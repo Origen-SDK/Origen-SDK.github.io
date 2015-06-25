@@ -1,4 +1,4 @@
-$.getJSON("/website/0_1_0/search.json", function(json) {
+$.getJSON("/search.json", function(json) {
   window.index = lunr(function() {
     this.field("title", {boost: 10});
     this.field("subtitle", {boost: 5});
@@ -35,10 +35,10 @@ function search(go) {
   var results = window.index.search(term);
 
   if(results && results.length == 1) {
-    window.location.replace("/website/0_1_0/" + results[0].ref + "?highlight=" + escape(term));
+    window.location.replace("/" + results[0].ref + "?highlight=" + escape(term));
   } else if(results && results.length > 1) {
     if (go) {
-      window.location.replace("/website/0_1_0/" + results[0].ref + "?highlight=" + escape(term));
+      window.location.replace("/" + results[0].ref + "?highlight=" + escape(term));
     } else {
       displayResults(results, term);
     }
@@ -56,7 +56,7 @@ function displayResults(results, term) {
 
   $.each(results, function(i, result) {
     var article = window.articles[result.ref];
-    container.append("<p><a href=\"/website/0_1_0/" + result.ref + "?highlight=" + escape(term) + "\">" + article.title + " - " + article.subtitle + "</a></p>");
+    container.append("<p><a href=\"/" + result.ref + "?highlight=" + escape(term) + "\">" + article.title + " - " + article.subtitle + "</a></p>");
   });
 }
 
