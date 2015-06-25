@@ -1,4 +1,4 @@
-$.getJSON("/search.json", function(json) {
+$.getJSON("/origen/search.json", function(json) {
   window.index = lunr(function() {
     this.field("title", {boost: 10});
     this.field("subtitle", {boost: 5});
@@ -35,10 +35,10 @@ function search(go) {
   var results = window.index.search(term);
 
   if(results && results.length == 1) {
-    window.location.replace("/" + results[0].ref + "?highlight=" + escape(term));
+    window.location.replace("/origen/" + results[0].ref + "?highlight=" + escape(term));
   } else if(results && results.length > 1) {
     if (go) {
-      window.location.replace("/" + results[0].ref + "?highlight=" + escape(term));
+      window.location.replace("/origen/" + results[0].ref + "?highlight=" + escape(term));
     } else {
       displayResults(results, term);
     }
@@ -56,7 +56,7 @@ function displayResults(results, term) {
 
   $.each(results, function(i, result) {
     var article = window.articles[result.ref];
-    container.append("<p><a href=\"/" + result.ref + "?highlight=" + escape(term) + "\">" + article.title + " - " + article.subtitle + "</a></p>");
+    container.append("<p><a href=\"/origen/" + result.ref + "?highlight=" + escape(term) + "\">" + article.title + " - " + article.subtitle + "</a></p>");
   });
 }
 
