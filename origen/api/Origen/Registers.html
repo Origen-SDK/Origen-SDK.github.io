@@ -1,0 +1,2607 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Module: Origen::Registers
+  
+    &mdash; Origen Core 0.0.4
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '../';
+  framesUrl = "../frames.html#!Origen/Registers.html";
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../_index.html">Index (R)</a> &raquo;
+    <span class='title'><span class='object_link'><a href="../Origen.html" title="Origen (module)">Origen</a></span></span>
+     &raquo; 
+    <span class="title">Registers</span>
+  
+
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="../class_list.html">
+      Class List
+    </a>
+  
+    <a class="full_list_link" id="method_list_link"
+        href="../method_list.html">
+      Method List
+    </a>
+  
+    <a class="full_list_link" id="file_list_link"
+        href="../file_list.html">
+      File List
+    </a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+
+    <iframe id="search_frame"></iframe>
+
+    <div id="content"><h1>Module: Origen::Registers
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+  
+    
+      <dt class="r1">Extended by:</dt>
+      <dd class="r1">ActiveSupport::Concern</dd>
+      
+    
+  
+    
+  
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">lib/origen/registers.rb<span class="defines">,<br />
+  lib/origen/registers/bit.rb,<br /> lib/origen/registers/reg.rb,<br /> lib/origen/registers/domain.rb,<br /> lib/origen/registers/container.rb,<br /> lib/origen/registers/bit_collection.rb,<br /> lib/origen/registers/reg_collection.rb</span>
+</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>Origen provides a powerful register class which you are encouraged to use
+when you wish to interact with a silicon register (or RAM location). By
+interacting with the register on silicon through the register API your
+pattern will automatically track silicon state, so you can set and forget
+bits in the patgen the same as you would do with a physical register.
+Include this module to add registers to your block, then use the macros
+described below to instantiate register objects</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_include'>include</span> <span class='const'>Origen</span><span class='op'>::</span><span class='const'>Registers</span></code></pre>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><h2>Defined Under Namespace</h2>
+<p class="children">
+  
+    
+  
+    
+      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Registers/Bit.html" title="Origen::Registers::Bit (class)">Bit</a></span>, <span class='object_link'><a href="Registers/BitCollection.html" title="Origen::Registers::BitCollection (class)">BitCollection</a></span>, <span class='object_link'><a href="Registers/Collector.html" title="Origen::Registers::Collector (class)">Collector</a></span>, <span class='object_link'><a href="Registers/Container.html" title="Origen::Registers::Container (class)">Container</a></span>, <span class='object_link'><a href="Registers/Domain.html" title="Origen::Registers::Domain (class)">Domain</a></span>, <span class='object_link'><a href="Registers/Placeholder.html" title="Origen::Registers::Placeholder (class)">Placeholder</a></span>, <span class='object_link'><a href="Registers/Reg.html" title="Origen::Registers::Reg (class)">Reg</a></span>, <span class='object_link'><a href="Registers/RegCollection.html" title="Origen::Registers::RegCollection (class)">RegCollection</a></span>
+    
+  
+</p>
+
+  <h2>Constant Summary</h2>
+  
+    <dl class="constants">
+      
+        <dt id="reg_metadata-classvariable" class="">@@reg_metadata =
+          
+        </dt>
+        <dd><pre class="code"><span class='lbrace'>{</span><span class='rbrace'>}</span></pre></dd>
+      
+        <dt id="bit_metadata-classvariable" class="">@@bit_metadata =
+          
+        </dt>
+        <dd><pre class="code"><span class='lbrace'>{</span><span class='rbrace'>}</span></pre></dd>
+      
+    </dl>
+  
+
+
+
+
+
+
+
+  
+    <h2>
+      Class Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#bit_metadata-class_method" title="bit_metadata (class method)">+ (Object) <strong>bit_metadata</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  <span class="private note title">private</span>
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns a lookup table containing all custom bit metadata defined by
+objects in an application.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#default_bit_meta_data-class_method" title="default_bit_meta_data (class method)">+ (Object) <strong>default_bit_meta_data</strong>(*args, &amp;block) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>An alias for default_bit_metadata.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#default_bit_metadata-class_method" title="default_bit_metadata (class method)">+ (Object) <strong>default_bit_metadata</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Can be called to add app specific meta data to all bits.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#default_reg_meta_data-class_method" title="default_reg_meta_data (class method)">+ (Object) <strong>default_reg_meta_data</strong>(*args, &amp;block) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>An alias for default_reg_metadata.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#default_reg_metadata-class_method" title="default_reg_metadata (class method)">+ (Object) <strong>default_reg_metadata</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Can be called to add app specific meta data to all registers.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#reg_metadata-class_method" title="reg_metadata (class method)">+ (Object) <strong>reg_metadata</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  <span class="private note title">private</span>
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns a lookup table containing all custom register metadata defined by
+objects in an application.</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#_registers-instance_method" title="#_registers (instance method)">- (Object) <strong>_registers</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  <span class="private note title">private</span>
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>All register objects are stored here, but they should be accessed via the
+_reg method to ensure that feature scoping is applied.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#add_reg-instance_method" title="#add_reg (instance method)">- (Object) <strong>add_reg</strong>(id, address, size = nil, bit_info = {}, &amp;_block) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Add a register.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#add_reg32-instance_method" title="#add_reg32 (instance method)">- (Object) <strong>add_reg32</strong>(id, address, args = {}, &amp;block) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#bit-instance_method" title="#bit (instance method)">- (Object) <strong>bit</strong>(index, name, attrs = {}) </a>
+    
+
+    
+      (also: #bits)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Called within an add_reg block to define bits.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#contains_bits%3F-instance_method" title="#contains_bits? (instance method)">- (Boolean) <strong>contains_bits?</strong>(obj) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns true if the given object is one of the recognized Origen bit
+containers (bit collection, reg or container).</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#default_bit_metadata-instance_method" title="#default_bit_metadata (instance method)">- (Object) <strong>default_bit_metadata</strong> </a>
+    
+
+    
+      (also: #default_bit_meta_data)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#default_reg_metadata-instance_method" title="#default_reg_metadata (instance method)">- (Object) <strong>default_reg_metadata</strong> </a>
+    
+
+    
+      (also: #default_reg_meta_data)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Can be called to add app specific meta data that is isolated to all
+registers defined within a given class.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#define_file-instance_method" title="#define_file (instance method)">- (Object) <strong>define_file</strong>(file) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  <span class="private note title">private</span>
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#del_reg-instance_method" title="#del_reg (instance method)">- (Object) <strong>del_reg</strong>(id) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Delete an existing register.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#delete_registers-instance_method" title="#delete_registers (instance method)">- (Object) <strong>delete_registers</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#dummy_reg-instance_method" title="#dummy_reg (instance method)">- (Object) <strong>dummy_reg</strong>(size = 16) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Creates a dummy register.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#has_reg%3F-instance_method" title="#has_reg? (instance method)">- (Boolean) <strong>has_reg?</strong>(name, params = {}) </a>
+    
+
+    
+      (also: #has_reg)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns true if the object contains a register matching the given name.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#instantiate_reg-instance_method" title="#instantiate_reg (instance method)">- (Object) <strong>instantiate_reg</strong>(id, attrs) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  <span class="private note title">private</span>
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#is_a_bit%3F-instance_method" title="#is_a_bit? (instance method)">- (Boolean) <strong>is_a_bit?</strong>(obj) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns true if the given object is an Origen bit.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#max_address_reg_size-instance_method" title="#max_address_reg_size (instance method)">- (Object) <strong>max_address_reg_size</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the size (in bits) of the register with the highest address, can be
+useful in combination with max_reg_address to work out the range of
+addresses containing registers.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#max_reg_address-instance_method" title="#max_reg_address (instance method)">- (Object) <strong>max_reg_address</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the highest address of all registers that have been added.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#method_missing-instance_method" title="#method_missing (instance method)">- (Object) <strong>method_missing</strong>(method, *args, &amp;block) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>:nodoc:.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#min_reg_address-instance_method" title="#min_reg_address (instance method)">- (Object) <strong>min_reg_address</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the lowest address of all registers that have been added.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#read_register_missing%21-instance_method" title="#read_register_missing! (instance method)">- (Object) <strong>read_register_missing!</strong>(reg) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#reg-instance_method" title="#reg (instance method)">- (Object) <strong>reg</strong>(*args, &amp;block) </a>
+    
+
+    
+      (also: #regs)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the register object matching the given name, or a hash of all
+registers, associated with a feature,if no name is specified.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#reset_registers-instance_method" title="#reset_registers (instance method)">- (Object) <strong>reset_registers</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Resets all registers.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#respond_to%3F-instance_method" title="#respond_to? (instance method)">- (Boolean) <strong>respond_to?</strong>(sym) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>:nodoc:.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#write_register_missing%21-instance_method" title="#write_register_missing! (instance method)">- (Object) <strong>write_register_missing!</strong>(reg) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  <div id="method_missing_details" class="method_details_list">
+  <h2>Dynamic Method Handling</h2>
+  <p class="notice this">
+    This class handles dynamic methods through the <tt>method_missing</tt> method
+    
+  </p>
+  
+    <div class="method_details first">
+  <h3 class="signature first" id="method_missing-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt>) <strong>method_missing</strong>(method, *args, &amp;block) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>:nodoc:</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+29
+30
+31
+32
+33
+34
+35</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 29</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_method_missing'>method_missing</span><span class='lparen'>(</span><span class='id identifier rubyid_method'>method</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span> <span class='comment'># :nodoc:
+</span>  <span class='kw'>if</span> <span class='id identifier rubyid__registers'>_registers</span><span class='period'>.</span><span class='id identifier rubyid_key?'>key?</span><span class='lparen'>(</span><span class='id identifier rubyid_method'>method</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_reg'>reg</span><span class='lparen'>(</span><span class='id identifier rubyid_method'>method</span><span class='rparen'>)</span>
+  <span class='kw'>else</span>
+    <span class='kw'>super</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+  
+</div>
+
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="bit_metadata-class_method">
+  
+    + (<tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt>) <strong>bit_metadata</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p class="note private">
+  <strong>This method is part of a private API.</strong>
+  You should avoid using this method if possible, as it may be removed or be changed in the future.
+</p>
+
+<p>Returns a lookup table containing all custom bit metadata defined by
+objects in an application</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+60
+61
+62</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 60</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_bit_metadata'>bit_metadata</span>
+  <span class='cvar'>@@bit_metadata</span> <span class='op'>||=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="default_bit_meta_data-class_method">
+  
+    + (<tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt>) <strong>default_bit_meta_data</strong>(*args, &amp;block) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>An alias for default_bit_metadata</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+92
+93
+94</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 92</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_default_bit_meta_data'>default_bit_meta_data</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_default_bit_metadata'>default_bit_metadata</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="default_bit_metadata-class_method">
+  
+    + (<tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt>) <strong>default_bit_metadata</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Can be called to add app specific meta data to all bits</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+81
+82
+83
+84
+85
+86
+87
+88
+89</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 81</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_default_bit_metadata'>default_bit_metadata</span>
+  <span class='const'>Origen</span><span class='op'>::</span><span class='const'>Registers</span><span class='period'>.</span><span class='id identifier rubyid_bit_metadata'>bit_metadata</span><span class='lbracket'>[</span><span class='symbol'>:global</span><span class='rbracket'>]</span> <span class='op'>||=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_block_given?'>block_given?</span>
+    <span class='id identifier rubyid_collector'>collector</span> <span class='op'>=</span> <span class='const'>Collector</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
+    <span class='kw'>yield</span> <span class='id identifier rubyid_collector'>collector</span>
+    <span class='const'>Origen</span><span class='op'>::</span><span class='const'>Registers</span><span class='period'>.</span><span class='id identifier rubyid_bit_metadata'>bit_metadata</span><span class='lbracket'>[</span><span class='symbol'>:global</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_merge!'>merge!</span><span class='lparen'>(</span><span class='id identifier rubyid_collector'>collector</span><span class='period'>.</span><span class='id identifier rubyid_store'>store</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+  <span class='const'>Origen</span><span class='op'>::</span><span class='const'>Registers</span><span class='period'>.</span><span class='id identifier rubyid_bit_metadata'>bit_metadata</span><span class='lbracket'>[</span><span class='symbol'>:global</span><span class='rbracket'>]</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="default_reg_meta_data-class_method">
+  
+    + (<tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt>) <strong>default_reg_meta_data</strong>(*args, &amp;block) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>An alias for default_reg_metadata</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+76
+77
+78</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 76</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_default_reg_meta_data'>default_reg_meta_data</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_default_reg_metadata'>default_reg_metadata</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="default_reg_metadata-class_method">
+  
+    + (<tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt>) <strong>default_reg_metadata</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Can be called to add app specific meta data to all registers</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+65
+66
+67
+68
+69
+70
+71
+72
+73</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 65</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_default_reg_metadata'>default_reg_metadata</span>
+  <span class='const'>Origen</span><span class='op'>::</span><span class='const'>Registers</span><span class='period'>.</span><span class='id identifier rubyid_reg_metadata'>reg_metadata</span><span class='lbracket'>[</span><span class='symbol'>:global</span><span class='rbracket'>]</span> <span class='op'>||=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_block_given?'>block_given?</span>
+    <span class='id identifier rubyid_collector'>collector</span> <span class='op'>=</span> <span class='const'>Collector</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
+    <span class='kw'>yield</span> <span class='id identifier rubyid_collector'>collector</span>
+    <span class='const'>Origen</span><span class='op'>::</span><span class='const'>Registers</span><span class='period'>.</span><span class='id identifier rubyid_reg_metadata'>reg_metadata</span><span class='lbracket'>[</span><span class='symbol'>:global</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_merge!'>merge!</span><span class='lparen'>(</span><span class='id identifier rubyid_collector'>collector</span><span class='period'>.</span><span class='id identifier rubyid_store'>store</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+  <span class='const'>Origen</span><span class='op'>::</span><span class='const'>Registers</span><span class='period'>.</span><span class='id identifier rubyid_reg_metadata'>reg_metadata</span><span class='lbracket'>[</span><span class='symbol'>:global</span><span class='rbracket'>]</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="reg_metadata-class_method">
+  
+    + (<tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt>) <strong>reg_metadata</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p class="note private">
+  <strong>This method is part of a private API.</strong>
+  You should avoid using this method if possible, as it may be removed or be changed in the future.
+</p>
+
+<p>Returns a lookup table containing all custom register metadata defined by
+objects in an application</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+53
+54
+55</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 53</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_reg_metadata'>reg_metadata</span>
+  <span class='cvar'>@@reg_metadata</span> <span class='op'>||=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="_registers-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt>) <strong>_registers</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p class="note private">
+  <strong>This method is part of a private API.</strong>
+  You should avoid using this method if possible, as it may be removed or be changed in the future.
+</p>
+
+<p>All register objects are stored here, but they should be accessed via the
+_reg method to ensure that feature scoping is applied</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+101
+102
+103</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 101</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid__registers'>_registers</span>
+  <span class='ivar'>@_registers</span> <span class='op'>||=</span> <span class='const'>RegCollection</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='kw'>self</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="add_reg-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt>) <strong>add_reg</strong>(id, address, size = nil, bit_info = {}, &amp;_block) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Add a register. When adding a register you must supply a name, an address,
+size in bits, and bit definitions, any bits that are not declared will be
+filled with dummy bit objects that are not writable and will read back as
+0.</p>
+
+<pre class="code ruby"><code class="ruby">add_reg :control,  0x00,    16    :mode    =&gt; { :pos =&gt; 8, :bits =&gt; 8 },
+                                  # Leaving out bits does 1 by default
+                                  :launch  =&gt; { :pos =&gt; 6 },
+                                  # The default reset state is 0, specify an alternative..
+                                  :status  =&gt; { :pos =&gt; 4, :bits =&gt; 2, :res =&gt; 0b11 },
+                                  :fail    =&gt; { :pos =&gt; 2 },
+                                  :done    =&gt; { :pos =&gt; 0 }
+</code></pre>
+
+<p>Can be called on any object to add a register to it</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  <div class="examples">
+    <p class="tag_title">Examples:</p>
+    
+      
+      <pre class="example code"><code><span class='const'>Name</span>    <span class='const'>Address</span>  <span class='const'>Size</span>   <span class='const'>Bit</span> <span class='const'>Definitions</span></code></pre>
+    
+  </div>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 287</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_add_reg'>add_reg</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_address'>address</span><span class='comma'>,</span> <span class='id identifier rubyid_size'>size</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_bit_info'>bit_info</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid__block'>_block</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_size'>size</span><span class='comma'>,</span> <span class='id identifier rubyid_bit_info'>bit_info</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_size'>size</span> <span class='kw'>if</span> <span class='id identifier rubyid_size'>size</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'>Hash</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_size'>size</span> <span class='op'>||=</span> <span class='id identifier rubyid_bit_info'>bit_info</span><span class='period'>.</span><span class='id identifier rubyid_delete'>delete</span><span class='lparen'>(</span><span class='symbol'>:size</span><span class='rparen'>)</span> <span class='op'>||</span> <span class='int'>32</span>
+  <span class='id identifier rubyid_description'>description</span> <span class='op'>=</span> <span class='id identifier rubyid_bit_info'>bit_info</span><span class='period'>.</span><span class='id identifier rubyid_delete'>delete</span><span class='lparen'>(</span><span class='symbol'>:description</span><span class='rparen'>)</span>
+
+  <span class='id identifier rubyid_local_vars'>local_vars</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+
+  <span class='const'>Reg</span><span class='op'>::</span><span class='const'>REG_LEVEL_ATTRIBUTES</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_attribute'>attribute</span><span class='comma'>,</span> <span class='id identifier rubyid_meta'>meta</span><span class='op'>|</span>
+    <span class='id identifier rubyid_aliases'>aliases</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='id identifier rubyid_attribute'>attribute</span><span class='rbracket'>]</span>
+    <span class='id identifier rubyid_aliases'>aliases</span> <span class='op'>+=</span> <span class='id identifier rubyid_meta'>meta</span><span class='lbracket'>[</span><span class='symbol'>:aliases</span><span class='rbracket'>]</span> <span class='kw'>if</span> <span class='id identifier rubyid_meta'>meta</span><span class='lbracket'>[</span><span class='symbol'>:aliases</span><span class='rbracket'>]</span>
+    <span class='id identifier rubyid_aliases'>aliases</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid__a'>_a</span><span class='op'>|</span> <span class='id identifier rubyid_local_vars'>local_vars</span><span class='lbracket'>[</span><span class='id identifier rubyid_attribute'>attribute</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_bit_info'>bit_info</span><span class='period'>.</span><span class='id identifier rubyid_delete'>delete</span><span class='lparen'>(</span><span class='id identifier rubyid_attribute'>attribute</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_bit_info'>bit_info</span><span class='period'>.</span><span class='id identifier rubyid_key?'>key?</span><span class='lparen'>(</span><span class='id identifier rubyid_attribute'>attribute</span><span class='rparen'>)</span> <span class='rbrace'>}</span>
+  <span class='kw'>end</span>
+
+  <span class='id identifier rubyid_local_vars'>local_vars</span><span class='lbracket'>[</span><span class='symbol'>:reset</span><span class='rbracket'>]</span> <span class='op'>||=</span> <span class='symbol'>:memory</span> <span class='kw'>if</span> <span class='id identifier rubyid_local_vars'>local_vars</span><span class='lbracket'>[</span><span class='symbol'>:memory</span><span class='rbracket'>]</span>
+  <span class='ivar'>@min_reg_address</span> <span class='op'>||=</span> <span class='id identifier rubyid_address'>address</span>
+  <span class='ivar'>@max_reg_address</span> <span class='op'>||=</span> <span class='id identifier rubyid_address'>address</span>
+  <span class='ivar'>@min_reg_address</span> <span class='op'>=</span> <span class='id identifier rubyid_address'>address</span> <span class='kw'>if</span> <span class='id identifier rubyid_address'>address</span> <span class='op'>&lt;</span> <span class='ivar'>@min_reg_address</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_address'>address</span> <span class='op'>&gt;</span> <span class='ivar'>@max_reg_address</span>
+    <span class='ivar'>@max_address_reg_size</span> <span class='op'>=</span> <span class='id identifier rubyid_size'>size</span>
+    <span class='ivar'>@max_reg_address</span> <span class='op'>=</span> <span class='id identifier rubyid_address'>address</span>
+  <span class='kw'>end</span>
+  <span class='ivar'>@reg_define_file</span> <span class='op'>||=</span> <span class='id identifier rubyid_define_file'>define_file</span><span class='lparen'>(</span><span class='id identifier rubyid_caller'>caller</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+
+  <span class='kw'>if</span> <span class='id identifier rubyid_block_given?'>block_given?</span>
+    <span class='ivar'>@new_reg_attrs</span> <span class='op'>=</span> <span class='lbrace'>{</span> <span class='label'>meta:</span> <span class='id identifier rubyid_bit_info'>bit_info</span> <span class='rbrace'>}</span>
+    <span class='kw'>yield</span> <span class='kw'>self</span>
+    <span class='id identifier rubyid_bit_info'>bit_info</span> <span class='op'>=</span> <span class='ivar'>@new_reg_attrs</span>
+  <span class='kw'>end</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid__registers'>_registers</span><span class='lbracket'>[</span><span class='id identifier rubyid_id'>id</span><span class='rbracket'>]</span> <span class='op'>&amp;&amp;</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_strict_errors'>strict_errors</span>
+    <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span>
+    <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Add register error, you have already added a register named </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_id'>id</span><span class='embexpr_end'>}</span><span class='tstring_content'> to </span><span class='embexpr_beg'>#{</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+    <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span>
+    <span class='id identifier rubyid_fail'>fail</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Duplicate register error!</span><span class='tstring_end'>&#39;</span></span>
+  <span class='kw'>else</span>
+    <span class='id identifier rubyid_attributes'>attributes</span> <span class='op'>=</span> <span class='lbrace'>{</span>
+      <span class='label'>define_file:</span> <span class='ivar'>@reg_define_file</span><span class='comma'>,</span>
+      <span class='label'>address:</span>     <span class='id identifier rubyid_address'>address</span><span class='comma'>,</span>
+      <span class='label'>size:</span>        <span class='id identifier rubyid_size'>size</span><span class='comma'>,</span>
+      <span class='label'>bit_info:</span>    <span class='id identifier rubyid_bit_info'>bit_info</span><span class='comma'>,</span>
+      <span class='label'>description:</span> <span class='id identifier rubyid_description'>description</span>
+    <span class='rbrace'>}</span>
+    <span class='const'>Reg</span><span class='op'>::</span><span class='const'>REG_LEVEL_ATTRIBUTES</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_attribute'>attribute</span><span class='comma'>,</span> <span class='id identifier rubyid__meta'>_meta</span><span class='op'>|</span>
+      <span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='id identifier rubyid_attribute'>attribute</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_local_vars'>local_vars</span><span class='lbracket'>[</span><span class='id identifier rubyid_attribute'>attribute</span><span class='rbracket'>]</span>
+    <span class='kw'>end</span>
+    <span class='id identifier rubyid__registers'>_registers</span><span class='lbracket'>[</span><span class='id identifier rubyid_id'>id</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='const'>Placeholder</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='kw'>self</span><span class='comma'>,</span> <span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+  <span class='ivar'>@reg_define_file</span> <span class='op'>=</span> <span class='kw'>nil</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="add_reg32-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt>) <strong>add_reg32</strong>(id, address, args = {}, &amp;block) 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+428
+429
+430
+431</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 428</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_add_reg32'>add_reg32</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_address'>address</span><span class='comma'>,</span> <span class='id identifier rubyid_args'>args</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+  <span class='ivar'>@reg_define_file</span> <span class='op'>=</span> <span class='id identifier rubyid_define_file'>define_file</span><span class='lparen'>(</span><span class='id identifier rubyid_caller'>caller</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_add_reg'>add_reg</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_address'>address</span><span class='comma'>,</span> <span class='int'>32</span><span class='comma'>,</span> <span class='id identifier rubyid_args'>args</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="bit-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt>) <strong>bit</strong>(index, name, attrs = {}) 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='bits-instance_method'>bits</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Called within an add_reg block to define bits</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 352</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_bit'>bit</span><span class='lparen'>(</span><span class='id identifier rubyid_index'>index</span><span class='comma'>,</span> <span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_attrs'>attrs</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_index'>index</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'>Range</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_msb'>msb</span> <span class='op'>=</span> <span class='id identifier rubyid_index'>index</span><span class='period'>.</span><span class='id identifier rubyid_first'>first</span>
+    <span class='id identifier rubyid_lsb'>lsb</span> <span class='op'>=</span> <span class='id identifier rubyid_index'>index</span><span class='period'>.</span><span class='id identifier rubyid_last'>last</span>
+    <span class='id identifier rubyid_msb'>msb</span><span class='comma'>,</span> <span class='id identifier rubyid_lsb'>lsb</span> <span class='op'>=</span> <span class='id identifier rubyid_lsb'>lsb</span><span class='comma'>,</span> <span class='id identifier rubyid_msb'>msb</span> <span class='kw'>if</span> <span class='id identifier rubyid_lsb'>lsb</span> <span class='op'>&gt;</span> <span class='id identifier rubyid_msb'>msb</span>
+    <span class='id identifier rubyid_pos'>pos</span> <span class='op'>=</span> <span class='id identifier rubyid_lsb'>lsb</span>
+    <span class='id identifier rubyid_bits'>bits</span> <span class='op'>=</span> <span class='lparen'>(</span><span class='id identifier rubyid_msb'>msb</span> <span class='op'>-</span> <span class='id identifier rubyid_lsb'>lsb</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_abs'>abs</span> <span class='op'>+</span> <span class='int'>1</span>
+  <span class='kw'>elsif</span> <span class='id identifier rubyid_index'>index</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'>Numeric</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_pos'>pos</span> <span class='op'>=</span> <span class='id identifier rubyid_index'>index</span>
+    <span class='id identifier rubyid_bits'>bits</span> <span class='op'>=</span> <span class='int'>1</span>
+  <span class='kw'>else</span>
+    <span class='id identifier rubyid_fail'>fail</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>No valid index supplied when defining a register bit!</span><span class='tstring_end'>&#39;</span></span>
+  <span class='kw'>end</span>
+
+  <span class='comment'># Traynor, this could be more elegant
+</span>  <span class='comment'># its just a dirty way to make the value of the
+</span>  <span class='comment'># key in @new_reg_atts hash array (ie name) tie to
+</span>  <span class='comment'># a value that is an array of hashes describing
+</span>  <span class='comment'># data for each scrambled bit
+</span>  <span class='id identifier rubyid_attrs'>attrs</span> <span class='op'>=</span> <span class='id identifier rubyid_attrs'>attrs</span><span class='period'>.</span><span class='id identifier rubyid_merge'>merge</span><span class='lparen'>(</span><span class='label'>pos:</span> <span class='id identifier rubyid_pos'>pos</span><span class='comma'>,</span> <span class='label'>bits:</span> <span class='id identifier rubyid_bits'>bits</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_temparray'>temparray</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
+  <span class='kw'>if</span> <span class='ivar'>@new_reg_attrs</span><span class='lbracket'>[</span><span class='id identifier rubyid_name'>name</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+    <span class='ivar'>@new_reg_attrs</span><span class='lbracket'>[</span><span class='id identifier rubyid_name'>name</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_attrs'>attrs</span>
+  <span class='kw'>else</span>
+    <span class='kw'>if</span> <span class='ivar'>@new_reg_attrs</span><span class='lbracket'>[</span><span class='id identifier rubyid_name'>name</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>Hash</span>
+      <span class='id identifier rubyid_temparray'>temparray</span> <span class='op'>=</span> <span class='id identifier rubyid_temparray'>temparray</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span><span class='lparen'>(</span><span class='ivar'>@new_reg_attrs</span><span class='lbracket'>[</span><span class='id identifier rubyid_name'>name</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+    <span class='kw'>else</span>
+      <span class='id identifier rubyid_temparray'>temparray</span> <span class='op'>=</span> <span class='ivar'>@new_reg_attrs</span><span class='lbracket'>[</span><span class='id identifier rubyid_name'>name</span><span class='rbracket'>]</span>
+    <span class='kw'>end</span>
+    <span class='id identifier rubyid_temparray'>temparray</span> <span class='op'>=</span> <span class='id identifier rubyid_temparray'>temparray</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span><span class='lparen'>(</span><span class='id identifier rubyid_attrs'>attrs</span><span class='rparen'>)</span>
+    <span class='comment'># added the sort so that the order the registers bits is described is not important
+</span>    <span class='ivar'>@new_reg_attrs</span><span class='lbracket'>[</span><span class='id identifier rubyid_name'>name</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_temparray'>temparray</span><span class='period'>.</span><span class='id identifier rubyid_sort'>sort</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_a'>a</span><span class='comma'>,</span> <span class='id identifier rubyid_b'>b</span><span class='op'>|</span> <span class='id identifier rubyid_b'>b</span><span class='lbracket'>[</span><span class='symbol'>:pos</span><span class='rbracket'>]</span> <span class='op'>&lt;=&gt;</span> <span class='id identifier rubyid_a'>a</span><span class='lbracket'>[</span><span class='symbol'>:pos</span><span class='rbracket'>]</span> <span class='rbrace'>}</span>
+
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="contains_bits?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>contains_bits?</strong>(obj) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns true if the given object is one of the recognized Origen bit
+containers (bit collection, reg or container).</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+262
+263
+264</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 262</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_contains_bits?'>contains_bits?</span><span class='lparen'>(</span><span class='id identifier rubyid_obj'>obj</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_obj'>obj</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:contains_bits?</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_obj'>obj</span><span class='period'>.</span><span class='id identifier rubyid_contains_bits?'>contains_bits?</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="default_bit_metadata-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt>) <strong>default_bit_metadata</strong> 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='default_bit_meta_data-instance_method'>default_bit_meta_data</span></span>
+    </span>
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+403
+404
+405
+406
+407
+408
+409
+410
+411</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 403</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_default_bit_metadata'>default_bit_metadata</span>
+  <span class='const'>Origen</span><span class='op'>::</span><span class='const'>Registers</span><span class='period'>.</span><span class='id identifier rubyid_bit_metadata'>bit_metadata</span><span class='lbracket'>[</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='rbracket'>]</span> <span class='op'>||=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_block_given?'>block_given?</span>
+    <span class='id identifier rubyid_collector'>collector</span> <span class='op'>=</span> <span class='const'>Collector</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
+    <span class='kw'>yield</span> <span class='id identifier rubyid_collector'>collector</span>
+    <span class='const'>Origen</span><span class='op'>::</span><span class='const'>Registers</span><span class='period'>.</span><span class='id identifier rubyid_bit_metadata'>bit_metadata</span><span class='lbracket'>[</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_merge!'>merge!</span><span class='lparen'>(</span><span class='id identifier rubyid_collector'>collector</span><span class='period'>.</span><span class='id identifier rubyid_store'>store</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+  <span class='const'>Origen</span><span class='op'>::</span><span class='const'>Registers</span><span class='period'>.</span><span class='id identifier rubyid_bit_metadata'>bit_metadata</span><span class='lbracket'>[</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='rbracket'>]</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="default_reg_metadata-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt>) <strong>default_reg_metadata</strong> 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='default_reg_meta_data-instance_method'>default_reg_meta_data</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Can be called to add app specific meta data that is isolated to all
+registers defined within a given class</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+392
+393
+394
+395
+396
+397
+398
+399
+400</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 392</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_default_reg_metadata'>default_reg_metadata</span>
+  <span class='const'>Origen</span><span class='op'>::</span><span class='const'>Registers</span><span class='period'>.</span><span class='id identifier rubyid_reg_metadata'>reg_metadata</span><span class='lbracket'>[</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='rbracket'>]</span> <span class='op'>||=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_block_given?'>block_given?</span>
+    <span class='id identifier rubyid_collector'>collector</span> <span class='op'>=</span> <span class='const'>Collector</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
+    <span class='kw'>yield</span> <span class='id identifier rubyid_collector'>collector</span>
+    <span class='const'>Origen</span><span class='op'>::</span><span class='const'>Registers</span><span class='period'>.</span><span class='id identifier rubyid_reg_metadata'>reg_metadata</span><span class='lbracket'>[</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_merge!'>merge!</span><span class='lparen'>(</span><span class='id identifier rubyid_collector'>collector</span><span class='period'>.</span><span class='id identifier rubyid_store'>store</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+  <span class='const'>Origen</span><span class='op'>::</span><span class='const'>Registers</span><span class='period'>.</span><span class='id identifier rubyid_reg_metadata'>reg_metadata</span><span class='lbracket'>[</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='rbracket'>]</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="define_file-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt>) <strong>define_file</strong>(file) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p class="note private">
+  <strong>This method is part of a private API.</strong>
+  You should avoid using this method if possible, as it may be removed or be changed in the future.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+342
+343
+344
+345
+346
+347
+348
+349</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 342</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_define_file'>define_file</span><span class='lparen'>(</span><span class='id identifier rubyid_file'>file</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_running_on_windows?'>running_on_windows?</span>
+    <span class='id identifier rubyid_fields'>fields</span> <span class='op'>=</span> <span class='id identifier rubyid_file'>file</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>:</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+    <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_fields'>fields</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='embexpr_end'>}</span><span class='tstring_content'>:</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_fields'>fields</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+  <span class='kw'>else</span>
+    <span class='id identifier rubyid_file'>file</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>:</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_first'>first</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="del_reg-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt>) <strong>del_reg</strong>(id) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Delete an existing register</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+337
+338
+339</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 337</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_del_reg'>del_reg</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid__registers'>_registers</span><span class='period'>.</span><span class='id identifier rubyid_delete'>delete</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="delete_registers-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt>) <strong>delete_registers</strong> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+41
+42
+43</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 41</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_delete_registers'>delete_registers</span>
+  <span class='ivar'>@_registers</span> <span class='op'>=</span> <span class='kw'>nil</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="dummy_reg-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt>) <strong>dummy_reg</strong>(size = 16) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Creates a dummy register. Equivalent to Reg.dummy except the reg owner is
+assigned as the caller rather than Reg. Use this if you need to call read!
+or write! on the dummy register object.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+616
+617
+618</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 616</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_dummy_reg'>dummy_reg</span><span class='lparen'>(</span><span class='id identifier rubyid_size'>size</span> <span class='op'>=</span> <span class='int'>16</span><span class='rparen'>)</span>
+  <span class='const'>Reg</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='kw'>self</span><span class='comma'>,</span> <span class='int'>0</span><span class='comma'>,</span> <span class='id identifier rubyid_size'>size</span><span class='comma'>,</span> <span class='symbol'>:dummy</span><span class='comma'>,</span> <span class='label'>init_as_writable:</span> <span class='kw'>true</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="has_reg?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>has_reg?</strong>(name, params = {}) 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='has_reg-instance_method'>has_reg</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns true if the object contains a register matching the given name</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+456
+457
+458
+459
+460
+461
+462
+463
+464
+465
+466</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 456</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_has_reg?'>has_reg?</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_params'>params</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_params'>params</span> <span class='op'>=</span> <span class='lbrace'>{</span>
+    <span class='label'>test_for_true_false:</span> <span class='kw'>true</span>
+  <span class='rbrace'>}</span><span class='period'>.</span><span class='id identifier rubyid_update'>update</span><span class='lparen'>(</span><span class='id identifier rubyid_params'>params</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_params'>params</span><span class='period'>.</span><span class='id identifier rubyid_key?'>key?</span><span class='lparen'>(</span><span class='symbol'>:enabled_features</span><span class='rparen'>)</span> <span class='op'>||</span> <span class='id identifier rubyid_params'>params</span><span class='period'>.</span><span class='id identifier rubyid_key?'>key?</span><span class='lparen'>(</span><span class='symbol'>:enabled_feature</span><span class='rparen'>)</span>
+    <span class='kw'>return</span> <span class='op'>!</span><span class='op'>!</span><span class='id identifier rubyid_get_registers'>get_registers</span><span class='lparen'>(</span><span class='id identifier rubyid_params'>params</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
+  <span class='kw'>else</span>
+    <span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:enabled_features</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='symbol'>:default</span>
+    <span class='kw'>return</span> <span class='op'>!</span><span class='op'>!</span><span class='id identifier rubyid_get_registers'>get_registers</span><span class='lparen'>(</span><span class='id identifier rubyid_params'>params</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="instantiate_reg-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt>) <strong>instantiate_reg</strong>(id, attrs) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p class="note private">
+  <strong>This method is part of a private API.</strong>
+  You should avoid using this method if possible, as it may be removed or be changed in the future.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+415
+416
+417
+418
+419
+420
+421
+422
+423
+424
+425
+426</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 415</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_instantiate_reg'>instantiate_reg</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_attrs'>attrs</span><span class='rparen'>)</span>
+  <span class='kw'>return</span> <span class='id identifier rubyid__registers'>_registers</span><span class='lbracket'>[</span><span class='id identifier rubyid_id'>id</span><span class='rbracket'>]</span> <span class='kw'>unless</span> <span class='id identifier rubyid__registers'>_registers</span><span class='lbracket'>[</span><span class='id identifier rubyid_id'>id</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'>Origen</span><span class='op'>::</span><span class='const'>Registers</span><span class='op'>::</span><span class='const'>Placeholder</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_attributes'>attributes</span> <span class='op'>=</span> <span class='lbrace'>{</span>
+    <span class='label'>define_file:</span> <span class='id identifier rubyid_attrs'>attrs</span><span class='lbracket'>[</span><span class='symbol'>:define_file</span><span class='rbracket'>]</span><span class='comma'>,</span>
+    <span class='label'>description:</span> <span class='id identifier rubyid_attrs'>attrs</span><span class='lbracket'>[</span><span class='symbol'>:description</span><span class='rbracket'>]</span>
+  <span class='rbrace'>}</span>
+  <span class='const'>Reg</span><span class='op'>::</span><span class='const'>REG_LEVEL_ATTRIBUTES</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_attribute'>attribute</span><span class='comma'>,</span> <span class='id identifier rubyid__meta'>_meta</span><span class='op'>|</span>
+    <span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='id identifier rubyid_attribute'>attribute</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_attrs'>attrs</span><span class='lbracket'>[</span><span class='id identifier rubyid_attribute'>attribute</span><span class='rbracket'>]</span>
+  <span class='kw'>end</span>
+  <span class='id identifier rubyid__registers'>_registers</span><span class='lbracket'>[</span><span class='id identifier rubyid_id'>id</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='const'>Reg</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='kw'>self</span><span class='comma'>,</span> <span class='id identifier rubyid_attrs'>attrs</span><span class='lbracket'>[</span><span class='symbol'>:address</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_attrs'>attrs</span><span class='lbracket'>[</span><span class='symbol'>:size</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_id'>id</span><span class='comma'>,</span>
+                           <span class='id identifier rubyid_attrs'>attrs</span><span class='lbracket'>[</span><span class='symbol'>:bit_info</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_merge'>merge</span><span class='lparen'>(</span><span class='id identifier rubyid_attributes'>attributes</span><span class='rparen'>)</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="is_a_bit?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>is_a_bit?</strong>(obj) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns true if the given object is an Origen bit</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+267
+268
+269</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 267</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_is_a_bit?'>is_a_bit?</span><span class='lparen'>(</span><span class='id identifier rubyid_obj'>obj</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_obj'>obj</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'>Origen</span><span class='op'>::</span><span class='const'>Registers</span><span class='op'>::</span><span class='const'>Bit</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="max_address_reg_size-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt>) <strong>max_address_reg_size</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the size (in bits) of the register with the highest address, can be
+useful in combination with max_reg_address to work out the range of
+addresses containing registers</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+446
+447
+448</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 446</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_max_address_reg_size'>max_address_reg_size</span>
+  <span class='ivar'>@max_address_reg_size</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="max_reg_address-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt>) <strong>max_reg_address</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the highest address of all registers that have been added</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+439
+440
+441</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 439</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_max_reg_address'>max_reg_address</span>
+  <span class='ivar'>@max_reg_address</span> <span class='op'>||</span> <span class='int'>0</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="min_reg_address-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt>) <strong>min_reg_address</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the lowest address of all registers that have been added</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+434
+435
+436</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 434</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_min_reg_address'>min_reg_address</span>
+  <span class='ivar'>@min_reg_address</span> <span class='op'>||</span> <span class='int'>0</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="read_register_missing!-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt>) <strong>read_register_missing!</strong>(reg) 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+636
+637
+638
+639
+640
+641
+642
+643
+644
+645
+646
+647
+648
+649
+650</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 636</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_read_register_missing!'>read_register_missing!</span><span class='lparen'>(</span><span class='id identifier rubyid_reg'>reg</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span>
+  <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span>
+  <span class='id identifier rubyid_puts'>puts</span> <span class='heredoc_beg'>&lt;&lt;-EOT</span>
+<span class='tstring_content'>You have made a request to read register: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_reg'>reg</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'>, however the </span><span class='embexpr_beg'>#{</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='embexpr_end'>}</span><span class='tstring_content'>
+class does not know how to do this yet. You must implement a read_register
+method in the </span><span class='embexpr_beg'>#{</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='embexpr_end'>}</span><span class='tstring_content'> like this:
+
+  def read_register(reg, options={})
+&lt;logic to handle reading the reg object here&gt;
+  end
+</span><span class='heredoc_end'>  EOT
+</span>  <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span>
+  <span class='id identifier rubyid_exit'>exit</span> <span class='int'>1</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="reg-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt>) <strong>reg</strong>(*args, &amp;block) 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='regs-instance_method'>regs</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the register object matching the given name, or a hash of all
+registers, associated with a feature,if no name is specified.</p>
+
+<p>Can also be used to define a new register if a block is supplied in which
+case it is equivalent to calling add_reg with a block.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+474
+475
+476
+477
+478
+479
+480
+481
+482
+483
+484
+485
+486
+487
+488
+489
+490
+491
+492
+493
+494
+495
+496
+497
+498
+499
+500
+501
+502
+503
+504
+505
+506
+507
+508
+509
+510
+511
+512
+513
+514
+515
+516
+517
+518
+519
+520
+521
+522
+523
+524
+525
+526
+527
+528
+529
+530
+531
+532
+533
+534
+535
+536
+537
+538
+539
+540
+541
+542
+543
+544
+545
+546
+547
+548
+549
+550</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 474</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_reg'>reg</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_block_given?'>block_given?</span>
+    <span class='ivar'>@reg_define_file</span> <span class='op'>=</span> <span class='id identifier rubyid_define_file'>define_file</span><span class='lparen'>(</span><span class='id identifier rubyid_caller'>caller</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_add_reg'>add_reg</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+  <span class='kw'>else</span>
+    <span class='comment'># Example use cases:
+</span>    <span class='comment'># reg(:reg2)
+</span>    <span class='comment'># reg(:name =&gt; :reg2)
+</span>    <span class='kw'>if</span> <span class='op'>!</span><span class='id identifier rubyid_args'>args</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_args'>args</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span> <span class='op'>==</span> <span class='int'>1</span> <span class='op'>&amp;&amp;</span> <span class='lparen'>(</span><span class='id identifier rubyid_args'>args</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span> <span class='op'>!=</span> <span class='const'>Hash</span> <span class='op'>||</span> <span class='lparen'>(</span><span class='id identifier rubyid_args'>args</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_key?'>key?</span><span class='lparen'>(</span><span class='symbol'>:name</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_args'>args</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span> <span class='op'>==</span> <span class='int'>1</span><span class='rparen'>)</span><span class='rparen'>)</span>
+      <span class='kw'>if</span> <span class='id identifier rubyid_args'>args</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span> <span class='op'>==</span> <span class='const'>Hash</span>
+        <span class='id identifier rubyid_name'>name</span> <span class='op'>=</span> <span class='id identifier rubyid_args'>args</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='symbol'>:name</span><span class='rbracket'>]</span>
+      <span class='kw'>else</span> <span class='id identifier rubyid_name'>name</span> <span class='op'>=</span> <span class='id identifier rubyid_args'>args</span><span class='period'>.</span><span class='id identifier rubyid_first'>first</span>
+      <span class='kw'>end</span>
+      <span class='kw'>if</span> <span class='id identifier rubyid_has_reg'>has_reg</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
+        <span class='kw'>return</span> <span class='id identifier rubyid__registers'>_registers</span><span class='lbracket'>[</span><span class='id identifier rubyid_name'>name</span><span class='rbracket'>]</span>
+      <span class='kw'>else</span>
+        <span class='kw'>if</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_strict_errors'>strict_errors</span>
+          <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span>
+          <span class='kw'>if</span> <span class='id identifier rubyid_regs'>regs</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
+            <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='embexpr_end'>}</span><span class='tstring_content'> does not have a register named </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'> or it is not enabled.</span><span class='tstring_end'>&quot;</span></span>
+          <span class='kw'>else</span>
+            <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='embexpr_end'>}</span><span class='tstring_content'> does not have a register named </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'> or it is not enabled.</span><span class='tstring_end'>&quot;</span></span>
+            <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>You may need to add it. This could also be a typo, these are the valid register names:</span><span class='tstring_end'>&#39;</span></span>
+            <span class='id identifier rubyid_puts'>puts</span> <span class='id identifier rubyid_regs'>regs</span><span class='period'>.</span><span class='id identifier rubyid_keys'>keys</span>
+          <span class='kw'>end</span>
+          <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span>
+          <span class='id identifier rubyid_fail'>fail</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Missing register error!</span><span class='tstring_end'>&#39;</span></span>
+        <span class='kw'>end</span>
+      <span class='kw'>end</span>
+    <span class='comment'># Example use cases:
+</span>    <span class='comment'># reg(:enabled_features =&gt; :all)
+</span>    <span class='comment'># reg(:name =&gt; :reg2, enabled_features =&gt; :all)
+</span>    <span class='comment'># reg(:name =&gt; :reg2, enabled_features =&gt; :fac)
+</span>    <span class='kw'>elsif</span> <span class='op'>!</span><span class='id identifier rubyid_args'>args</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_args'>args</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span> <span class='op'>==</span> <span class='int'>1</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_args'>args</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span> <span class='op'>==</span> <span class='const'>Hash</span>
+      <span class='id identifier rubyid_params'>params</span> <span class='op'>=</span> <span class='id identifier rubyid_args'>args</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span>
+
+      <span class='comment'># Example use case:
+</span>      <span class='comment'># reg(:name =&gt; :reg2, :enabled_features =&gt; :all)
+</span>      <span class='kw'>if</span> <span class='lparen'>(</span><span class='id identifier rubyid_params'>params</span><span class='period'>.</span><span class='id identifier rubyid_key?'>key?</span><span class='lparen'>(</span><span class='symbol'>:enabled_features</span><span class='rparen'>)</span> <span class='op'>||</span> <span class='id identifier rubyid_params'>params</span><span class='period'>.</span><span class='id identifier rubyid_key?'>key?</span><span class='lparen'>(</span><span class='symbol'>:enabled_feature</span><span class='rparen'>)</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_params'>params</span><span class='period'>.</span><span class='id identifier rubyid_key?'>key?</span><span class='lparen'>(</span><span class='symbol'>:name</span><span class='rparen'>)</span>
+        <span class='id identifier rubyid_name'>name</span> <span class='op'>=</span> <span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:name</span><span class='rbracket'>]</span>
+        <span class='kw'>if</span> <span class='id identifier rubyid_has_reg'>has_reg</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_params'>params</span><span class='rparen'>)</span>
+          <span class='id identifier rubyid__registers'>_registers</span><span class='lbracket'>[</span><span class='id identifier rubyid_name'>name</span><span class='rbracket'>]</span>
+        <span class='kw'>else</span>
+          <span class='id identifier rubyid_reg_missing_error'>reg_missing_error</span><span class='lparen'>(</span><span class='id identifier rubyid_params'>params</span><span class='rparen'>)</span>
+        <span class='kw'>end</span>
+      <span class='comment'># Example use case:
+</span>      <span class='comment'># reg(:enabled_features =&gt;[:fac, fac2])
+</span>      <span class='kw'>elsif</span> <span class='id identifier rubyid_params'>params</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span> <span class='op'>==</span> <span class='int'>1</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_params'>params</span><span class='period'>.</span><span class='id identifier rubyid_key?'>key?</span><span class='lparen'>(</span><span class='symbol'>:enabled_features</span><span class='rparen'>)</span>
+        <span class='kw'>return</span> <span class='id identifier rubyid_get_registers'>get_registers</span><span class='lparen'>(</span><span class='label'>enabled_features:</span> <span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:enabled_features</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+      <span class='kw'>end</span>
+
+    <span class='comment'># Example use case:
+</span>    <span class='comment'># reg(:reg2, :enabled_features =&gt; :all)
+</span>    <span class='comment'># reg(:reg2, :enabled_features =&gt; :default)
+</span>    <span class='comment'># reg(:reg2, :enabled_features =&gt; :fac)
+</span>    <span class='kw'>elsif</span> <span class='op'>!</span><span class='id identifier rubyid_args'>args</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_args'>args</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span> <span class='op'>==</span> <span class='int'>2</span>
+      <span class='id identifier rubyid_name'>name</span> <span class='op'>=</span> <span class='id identifier rubyid_args'>args</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span>
+      <span class='id identifier rubyid_params'>params</span> <span class='op'>=</span> <span class='id identifier rubyid_args'>args</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span>
+      <span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_params'>params</span> <span class='op'>=</span> <span class='id identifier rubyid_params'>params</span><span class='comma'>,</span> <span class='id identifier rubyid_name'>name</span> <span class='kw'>if</span> <span class='id identifier rubyid_name'>name</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span> <span class='op'>==</span> <span class='const'>Hash</span>
+      <span class='kw'>if</span> <span class='id identifier rubyid_has_reg'>has_reg</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_params'>params</span><span class='rparen'>)</span>
+        <span class='id identifier rubyid__registers'>_registers</span><span class='lbracket'>[</span><span class='id identifier rubyid_name'>name</span><span class='rbracket'>]</span>
+      <span class='kw'>else</span>
+        <span class='id identifier rubyid_reg_missing_error'>reg_missing_error</span><span class='lparen'>(</span><span class='id identifier rubyid_params'>params</span><span class='rparen'>)</span>
+      <span class='kw'>end</span>
+    <span class='kw'>elsif</span> <span class='id identifier rubyid_args'>args</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
+      <span class='kw'>if</span> <span class='id identifier rubyid__registers'>_registers</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
+        <span class='kw'>return</span> <span class='id identifier rubyid__registers'>_registers</span>
+      <span class='kw'>else</span>
+        <span class='kw'>return</span> <span class='id identifier rubyid_get_registers'>get_registers</span><span class='lparen'>(</span><span class='label'>enabled_features:</span> <span class='symbol'>:default</span><span class='rparen'>)</span>
+      <span class='kw'>end</span>
+    <span class='kw'>else</span>
+      <span class='kw'>if</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_strict_errors'>strict_errors</span>
+        <span class='id identifier rubyid_fail'>fail</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Invalid call to reg method or invalid arguments specified</span><span class='tstring_end'>&#39;</span></span>
+      <span class='kw'>end</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="reset_registers-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt>) <strong>reset_registers</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Resets all registers</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+451
+452
+453</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 451</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_reset_registers'>reset_registers</span>
+  <span class='id identifier rubyid_regs'>regs</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid__name'>_name</span><span class='comma'>,</span> <span class='id identifier rubyid_reg'>reg</span><span class='op'>|</span> <span class='id identifier rubyid_reg'>reg</span><span class='period'>.</span><span class='id identifier rubyid_reset'>reset</span> <span class='rbrace'>}</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="respond_to?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>respond_to?</strong>(sym) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>:nodoc:</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+37
+38
+39</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 37</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='id identifier rubyid_sym'>sym</span><span class='rparen'>)</span> <span class='comment'># :nodoc:
+</span>  <span class='id identifier rubyid__registers'>_registers</span><span class='period'>.</span><span class='id identifier rubyid_key?'>key?</span><span class='lparen'>(</span><span class='id identifier rubyid_sym'>sym</span><span class='rparen'>)</span> <span class='op'>||</span> <span class='kw'>super</span><span class='lparen'>(</span><span class='id identifier rubyid_sym'>sym</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="write_register_missing!-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt>) <strong>write_register_missing!</strong>(reg) 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+620
+621
+622
+623
+624
+625
+626
+627
+628
+629
+630
+631
+632
+633
+634</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 620</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_write_register_missing!'>write_register_missing!</span><span class='lparen'>(</span><span class='id identifier rubyid_reg'>reg</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span>
+  <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span>
+  <span class='id identifier rubyid_puts'>puts</span> <span class='heredoc_beg'>&lt;&lt;-EOT</span>
+<span class='tstring_content'>You have made a request to write register: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_reg'>reg</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'>, however the </span><span class='embexpr_beg'>#{</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='embexpr_end'>}</span><span class='tstring_content'>
+class does not know how to do this yet. You must implement a write_register
+method in the </span><span class='embexpr_beg'>#{</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='embexpr_end'>}</span><span class='tstring_content'> like this:
+
+  def write_register(reg, options={})
+&lt;logic to handle the writing of the reg object here&gt;
+  end
+</span><span class='heredoc_end'>  EOT
+</span>  <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span>
+  <span class='id identifier rubyid_exit'>exit</span> <span class='int'>1</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+
+    <div id="footer">
+  Generated on Thu Jun 25 11:49:23 2015 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.8.7.6 (ruby-2.1.5).
+</div>
+
+  </body>
+</html>

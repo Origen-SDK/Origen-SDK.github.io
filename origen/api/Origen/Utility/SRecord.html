@@ -1,0 +1,514 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: Origen::Utility::SRecord
+  
+    &mdash; Origen Core 0.0.4
+  
+</title>
+
+  <link rel="stylesheet" href="../../css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="../../css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '../../';
+  framesUrl = "../../frames.html#!Origen/Utility/SRecord.html";
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../../_index.html">Index (S)</a> &raquo;
+    <span class='title'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span> &raquo; <span class='title'><span class='object_link'><a href="../Utility.html" title="Origen::Utility (module)">Utility</a></span></span>
+     &raquo; 
+    <span class="title">SRecord</span>
+  
+
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="../../class_list.html">
+      Class List
+    </a>
+  
+    <a class="full_list_link" id="method_list_link"
+        href="../../method_list.html">
+      Method List
+    </a>
+  
+    <a class="full_list_link" id="file_list_link"
+        href="../../file_list.html">
+      File List
+    </a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+
+    <iframe id="search_frame"></iframe>
+
+    <div id="content"><h1>Class: Origen::Utility::SRecord
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName"><span class='object_link'><a href="../../Object.html" title="Object (class)">Object</a></span></span>
+      
+        <ul class="fullTree">
+          <li><span class='object_link'><a href="../../Object.html" title="Object (class)">Object</a></span></li>
+          
+            <li class="next">Origen::Utility::SRecord</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+  
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">lib/origen/utility/s_record.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>A class to handle the parsing of S-records</p>
+
+<p>An S-record file consists of a sequence of specially formatted ASCII
+character strings. An S-record will be less than or equal to 78 bytes in
+length. The order of S-records within a file is of no significance and no
+particular order may be assumed.</p>
+
+<p>The general format of an S-record follows:</p>
+
+<pre class="code ruby"><code class="ruby">+-------------------//------------------//-----------------------+
+| type | count | address  |            data           | checksum |
++-------------------//------------------//-----------------------+</code></pre>
+
+<p>type – A <a href="2">char</a> field. These characters describe the type of
+record (S0, S1, S2, S3, S5, S7, S8, or S9). count – A <a href="2">char</a>
+field. These characters when paired and interpreted as a hexadecimal value,
+display the count of remaining character pairs in the record.</p>
+
+<p>address – A char[4,6, or 8] field. These characters grouped and interpreted
+as a hexadecimal value, display the address at which the data field is to
+be loaded into memory. The length of the field depends on the number of
+bytes necessary to hold the address. A 2-byte address uses 4 characters, a
+3-byte address uses 6 characters, and a 4-byte address uses 8 characters.</p>
+
+<p>data – A char [0-64] field. These characters when paired and interpreted as
+hexadecimal values represent the memory loadable data or descriptive
+information.</p>
+
+<p>data – A char [0-64] field. These characters when paired and interpreted as
+hexadecimal values represent checksum – A <a href="2">char</a> field. These
+characters when paired and interpreted as a hexadecimal value display the
+least significant byte of the ones complement of the sum of the byte values
+represented by the pairs of characters making up the count, the address,
+and the data fields.</p>
+
+<p>data – A char [0-64] field. These characters when paired and interpreted as
+hexadecimal values represent Each record is terminated with a line feed. If
+any additional or different record terminator(s) or delay characters are
+needed during transmission to the target system it is the responsibility of
+the transmitting program to provide them.</p>
+
+<p>data – A char [0-64] field. These characters when paired and interpreted as
+hexadecimal values represent S0 Record. The type of record is &#39;S0&#39;
+(0x5330). The address field is unused and will be filled with zeros
+(0x0000). The header information within the data field is divided into the
+following subfields.</p>
+<ul><li>
+<p>mname is <a href="20">char</a> and is the module name.</p>
+</li><li>
+<p>ver is <a href="2">char</a> and is the version number.</p>
+</li><li>
+<p>rev is <a href="2">char</a> and is the revision number.</p>
+</li><li>
+<p>description is <a href="0-36">char</a> and is a text comment.</p>
+</li></ul>
+
+<p>Each of the subfields is composed of ASCII bytes whose associated
+characters, when paired, represent one byte hexadecimal values in the case
+of the version and revision numbers, or represent the hexadecimal values of
+the ASCII characters comprising the module name and description.</p>
+
+<p>S1 Record. The type of record field is &#39;S1&#39; (0x5331). The address
+field is intrepreted as a 2-byte address. The data field is composed of
+memory loadable data.</p>
+
+<p>S2 Record. The type of record field is &#39;S2&#39; (0x5332). The address
+field is intrepreted as a 3-byte address. The data field is composed of
+memory loadable data.</p>
+
+<p>S3 Record. The type of record field is &#39;S3&#39; (0x5333). The address
+field is intrepreted as a 4-byte address. The data field is composed of
+memory loadable data.</p>
+
+<p>S5 Record. The type of record field is &#39;S5&#39; (0x5335). The address
+field is intrepreted as a 2-byte value and contains the count of S1, S2,
+and S3 records previously transmitted. There is no data field.</p>
+
+<p>S7 Record. The type of record field is &#39;S7&#39; (0x5337). The address
+field contains the starting execution address and is intrepreted as 4-byte
+address. There is no data field.</p>
+
+<p>S8 Record. The type of record field is &#39;S8&#39; (0x5338). The address
+field contains the starting execution address and is intrepreted as 3-byte
+address. There is no data field.</p>
+
+<p>S9 Record. The type of record field is &#39;S9&#39; (0x5339). The address
+field contains the starting execution address and is intrepreted as 2-byte
+address. There is no data field.</p>
+
+<p>EXAMPLE</p>
+
+<p>Shown below is a typical S-record format file.</p>
+
+<pre class="code ruby"><code class="ruby"><span class='const'>S00600004844521B</span>
+<span class='const'>S1130000285F245F2212226A000424290008237C2A</span>
+<span class='const'>S11300100002000800082629001853812341001813</span>
+<span class='const'>S113002041E900084E42234300182342000824A952</span>
+<span class='const'>S107003000144ED492</span>
+<span class='const'>S5030004F8</span>
+<span class='const'>S9030000FC</span></code></pre>
+
+<p>The file consists of one S0 record, four S1 records, one S5 record and an
+S9 record.</p>
+
+<p>The S0 record is comprised as follows:</p>
+<ul><li>
+<p>S0 S-record type S0, indicating it is a header record.</p>
+</li><li>
+<p>06 Hexadecimal 06 (decimal 6), indicating that six character pairs (or
+ASCII bytes) follow.</p>
+</li><li>
+<p>00 00 Four character 2-byte address field, zeroes in this example.</p>
+</li><li>
+<p>48 44 52 ASCII H, D, and R - “HDR”.</p>
+</li><li>
+<p>1B The checksum.</p>
+</li></ul>
+
+<p>The first S1 record is comprised as follows:</p>
+<ul><li>
+<p>S1 S-record type S1, indicating it is a data record to be loaded at a
+2-byte address.</p>
+</li><li>
+<p>13 Hexadecimal 13 (decimal 19), indicating that nineteen character pairs,
+representing a 2 byte address,</p>
+</li><li>
+<p>16 bytes of binary data, and a 1 byte checksum, follow.</p>
+</li><li>
+<p>00 00 Four character 2-byte address field; hexidecimal address 0x0000,
+where the data which follows is to be loaded.</p>
+</li><li>
+<p>28 5F 24 5F 22 12 22 6A 00 04 24 29 00 08 23 7C Sixteen character pairs
+representing the actual binary data.</p>
+</li><li>
+<p>2A The checksum.</p>
+</li><li>
+<p>The second and third S1 records each contain 0x13 (19) character pairs and
+are ended with checksums of 13 and 52, respectively. The fourth S1 record
+contains 07 character pairs and has a checksum of 92.</p>
+</li></ul>
+
+<p>The S5 record is comprised as follows:</p>
+<ul><li>
+<p>S5 S-record type S5, indicating it is a count record indicating the number
+of S1 records</p>
+</li><li>
+<p>03 Hexadecimal 03 (decimal 3), indicating that three character pairs
+follow.</p>
+</li><li>
+<p>00 04 Hexadecimal 0004 (decimal 4), indicating that there are four data
+records previous to this record.</p>
+</li><li>
+<p>F8 The checksum.</p>
+</li></ul>
+
+<p>The S9 record is comprised as follows:</p>
+<ul><li>
+<p>S9 S-record type S9, indicating it is a termination record.</p>
+</li><li>
+<p>03 Hexadecimal 03 (decimal 3), indicating that three character pairs
+follow.</p>
+</li><li>
+<p>00 00 The address field, hexadecimal 0 (decimal 0) indicating the starting
+execution address.</p>
+</li><li>
+<p>FC The checksum.</p>
+</li></ul>
+<hr>
+
+<p>Instructor Notes</p>
+
+<p>There isn&#39;t any evidence that Motorola ever has made use of the header
+information within the data field of the S0 record, as described above.
+This must have been used by some third party vendors. This is the only
+place that a 78-byte limit on total record length or 64-byte limit on data
+length is documented. These values shouldn&#39;t be trusted for the general
+case. The count field can have values in the range of 0x3 (2 bytes of
+address + 1 byte checksum = 3, a not very useful record) to 0xff; this is
+the count of remaining character pairs, including checksum. If you write
+code to convert S-Records, you should always assume that a record can be as
+long as 514 (decimal) characters in length (255 * 2 = 510, plus 4
+characters for the type and count fields), plus any terminating
+character(s). That is, in establishing an input buffer in C, you would
+declare it to be an array of 515 chars, thus leaving room for the
+terminating null character.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+
+
+
+
+
+
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (SRecord) <strong>initialize</strong>(file) </a>
+    
+
+    
+  </span>
+  
+  
+    <span class="note title constructor">constructor</span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Supply a path to the S-record file, this should be a relative path from the
+top level of your project workspace (Origen.root).</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#parse-instance_method" title="#parse (instance method)">- (Object) <strong>parse</strong>(options = {}) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Parses the S-record and returns either an array of address and data values
+like this: * [addr, data, addr, data, addr, data] Or if a block is supplied
+it will pass back a single address and a single data value in turn.</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+<div id="constructor_details" class="method_details_list">
+  <h2>Constructor Details</h2>
+  
+    <div class="method_details first">
+  <h3 class="signature first" id="initialize-instance_method">
+  
+    - (<tt><span class='object_link'><a href="" title="Origen::Utility::SRecord (class)">SRecord</a></span></tt>) <strong>initialize</strong>(file) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Supply a path to the S-record file, this should be a relative path from the
+top level of your project workspace (Origen.root)</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+137
+138
+139</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/utility/s_record.rb', line 137</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_file'>file</span><span class='rparen'>)</span>
+  <span class='ivar'>@file</span> <span class='op'>=</span> <span class='id identifier rubyid_file'>file</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+  
+</div>
+
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="parse-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../../Object.html" title="Object (class)">Object</a></span></tt>) <strong>parse</strong>(options = {}) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Parses the S-record and returns either an array of address and data values
+like this:</p>
+<ul><li>
+<p>[addr, data, addr, data, addr, data]</p>
+</li></ul>
+
+<p>Or if a block is supplied it will pass back a single address and a single
+data value in turn.</p>
+
+<h4 id="label-Options">Options</h4>
+<ul><li>
+<p>:data_width_in_bytes - By default the returned data items will be 1 byte
+wide, set</p>
+</li></ul>
+
+<p>this option to have it parsed and passed back in N byte wide packets</p>
+
+<h4 id="label-Example">Example</h4>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_srec'>srec</span> <span class='op'>=</span> <span class='const'>SRecord</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>srecs/test_atd.abs.S19</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+<span class='gvar'>$top</span><span class='period'>.</span><span class='id identifier rubyid_write_addr_data'>write_addr_data</span><span class='lparen'>(</span><span class='id identifier rubyid_srec'>srec</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='rparen'>)</span>   <span class='comment'># Let write_addr_data handle the processing
+</span><span class='comment'># As above but pass the data to the top block in 16-bit packets
+</span><span class='gvar'>$top</span><span class='period'>.</span><span class='id identifier rubyid_write_addr_data'>write_addr_data</span><span class='lparen'>(</span><span class='id identifier rubyid_srec'>srec</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='symbol'>:data_width_in_bytes</span> <span class='op'>=&gt;</span> <span class='int'>2</span><span class='rparen'>)</span><span class='rparen'>)</span>
+
+<span class='comment'># Handle the processing from here...
+</span><span class='id identifier rubyid_srec'>srec</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_addr'>addr</span><span class='comma'>,</span><span class='id identifier rubyid_data'>data</span><span class='op'>|</span>
+    <span class='gvar'>$top</span><span class='period'>.</span><span class='id identifier rubyid_write'>write</span><span class='lparen'>(</span><span class='id identifier rubyid_addr'>addr</span><span class='comma'>,</span> <span class='id identifier rubyid_data'>data</span><span class='rparen'>)</span>
+<span class='kw'>end</span>
+</code></pre>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/utility/s_record.rb', line 158</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_addr_data'>addr_data</span> <span class='op'>=</span> <span class='id identifier rubyid_extract_addr_data'>extract_addr_data</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_block_given?'>block_given?</span>
+    <span class='id identifier rubyid_addr_data'>addr_data</span><span class='period'>.</span><span class='id identifier rubyid_each_slice'>each_slice</span><span class='lparen'>(</span><span class='int'>2</span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_pair'>pair</span><span class='op'>|</span>
+      <span class='kw'>yield</span> <span class='id identifier rubyid_pair'>pair</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_pair'>pair</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span>
+    <span class='kw'>end</span>
+  <span class='kw'>else</span>
+    <span class='id identifier rubyid_addr_data'>addr_data</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+
+    <div id="footer">
+  Generated on Thu Jun 25 11:49:33 2015 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.8.7.6 (ruby-2.1.5).
+</div>
+
+  </body>
+</html>
