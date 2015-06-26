@@ -1,0 +1,1967 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <title>Origen Documentation Helpers</title>
+        
+    
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="http://origen-sdk.org/css/bootstrap_custom.css"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <link rel="shortcut icon" href="http://rgen.freescale.net/favicon.ico"/>
+    <link rel="icon" type="image/ico" href="http://rgen.freescale.net/favicon.ico"/>
+  </head>
+
+  <body>
+    
+      <div class="container">
+        <nav class="navbar navbar-inverse navbar-fixed-top"><div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/doc_helpers/">Home</a>
+    </div>
+    <div id="navbar" class="collapse navbar-collapse">
+      <ul class="nav navbar-nav">
+<li class="active"><a href="/doc_helpers/examples">Examples</a></li>
+        <li class=""><a href="/doc_helpers/release_notes">Release Notes</a></li>
+        <li><a href="https://github.com/Origen-SDK/origen_doc_helpers">Github</a></li>
+      </ul>
+<div class="pull-right logo-rgen" style="margin-top: 18px; margin-left: 10px">
+  <a href="http://origen-sdk.org" style="text-decoration: none; color: #e66a08; font-weight: bold; font-size: 20px;">
+  <span>Origen</span>
+  </a>
+</div>
+<div class="pull-right">
+  <a href="http://origen-sdk.org">
+    <img src="http://rgen.freescale.net/img/fsl_logo.png" style="height:40px"></a>
+</div>
+
+    </div>
+<!--/.nav-collapse -->
+  </div>
+</nav><div class="row">
+  <div class="span12">
+
+    <h1 id="register-helpers">Register Helpers</h1>
+
+    <p>Use the <a href="http://origen-sdk.org/origen/guides/models/registers">Origen register API</a>
+to define registers in the normal way,
+all of the examples are here are based on this register definition:</p>
+
+    <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#777"># **The Long Name of the Reg**</span>
+<span style="color:#777">#</span>
+<span style="color:#777"># The MCLKDIV register is used to divide down the frequency of the HBOSCCLK input. If the MCLKDIV</span>
+<span style="color:#777"># register is set to value "N", then the output (beat) frequency of the clock divider is OSCCLK / (N+1). The</span>
+<span style="color:#777"># resulting beats are, in turn, counted by the PTIMER module to control the duration of Flash high-voltage</span>
+<span style="color:#777"># operations.</span>
+<span style="color:#777">#</span>
+<span style="color:#777"># This is just a test that paragraphs work.</span>
+add_reg <span style="color:#A60">:mclkdiv</span>, <span style="color:#00D">0x0003</span>, <span style="color:#A60">:size</span> =&gt; <span style="color:#00D">16</span> <span style="color:#080;font-weight:bold">do</span>
+  <span style="color:#777"># **Oscillator (Hi)** - Firmware FMU clock source selection. (Note that in addition to this firmware-controlled bit, the</span>
+  <span style="color:#777"># FMU clock source is also dependent on test and power control discretes).</span>
+  <span style="color:#777">#</span>
+  <span style="color:#777"># 0 | FMU clock is the externally supplied bus clock ipg_clk</span>
+  <span style="color:#777"># 1 | FMU clock is the internal oscillator from the TFS hardblock</span>
+  bit <span style="color:#00D">15</span>, <span style="color:#A60">:osch</span>, <span style="color:#A60">:reset</span> =&gt; <span style="color:#00D">1</span>
+  <span style="color:#777"># **Mode Ready** - A Synchronized version of the *ftf_mode_ready[1:0]* output from the flash analog hard block.</span>
+  <span style="color:#777"># See the TFL3 Hard Block Creation Guide for more details.</span>
+  <span style="color:#777">#</span>
+  <span style="color:#777"># 0 | Analog voltages have not reached target levels for the specified mode of operation</span>
+  <span style="color:#777"># 1 | Analog voltages have reached target levels for the specified mode of operation</span>
+  bit <span style="color:#00D">13</span>..<span style="color:#00D">12</span>, <span style="color:#A60">:mode_rdy</span>, <span style="color:#A60">:writable</span> =&gt; <span style="color:#069">false</span>
+  <span style="color:#777"># **IFR and FW ECC Enable for LDM** - On / off control for UIFR, RIFR, and FW when reading with the MGATE's</span>
+  <span style="color:#777"># Load Memory (LDM) instruction. The setting of this bit only makes a difference when reading with LDM, all other</span>
+  <span style="color:#777"># MGATE reads from UIFR/RIFR will always have ECC disabled and reads from FW will have ECC enabled.</span>
+  <span style="color:#777">#</span>
+  <span style="color:#777"># 0 | ECC is disabled for UIFR, RIFR, and FW reads when using the LDM instruction</span>
+  <span style="color:#777"># 1 | ECC is enabled for all UIFR, RIFR, and FW reads when using the LDM instruction</span>
+  bit <span style="color:#00D">10</span>, <span style="color:#A60">:eccen</span>, <span style="color:#A60">:reset</span> =&gt; <span style="color:#00D">1</span>
+  <span style="color:#777"># **MGATE Command Location Code** - A 2-bit code that tells the MGATE where to go for its instruction fetches</span>
+  <span style="color:#777"># (location of command definitions). These bits are used to form different MGATE command request IDs from a</span>
+  <span style="color:#777"># falling CCIF, one request ID for each of the possible locations of the MGATE executable. If this field is changed,</span>
+  <span style="color:#777"># all subsequent command launches (falling CCIF) will execute from the new area. Note that the MGATE also has</span>
+  <span style="color:#777"># a reset request ID. The reset request ID always targets the Boot Code and is unaffected by the CMDLOC setting.</span>
+  <span style="color:#777">#</span>
+  <span style="color:#777"># 00 | Execute from the Beginning of the MGRAM + 256B (the normal location)</span>
+  <span style="color:#777"># 01 | Execute from the Beginning of the MGRAM</span>
+  <span style="color:#777"># 10 | Execute from the Stack start at the end of MGRAM</span>
+  <span style="color:#777"># 11 | Reserved</span>
+  bit <span style="color:#00D">9</span>..<span style="color:#00D">7</span>, <span style="color:#A60">:cmdloc</span>, <span style="color:#A60">:reset</span> =&gt; <span style="color:#A60">:undefined</span>
+  <span style="color:#777"># **Clock Divider Bits** - DIV[7:0] must be set to effectively divide HBOSCCLK down to a known beat frequency</span>
+  <span style="color:#777"># having acceptable resolution and dynamic range for timing high-voltage operations on the Flash hardblocks</span>
+  <span style="color:#777"># during algorithms with timed events. Table 1-50 shows the range of timed events (i.e. pulse widths) that can be</span>
+  <span style="color:#777"># achieved with 8-bit and 16-bit PTIMER loads for various input clock frequencies and clock divider settings.</span>
+  bit <span style="color:#00D">6</span>..<span style="color:#00D">2</span>, <span style="color:#A60">:div</span>, <span style="color:#A60">:reset</span> =&gt; <span style="color:#A60">:memory</span>
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+    </div>
+
+    <div>    
+  <a class="anchor" name="Basic_Register_Diagram"></a>          
+  <h3><a href="#Basic_Register_Diagram">Basic Register Diagram</a></h3>          
+</div>
+
+    <div class="register">
+<a class="anchor" name="mclkdiv"></a>
+
+<a href="#mclkdiv">
+<div>    
+  <a class="anchor" name="0x3_-_The_Long_Name_of_the_Reg_(mclkdiv)"></a>          
+  <h4><a href="#0x3_-_The_Long_Name_of_the_Reg_(mclkdiv)">0x3 - The Long Name of the Reg (mclkdiv)</a></h4>          
+</div>
+</a>
+
+
+
+<table class="reg table table-condensed" style="margin-bottom: 0; table-layout: fixed;">
+<thead><tr class="bit-positions">
+<th class="spacer"></th>
+      <th class="bit-position">15</th>
+      <th class="bit-position">14</th>
+      <th class="bit-position">13</th>
+      <th class="bit-position">12</th>
+      <th class="bit-position">11</th>
+      <th class="bit-position">10</th>
+      <th class="bit-position">9</th>
+      <th class="bit-position">8</th>
+    </tr></thead>
+<tbody>
+<tr class="read">
+<td class="heading">R</td>
+      <td class="readable writable"><span>osch</span></td>
+      <td>0</td> 
+      <td class="readable not-writable" colspan="2">
+         <span>mode_rdy[1:0]</span>
+      </td>
+      <td>0</td> 
+      <td class="readable writable"><span>eccen</span></td>
+      <td class="readable writable" colspan="2">
+         <span>cmdloc[2:0]</span>
+      </td>
+    </tr>
+<tr class="write">
+<td class="heading">W</td>
+      <td class="readable writable"></td>
+      <td class="not-writable"></td> 
+      <td class="readable not-writable" colspan="2"></td>
+      <td class="not-writable"></td> 
+      <td class="readable writable"></td>
+      <td class="readable writable" colspan="2"></td>
+    </tr>
+<tr class="reset">
+<td class="heading">Reset</td>
+        <td>1</td>
+        <td>0</td>
+          <td colspan="2">0</td>
+        <td>0</td>
+        <td>1</td>
+          <td colspan="2">X</td>
+    </tr>
+</tbody>
+</table>
+<table class="reg table table-condensed" style="margin-bottom: 0; table-layout: fixed;">
+<thead><tr class="bit-positions">
+<th class="spacer"></th>
+      <th class="bit-position">7</th>
+      <th class="bit-position">6</th>
+      <th class="bit-position">5</th>
+      <th class="bit-position">4</th>
+      <th class="bit-position">3</th>
+      <th class="bit-position">2</th>
+      <th class="bit-position">1</th>
+      <th class="bit-position">0</th>
+    </tr></thead>
+<tbody>
+<tr class="read">
+<td class="heading">R</td>
+      <td class="readable writable" colspan="1">
+         <span>cmdloc[2:0]</span>
+      </td>
+      <td class="readable writable" colspan="5">
+         <span>div[4:0]</span>
+      </td>
+      <td>0</td> 
+      <td>0</td> 
+    </tr>
+<tr class="write">
+<td class="heading">W</td>
+      <td class="readable writable" colspan="1"></td>
+      <td class="readable writable" colspan="5"></td>
+      <td class="not-writable"></td> 
+      <td class="not-writable"></td> 
+    </tr>
+<tr class="reset">
+<td class="heading">Reset</td>
+          <td colspan="1">X</td>
+          <td colspan="5">M</td>
+      <td></td> 
+      <td></td> 
+    </tr>
+</tbody>
+</table>
+</div>
+
+    <p>Here is an example of how to insert a basic register diagram in
+a document:</p>
+
+    <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>## Register Map
+
+% $dut.regs.each do |name, reg|
+
+<span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> render <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">doc_helpers/register.html</span><span style="color:#710">"</span></span>, <span style="color:#606">reg</span>: reg, <span style="color:#606">preserve_target</span>: <span style="color:#069">true</span> <span style="font-weight:bold;color:#666">%&gt;</span></span>
+
+% end
+</pre></div>
+</div>
+    </div>
+
+    <div>    
+  <a class="anchor" name="Register_Diagram_with_Descriptions"></a>          
+  <h3><a href="#Register_Diagram_with_Descriptions">Register Diagram with Descriptions</a></h3>          
+</div>
+
+    <div class="register">
+<a class="anchor" name="mclkdiv"></a>
+
+<a href="#mclkdiv">
+<div>    
+  <a class="anchor" name="0x3_-_The_Long_Name_of_the_Reg_(mclkdiv)"></a>          
+  <h4><a href="#0x3_-_The_Long_Name_of_the_Reg_(mclkdiv)">0x3 - The Long Name of the Reg (mclkdiv)</a></h4>          
+</div>
+</a>
+
+<div style="margin: 0 0 20px 0">
+
+        <p>The MCLKDIV register is used to divide down the frequency of the HBOSCCLK input. If the MCLKDIV
+register is set to value “N”, then the output (beat) frequency of the clock divider is OSCCLK / (N+1). The
+resulting beats are, in turn, counted by the PTIMER module to control the duration of Flash high-voltage
+operations.</p>
+
+        <p>This is just a test that paragraphs work.</p>
+
+      </div>
+
+
+<table class="reg table table-condensed" style="margin-bottom: 0; table-layout: fixed;">
+<thead><tr class="bit-positions">
+<th class="spacer"></th>
+      <th class="bit-position">15</th>
+      <th class="bit-position">14</th>
+      <th class="bit-position">13</th>
+      <th class="bit-position">12</th>
+      <th class="bit-position">11</th>
+      <th class="bit-position">10</th>
+      <th class="bit-position">9</th>
+      <th class="bit-position">8</th>
+    </tr></thead>
+<tbody>
+<tr class="read">
+<td class="heading">R</td>
+      <td class="readable writable"><span>osch</span></td>
+      <td>0</td> 
+      <td class="readable not-writable" colspan="2">
+         <span>mode_rdy[1:0]</span>
+      </td>
+      <td>0</td> 
+      <td class="readable writable"><span>eccen</span></td>
+      <td class="readable writable" colspan="2">
+         <span>cmdloc[2:0]</span>
+      </td>
+    </tr>
+<tr class="write">
+<td class="heading">W</td>
+      <td class="readable writable"></td>
+      <td class="not-writable"></td> 
+      <td class="readable not-writable" colspan="2"></td>
+      <td class="not-writable"></td> 
+      <td class="readable writable"></td>
+      <td class="readable writable" colspan="2"></td>
+    </tr>
+<tr class="reset">
+<td class="heading">Reset</td>
+        <td>1</td>
+        <td>0</td>
+          <td colspan="2">0</td>
+        <td>0</td>
+        <td>1</td>
+          <td colspan="2">X</td>
+    </tr>
+</tbody>
+</table>
+<table class="reg table table-condensed" style="margin-bottom: 0; table-layout: fixed;">
+<thead><tr class="bit-positions">
+<th class="spacer"></th>
+      <th class="bit-position">7</th>
+      <th class="bit-position">6</th>
+      <th class="bit-position">5</th>
+      <th class="bit-position">4</th>
+      <th class="bit-position">3</th>
+      <th class="bit-position">2</th>
+      <th class="bit-position">1</th>
+      <th class="bit-position">0</th>
+    </tr></thead>
+<tbody>
+<tr class="read">
+<td class="heading">R</td>
+      <td class="readable writable" colspan="1">
+         <span>cmdloc[2:0]</span>
+      </td>
+      <td class="readable writable" colspan="5">
+         <span>div[4:0]</span>
+      </td>
+      <td>0</td> 
+      <td>0</td> 
+    </tr>
+<tr class="write">
+<td class="heading">W</td>
+      <td class="readable writable" colspan="1"></td>
+      <td class="readable writable" colspan="5"></td>
+      <td class="not-writable"></td> 
+      <td class="not-writable"></td> 
+    </tr>
+<tr class="reset">
+<td class="heading">Reset</td>
+          <td colspan="1">X</td>
+          <td colspan="5">M</td>
+      <td></td> 
+      <td></td> 
+    </tr>
+</tbody>
+</table>
+<table class="bit-descriptions table table-condensed table-bordered" style="margin: 20px 0 0 0">
+<thead><tr>
+<th>Bit</th>
+      <th>Description</th>
+    </tr></thead>
+<tbody>
+<tr>
+<td>
+        <p>
+          15
+        </p>
+        <p>
+          osch
+        </p>
+      </td>
+<td>
+
+              <p><strong>Oscillator (Hi)</strong> - Firmware FMU clock source selection. (Note that in addition to this firmware-controlled bit, the
+FMU clock source is also dependent on test and power control discretes).</p>
+
+              <table class="table"><tbody>
+<tr>
+<td>0</td>
+                    <td>FMU clock is the externally supplied bus clock ipg_clk</td>
+                  </tr>
+<tr>
+<td>1</td>
+                    <td>FMU clock is the internal oscillator from the TFS hardblock</td>
+                  </tr>
+</tbody></table>
+</td>
+    </tr>
+<tr>
+<td>
+        <p>
+          13-12
+        </p>
+        <p>
+          mode_rdy[1:0]
+        </p>
+      </td>
+<td>
+
+              <p><strong>Mode Ready</strong> - A Synchronized version of the <em>ftf_mode_ready[1:0]</em> output from the flash analog hard block.
+See the TFL3 Hard Block Creation Guide for more details.</p>
+
+              <table class="table"><tbody>
+<tr>
+<td>0</td>
+                    <td>Analog voltages have not reached target levels for the specified mode of operation</td>
+                  </tr>
+<tr>
+<td>1</td>
+                    <td>Analog voltages have reached target levels for the specified mode of operation</td>
+                  </tr>
+</tbody></table>
+</td>
+    </tr>
+<tr>
+<td>
+        <p>
+          10
+        </p>
+        <p>
+          eccen
+        </p>
+      </td>
+<td>
+
+              <p><strong>IFR and FW ECC Enable for LDM</strong> - On / off control for UIFR, RIFR, and FW when reading with the MGATE’s
+Load Memory (LDM) instruction. The setting of this bit only makes a difference when reading with LDM, all other
+MGATE reads from UIFR/RIFR will always have ECC disabled and reads from FW will have ECC enabled.</p>
+
+              <table class="table"><tbody>
+<tr>
+<td>0</td>
+                    <td>ECC is disabled for UIFR, RIFR, and FW reads when using the LDM instruction</td>
+                  </tr>
+<tr>
+<td>1</td>
+                    <td>ECC is enabled for all UIFR, RIFR, and FW reads when using the LDM instruction</td>
+                  </tr>
+</tbody></table>
+</td>
+    </tr>
+<tr>
+<td>
+        <p>
+          9-7
+        </p>
+        <p>
+          cmdloc[2:0]
+        </p>
+      </td>
+<td>
+
+              <p><strong>MGATE Command Location Code</strong> - A 2-bit code that tells the MGATE where to go for its instruction fetches
+(location of command definitions). These bits are used to form different MGATE command request IDs from a
+falling CCIF, one request ID for each of the possible locations of the MGATE executable. If this field is changed,
+all subsequent command launches (falling CCIF) will execute from the new area. Note that the MGATE also has
+a reset request ID. The reset request ID always targets the Boot Code and is unaffected by the CMDLOC setting.</p>
+
+              <table class="table"><tbody>
+<tr>
+<td>00</td>
+                    <td>Execute from the Beginning of the MGRAM + 256B (the normal location)</td>
+                  </tr>
+<tr>
+<td>01</td>
+                    <td>Execute from the Beginning of the MGRAM</td>
+                  </tr>
+<tr>
+<td>10</td>
+                    <td>Execute from the Stack start at the end of MGRAM</td>
+                  </tr>
+<tr>
+<td>11</td>
+                    <td>Reserved</td>
+                  </tr>
+</tbody></table>
+</td>
+    </tr>
+<tr>
+<td>
+        <p>
+          6-2
+        </p>
+        <p>
+          div[4:0]
+        </p>
+      </td>
+<td>
+
+              <p><strong>Clock Divider Bits</strong> - DIV[7:0] must be set to effectively divide HBOSCCLK down to a known beat frequency
+having acceptable resolution and dynamic range for timing high-voltage operations on the Flash hardblocks
+during algorithms with timed events. Table 1-50 shows the range of timed events (i.e. pulse widths) that can be
+achieved with 8-bit and 16-bit PTIMER loads for various input clock frequencies and clock divider settings.</p>
+
+            </td>
+    </tr>
+</tbody>
+</table>
+</div>
+
+    <p>Set the <code>:descriptions</code> switch to true to include the register and
+bit descriptions:</p>
+
+    <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>## Register Map
+
+% $dut.regs.each do |name, reg|
+
+<span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> render <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">doc_helpers/register.html</span><span style="color:#710">"</span></span>, <span style="color:#606">reg</span>: reg, <span style="color:#606">preserve_target</span>: <span style="color:#069">true</span>, <span style="color:#606">descriptions</span>: <span style="color:#069">true</span> <span style="font-weight:bold;color:#666">%&gt;</span></span>
+
+% end
+</pre></div>
+</div>
+    </div>
+
+    <div>    
+  <a class="anchor" name="Additional_Test_Cases"></a>          
+  <h3><a href="#Additional_Test_Cases">Additional Test Cases</a></h3>          
+</div>
+
+    <div class="register">
+<a class="anchor" name="proth"></a>
+
+<a href="#proth">
+<div>    
+  <a class="anchor" name="0x24_-_Protection_High_(proth)"></a>          
+  <h4><a href="#0x24_-_Protection_High_(proth)">0x24 - Protection High (proth)</a></h4>          
+</div>
+</a>
+
+
+
+<table class="reg table table-condensed" style="margin-bottom: 0; table-layout: fixed;">
+<thead><tr class="bit-positions">
+<th class="spacer"></th>
+      <th class="bit-position">31</th>
+      <th class="bit-position">30</th>
+      <th class="bit-position">29</th>
+      <th class="bit-position">28</th>
+      <th class="bit-position">27</th>
+      <th class="bit-position">26</th>
+      <th class="bit-position">25</th>
+      <th class="bit-position">24</th>
+    </tr></thead>
+<tbody>
+<tr class="read">
+<td class="heading">R</td>
+      <td class="readable writable" colspan="8">
+         <span>fprot7[7:0]</span>
+      </td>
+    </tr>
+<tr class="write">
+<td class="heading">W</td>
+      <td class="readable writable" colspan="8"></td>
+    </tr>
+<tr class="reset">
+<td class="heading">Reset</td>
+          <td colspan="8">FF</td>
+    </tr>
+</tbody>
+</table>
+<table class="reg table table-condensed" style="margin-bottom: 0; table-layout: fixed;">
+<thead><tr class="bit-positions">
+<th class="spacer"></th>
+      <th class="bit-position">23</th>
+      <th class="bit-position">22</th>
+      <th class="bit-position">21</th>
+      <th class="bit-position">20</th>
+      <th class="bit-position">19</th>
+      <th class="bit-position">18</th>
+      <th class="bit-position">17</th>
+      <th class="bit-position">16</th>
+    </tr></thead>
+<tbody>
+<tr class="read">
+<td class="heading">R</td>
+      <td class="readable writable" colspan="8">
+         <span>fprot6[7:0]</span>
+      </td>
+    </tr>
+<tr class="write">
+<td class="heading">W</td>
+      <td class="readable writable" colspan="8"></td>
+    </tr>
+<tr class="reset">
+<td class="heading">Reset</td>
+          <td colspan="8">EE</td>
+    </tr>
+</tbody>
+</table>
+<table class="reg table table-condensed" style="margin-bottom: 0; table-layout: fixed;">
+<thead><tr class="bit-positions">
+<th class="spacer"></th>
+      <th class="bit-position">15</th>
+      <th class="bit-position">14</th>
+      <th class="bit-position">13</th>
+      <th class="bit-position">12</th>
+      <th class="bit-position">11</th>
+      <th class="bit-position">10</th>
+      <th class="bit-position">9</th>
+      <th class="bit-position">8</th>
+    </tr></thead>
+<tbody>
+<tr class="read">
+<td class="heading">R</td>
+      <td class="readable writable" colspan="8">
+         <span>fprot5[7:0]</span>
+      </td>
+    </tr>
+<tr class="write">
+<td class="heading">W</td>
+      <td class="readable writable" colspan="8"></td>
+    </tr>
+<tr class="reset">
+<td class="heading">Reset</td>
+          <td colspan="8">DD</td>
+    </tr>
+</tbody>
+</table>
+<table class="reg table table-condensed" style="margin-bottom: 0; table-layout: fixed;">
+<thead><tr class="bit-positions">
+<th class="spacer"></th>
+      <th class="bit-position">7</th>
+      <th class="bit-position">6</th>
+      <th class="bit-position">5</th>
+      <th class="bit-position">4</th>
+      <th class="bit-position">3</th>
+      <th class="bit-position">2</th>
+      <th class="bit-position">1</th>
+      <th class="bit-position">0</th>
+    </tr></thead>
+<tbody>
+<tr class="read">
+<td class="heading">R</td>
+      <td class="readable writable" colspan="8">
+         <span>fprot4[7:0]</span>
+      </td>
+    </tr>
+<tr class="write">
+<td class="heading">W</td>
+      <td class="readable writable" colspan="8"></td>
+    </tr>
+<tr class="reset">
+<td class="heading">Reset</td>
+          <td colspan="8">11</td>
+    </tr>
+</tbody>
+</table>
+</div>
+
+    <div class="register">
+<a class="anchor" name="protl"></a>
+
+<a href="#protl">
+<div>    
+  <a class="anchor" name="0x28_-_Protection_Low_(protl)"></a>          
+  <h4><a href="#0x28_-_Protection_Low_(protl)">0x28 - Protection Low (protl)</a></h4>          
+</div>
+</a>
+
+
+
+<table class="reg table table-condensed" style="margin-bottom: 0; table-layout: fixed;">
+<thead><tr class="bit-positions">
+<th class="spacer"></th>
+      <th class="bit-position">31</th>
+      <th class="bit-position">30</th>
+      <th class="bit-position">29</th>
+      <th class="bit-position">28</th>
+      <th class="bit-position">27</th>
+      <th class="bit-position">26</th>
+      <th class="bit-position">25</th>
+      <th class="bit-position">24</th>
+    </tr></thead>
+<tbody>
+<tr class="read">
+<td class="heading">R</td>
+      <td class="readable writable" colspan="8">
+         <span>fprot3[7:0]</span>
+      </td>
+    </tr>
+<tr class="write">
+<td class="heading">W</td>
+      <td class="readable writable" colspan="8"></td>
+    </tr>
+<tr class="reset">
+<td class="heading">Reset</td>
+          <td colspan="8">M</td>
+    </tr>
+</tbody>
+</table>
+<table class="reg table table-condensed" style="margin-bottom: 0; table-layout: fixed;">
+<thead><tr class="bit-positions">
+<th class="spacer"></th>
+      <th class="bit-position">23</th>
+      <th class="bit-position">22</th>
+      <th class="bit-position">21</th>
+      <th class="bit-position">20</th>
+      <th class="bit-position">19</th>
+      <th class="bit-position">18</th>
+      <th class="bit-position">17</th>
+      <th class="bit-position">16</th>
+    </tr></thead>
+<tbody>
+<tr class="read">
+<td class="heading">R</td>
+      <td class="readable writable" colspan="8">
+         <span>fprot2[7:0]</span>
+      </td>
+    </tr>
+<tr class="write">
+<td class="heading">W</td>
+      <td class="readable writable" colspan="8"></td>
+    </tr>
+<tr class="reset">
+<td class="heading">Reset</td>
+          <td colspan="8">M</td>
+    </tr>
+</tbody>
+</table>
+<table class="reg table table-condensed" style="margin-bottom: 0; table-layout: fixed;">
+<thead><tr class="bit-positions">
+<th class="spacer"></th>
+      <th class="bit-position">15</th>
+      <th class="bit-position">14</th>
+      <th class="bit-position">13</th>
+      <th class="bit-position">12</th>
+      <th class="bit-position">11</th>
+      <th class="bit-position">10</th>
+      <th class="bit-position">9</th>
+      <th class="bit-position">8</th>
+    </tr></thead>
+<tbody>
+<tr class="read">
+<td class="heading">R</td>
+      <td class="readable writable" colspan="8">
+         <span>fprot1[7:0]</span>
+      </td>
+    </tr>
+<tr class="write">
+<td class="heading">W</td>
+      <td class="readable writable" colspan="8"></td>
+    </tr>
+<tr class="reset">
+<td class="heading">Reset</td>
+          <td colspan="8">M</td>
+    </tr>
+</tbody>
+</table>
+<table class="reg table table-condensed" style="margin-bottom: 0; table-layout: fixed;">
+<thead><tr class="bit-positions">
+<th class="spacer"></th>
+      <th class="bit-position">7</th>
+      <th class="bit-position">6</th>
+      <th class="bit-position">5</th>
+      <th class="bit-position">4</th>
+      <th class="bit-position">3</th>
+      <th class="bit-position">2</th>
+      <th class="bit-position">1</th>
+      <th class="bit-position">0</th>
+    </tr></thead>
+<tbody>
+<tr class="read">
+<td class="heading">R</td>
+      <td class="readable writable" colspan="8">
+         <span>fprot0[7:0]</span>
+      </td>
+    </tr>
+<tr class="write">
+<td class="heading">W</td>
+      <td class="readable writable" colspan="8"></td>
+    </tr>
+<tr class="reset">
+<td class="heading">Reset</td>
+          <td colspan="8">M</td>
+    </tr>
+</tbody>
+</table>
+</div>
+
+    <div class="register">
+<a class="anchor" name="debug_18"></a>
+
+<a href="#debug_18">
+<div>    
+  <a class="anchor" name="0xF44_-_debug_18"></a>          
+  <h4><a href="#0xF44_-_debug_18">0xF44 - debug_18</a></h4>          
+</div>
+</a>
+
+<div style="margin: 0 0 20px 0">
+
+      </div>
+
+
+<table class="reg table table-condensed" style="margin-bottom: 0; table-layout: fixed;">
+<thead><tr class="bit-positions">
+<th class="spacer"></th>
+      <th class="bit-position">31</th>
+      <th class="bit-position">30</th>
+      <th class="bit-position">29</th>
+      <th class="bit-position">28</th>
+      <th class="bit-position">27</th>
+      <th class="bit-position">26</th>
+      <th class="bit-position">25</th>
+      <th class="bit-position">24</th>
+    </tr></thead>
+<tbody>
+<tr class="read">
+<td class="heading">R</td>
+      <td class="readable writable" colspan="8">
+         <span>placeholder[31:0]</span>
+      </td>
+    </tr>
+<tr class="write">
+<td class="heading">W</td>
+      <td class="readable writable" colspan="8"></td>
+    </tr>
+<tr class="reset">
+<td class="heading">Reset</td>
+          <td colspan="8">0</td>
+    </tr>
+</tbody>
+</table>
+<table class="reg table table-condensed" style="margin-bottom: 0; table-layout: fixed;">
+<thead><tr class="bit-positions">
+<th class="spacer"></th>
+      <th class="bit-position">23</th>
+      <th class="bit-position">22</th>
+      <th class="bit-position">21</th>
+      <th class="bit-position">20</th>
+      <th class="bit-position">19</th>
+      <th class="bit-position">18</th>
+      <th class="bit-position">17</th>
+      <th class="bit-position">16</th>
+    </tr></thead>
+<tbody>
+<tr class="read">
+<td class="heading">R</td>
+      <td class="readable writable" colspan="8">
+         <span>placeholder[31:0]</span>
+      </td>
+    </tr>
+<tr class="write">
+<td class="heading">W</td>
+      <td class="readable writable" colspan="8"></td>
+    </tr>
+<tr class="reset">
+<td class="heading">Reset</td>
+          <td colspan="8">0</td>
+    </tr>
+</tbody>
+</table>
+<table class="reg table table-condensed" style="margin-bottom: 0; table-layout: fixed;">
+<thead><tr class="bit-positions">
+<th class="spacer"></th>
+      <th class="bit-position">15</th>
+      <th class="bit-position">14</th>
+      <th class="bit-position">13</th>
+      <th class="bit-position">12</th>
+      <th class="bit-position">11</th>
+      <th class="bit-position">10</th>
+      <th class="bit-position">9</th>
+      <th class="bit-position">8</th>
+    </tr></thead>
+<tbody>
+<tr class="read">
+<td class="heading">R</td>
+      <td class="readable writable" colspan="8">
+         <span>placeholder[31:0]</span>
+      </td>
+    </tr>
+<tr class="write">
+<td class="heading">W</td>
+      <td class="readable writable" colspan="8"></td>
+    </tr>
+<tr class="reset">
+<td class="heading">Reset</td>
+          <td colspan="8">0</td>
+    </tr>
+</tbody>
+</table>
+<table class="reg table table-condensed" style="margin-bottom: 0; table-layout: fixed;">
+<thead><tr class="bit-positions">
+<th class="spacer"></th>
+      <th class="bit-position">7</th>
+      <th class="bit-position">6</th>
+      <th class="bit-position">5</th>
+      <th class="bit-position">4</th>
+      <th class="bit-position">3</th>
+      <th class="bit-position">2</th>
+      <th class="bit-position">1</th>
+      <th class="bit-position">0</th>
+    </tr></thead>
+<tbody>
+<tr class="read">
+<td class="heading">R</td>
+      <td class="readable writable" colspan="8">
+         <span>placeholder[31:0]</span>
+      </td>
+    </tr>
+<tr class="write">
+<td class="heading">W</td>
+      <td class="readable writable" colspan="8"></td>
+    </tr>
+<tr class="reset">
+<td class="heading">Reset</td>
+          <td colspan="8">0</td>
+    </tr>
+</tbody>
+</table>
+<table class="bit-descriptions table table-condensed table-bordered" style="margin: 20px 0 0 0">
+<thead><tr>
+<th>Bit</th>
+      <th>Description</th>
+    </tr></thead>
+<tbody><tr>
+<td>
+        <p>
+          31-0
+        </p>
+        <p>
+          placeholder[31:0]
+        </p>
+      </td>
+<td>
+
+            </td>
+    </tr></tbody>
+</table>
+</div>
+
+    <div class="register">
+<a class="anchor" name="debug_19"></a>
+
+<a href="#debug_19">
+<div>    
+  <a class="anchor" name="0xF48_-_debug_19"></a>          
+  <h4><a href="#0xF48_-_debug_19">0xF48 - debug_19</a></h4>          
+</div>
+</a>
+
+<div style="margin: 0 0 20px 0">
+
+      </div>
+
+
+<table class="reg table table-condensed" style="margin-bottom: 0; table-layout: fixed;">
+<thead><tr class="bit-positions">
+<th class="spacer"></th>
+      <th class="bit-position">31</th>
+      <th class="bit-position">30</th>
+      <th class="bit-position">29</th>
+      <th class="bit-position">28</th>
+      <th class="bit-position">27</th>
+      <th class="bit-position">26</th>
+      <th class="bit-position">25</th>
+      <th class="bit-position">24</th>
+    </tr></thead>
+<tbody>
+<tr class="read">
+<td class="heading">R</td>
+      <td class="readable writable"><span>mcsr</span></td>
+      <td class="readable writable"><span>spare_cnfg3</span></td>
+      <td class="readable writable"><span>frc_wrlvl</span></td>
+      <td class="readable writable"><span>wrc_dis</span></td>
+      <td class="readable writable"><span>spare_cnfg2</span></td>
+      <td class="readable writable"><span>cswlo</span></td>
+      <td class="readable writable" colspan="2">
+         <span>cswl[1:0]</span>
+      </td>
+    </tr>
+<tr class="write">
+<td class="heading">W</td>
+      <td class="readable writable"></td>
+      <td class="readable writable"></td>
+      <td class="readable writable"></td>
+      <td class="readable writable"></td>
+      <td class="readable writable"></td>
+      <td class="readable writable"></td>
+      <td class="readable writable" colspan="2"></td>
+    </tr>
+<tr class="reset">
+<td class="heading">Reset</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+          <td colspan="2">0</td>
+    </tr>
+</tbody>
+</table>
+<table class="reg table table-condensed" style="margin-bottom: 0; table-layout: fixed;">
+<thead><tr class="bit-positions">
+<th class="spacer"></th>
+      <th class="bit-position">23</th>
+      <th class="bit-position">22</th>
+      <th class="bit-position">21</th>
+      <th class="bit-position">20</th>
+      <th class="bit-position">19</th>
+      <th class="bit-position">18</th>
+      <th class="bit-position">17</th>
+      <th class="bit-position">16</th>
+    </tr></thead>
+<tbody>
+<tr class="read">
+<td class="heading">R</td>
+      <td class="readable writable"><span>int_ref_sel</span></td>
+      <td class="readable writable"><span>ign_cas_full</span></td>
+      <td class="readable writable"><span>perf_en_ovrd</span></td>
+      <td class="readable writable"><span>bdad</span></td>
+      <td class="readable writable" colspan="3">
+         <span>rx_skip_tap[2:0]</span>
+      </td>
+      <td class="readable writable"><span>mck_dis</span></td>
+    </tr>
+<tr class="write">
+<td class="heading">W</td>
+      <td class="readable writable"></td>
+      <td class="readable writable"></td>
+      <td class="readable writable"></td>
+      <td class="readable writable"></td>
+      <td class="readable writable" colspan="3"></td>
+      <td class="readable writable"></td>
+    </tr>
+<tr class="reset">
+<td class="heading">Reset</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+          <td colspan="3">0</td>
+        <td>0</td>
+    </tr>
+</tbody>
+</table>
+<table class="reg table table-condensed" style="margin-bottom: 0; table-layout: fixed;">
+<thead><tr class="bit-positions">
+<th class="spacer"></th>
+      <th class="bit-position">15</th>
+      <th class="bit-position">14</th>
+      <th class="bit-position">13</th>
+      <th class="bit-position">12</th>
+      <th class="bit-position">11</th>
+      <th class="bit-position">10</th>
+      <th class="bit-position">9</th>
+      <th class="bit-position">8</th>
+    </tr></thead>
+<tbody>
+<tr class="read">
+<td class="heading">R</td>
+      <td class="readable writable" colspan="4">
+         <span>curr_adj[3:0]</span>
+      </td>
+      <td class="readable writable"><span>en_tpa</span></td>
+      <td class="readable writable" colspan="3">
+         <span>tpa_mux_sel[4:0]</span>
+      </td>
+    </tr>
+<tr class="write">
+<td class="heading">W</td>
+      <td class="readable writable" colspan="4"></td>
+      <td class="readable writable"></td>
+      <td class="readable writable" colspan="3"></td>
+    </tr>
+<tr class="reset">
+<td class="heading">Reset</td>
+          <td colspan="4">0</td>
+        <td>0</td>
+          <td colspan="3">0</td>
+    </tr>
+</tbody>
+</table>
+<table class="reg table table-condensed" style="margin-bottom: 0; table-layout: fixed;">
+<thead><tr class="bit-positions">
+<th class="spacer"></th>
+      <th class="bit-position">7</th>
+      <th class="bit-position">6</th>
+      <th class="bit-position">5</th>
+      <th class="bit-position">4</th>
+      <th class="bit-position">3</th>
+      <th class="bit-position">2</th>
+      <th class="bit-position">1</th>
+      <th class="bit-position">0</th>
+    </tr></thead>
+<tbody>
+<tr class="read">
+<td class="heading">R</td>
+      <td class="readable writable" colspan="2">
+         <span>tpa_mux_sel[4:0]</span>
+      </td>
+      <td class="readable writable"><span>cntr_ovrd</span></td>
+      <td class="readable writable" colspan="3">
+         <span>cntr_ovrd_val[2:0]</span>
+      </td>
+      <td class="readable writable"><span>tx_bd_en</span></td>
+      <td class="readable writable"><span>spare_cnfg</span></td>
+    </tr>
+<tr class="write">
+<td class="heading">W</td>
+      <td class="readable writable" colspan="2"></td>
+      <td class="readable writable"></td>
+      <td class="readable writable" colspan="3"></td>
+      <td class="readable writable"></td>
+      <td class="readable writable"></td>
+    </tr>
+<tr class="reset">
+<td class="heading">Reset</td>
+          <td colspan="2">0</td>
+        <td>0</td>
+          <td colspan="3">0</td>
+        <td>0</td>
+        <td>1</td>
+    </tr>
+</tbody>
+</table>
+<table class="bit-descriptions table table-condensed table-bordered" style="margin: 20px 0 0 0">
+<thead><tr>
+<th>Bit</th>
+      <th>Description</th>
+    </tr></thead>
+<tbody>
+<tr>
+<td>
+        <p>
+          31
+        </p>
+        <p>
+          mcsr
+        </p>
+      </td>
+<td>
+
+              <p>When this bit is set, the controller’s state machines and queues will be reset. Software then needs to clear this bit to allow the controller to function. This bit can only be set when DDR_SDRAM_CFG[MEM_EN] is cleared.</p>
+
+              <table class="table"><tbody>
+<tr>
+<td>0</td>
+                    <td>Memory controller is not reset.</td>
+                  </tr>
+<tr>
+<td>1</td>
+                    <td>Memory controller is reset.</td>
+                  </tr>
+</tbody></table>
+</td>
+    </tr>
+<tr>
+<td>
+        <p>
+          30
+        </p>
+        <p>
+          spare_cnfg3
+        </p>
+      </td>
+<td>
+
+              <p>These are spare configuration bits that can be written or read. However, they are not currently used by the controller.</p>
+
+            </td>
+    </tr>
+<tr>
+<td>
+        <p>
+          29
+        </p>
+        <p>
+          frc_wrlvl
+        </p>
+      </td>
+<td>
+
+              <p>This bit can be set to force the controller to start write leveling. This bit will be cleared by hardware after write leveling is complete.</p>
+
+            </td>
+    </tr>
+<tr>
+<td>
+        <p>
+          28
+        </p>
+        <p>
+          wrc_dis
+        </p>
+      </td>
+<td>
+
+              <p>If this bit is cleared and automatic CAS to Preamble is used, then the DDR controller will calculate the write leveling start values for DQS[1:8] based on the CAS to Preamble results and the start value for DQS[0]. If this bit is set, then the automatic calculation of the start value is disabled.</p>
+
+            </td>
+    </tr>
+<tr>
+<td>
+        <p>
+          27
+        </p>
+        <p>
+          spare_cnfg2
+        </p>
+      </td>
+<td>
+
+              <p>These are spare configuration bits that can be written or read. However, they are not currently used by the controller.</p>
+
+            </td>
+    </tr>
+<tr>
+<td>
+        <p>
+          26
+        </p>
+        <p>
+          cswlo
+        </p>
+      </td>
+<td>
+
+              <p>If this bit is set, then the chip select specified by CSWL will be used during write leveling.</p>
+
+            </td>
+    </tr>
+<tr>
+<td>
+        <p>
+          25-24
+        </p>
+        <p>
+          cswl[1:0]
+        </p>
+      </td>
+<td>
+
+              <p>This field represents the chip select that will be used during write leveling if CSWLO is set.</p>
+
+            </td>
+    </tr>
+<tr>
+<td>
+        <p>
+          23
+        </p>
+        <p>
+          int_ref_sel
+        </p>
+      </td>
+<td>
+
+              <p>This can be set to use an internally generated VRef.</p>
+
+              <table class="table"><tbody>
+<tr>
+<td>0</td>
+                    <td>Default.</td>
+                  </tr>
+<tr>
+<td>1</td>
+                    <td>Use internal VRef.</td>
+                  </tr>
+</tbody></table>
+</td>
+    </tr>
+<tr>
+<td>
+        <p>
+          22
+        </p>
+        <p>
+          ign_cas_full
+        </p>
+      </td>
+<td>
+
+            </td>
+    </tr>
+<tr>
+<td>
+        <p>
+          21
+        </p>
+        <p>
+          perf_en_ovrd
+        </p>
+      </td>
+<td>
+
+              <p>This bit can be set to override the perfmon enable to the controller.</p>
+
+              <table class="table"><tbody>
+<tr>
+<td>0</td>
+                    <td>Use ipm_plus_perfmon_en.</td>
+                  </tr>
+<tr>
+<td>1</td>
+                    <td>Ignore ipm_plus_perfmon_en and collect perfmon events.</td>
+                  </tr>
+</tbody></table>
+</td>
+    </tr>
+<tr>
+<td>
+        <p>
+          20
+        </p>
+        <p>
+          bdad
+        </p>
+      </td>
+<td>
+
+              <p>If this bit is set, then the bit deskew results will not be averaged across the enabled ranks. Instead, the address determined by DDR_INIT_ADDR will be used for bit deskew.</p>
+
+            </td>
+    </tr>
+<tr>
+<td>
+        <p>
+          19-17
+        </p>
+        <p>
+          rx_skip_tap[2:0]
+        </p>
+      </td>
+<td>
+
+              <p>This field specifies how many taps will be incremented for each sample during RX bit deskew training. Note that this can be used to improve simulation times when validating the DDR controller RX deskew training.</p>
+
+              <table class="table"><tbody>
+<tr>
+<td>000</td>
+                    <td>Increment 1 tap at a time</td>
+                  </tr>
+<tr>
+<td>001</td>
+                    <td>Increment 2 taps at a time</td>
+                  </tr>
+<tr>
+<td>010</td>
+                    <td>Increment 4 taps at a time</td>
+                  </tr>
+<tr>
+<td>011</td>
+                    <td>Increment 6 taps at a time</td>
+                  </tr>
+<tr>
+<td>100</td>
+                    <td>Increment 8 taps at a time</td>
+                  </tr>
+<tr>
+<td>101</td>
+                    <td>Increment 10 taps at a time</td>
+                  </tr>
+<tr>
+<td>110</td>
+                    <td>Increment 12 taps at a time</td>
+                  </tr>
+<tr>
+<td>111</td>
+                    <td>Increment 14 taps at a time</td>
+                  </tr>
+</tbody></table>
+</td>
+    </tr>
+<tr>
+<td>
+        <p>
+          16
+        </p>
+        <p>
+          mck_dis
+        </p>
+      </td>
+<td>
+
+              <p>If this bit is set, then the MCK gating during self refresh will be disabled.</p>
+
+            </td>
+    </tr>
+<tr>
+<td>
+        <p>
+          15-12
+        </p>
+        <p>
+          curr_adj[3:0]
+        </p>
+      </td>
+<td>
+
+              <p>This is the value sent to the IOs for the p_gnd_curr_adj[0:1] and n_gnd_curr_adj[0:1]</p>
+
+            </td>
+    </tr>
+<tr>
+<td>
+        <p>
+          11
+        </p>
+        <p>
+          en_tpa
+        </p>
+      </td>
+<td>
+
+              <p>This is the enable for the TPA pin.</p>
+
+            </td>
+    </tr>
+<tr>
+<td>
+        <p>
+          10-6
+        </p>
+        <p>
+          tpa_mux_sel[4:0]
+        </p>
+      </td>
+<td>
+
+              <p>This 4-bit value represents the 4-bit MUX select to the TPA pin for.</p>
+
+            </td>
+    </tr>
+<tr>
+<td>
+        <p>
+          5
+        </p>
+        <p>
+          cntr_ovrd
+        </p>
+      </td>
+<td>
+
+              <p>This bit can be set to override the counter free-list group. It can be used to force a certain group only to be enabled.</p>
+
+            </td>
+    </tr>
+<tr>
+<td>
+        <p>
+          4-2
+        </p>
+        <p>
+          cntr_ovrd_val[2:0]
+        </p>
+      </td>
+<td>
+
+              <p>This is the value that will be overridden to the counter logic if CNTR_OVRD is set. Note that values of 3’b110 and 3’b111 are illegal, and the will prevent the controller from finding an available counter to use.</p>
+
+            </td>
+    </tr>
+<tr>
+<td>
+        <p>
+          1
+        </p>
+        <p>
+          tx_bd_en
+        </p>
+      </td>
+<td>
+
+              <p>This bit can be set to force the transmit bit deskew to be enabled, regardless of the value of SLOW_EN.</p>
+
+            </td>
+    </tr>
+<tr>
+<td>
+        <p>
+          0
+        </p>
+        <p>
+          spare_cnfg
+        </p>
+      </td>
+<td>
+
+            </td>
+    </tr>
+</tbody>
+</table>
+</div>
+
+    <div class="register">
+<a class="anchor" name="debug_20"></a>
+
+<a href="#debug_20">
+<div>    
+  <a class="anchor" name="0xF4C_-_debug_20"></a>          
+  <h4><a href="#0xF4C_-_debug_20">0xF4C - debug_20</a></h4>          
+</div>
+</a>
+
+<div style="margin: 0 0 20px 0">
+
+      </div>
+
+
+<table class="reg table table-condensed" style="margin-bottom: 0; table-layout: fixed;">
+<thead><tr class="bit-positions">
+<th class="spacer"></th>
+      <th class="bit-position">31</th>
+      <th class="bit-position">30</th>
+      <th class="bit-position">29</th>
+      <th class="bit-position">28</th>
+      <th class="bit-position">27</th>
+      <th class="bit-position">26</th>
+      <th class="bit-position">25</th>
+      <th class="bit-position">24</th>
+    </tr></thead>
+<tbody>
+<tr class="read">
+<td class="heading">R</td>
+      <td class="readable writable" colspan="8">
+         <span>placeholder[31:0]</span>
+      </td>
+    </tr>
+<tr class="write">
+<td class="heading">W</td>
+      <td class="readable writable" colspan="8"></td>
+    </tr>
+<tr class="reset">
+<td class="heading">Reset</td>
+          <td colspan="8">0</td>
+    </tr>
+</tbody>
+</table>
+<table class="reg table table-condensed" style="margin-bottom: 0; table-layout: fixed;">
+<thead><tr class="bit-positions">
+<th class="spacer"></th>
+      <th class="bit-position">23</th>
+      <th class="bit-position">22</th>
+      <th class="bit-position">21</th>
+      <th class="bit-position">20</th>
+      <th class="bit-position">19</th>
+      <th class="bit-position">18</th>
+      <th class="bit-position">17</th>
+      <th class="bit-position">16</th>
+    </tr></thead>
+<tbody>
+<tr class="read">
+<td class="heading">R</td>
+      <td class="readable writable" colspan="8">
+         <span>placeholder[31:0]</span>
+      </td>
+    </tr>
+<tr class="write">
+<td class="heading">W</td>
+      <td class="readable writable" colspan="8"></td>
+    </tr>
+<tr class="reset">
+<td class="heading">Reset</td>
+          <td colspan="8">0</td>
+    </tr>
+</tbody>
+</table>
+<table class="reg table table-condensed" style="margin-bottom: 0; table-layout: fixed;">
+<thead><tr class="bit-positions">
+<th class="spacer"></th>
+      <th class="bit-position">15</th>
+      <th class="bit-position">14</th>
+      <th class="bit-position">13</th>
+      <th class="bit-position">12</th>
+      <th class="bit-position">11</th>
+      <th class="bit-position">10</th>
+      <th class="bit-position">9</th>
+      <th class="bit-position">8</th>
+    </tr></thead>
+<tbody>
+<tr class="read">
+<td class="heading">R</td>
+      <td class="readable writable" colspan="8">
+         <span>placeholder[31:0]</span>
+      </td>
+    </tr>
+<tr class="write">
+<td class="heading">W</td>
+      <td class="readable writable" colspan="8"></td>
+    </tr>
+<tr class="reset">
+<td class="heading">Reset</td>
+          <td colspan="8">0</td>
+    </tr>
+</tbody>
+</table>
+<table class="reg table table-condensed" style="margin-bottom: 0; table-layout: fixed;">
+<thead><tr class="bit-positions">
+<th class="spacer"></th>
+      <th class="bit-position">7</th>
+      <th class="bit-position">6</th>
+      <th class="bit-position">5</th>
+      <th class="bit-position">4</th>
+      <th class="bit-position">3</th>
+      <th class="bit-position">2</th>
+      <th class="bit-position">1</th>
+      <th class="bit-position">0</th>
+    </tr></thead>
+<tbody>
+<tr class="read">
+<td class="heading">R</td>
+      <td class="readable writable" colspan="8">
+         <span>placeholder[31:0]</span>
+      </td>
+    </tr>
+<tr class="write">
+<td class="heading">W</td>
+      <td class="readable writable" colspan="8"></td>
+    </tr>
+<tr class="reset">
+<td class="heading">Reset</td>
+          <td colspan="8">0</td>
+    </tr>
+</tbody>
+</table>
+<table class="bit-descriptions table table-condensed table-bordered" style="margin: 20px 0 0 0">
+<thead><tr>
+<th>Bit</th>
+      <th>Description</th>
+    </tr></thead>
+<tbody><tr>
+<td>
+        <p>
+          31-0
+        </p>
+        <p>
+          placeholder[31:0]
+        </p>
+      </td>
+<td>
+
+            </td>
+    </tr></tbody>
+</table>
+</div>
+
+    <div class="register">
+<a class="anchor" name="debug_21"></a>
+
+<a href="#debug_21">
+<div>    
+  <a class="anchor" name="0xF50_-_debug_21"></a>          
+  <h4><a href="#0xF50_-_debug_21">0xF50 - debug_21</a></h4>          
+</div>
+</a>
+
+<div style="margin: 0 0 20px 0">
+
+      </div>
+
+
+<table class="reg table table-condensed" style="margin-bottom: 0; table-layout: fixed;">
+<thead><tr class="bit-positions">
+<th class="spacer"></th>
+      <th class="bit-position">31</th>
+      <th class="bit-position">30</th>
+      <th class="bit-position">29</th>
+      <th class="bit-position">28</th>
+      <th class="bit-position">27</th>
+      <th class="bit-position">26</th>
+      <th class="bit-position">25</th>
+      <th class="bit-position">24</th>
+    </tr></thead>
+<tbody>
+<tr class="read">
+<td class="heading">R</td>
+      <td class="readable writable" colspan="8">
+         <span>placeholder[31:0]</span>
+      </td>
+    </tr>
+<tr class="write">
+<td class="heading">W</td>
+      <td class="readable writable" colspan="8"></td>
+    </tr>
+<tr class="reset">
+<td class="heading">Reset</td>
+          <td colspan="8">0</td>
+    </tr>
+</tbody>
+</table>
+<table class="reg table table-condensed" style="margin-bottom: 0; table-layout: fixed;">
+<thead><tr class="bit-positions">
+<th class="spacer"></th>
+      <th class="bit-position">23</th>
+      <th class="bit-position">22</th>
+      <th class="bit-position">21</th>
+      <th class="bit-position">20</th>
+      <th class="bit-position">19</th>
+      <th class="bit-position">18</th>
+      <th class="bit-position">17</th>
+      <th class="bit-position">16</th>
+    </tr></thead>
+<tbody>
+<tr class="read">
+<td class="heading">R</td>
+      <td class="readable writable" colspan="8">
+         <span>placeholder[31:0]</span>
+      </td>
+    </tr>
+<tr class="write">
+<td class="heading">W</td>
+      <td class="readable writable" colspan="8"></td>
+    </tr>
+<tr class="reset">
+<td class="heading">Reset</td>
+          <td colspan="8">0</td>
+    </tr>
+</tbody>
+</table>
+<table class="reg table table-condensed" style="margin-bottom: 0; table-layout: fixed;">
+<thead><tr class="bit-positions">
+<th class="spacer"></th>
+      <th class="bit-position">15</th>
+      <th class="bit-position">14</th>
+      <th class="bit-position">13</th>
+      <th class="bit-position">12</th>
+      <th class="bit-position">11</th>
+      <th class="bit-position">10</th>
+      <th class="bit-position">9</th>
+      <th class="bit-position">8</th>
+    </tr></thead>
+<tbody>
+<tr class="read">
+<td class="heading">R</td>
+      <td class="readable writable" colspan="8">
+         <span>placeholder[31:0]</span>
+      </td>
+    </tr>
+<tr class="write">
+<td class="heading">W</td>
+      <td class="readable writable" colspan="8"></td>
+    </tr>
+<tr class="reset">
+<td class="heading">Reset</td>
+          <td colspan="8">0</td>
+    </tr>
+</tbody>
+</table>
+<table class="reg table table-condensed" style="margin-bottom: 0; table-layout: fixed;">
+<thead><tr class="bit-positions">
+<th class="spacer"></th>
+      <th class="bit-position">7</th>
+      <th class="bit-position">6</th>
+      <th class="bit-position">5</th>
+      <th class="bit-position">4</th>
+      <th class="bit-position">3</th>
+      <th class="bit-position">2</th>
+      <th class="bit-position">1</th>
+      <th class="bit-position">0</th>
+    </tr></thead>
+<tbody>
+<tr class="read">
+<td class="heading">R</td>
+      <td class="readable writable" colspan="8">
+         <span>placeholder[31:0]</span>
+      </td>
+    </tr>
+<tr class="write">
+<td class="heading">W</td>
+      <td class="readable writable" colspan="8"></td>
+    </tr>
+<tr class="reset">
+<td class="heading">Reset</td>
+          <td colspan="8">0</td>
+    </tr>
+</tbody>
+</table>
+<table class="bit-descriptions table table-condensed table-bordered" style="margin: 20px 0 0 0">
+<thead><tr>
+<th>Bit</th>
+      <th>Description</th>
+    </tr></thead>
+<tbody><tr>
+<td>
+        <p>
+          31-0
+        </p>
+        <p>
+          placeholder[31:0]
+        </p>
+      </td>
+<td>
+
+            </td>
+    </tr></tbody>
+</table>
+</div>
+
+    <div class="register">
+<a class="anchor" name="debug_22"></a>
+
+<a href="#debug_22">
+<div>    
+  <a class="anchor" name="0xF54_-_debug_22"></a>          
+  <h4><a href="#0xF54_-_debug_22">0xF54 - debug_22</a></h4>          
+</div>
+</a>
+
+<div style="margin: 0 0 20px 0">
+
+      </div>
+
+
+<table class="reg table table-condensed" style="margin-bottom: 0; table-layout: fixed;">
+<thead><tr class="bit-positions">
+<th class="spacer"></th>
+      <th class="bit-position">31</th>
+      <th class="bit-position">30</th>
+      <th class="bit-position">29</th>
+      <th class="bit-position">28</th>
+      <th class="bit-position">27</th>
+      <th class="bit-position">26</th>
+      <th class="bit-position">25</th>
+      <th class="bit-position">24</th>
+    </tr></thead>
+<tbody>
+<tr class="read">
+<td class="heading">R</td>
+      <td class="readable writable" colspan="8">
+         <span>placeholder[31:0]</span>
+      </td>
+    </tr>
+<tr class="write">
+<td class="heading">W</td>
+      <td class="readable writable" colspan="8"></td>
+    </tr>
+<tr class="reset">
+<td class="heading">Reset</td>
+          <td colspan="8">0</td>
+    </tr>
+</tbody>
+</table>
+<table class="reg table table-condensed" style="margin-bottom: 0; table-layout: fixed;">
+<thead><tr class="bit-positions">
+<th class="spacer"></th>
+      <th class="bit-position">23</th>
+      <th class="bit-position">22</th>
+      <th class="bit-position">21</th>
+      <th class="bit-position">20</th>
+      <th class="bit-position">19</th>
+      <th class="bit-position">18</th>
+      <th class="bit-position">17</th>
+      <th class="bit-position">16</th>
+    </tr></thead>
+<tbody>
+<tr class="read">
+<td class="heading">R</td>
+      <td class="readable writable" colspan="8">
+         <span>placeholder[31:0]</span>
+      </td>
+    </tr>
+<tr class="write">
+<td class="heading">W</td>
+      <td class="readable writable" colspan="8"></td>
+    </tr>
+<tr class="reset">
+<td class="heading">Reset</td>
+          <td colspan="8">0</td>
+    </tr>
+</tbody>
+</table>
+<table class="reg table table-condensed" style="margin-bottom: 0; table-layout: fixed;">
+<thead><tr class="bit-positions">
+<th class="spacer"></th>
+      <th class="bit-position">15</th>
+      <th class="bit-position">14</th>
+      <th class="bit-position">13</th>
+      <th class="bit-position">12</th>
+      <th class="bit-position">11</th>
+      <th class="bit-position">10</th>
+      <th class="bit-position">9</th>
+      <th class="bit-position">8</th>
+    </tr></thead>
+<tbody>
+<tr class="read">
+<td class="heading">R</td>
+      <td class="readable writable" colspan="8">
+         <span>placeholder[31:0]</span>
+      </td>
+    </tr>
+<tr class="write">
+<td class="heading">W</td>
+      <td class="readable writable" colspan="8"></td>
+    </tr>
+<tr class="reset">
+<td class="heading">Reset</td>
+          <td colspan="8">0</td>
+    </tr>
+</tbody>
+</table>
+<table class="reg table table-condensed" style="margin-bottom: 0; table-layout: fixed;">
+<thead><tr class="bit-positions">
+<th class="spacer"></th>
+      <th class="bit-position">7</th>
+      <th class="bit-position">6</th>
+      <th class="bit-position">5</th>
+      <th class="bit-position">4</th>
+      <th class="bit-position">3</th>
+      <th class="bit-position">2</th>
+      <th class="bit-position">1</th>
+      <th class="bit-position">0</th>
+    </tr></thead>
+<tbody>
+<tr class="read">
+<td class="heading">R</td>
+      <td class="readable writable" colspan="8">
+         <span>placeholder[31:0]</span>
+      </td>
+    </tr>
+<tr class="write">
+<td class="heading">W</td>
+      <td class="readable writable" colspan="8"></td>
+    </tr>
+<tr class="reset">
+<td class="heading">Reset</td>
+          <td colspan="8">0</td>
+    </tr>
+</tbody>
+</table>
+<table class="bit-descriptions table table-condensed table-bordered" style="margin: 20px 0 0 0">
+<thead><tr>
+<th>Bit</th>
+      <th>Description</th>
+    </tr></thead>
+<tbody><tr>
+<td>
+        <p>
+          31-0
+        </p>
+        <p>
+          placeholder[31:0]
+        </p>
+      </td>
+<td>
+
+            </td>
+    </tr></tbody>
+</table>
+</div>
+
+  </div>
+</div>
+      </div><!-- /.container -->
+    
+
+    <footer class="footer">
+      <div class="container">
+        <p class="pull-left text-muted">
+          Freescale Internal Use Only
+        </p>
+        <p class="pull-right text-muted">&copy; Copyright 2015 Freescale, Inc. All Rights Reserved</p>
+      </div>
+    </footer>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="http://origen-sdk.org/js/lunr.min.js"></script>
+    <script src="http://origen-sdk.org/js/highlight.js"></script>
+    <script src="http://origen-sdk.org/js/custom.js"></script>
+  </body>
+</html>
