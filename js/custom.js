@@ -1,5 +1,4 @@
 // Modified from: http://jsfiddle.net/jhfrench/mc4Qd/
-console.log("yo");
 $('.expandcollapse').click(function() {
 
     var newstate = $(this).attr('state') ^ 1,
