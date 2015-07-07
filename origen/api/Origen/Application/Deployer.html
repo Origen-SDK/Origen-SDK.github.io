@@ -6,7 +6,7 @@
 <title>
   Class: Origen::Application::Deployer
   
-    &mdash; Origen Core 0.0.5
+    &mdash; Origen Core 0.0.6
   
 </title>
 
@@ -718,13 +718,13 @@ found to have insufficient permissions to deploy to the target directory.</p>
       <pre class="lines">
 
 
-211
-212
-213
-214</pre>
+214
+215
+216
+217</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application/deployer.rb', line 211</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application/deployer.rb', line 214</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_create_symlink'>create_symlink</span><span class='lparen'>(</span><span class='id identifier rubyid_from'>from</span><span class='comma'>,</span> <span class='id identifier rubyid_to'>to</span><span class='rparen'>)</span>
   <span class='backtick'>`</span><span class='tstring_content'>rm -f </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_to'>to</span><span class='embexpr_end'>}</span><span class='tstring_end'>`</span></span> <span class='kw'>if</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_exist?'>exist?</span><span class='lparen'>(</span><span class='id identifier rubyid_to'>to</span><span class='rparen'>)</span>
@@ -750,9 +750,6 @@ found to have insufficient permissions to deploy to the target directory.</p>
       <pre class="lines">
 
 
-220
-221
-222
 223
 224
 225
@@ -771,10 +768,13 @@ found to have insufficient permissions to deploy to the target directory.</p>
 238
 239
 240
-241</pre>
+241
+242
+243
+244</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application/deployer.rb', line 220</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application/deployer.rb', line 223</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_create_web_server_dir'>create_web_server_dir</span>
   <span class='kw'>if</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_exist?'>exist?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_root'>root</span><span class='embexpr_end'>}</span><span class='tstring_content'>/templates/web</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
@@ -818,19 +818,19 @@ found to have insufficient permissions to deploy to the target directory.</p>
       <pre class="lines">
 
 
-200
-201
-202
 203
 204
 205
 206
 207
 208
-209</pre>
+209
+210
+211
+212</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application/deployer.rb', line 200</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application/deployer.rb', line 203</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_deploy_archive'>deploy_archive</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_dir'>dir</span> <span class='op'>=</span> <span class='id identifier rubyid_live_remote_directory'>live_remote_directory</span>
@@ -862,6 +862,7 @@ found to have insufficient permissions to deploy to the target directory.</p>
       <pre class="lines">
 
 
+159
 160
 161
 162
@@ -876,23 +877,30 @@ found to have insufficient permissions to deploy to the target directory.</p>
 171
 172
 173
-174</pre>
+174
+175
+176
+177</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application/deployer.rb', line 160</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application/deployer.rb', line 159</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_deploy_file'>deploy_file</span><span class='lparen'>(</span><span class='id identifier rubyid_file'>file</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_remote_dir'>remote_dir</span> <span class='op'>=</span> <span class='id identifier rubyid_live_remote_directory'>live_remote_directory</span>
-  <span class='kw'>if</span> <span class='id identifier rubyid_remote_dir'>remote_dir</span>
-    <span class='id identifier rubyid_file'>file</span> <span class='op'>=</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_file_handler'>file_handler</span><span class='period'>.</span><span class='id identifier rubyid_clean_path_to'>clean_path_to</span><span class='lparen'>(</span><span class='id identifier rubyid_file'>file</span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_sub_dir'>sub_dir</span> <span class='op'>=</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_file_handler'>file_handler</span><span class='period'>.</span><span class='id identifier rubyid_sub_dir_of'>sub_dir_of</span><span class='lparen'>(</span><span class='id identifier rubyid_file'>file</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_root'>root</span><span class='embexpr_end'>}</span><span class='tstring_content'>/templates/web</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span>
-    <span class='id identifier rubyid_page'>page</span> <span class='op'>=</span> <span class='id identifier rubyid_file'>file</span><span class='period'>.</span><span class='id identifier rubyid_basename'>basename</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='period'>.</span><span class='id identifier rubyid_sub'>sub</span><span class='lparen'>(</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>\..*</span><span class='regexp_end'>/</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
-    <span class='comment'># Special case for the main index page
-</span>    <span class='kw'>if</span> <span class='id identifier rubyid_page'>page</span> <span class='op'>==</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>index</span><span class='tstring_end'>&#39;</span></span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_sub_dir'>sub_dir</span> <span class='op'>==</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>.</span><span class='tstring_end'>&#39;</span></span>
-      <span class='const'>FileUtils</span><span class='period'>.</span><span class='id identifier rubyid_cp'>cp</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_root'>root</span><span class='embexpr_end'>}</span><span class='tstring_content'>/web/output/index.html</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_remote_dir'>remote_dir</span>
-    <span class='kw'>else</span>
-      <span class='const'>FileUtils</span><span class='period'>.</span><span class='id identifier rubyid_mkdir_p'>mkdir_p</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_remote_dir'>remote_dir</span><span class='embexpr_end'>}</span><span class='tstring_content'>/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_sub_dir'>sub_dir</span><span class='embexpr_end'>}</span><span class='tstring_content'>/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_page'>page</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
-      <span class='const'>FileUtils</span><span class='period'>.</span><span class='id identifier rubyid_cp'>cp</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_root'>root</span><span class='embexpr_end'>}</span><span class='tstring_content'>/web/output/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_sub_dir'>sub_dir</span><span class='embexpr_end'>}</span><span class='tstring_content'>/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_page'>page</span><span class='embexpr_end'>}</span><span class='tstring_content'>/index.html</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_remote_dir'>remote_dir</span><span class='embexpr_end'>}</span><span class='tstring_content'>/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_sub_dir'>sub_dir</span><span class='embexpr_end'>}</span><span class='tstring_content'>/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_page'>page</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_deploy_to_git?'>deploy_to_git?</span>
+    <span class='id identifier rubyid_fail'>fail</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>File based deploy has is not support for Git yet :-(</span><span class='tstring_end'>&quot;</span></span>
+  <span class='kw'>else</span>
+    <span class='id identifier rubyid_remote_dir'>remote_dir</span> <span class='op'>=</span> <span class='id identifier rubyid_live_remote_directory'>live_remote_directory</span>
+    <span class='kw'>if</span> <span class='id identifier rubyid_remote_dir'>remote_dir</span>
+      <span class='id identifier rubyid_file'>file</span> <span class='op'>=</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_file_handler'>file_handler</span><span class='period'>.</span><span class='id identifier rubyid_clean_path_to'>clean_path_to</span><span class='lparen'>(</span><span class='id identifier rubyid_file'>file</span><span class='rparen'>)</span>
+      <span class='id identifier rubyid_sub_dir'>sub_dir</span> <span class='op'>=</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_file_handler'>file_handler</span><span class='period'>.</span><span class='id identifier rubyid_sub_dir_of'>sub_dir_of</span><span class='lparen'>(</span><span class='id identifier rubyid_file'>file</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_root'>root</span><span class='embexpr_end'>}</span><span class='tstring_content'>/templates/web</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span>
+      <span class='id identifier rubyid_page'>page</span> <span class='op'>=</span> <span class='id identifier rubyid_file'>file</span><span class='period'>.</span><span class='id identifier rubyid_basename'>basename</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='period'>.</span><span class='id identifier rubyid_sub'>sub</span><span class='lparen'>(</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>\..*</span><span class='regexp_end'>/</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+      <span class='comment'># Special case for the main index page
+</span>      <span class='kw'>if</span> <span class='id identifier rubyid_page'>page</span> <span class='op'>==</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>index</span><span class='tstring_end'>&#39;</span></span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_sub_dir'>sub_dir</span> <span class='op'>==</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>.</span><span class='tstring_end'>&#39;</span></span>
+        <span class='const'>FileUtils</span><span class='period'>.</span><span class='id identifier rubyid_cp'>cp</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_root'>root</span><span class='embexpr_end'>}</span><span class='tstring_content'>/web/output/index.html</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_remote_dir'>remote_dir</span>
+      <span class='kw'>else</span>
+        <span class='const'>FileUtils</span><span class='period'>.</span><span class='id identifier rubyid_mkdir_p'>mkdir_p</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_remote_dir'>remote_dir</span><span class='embexpr_end'>}</span><span class='tstring_content'>/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_sub_dir'>sub_dir</span><span class='embexpr_end'>}</span><span class='tstring_content'>/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_page'>page</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+        <span class='const'>FileUtils</span><span class='period'>.</span><span class='id identifier rubyid_cp'>cp</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_root'>root</span><span class='embexpr_end'>}</span><span class='tstring_content'>/web/output/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_sub_dir'>sub_dir</span><span class='embexpr_end'>}</span><span class='tstring_content'>/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_page'>page</span><span class='embexpr_end'>}</span><span class='tstring_content'>/index.html</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_remote_dir'>remote_dir</span><span class='embexpr_end'>}</span><span class='tstring_content'>/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_sub_dir'>sub_dir</span><span class='embexpr_end'>}</span><span class='tstring_content'>/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_page'>page</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+      <span class='kw'>end</span>
     <span class='kw'>end</span>
   <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
@@ -930,6 +938,7 @@ to the remote server.</p>
       <pre class="lines">
 
 
+127
 128
 129
 130
@@ -959,11 +968,10 @@ to the remote server.</p>
 154
 155
 156
-157
-158</pre>
+157</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application/deployer.rb', line 128</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application/deployer.rb', line 127</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_deploy_site'>deploy_site</span>
   <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_app'>app</span><span class='period'>.</span><span class='id identifier rubyid_listeners_for'>listeners_for</span><span class='lparen'>(</span><span class='symbol'>:before_deploy_site</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span><span class='lparen'>(</span><span class='op'>&amp;</span><span class='symbol'>:before_deploy_site</span><span class='rparen'>)</span>
@@ -1038,12 +1046,12 @@ to the remote server.</p>
       <pre class="lines">
 
 
+84
 85
-86
-87</pre>
+86</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application/deployer.rb', line 85</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application/deployer.rb', line 84</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_deploy_to_git?'>deploy_to_git?</span>
   <span class='op'>!</span><span class='op'>!</span><span class='lparen'>(</span><span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_web_directory'>web_directory</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>\.git\/?</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_git_sub_dir'>git_sub_dir</span><span class='embexpr_end'>}</span><span class='tstring_content'>$</span><span class='regexp_end'>/</span></span><span class='rparen'>)</span>
@@ -1068,9 +1076,6 @@ to the remote server.</p>
       <pre class="lines">
 
 
-176
-177
-178
 179
 180
 181
@@ -1090,10 +1095,13 @@ to the remote server.</p>
 195
 196
 197
-198</pre>
+198
+199
+200
+201</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application/deployer.rb', line 176</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application/deployer.rb', line 179</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_generate_api'>generate_api</span>
   <span class='id identifier rubyid_dir'>dir</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_root'>root</span><span class='embexpr_end'>}</span><span class='tstring_content'>/web/output/api</span><span class='tstring_end'>&quot;</span></span>
@@ -1166,8 +1174,7 @@ website repo which is will build and checkout as required</p>
 75
 76
 77
-78
-79</pre>
+78</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/origen/application/deployer.rb', line 62</span>
@@ -1181,7 +1188,6 @@ website repo which is will build and checkout as required</p>
       <span class='id identifier rubyid_remote'>remote</span> <span class='op'>=</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_web_directory'>web_directory</span>
     <span class='kw'>end</span>
     <span class='id identifier rubyid_git'>git</span> <span class='op'>=</span> <span class='const'>RevisionControl</span><span class='op'>::</span><span class='const'>Git</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='label'>local:</span> <span class='id identifier rubyid_local'>local</span><span class='comma'>,</span> <span class='label'>remote:</span> <span class='id identifier rubyid_remote'>remote</span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_debugger'>debugger</span>
     <span class='kw'>if</span> <span class='id identifier rubyid_git'>git</span><span class='period'>.</span><span class='id identifier rubyid_initialized?'>initialized?</span>
       <span class='id identifier rubyid_git'>git</span><span class='period'>.</span><span class='id identifier rubyid_checkout'>checkout</span><span class='lparen'>(</span><span class='label'>force:</span> <span class='kw'>true</span><span class='rparen'>)</span>
     <span class='kw'>else</span>
@@ -1244,12 +1250,12 @@ website repo which is will build and checkout as required</p>
       <pre class="lines">
 
 
+97
 98
-99
-100</pre>
+99</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application/deployer.rb', line 98</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application/deployer.rb', line 97</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_latest_symlink'>latest_symlink</span>
   <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_web_directory'>web_directory</span><span class='embexpr_end'>}</span><span class='tstring_content'>/latest</span><span class='tstring_end'>&quot;</span></span>
@@ -1274,6 +1280,7 @@ website repo which is will build and checkout as required</p>
       <pre class="lines">
 
 
+113
 114
 115
 116
@@ -1281,11 +1288,10 @@ website repo which is will build and checkout as required</p>
 118
 119
 120
-121
-122</pre>
+121</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application/deployer.rb', line 114</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application/deployer.rb', line 113</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_live_remote_directory'>live_remote_directory</span>
   <span class='kw'>if</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_exist?'>exist?</span><span class='lparen'>(</span><span class='id identifier rubyid_latest_symlink'>latest_symlink</span><span class='rparen'>)</span>
@@ -1316,6 +1322,7 @@ website repo which is will build and checkout as required</p>
       <pre class="lines">
 
 
+101
 102
 103
 104
@@ -1325,11 +1332,10 @@ website repo which is will build and checkout as required</p>
 108
 109
 110
-111
-112</pre>
+111</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application/deployer.rb', line 102</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application/deployer.rb', line 101</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_offline_remote_directory'>offline_remote_directory</span>
   <span class='kw'>if</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_exist?'>exist?</span><span class='lparen'>(</span><span class='id identifier rubyid_latest_symlink'>latest_symlink</span><span class='rparen'>)</span>
@@ -1414,8 +1420,8 @@ found to have insufficient permissions to deploy to the target directory</p>
       <span class='id identifier rubyid_q'>q</span><span class='period'>.</span><span class='id identifier rubyid_responses'>responses</span><span class='lbracket'>[</span><span class='symbol'>:not_valid</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Can&#39;t be blank</span><span class='tstring_end'>&quot;</span></span>
     <span class='kw'>end</span>
     <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_log'>log</span><span class='period'>.</span><span class='id identifier rubyid_info'>info</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Fetching the website&#39;s Git respository...</span><span class='tstring_end'>&quot;</span></span>
+    <span class='id identifier rubyid_git_repo'>git_repo</span>
     <span class='kw'>begin</span>
-      <span class='id identifier rubyid_git_repo'>git_repo</span>
       <span class='id identifier rubyid_fail'>fail</span> <span class='kw'>unless</span> <span class='id identifier rubyid_git_repo'>git_repo</span><span class='period'>.</span><span class='id identifier rubyid_can_checkin?'>can_checkin?</span>
     <span class='kw'>rescue</span>
       <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Sorry, but you don&#39;t have permission to write to </span><span class='embexpr_beg'>#{</span><span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_web_directory'>web_directory</span><span class='embexpr_end'>}</span><span class='tstring_content'>!</span><span class='tstring_end'>&quot;</span></span>
@@ -1454,17 +1460,17 @@ found to have insufficient permissions to deploy to the target directory</p>
       <pre class="lines">
 
 
+88
 89
 90
 91
 92
 93
 94
-95
-96</pre>
+95</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application/deployer.rb', line 89</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application/deployer.rb', line 88</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_require_remote_directories'>require_remote_directories</span>
   <span class='qwords_beg'>%w(</span><span class='tstring_content'>remote1</span><span class='words_sep'> </span><span class='tstring_content'>remote2</span><span class='words_sep'>)</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_dir'>dir</span><span class='op'>|</span>
@@ -1516,12 +1522,12 @@ found to have insufficient permissions to deploy to the target directory</p>
       <pre class="lines">
 
 
+80
 81
-82
-83</pre>
+82</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application/deployer.rb', line 81</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application/deployer.rb', line 80</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_test_run?'>test_run?</span>
   <span class='ivar'>@test</span>
@@ -1546,12 +1552,12 @@ found to have insufficient permissions to deploy to the target directory</p>
       <pre class="lines">
 
 
-216
-217
-218</pre>
+219
+220
+221</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application/deployer.rb', line 216</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application/deployer.rb', line 219</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_web_server_dir'>web_server_dir</span>
   <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_root'>root</span><span class='embexpr_end'>}</span><span class='tstring_content'>/web</span><span class='tstring_end'>&quot;</span></span>
@@ -1566,9 +1572,9 @@ found to have insufficient permissions to deploy to the target directory</p>
 </div>
 
     <div id="footer">
-  Generated on Fri Jun 26 11:36:25 2015 by
+  Generated on Tue Jul  7 22:29:40 2015 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.7.6 (ruby-2.1.5).
+  0.8.7.6 (ruby-2.1.2).
 </div>
 
   </body>
