@@ -6,7 +6,7 @@
 <title>
   Class: Origen::SiteConfig
   
-    &mdash; Origen Core 0.0.6
+    &mdash; Origen Core 0.0.8
   
 </title>
 
@@ -100,6 +100,23 @@
 <div class="clear"></div>
 
 
+  <h2>Constant Summary</h2>
+  
+    <dl class="constants">
+      
+        <dt id="TRUE_VALUES-constant" class="">TRUE_VALUES =
+          
+        </dt>
+        <dd><pre class="code"><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>true</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>TRUE</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>1</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='int'>1</span><span class='rbracket'>]</span></pre></dd>
+      
+        <dt id="FALSE_VALUES-constant" class="">FALSE_VALUES =
+          
+        </dt>
+        <dd><pre class="code"><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>false</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>FALSE</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>0</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='int'>0</span><span class='rbracket'>]</span></pre></dd>
+      
+    </dl>
+  
+
 
 
 
@@ -161,9 +178,6 @@
       <pre class="lines">
 
 
-6
-7
-8
 9
 10
 11
@@ -183,10 +197,18 @@
 25
 26
 27
-28</pre>
+28
+29
+30
+31
+32
+33
+34
+35
+36</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/site_config.rb', line 6</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/site_config.rb', line 9</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_method_missing'>method_missing</span><span class='lparen'>(</span><span class='id identifier rubyid_method'>method</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_method'>method</span> <span class='op'>=</span> <span class='id identifier rubyid_method'>method</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span>
@@ -197,6 +219,11 @@
   <span class='id identifier rubyid_env'>env</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>ORIGEN_</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_method'>method</span><span class='period'>.</span><span class='id identifier rubyid_upcase'>upcase</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
   <span class='kw'>if</span> <span class='const'>ENV</span><span class='period'>.</span><span class='id identifier rubyid_key?'>key?</span><span class='lparen'>(</span><span class='id identifier rubyid_env'>env</span><span class='rparen'>)</span>
     <span class='id identifier rubyid_val'>val</span> <span class='op'>=</span> <span class='const'>ENV</span><span class='lbracket'>[</span><span class='id identifier rubyid_env'>env</span><span class='rbracket'>]</span>
+    <span class='kw'>if</span> <span class='const'>TRUE_VALUES</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='id identifier rubyid_val'>val</span><span class='rparen'>)</span>
+      <span class='id identifier rubyid_val'>val</span> <span class='op'>=</span> <span class='kw'>true</span>
+    <span class='kw'>elsif</span> <span class='const'>FALSE_VALUES</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='id identifier rubyid_val'>val</span><span class='rparen'>)</span>
+      <span class='id identifier rubyid_val'>val</span> <span class='op'>=</span> <span class='kw'>false</span>
+    <span class='kw'>end</span>
   <span class='kw'>else</span>
     <span class='id identifier rubyid_config'>config</span> <span class='op'>=</span> <span class='id identifier rubyid_configs'>configs</span><span class='period'>.</span><span class='id identifier rubyid_find'>find</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_c'>c</span><span class='op'>|</span> <span class='id identifier rubyid_c'>c</span><span class='period'>.</span><span class='id identifier rubyid_key?'>key?</span><span class='lparen'>(</span><span class='id identifier rubyid_method'>method</span><span class='rparen'>)</span> <span class='rbrace'>}</span>
     <span class='id identifier rubyid_val'>val</span> <span class='op'>=</span> <span class='id identifier rubyid_config'>config</span> <span class='op'>?</span> <span class='id identifier rubyid_config'>config</span><span class='lbracket'>[</span><span class='id identifier rubyid_method'>method</span><span class='rbracket'>]</span> <span class='op'>:</span> <span class='kw'>nil</span>
@@ -222,7 +249,7 @@
 </div>
 
     <div id="footer">
-  Generated on Tue Jul  7 22:29:34 2015 by
+  Generated on Sat Jul 11 17:57:46 2015 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.1.2).
 </div>
