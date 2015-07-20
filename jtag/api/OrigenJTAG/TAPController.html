@@ -1,0 +1,1089 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Module: OrigenJTAG::TAPController
+  
+    &mdash; Origen JTAG 0.11.0.pre5
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '../';
+  framesUrl = "../frames.html#!OrigenJTAG/TAPController.html";
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../_index.html">Index (T)</a> &raquo;
+    <span class='title'><span class='object_link'><a href="../OrigenJTAG.html" title="OrigenJTAG (module)">OrigenJTAG</a></span></span>
+     &raquo; 
+    <span class="title">TAPController</span>
+  
+
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="../class_list.html">
+      Class List
+    </a>
+  
+    <a class="full_list_link" id="method_list_link"
+        href="../method_list.html">
+      Method List
+    </a>
+  
+    <a class="full_list_link" id="file_list_link"
+        href="../file_list.html">
+      File List
+    </a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+
+    <iframe id="search_frame"></iframe>
+
+    <div id="content"><h1>Module: OrigenJTAG::TAPController
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+  
+    
+  
+    
+  
+  
+    <dt class="r1">Included in:</dt>
+    <dd class="r1"><span class='object_link'><a href="Driver.html" title="OrigenJTAG::Driver (class)">Driver</a></span></dd>
+    
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">lib/origen_jtag/tap_controller.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>Provides methods specifically for controlling the state of the TAP
+Controller</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+  <h2>Constant Summary</h2>
+  
+    <dl class="constants">
+      
+        <dt id="STATES-constant" class="">STATES =
+          <div class="docstring">
+  <div class="discussion">
+    
+<p>Map of internal state symbols to human readable names</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='lbrace'>{</span>
+  <span class='label'>reset:</span>      <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Test-Logic-Reset</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+  <span class='label'>idle:</span>       <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Run-Test/Idle</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+  <span class='label'>select_dr:</span>  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Select-DR</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+  <span class='label'>capture_dr:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Capture-DR</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+  <span class='label'>shift_dr:</span>   <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Shift-DR</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+  <span class='label'>exit1_dr:</span>   <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Exit1-DR</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+  <span class='label'>pause_dr:</span>   <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Pause-DR</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+  <span class='label'>exit2_dr:</span>   <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Exit2-DR</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+  <span class='label'>update_dr:</span>  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Update-DR</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+  <span class='label'>select_ir:</span>  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Select-IR</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+  <span class='label'>capture_ir:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Capture-IR</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+  <span class='label'>shift_ir:</span>   <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Shift-IR</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+  <span class='label'>exit1_ir:</span>   <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Exit1-IR</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+  <span class='label'>pause_ir:</span>   <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Pause-IR</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+  <span class='label'>exit2_ir:</span>   <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Exit2-IR</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+  <span class='label'>update_ir:</span>  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Update-IR</span><span class='tstring_end'>&#39;</span></span>
+<span class='rbrace'>}</span></pre></dd>
+      
+    </dl>
+  
+
+
+
+
+  <h2>Instance Attribute Summary <small>(<a href="#" class="summary_toggle">collapse</a>)</small></h2>
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#state-instance_method" title="#state (instance method)">- (Object) <strong>state</strong> </a>
+    
+
+    
+      (also: #current_state)
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the current state of the JTAG TAP Controller.</p>
+</div></span>
+  
+</li>
+
+    
+  </ul>
+
+
+
+
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#idle-instance_method" title="#idle (instance method)">- (Object) <strong>idle</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Forces the state to Run-Test/Idle regardless of the current state.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#pause_dr-instance_method" title="#pause_dr (instance method)">- (Object) <strong>pause_dr</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Goto Pause-DR state then exit back to Run-Test/Idle.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#pause_ir-instance_method" title="#pause_ir (instance method)">- (Object) <strong>pause_ir</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Goto Pause-IR state then exit back to Run-Test/Idle.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#reset-instance_method" title="#reset (instance method)">- (Object) <strong>reset</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Force state to Test-Logic-Reset regardless of the current state.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#shift_dr-instance_method" title="#shift_dr (instance method)">- (Object) <strong>shift_dr</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Goto Shift-DR state then exit back to Run-Test/Idle.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#shift_ir-instance_method" title="#shift_ir (instance method)">- (Object) <strong>shift_ir</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Goto Shift-IR state then exit back to Run-Test/Idle.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#state_str-instance_method" title="#state_str (instance method)">- (Object) <strong>state_str</strong> </a>
+    
+
+    
+      (also: #current_state_str)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the current state as a human readable string.</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  <div id="instance_attr_details" class="attr_details">
+    <h2>Instance Attribute Details</h2>
+    
+      
+      <span id=""></span>
+      <div class="method_details first">
+  <h3 class="signature first" id="state-instance_method">
+  
+    - (<tt>Object</tt>) <strong>state</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='current_state-instance_method'>current_state</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the current state of the JTAG TAP Controller</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+26
+27
+28</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_jtag/tap_controller.rb', line 26</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_state'>state</span>
+  <span class='ivar'>@state</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="idle-instance_method">
+  
+    - (<tt>Object</tt>) <strong>idle</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Forces the state to Run-Test/Idle regardless of the current state.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_jtag/tap_controller.rb', line 249</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_idle'>idle</span>
+  <span class='id identifier rubyid_log'>log</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Force transition to Run-Test/Idle...</span><span class='tstring_end'>&#39;</span></span>
+  <span class='comment'># From the JTAG2IPS block guide holding TMS high for 5 cycles
+</span>  <span class='comment'># will force it to reset regardless of the state, let&#39;s give
+</span>  <span class='comment'># it 6 for luck:
+</span>  <span class='int'>6</span><span class='period'>.</span><span class='id identifier rubyid_times'>times</span> <span class='lbrace'>{</span> <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>1</span><span class='rparen'>)</span> <span class='rbrace'>}</span>
+  <span class='comment'># Now a couple of cycles low to get it into idle
+</span>  <span class='int'>2</span><span class='period'>.</span><span class='id identifier rubyid_times'>times</span> <span class='lbrace'>{</span> <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>0</span><span class='rparen'>)</span> <span class='rbrace'>}</span>
+  <span class='id identifier rubyid_update_state'>update_state</span> <span class='symbol'>:idle</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="pause_dr-instance_method">
+  
+    - (<tt>Object</tt>) <strong>pause_dr</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Goto Pause-DR state then exit back to Run-Test/Idle</p>
+
+<p>This method can be nested inside of a shift_dr block to transition into the
+Pause-DR state and then back to Shift-DR</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  <div class="examples">
+    <p class="tag_title">Examples:</p>
+    
+      
+        <p class="example_title"><div class='inline'>
+<p>Trandition into Pause-DR</p>
+</div></p>
+      
+      <pre class="example code"><code><span class='comment'># State is Run-Test/Idle
+</span><span class='id identifier rubyid_jtag'>jtag</span><span class='period'>.</span><span class='id identifier rubyid_pause_dr'>pause_dr</span> <span class='kw'>do</span>
+  <span class='comment'># State is Pause-DR
+</span><span class='kw'>end</span>
+<span class='comment'># State is Run-Test/Idle</span></code></pre>
+    
+      
+        <p class="example_title"><div class='inline'>
+<p>Switching between Shift-DR and Pause-DR</p>
+</div></p>
+      
+      <pre class="example code"><code><span class='comment'># State is Run-Test/Idle
+</span><span class='id identifier rubyid_jtag'>jtag</span><span class='period'>.</span><span class='id identifier rubyid_shift_dr'>shift_dr</span> <span class='kw'>do</span>
+  <span class='comment'># State is Shift-DR
+</span>  <span class='id identifier rubyid_jtag'>jtag</span><span class='period'>.</span><span class='id identifier rubyid_pause_dr'>pause_dr</span> <span class='kw'>do</span>
+    <span class='comment'># State is Pause-DR
+</span>  <span class='kw'>end</span>
+  <span class='comment'># State is Shift-DR
+</span><span class='kw'>end</span>
+<span class='comment'># State is Run-Test/Idle</span></code></pre>
+    
+  </div>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_jtag/tap_controller.rb', line 107</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_pause_dr'>pause_dr</span>
+  <span class='id identifier rubyid_validate_state'>validate_state</span><span class='lparen'>(</span><span class='symbol'>:idle</span><span class='comma'>,</span> <span class='symbol'>:shift_dr</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_log'>log</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Transition to Pause-DR...</span><span class='tstring_end'>&#39;</span></span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_state'>state</span> <span class='op'>==</span> <span class='symbol'>:idle</span>
+    <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>1</span><span class='rparen'>)</span>  <span class='comment'># =&gt; Select-DR-Scan
+</span>    <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>0</span><span class='rparen'>)</span>  <span class='comment'># =&gt; Capture-DR
+</span>    <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>1</span><span class='rparen'>)</span>  <span class='comment'># =&gt; Exit1-DR
+</span>    <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>0</span><span class='rparen'>)</span>  <span class='comment'># =&gt; Pause-DR
+</span>    <span class='id identifier rubyid_update_state'>update_state</span> <span class='symbol'>:pause_dr</span>
+    <span class='kw'>yield</span>
+    <span class='id identifier rubyid_log'>log</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Transition to Run-Test/Idle...</span><span class='tstring_end'>&#39;</span></span>
+    <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>1</span><span class='rparen'>)</span>  <span class='comment'># =&gt; Exit2-DR
+</span>    <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>1</span><span class='rparen'>)</span>  <span class='comment'># =&gt; Update-DR
+</span>    <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>0</span><span class='rparen'>)</span>  <span class='comment'># =&gt; Run-Test/Idle
+</span>    <span class='id identifier rubyid_update_state'>update_state</span> <span class='symbol'>:idle</span>
+  <span class='kw'>else</span>  <span class='comment'># shift_dr
+</span>    <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>1</span><span class='rparen'>)</span>  <span class='comment'># =&gt; Exit1-DR
+</span>    <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>0</span><span class='rparen'>)</span>  <span class='comment'># =&gt; Pause-DR
+</span>    <span class='id identifier rubyid_update_state'>update_state</span> <span class='symbol'>:pause_dr</span>
+    <span class='kw'>yield</span>
+    <span class='id identifier rubyid_log'>log</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Transition to Shift-DR...</span><span class='tstring_end'>&#39;</span></span>
+    <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>1</span><span class='rparen'>)</span>  <span class='comment'># =&gt; Exit2-DR
+</span>    <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>0</span><span class='rparen'>)</span>  <span class='comment'># =&gt; Shift-DR
+</span>    <span class='id identifier rubyid_update_state'>update_state</span> <span class='symbol'>:shift_dr</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="pause_ir-instance_method">
+  
+    - (<tt>Object</tt>) <strong>pause_ir</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Goto Pause-IR state then exit back to Run-Test/Idle</p>
+
+<p>This method can be nested inside of a shift_ir block to transition into the
+Pause-IR state and then back to Shift-IR</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  <div class="examples">
+    <p class="tag_title">Examples:</p>
+    
+      
+        <p class="example_title"><div class='inline'>
+<p>Trandition into Pause-iR</p>
+</div></p>
+      
+      <pre class="example code"><code><span class='comment'># State is Run-Test/Idle
+</span><span class='id identifier rubyid_jtag'>jtag</span><span class='period'>.</span><span class='id identifier rubyid_pause_ir'>pause_ir</span> <span class='kw'>do</span>
+  <span class='comment'># State is Pause-IR
+</span><span class='kw'>end</span>
+<span class='comment'># State is Run-Test/Idle</span></code></pre>
+    
+      
+        <p class="example_title"><div class='inline'>
+<p>Switching between Shift-IR and Pause-IR</p>
+</div></p>
+      
+      <pre class="example code"><code><span class='comment'># State is Run-Test/Idle
+</span><span class='id identifier rubyid_jtag'>jtag</span><span class='period'>.</span><span class='id identifier rubyid_shift_ir'>shift_ir</span> <span class='kw'>do</span>
+  <span class='comment'># State is Shift-IR
+</span>  <span class='id identifier rubyid_jtag'>jtag</span><span class='period'>.</span><span class='id identifier rubyid_pause_ir'>pause_ir</span> <span class='kw'>do</span>
+    <span class='comment'># State is Pause-IR
+</span>  <span class='kw'>end</span>
+  <span class='comment'># State is Shift-IR
+</span><span class='kw'>end</span>
+<span class='comment'># State is Run-Test/Idle</span></code></pre>
+    
+  </div>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_jtag/tap_controller.rb', line 213</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_pause_ir'>pause_ir</span>
+  <span class='id identifier rubyid_validate_state'>validate_state</span><span class='lparen'>(</span><span class='symbol'>:idle</span><span class='comma'>,</span> <span class='symbol'>:shift_ir</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_log'>log</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Transition to Pause-IR...</span><span class='tstring_end'>&#39;</span></span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_state'>state</span> <span class='op'>==</span> <span class='symbol'>:idle</span>
+    <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>1</span><span class='rparen'>)</span>  <span class='comment'># =&gt; Select-DR-Scan
+</span>    <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>1</span><span class='rparen'>)</span>  <span class='comment'># =&gt; Select-IR-Scan
+</span>    <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>0</span><span class='rparen'>)</span>  <span class='comment'># =&gt; Capture-IR
+</span>    <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>1</span><span class='rparen'>)</span>  <span class='comment'># =&gt; Exit1-IR
+</span>    <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>0</span><span class='rparen'>)</span>  <span class='comment'># =&gt; Pause-IR
+</span>    <span class='id identifier rubyid_update_state'>update_state</span> <span class='symbol'>:pause_ir</span>
+    <span class='kw'>yield</span>
+    <span class='id identifier rubyid_log'>log</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Transition to Run-Test/Idle...</span><span class='tstring_end'>&#39;</span></span>
+    <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>1</span><span class='rparen'>)</span>  <span class='comment'># =&gt; Exit2-IR
+</span>    <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>1</span><span class='rparen'>)</span>  <span class='comment'># =&gt; Update-IR
+</span>    <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>0</span><span class='rparen'>)</span>  <span class='comment'># =&gt; Run-Test/Idle
+</span>    <span class='id identifier rubyid_update_state'>update_state</span> <span class='symbol'>:idle</span>
+  <span class='kw'>else</span> <span class='comment'># :shift_ir
+</span>    <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>1</span><span class='rparen'>)</span>  <span class='comment'># =&gt; Exit1-IR
+</span>    <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>0</span><span class='rparen'>)</span>  <span class='comment'># =&gt; Pause-IR
+</span>    <span class='id identifier rubyid_update_state'>update_state</span> <span class='symbol'>:pause_ir</span>
+    <span class='kw'>yield</span>
+    <span class='id identifier rubyid_log'>log</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Transition to Shift-IR...</span><span class='tstring_end'>&#39;</span></span>
+    <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>1</span><span class='rparen'>)</span>  <span class='comment'># =&gt; Exit2-IR
+</span>    <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>0</span><span class='rparen'>)</span>  <span class='comment'># =&gt; Shift-IR
+</span>    <span class='id identifier rubyid_update_state'>update_state</span> <span class='symbol'>:shift_ir</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="reset-instance_method">
+  
+    - (<tt>Object</tt>) <strong>reset</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Force state to Test-Logic-Reset regardless of the current state</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+262
+263
+264
+265
+266</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_jtag/tap_controller.rb', line 262</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_reset'>reset</span>
+  <span class='id identifier rubyid_log'>log</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Force transition to Test-Logic-Reset...</span><span class='tstring_end'>&#39;</span></span>
+  <span class='comment'># JTAG reset
+</span>  <span class='int'>6</span><span class='period'>.</span><span class='id identifier rubyid_times'>times</span> <span class='lbrace'>{</span> <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>1</span><span class='rparen'>)</span> <span class='rbrace'>}</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="shift_dr-instance_method">
+  
+    - (<tt>Object</tt>) <strong>shift_dr</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Goto Shift-DR state then exit back to Run-Test/Idle</p>
+
+<p>This method can be nested inside of a pause_dr block to transition into the
+Shift-DR state and then back to Pause-DR</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  <div class="examples">
+    <p class="tag_title">Examples:</p>
+    
+      
+        <p class="example_title"><div class='inline'>
+<p>Trandition into Shift-DR</p>
+</div></p>
+      
+      <pre class="example code"><code><span class='comment'># State is Run-Test/Idle
+</span><span class='id identifier rubyid_jtag'>jtag</span><span class='period'>.</span><span class='id identifier rubyid_shift_dr'>shift_dr</span> <span class='kw'>do</span>
+  <span class='comment'># State is Shift-DR
+</span><span class='kw'>end</span>
+<span class='comment'># State is Run-Test/Idle</span></code></pre>
+    
+      
+        <p class="example_title"><div class='inline'>
+<p>Switching between Pause-DR and Shift-DR</p>
+</div></p>
+      
+      <pre class="example code"><code><span class='comment'># State is Run-Test/Idle
+</span><span class='id identifier rubyid_jtag'>jtag</span><span class='period'>.</span><span class='id identifier rubyid_pause_dr'>pause_dr</span> <span class='kw'>do</span>
+  <span class='comment'># State is Pause-DR
+</span>  <span class='id identifier rubyid_jtag'>jtag</span><span class='period'>.</span><span class='id identifier rubyid_shift_dr'>shift_dr</span> <span class='kw'>do</span>
+    <span class='comment'># State is Shift-DR
+</span>  <span class='kw'>end</span>
+  <span class='comment'># State is Pause-DR
+</span><span class='kw'>end</span>
+<span class='comment'># State is Run-Test/Idle</span></code></pre>
+    
+  </div>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_jtag/tap_controller.rb', line 52</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_shift_dr'>shift_dr</span>
+  <span class='id identifier rubyid_validate_state'>validate_state</span><span class='lparen'>(</span><span class='symbol'>:idle</span><span class='comma'>,</span> <span class='symbol'>:pause_dr</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_log'>log</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Transition to Shift-DR...</span><span class='tstring_end'>&#39;</span></span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_state'>state</span> <span class='op'>==</span> <span class='symbol'>:idle</span>
+    <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>1</span><span class='rparen'>)</span>  <span class='comment'># =&gt; Select-DR-Scan
+</span>    <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>0</span><span class='rparen'>)</span>  <span class='comment'># =&gt; Capture-DR
+</span>    <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>0</span><span class='rparen'>)</span>  <span class='comment'># =&gt; Shift-DR
+</span>    <span class='id identifier rubyid_update_state'>update_state</span> <span class='symbol'>:shift_dr</span>
+    <span class='id identifier rubyid_log'>log</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>**** Data start ****</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>always:</span> <span class='kw'>true</span>
+    <span class='kw'>yield</span>
+    <span class='id identifier rubyid_log'>log</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Transition to Run-Test/Idle...</span><span class='tstring_end'>&#39;</span></span>
+    <span class='kw'>if</span> <span class='ivar'>@last_data_vector_shifted</span>
+      <span class='ivar'>@last_data_vector_shifted</span> <span class='op'>=</span> <span class='kw'>false</span>
+    <span class='kw'>else</span>
+      <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>1</span><span class='rparen'>)</span>  <span class='comment'># =&gt; Exit1-DR
+</span>    <span class='kw'>end</span>
+    <span class='id identifier rubyid_log'>log</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>**** Data stop ****</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>always:</span> <span class='kw'>true</span>
+    <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>1</span><span class='rparen'>)</span>  <span class='comment'># =&gt; Update-DR
+</span>    <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>0</span><span class='rparen'>)</span>  <span class='comment'># =&gt; Run-Test/Idle
+</span>    <span class='id identifier rubyid_update_state'>update_state</span> <span class='symbol'>:idle</span>
+  <span class='kw'>else</span> <span class='comment'># :pause_dr
+</span>    <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>1</span><span class='rparen'>)</span>  <span class='comment'># =&gt; Exit2-DR
+</span>    <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>0</span><span class='rparen'>)</span>  <span class='comment'># =&gt; Shift-DR
+</span>    <span class='id identifier rubyid_update_state'>update_state</span> <span class='symbol'>:shift_dr</span>
+    <span class='kw'>yield</span>
+    <span class='id identifier rubyid_log'>log</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Transition to Pause-DR...</span><span class='tstring_end'>&#39;</span></span>
+    <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>1</span><span class='rparen'>)</span>  <span class='comment'># =&gt; Exit1-DR
+</span>    <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>0</span><span class='rparen'>)</span>  <span class='comment'># =&gt; Pause-DR
+</span>    <span class='id identifier rubyid_update_state'>update_state</span> <span class='symbol'>:pause_dr</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="shift_ir-instance_method">
+  
+    - (<tt>Object</tt>) <strong>shift_ir</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Goto Shift-IR state then exit back to Run-Test/Idle</p>
+
+<p>This method can be nested inside of a pause_ir block to transition into the
+Shift-IR state and then back to Pause-IR</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  <div class="examples">
+    <p class="tag_title">Examples:</p>
+    
+      
+        <p class="example_title"><div class='inline'>
+<p>Trandition into Shift-IR</p>
+</div></p>
+      
+      <pre class="example code"><code><span class='comment'># State is Run-Test/Idle
+</span><span class='id identifier rubyid_jtag'>jtag</span><span class='period'>.</span><span class='id identifier rubyid_shift_ir'>shift_ir</span> <span class='kw'>do</span>
+  <span class='comment'># State is Shift-IR
+</span><span class='kw'>end</span>
+<span class='comment'># State is Run-Test/Idle</span></code></pre>
+    
+      
+        <p class="example_title"><div class='inline'>
+<p>Switching between Pause-IR and Shift-IR</p>
+</div></p>
+      
+      <pre class="example code"><code><span class='comment'># State is Run-Test/Idle
+</span><span class='id identifier rubyid_jtag'>jtag</span><span class='period'>.</span><span class='id identifier rubyid_pause_ir'>pause_ir</span> <span class='kw'>do</span>
+  <span class='comment'># State is Pause-IR
+</span>  <span class='id identifier rubyid_jtag'>jtag</span><span class='period'>.</span><span class='id identifier rubyid_shift_ir'>shift_ir</span> <span class='kw'>do</span>
+    <span class='comment'># State is Shift-IR
+</span>  <span class='kw'>end</span>
+  <span class='comment'># State is Pause-IR
+</span><span class='kw'>end</span>
+<span class='comment'># State is Run-Test/Idle</span></code></pre>
+    
+  </div>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_jtag/tap_controller.rb', line 157</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_shift_ir'>shift_ir</span>
+  <span class='id identifier rubyid_validate_state'>validate_state</span><span class='lparen'>(</span><span class='symbol'>:idle</span><span class='comma'>,</span> <span class='symbol'>:pause_ir</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_log'>log</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Transition to Shift-IR...</span><span class='tstring_end'>&#39;</span></span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_state'>state</span> <span class='op'>==</span> <span class='symbol'>:idle</span>
+    <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>1</span><span class='rparen'>)</span>  <span class='comment'># =&gt; Select-DR-Scan
+</span>    <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>1</span><span class='rparen'>)</span>  <span class='comment'># =&gt; Select-IR-Scan
+</span>    <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>0</span><span class='rparen'>)</span>  <span class='comment'># =&gt; Capture-IR
+</span>    <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>0</span><span class='rparen'>)</span>  <span class='comment'># =&gt; Shift-IR
+</span>    <span class='id identifier rubyid_update_state'>update_state</span> <span class='symbol'>:shift_ir</span>
+    <span class='id identifier rubyid_log'>log</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>**** Data start ****</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>always:</span> <span class='kw'>true</span>
+    <span class='kw'>yield</span>
+    <span class='id identifier rubyid_log'>log</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Transition to Run-Test/Idle...</span><span class='tstring_end'>&#39;</span></span>
+    <span class='kw'>if</span> <span class='ivar'>@last_data_vector_shifted</span>
+      <span class='ivar'>@last_data_vector_shifted</span> <span class='op'>=</span> <span class='kw'>false</span>
+    <span class='kw'>else</span>
+      <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>1</span><span class='rparen'>)</span>  <span class='comment'># =&gt; Exit1-DR
+</span>    <span class='kw'>end</span>
+    <span class='id identifier rubyid_log'>log</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>**** Data stop ****</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>always:</span> <span class='kw'>true</span>
+    <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>1</span><span class='rparen'>)</span>  <span class='comment'># =&gt; Update-IR
+</span>    <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>0</span><span class='rparen'>)</span>  <span class='comment'># =&gt; Run-Test/Idle
+</span>    <span class='id identifier rubyid_update_state'>update_state</span> <span class='symbol'>:idle</span>
+  <span class='kw'>else</span> <span class='comment'># :pause_ir
+</span>    <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>1</span><span class='rparen'>)</span>  <span class='comment'># =&gt; Exit2-IR
+</span>    <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>0</span><span class='rparen'>)</span>  <span class='comment'># =&gt; Shift-IR
+</span>    <span class='id identifier rubyid_update_state'>update_state</span> <span class='symbol'>:shift_ir</span>
+    <span class='kw'>yield</span>
+    <span class='id identifier rubyid_log'>log</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Transition to Pause-IR...</span><span class='tstring_end'>&#39;</span></span>
+    <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>1</span><span class='rparen'>)</span>  <span class='comment'># =&gt; Exit1-IR
+</span>    <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='int'>0</span><span class='rparen'>)</span>  <span class='comment'># =&gt; Pause-IR
+</span>    <span class='id identifier rubyid_update_state'>update_state</span> <span class='symbol'>:pause_ir</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="state_str-instance_method">
+  
+    - (<tt>Object</tt>) <strong>state_str</strong> 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='current_state_str-instance_method'>current_state_str</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the current state as a human readable string</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+242
+243
+244</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_jtag/tap_controller.rb', line 242</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_state_str'>state_str</span>
+  <span class='const'>STATES</span><span class='lbracket'>[</span><span class='id identifier rubyid_state'>state</span><span class='rbracket'>]</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+
+    <div id="footer">
+  Generated on Mon Jul 20 06:22:50 2015 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.8.7.6 (ruby-2.1.5).
+</div>
+
+  </body>
+</html>
