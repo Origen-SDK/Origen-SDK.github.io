@@ -72,8 +72,8 @@
     </div>
     <div id="navbar" class="collapse navbar-collapse">
       <ul class="nav navbar-nav">
-        <li class=""><a href="/doc_helpers/examples">Examples</a></li>
-        <li class="active"><a href="/doc_helpers/release_notes">Release Notes</a></li>
+        <li class="active"><a href="/doc_helpers/examples">Examples</a></li>
+        <li class=""><a href="/doc_helpers/release_notes">Release Notes</a></li>
         <li><a href="https://github.com/Origen-SDK/origen_doc_helpers">Github</a></li>
       </ul>
 <div class="pull-right logo-rgen" style="margin-top: 5px; margin-left: 5px">
@@ -95,23 +95,109 @@
 <div class="row">
   <div class="span12">
 
-    <p><a class="anchor release_tag" name="v0_2_0"></a></p>
-    <h1><a href="#v0_2_0">Tag: v0.2.0</a></h1>
+    <h1 id="disqus-comments">Disqus Comments</h1>
 
-    <h5 id="branch-master">Branch: ‘master’</h5>
+    <p>These helpers make it easy to drop a <a href="https://disqus.com/">Disqus</a> comments section at the
+bottom of your pages, just like <a href="/doc_helpers/examples/disqus/#Comments">the one below</a>.</p>
 
-    <h5 id="by-stephen-mcginty-on-23-jul-2015-2201pm">by Stephen McGinty on 23-Jul-2015 22:01PM</h5>
+    <p>Note that such comments will be externally visible and therefore <strong>this should not be used for
+company internal applications/web pages</strong>. For similar functionality within a company you
+can use <a href="/doc_helpers/examples/yammer">Yammer comments</a> instead if your company uses the
+Office 365 suite.</p>
 
-    <p>Added Disqus comments helper, see http://origen-sdk.org/doc_helpers/examples/disqus/</p>
+    <div>    
+  <a class="anchor" name="Community_Selection"></a>          
+  <h2><a href="#Community_Selection">Community Selection</a></h2>          
+</div>
 
-    <p><a class="anchor release_tag" name="v0_1_0"></a></p>
-    <h1><a href="#v0_1_0">Tag: v0.1.0</a></h1>
+    <p>Any comments made on a web page will be associated with a specific community on Disqus where
+they can be collectively viewed and moderated, for example here is
+<a href="https://disqus.com/home/forum/origen-sdk/">the Origen SDK Disqus community</a>.</p>
 
-    <h5 id="branch-master-1">Branch: ‘master’</h5>
+    <p>If your web page is about a plugin/application that will be of general interest within the Origen
+community, then you are welcome to use the Origen SDK Disqus community which will be selected
+by default.</p>
 
-    <h5 id="by-stephen-mcginty-on-26-jun-2015-1031am">by Stephen McGinty on 26-Jun-2015 10:31AM</h5>
+    <p>If your pages are more about your specific application domain, then you should
+<a href="https://disqus.com/home/channels/new/">create you own community channel</a> instead.</p>
 
-    <p>Initial public release</p>
+    <p>Your new community can be associated with your application by setting the following
+app configuration attribute:</p>
+
+    <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#777"># config/application.rb</span>
+config.disqus_shortname = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">my-community</span><span style="color:#710">"</span></span>
+</pre></div>
+</div>
+    </div>
+
+    <p>Alternatively this parameter can be passed directly to the comments helper as shown
+below.</p>
+
+    <div>    
+  <a class="anchor" name="Adding_Comments"></a>          
+  <h2><a href="#Adding_Comments">Adding Comments</a></h2>          
+</div>
+
+    <p>To include disqus comments simply add this to the bottom of any given page, or your
+layout file to add comments to every page:</p>
+
+    <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> disqus_comments <span style="font-weight:bold;color:#666">%&gt;</span></span>
+</pre></div>
+</div>
+    </div>
+
+    <p>The following options are available:</p>
+
+    <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>:disqus_shortname - Specify the disqus forum to associate your comments with. This will fall back to the value returned by
+                    RGen.app.config.disqus_shortname, and failing that will fall back to 'origen-sdk' to select the Origen
+                    community channel.
+</pre></div>
+</div>
+    </div>
+
+    <div style="position: relative">
+  <hr>
+  <div>    
+  <a class="anchor" name="Comments"></a>          
+  <h4><a href="#Comments">Comments</a></h4>          
+</div>
+</div>
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = 'origen-sdk';
+    var disqus_title;
+    var disqus_url = 'http://' + window.location.hostname + window.location.pathname;
+
+    disqus_title = $("h1").text();
+    if (disqus_title.length == 0) {
+      disqus_title = $("h2").text();
+    }
+    if (disqus_title.length == 0) {
+      disqus_title = $("h3").text();
+    }
+    if (disqus_title.length == 0) {
+      disqus_title = $("title").text();
+    } else {
+      disqus_title = disqus_title + ' (' + $("title").text() + ')';
+    }
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</noscript>
 
   </div>
 </div>
