@@ -1,0 +1,542 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: OrigenMemoryImage::SRecord
+  
+    &mdash; Origen Memory Image 0.5.0
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '../';
+  framesUrl = "../frames.html#!OrigenMemoryImage/SRecord.html";
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../_index.html">Index (S)</a> &raquo;
+    <span class='title'><span class='object_link'><a href="../OrigenMemoryImage.html" title="OrigenMemoryImage (module)">OrigenMemoryImage</a></span></span>
+     &raquo; 
+    <span class="title">SRecord</span>
+  
+
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="../class_list.html">
+      Class List
+    </a>
+  
+    <a class="full_list_link" id="method_list_link"
+        href="../method_list.html">
+      Method List
+    </a>
+  
+    <a class="full_list_link" id="file_list_link"
+        href="../file_list.html">
+      File List
+    </a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+
+    <iframe id="search_frame"></iframe>
+
+    <div id="content"><h1>Class: OrigenMemoryImage::SRecord
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName"><span class='object_link'><a href="Base.html" title="OrigenMemoryImage::Base (class)">Base</a></span></span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next"><span class='object_link'><a href="Base.html" title="OrigenMemoryImage::Base (class)">Base</a></span></li>
+          
+            <li class="next">OrigenMemoryImage::SRecord</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+  
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">lib/origen_memory_image/s_record.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>An S-record file consists of a sequence of specially formatted ASCII
+character strings. An S-record will be less than or equal to 78 bytes in
+length. The order of S-records within a file is of no significance and no
+particular order may be assumed.</p>
+
+<p>The general format of an S-record follows:</p>
+
+<pre class="code ruby"><code class="ruby">+-------------------//------------------//-----------------------+
+| type | count | address  |            data           | checksum |
++-------------------//------------------//-----------------------+</code></pre>
+
+<p>type : A <a href="2">char</a> field. These characters describe the type of
+record (S0, S1, S2, S3, S5, S7, S8, or S9).</p>
+
+<p>count : A <a href="2">char</a> field. These characters when paired and
+interpreted as a hexadecimal value, display the count of remaining
+character pairs in the record.</p>
+
+<p>address : A char[4,6, or 8] field. These characters grouped and interpreted
+as a hexadecimal value, display the address at which the data field is to
+be loaded into memory. The length of the field depends on the number of
+bytes necessary to hold the address. A 2-byte address uses 4 characters, a
+3-byte address uses 6 characters, and a 4-byte address uses 8 characters.</p>
+
+<p>data : A char [0-64] field. These characters when paired and interpreted as
+hexadecimal values represent the memory loadable data or descriptive
+information.</p>
+
+<p>checksum : A <a href="2">char</a> field. These characters when paired and
+interpreted as a hexadecimal value display the least significant byte of
+the ones complement of the sum of the byte values represented by the pairs
+of characters making up the count, the address, and the data fields.</p>
+
+<p>Each record is terminated with a line feed. If any additional or different
+record terminator(s) or delay characters are needed during transmission to
+the target system it is the responsibility of the transmitting program to
+provide them.</p>
+
+<p>#### S0 Record</p>
+
+<p>The type of record is &#39;S0&#39; (0x5330). The address field is unused
+and will be filled with zeros (0x0000). The header information within the
+data field is divided into the following subfields.</p>
+<ul><li>
+<p>mname is <a href="20">char</a> and is the module name.</p>
+</li><li>
+<p>ver is <a href="2">char</a> and is the version number.</p>
+</li><li>
+<p>rev is <a href="2">char</a> and is the revision number.</p>
+</li><li>
+<p>description is <a href="0-36">char</a> and is a text comment.</p>
+</li></ul>
+
+<p>Each of the subfields is composed of ASCII bytes whose associated
+characters, when paired, represent one byte hexadecimal values in the case
+of the version and revision numbers, or represent the hexadecimal values of
+the ASCII characters comprising the module name and description.</p>
+
+<p>#### S1 Record</p>
+
+<p>The type of record field is &#39;S1&#39; (0x5331). The address field is
+intrepreted as a 2-byte address. The data field is composed of memory
+loadable data.</p>
+
+<p>#### S2 Record</p>
+
+<p>The type of record field is &#39;S2&#39; (0x5332). The address field is
+intrepreted as a 3-byte address. The data field is composed of memory
+loadable data.</p>
+
+<p>#### S3 Record</p>
+
+<p>The type of record field is &#39;S3&#39; (0x5333). The address field is
+intrepreted as a 4-byte address. The data field is composed of memory
+loadable data.</p>
+
+<p>#### S5 Record</p>
+
+<p>The type of record field is &#39;S5&#39; (0x5335). The address field is
+intrepreted as a 2-byte value and contains the count of S1, S2, and S3
+records previously transmitted. There is no data field.</p>
+
+<p>#### S7 Record</p>
+
+<p>The type of record field is &#39;S7&#39; (0x5337). The address field
+contains the starting execution address and is intrepreted as 4-byte
+address. There is no data field.</p>
+
+<p>#### S8 Record</p>
+
+<p>The type of record field is &#39;S8&#39; (0x5338). The address field
+contains the starting execution address and is intrepreted as 3-byte
+address. There is no data field.</p>
+
+<p>#### S9 Record</p>
+
+<p>The type of record field is &#39;S9&#39; (0x5339). The address field
+contains the starting execution address and is intrepreted as 2-byte
+address. There is no data field.</p>
+
+<p>### Example</p>
+
+<p>Shown below is a typical S-record format file.</p>
+
+<pre class="code ruby"><code class="ruby"><span class='const'>S00600004844521B</span>
+<span class='const'>S1130000285F245F2212226A000424290008237C2A</span>
+<span class='const'>S11300100002000800082629001853812341001813</span>
+<span class='const'>S113002041E900084E42234300182342000824A952</span>
+<span class='const'>S107003000144ED492</span>
+<span class='const'>S5030004F8</span>
+<span class='const'>S9030000FC</span></code></pre>
+
+<p>The file consists of one S0 record, four S1 records, one S5 record and an
+S9 record.</p>
+
+<p>The S0 record is comprised as follows:</p>
+<ul><li>
+<p>S0 S-record type S0, indicating it is a header record.</p>
+</li><li>
+<p>06 Hexadecimal 06 (decimal 6), indicating that six character pairs (or
+ASCII bytes) follow.</p>
+</li><li>
+<p>00 00 Four character 2-byte address field, zeroes in this example.</p>
+</li><li>
+<p>48 44 52 ASCII H, D, and R - “HDR”.</p>
+</li><li>
+<p>1B The checksum.</p>
+</li></ul>
+
+<p>The first S1 record is comprised as follows:</p>
+<ul><li>
+<p>S1 S-record type S1, indicating it is a data record to be loaded at a
+2-byte address.</p>
+</li><li>
+<p>13 Hexadecimal 13 (decimal 19), indicating that nineteen character pairs,
+representing a 2 byte address,</p>
+</li><li>
+<p>16 bytes of binary data, and a 1 byte checksum, follow.</p>
+</li><li>
+<p>00 00 Four character 2-byte address field; hexidecimal address 0x0000,
+where the data which follows is to be loaded.</p>
+</li><li>
+<p>28 5F 24 5F 22 12 22 6A 00 04 24 29 00 08 23 7C Sixteen character pairs
+representing the actual binary data.</p>
+</li><li>
+<p>2A The checksum.</p>
+</li><li>
+<p>The second and third S1 records each contain 0x13 (19) character pairs and
+are ended with checksums of 13 and 52, respectively. The fourth S1 record
+contains 07 character pairs and has a checksum of 92.</p>
+</li></ul>
+
+<p>The S5 record is comprised as follows:</p>
+<ul><li>
+<p>S5 S-record type S5, indicating it is a count record indicating the number
+of S1 records</p>
+</li><li>
+<p>03 Hexadecimal 03 (decimal 3), indicating that three character pairs
+follow.</p>
+</li><li>
+<p>00 04 Hexadecimal 0004 (decimal 4), indicating that there are four data
+records previous to this record.</p>
+</li><li>
+<p>F8 The checksum.</p>
+</li></ul>
+
+<p>The S9 record is comprised as follows:</p>
+<ul><li>
+<p>S9 S-record type S9, indicating it is a termination record.</p>
+</li><li>
+<p>03 Hexadecimal 03 (decimal 3), indicating that three character pairs
+follow.</p>
+</li><li>
+<p>00 00 The address field, hexadecimal 0 (decimal 0) indicating the starting
+execution address.</p>
+</li><li>
+<p>FC The checksum.</p>
+</li></ul>
+
+<p>### Additional Notes</p>
+
+<p>There isn&#39;t any evidence that Motorola ever has made use of the header
+information within the data field of the S0 record, as described above.
+This must have been used by some third party vendors. This is the only
+place that a 78-byte limit on total record length or 64-byte limit on data
+length is documented. These values shouldn&#39;t be trusted for the general
+case.</p>
+
+<p>The count field can have values in the range of 0x3 (2 bytes of address + 1
+byte checksum = 3, a not very useful record) to 0xff; this is the count of
+remaining character pairs, including checksum. If you write code to convert
+S-Records, you should always assume that a record can be as long as 514
+(decimal) characters in length (255 * 2 = 510, plus 4 characters for the
+type and count fields), plus any terminating character(s).</p>
+
+<p>That is, in establishing an input buffer in C, you would declare it to be
+an array of 515 chars, thus leaving room for the terminating null
+character.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+
+
+
+
+
+  <h2>Instance Attribute Summary</h2>
+  
+  <h3 class="inherited">Attributes inherited from <span class='object_link'><a href="Base.html" title="OrigenMemoryImage::Base (class)">Base</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="Base.html#file-instance_method" title="OrigenMemoryImage::Base#file (method)">#file</a></span>, <span class='object_link'><a href="Base.html#source-instance_method" title="OrigenMemoryImage::Base#source (method)">#source</a></span></p>
+
+
+  
+    <h2>
+      Class Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#match%3F-class_method" title="match? (class method)">+ (Boolean) <strong>match?</strong>(snippet) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+    </ul>
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#start_address-instance_method" title="#start_address (instance method)">- (Object) <strong>start_address</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods inherited from <span class='object_link'><a href="Base.html" title="OrigenMemoryImage::Base (class)">Base</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="Base.html#file_name-instance_method" title="OrigenMemoryImage::Base#file_name (method)">#file_name</a></span>, <span class='object_link'><a href="Base.html#flip_endianness-instance_method" title="OrigenMemoryImage::Base#flip_endianness (method)">#flip_endianness</a></span>, <span class='object_link'><a href="Base.html#initialize-instance_method" title="OrigenMemoryImage::Base#initialize (method)">#initialize</a></span>, <span class='object_link'><a href="Base.html#lines-instance_method" title="OrigenMemoryImage::Base#lines (method)">#lines</a></span>, <span class='object_link'><a href="Base.html#to_a-instance_method" title="OrigenMemoryImage::Base#to_a (method)">#to_a</a></span></p>
+<div id="constructor_details" class="method_details_list">
+  <h2>Constructor Details</h2>
+  
+    <p class="notice">This class inherits a constructor from <span class='object_link'><a href="Base.html#initialize-instance_method" title="OrigenMemoryImage::Base#initialize (method)">OrigenMemoryImage::Base</a></span></p>
+  
+</div>
+
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="match?-class_method">
+  
+    + (<tt>Boolean</tt>) <strong>match?</strong>(snippet) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+152
+153
+154
+155
+156</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_memory_image/s_record.rb', line 152</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_match?'>match?</span><span class='lparen'>(</span><span class='id identifier rubyid_snippet'>snippet</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_snippet'>snippet</span><span class='period'>.</span><span class='id identifier rubyid_all?'>all?</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_line'>line</span><span class='op'>|</span>
+    <span class='id identifier rubyid_line'>line</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span> <span class='op'>||</span> <span class='id identifier rubyid_line'>line</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>^S[01235789]</span><span class='regexp_end'>/</span></span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="start_address-instance_method">
+  
+    - (<tt>Object</tt>) <strong>start_address</strong> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_memory_image/s_record.rb', line 158</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_start_address'>start_address</span>
+  <span class='ivar'>@start_address</span> <span class='op'>||=</span> <span class='kw'>begin</span>
+    <span class='id identifier rubyid_lines'>lines</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_line'>line</span><span class='op'>|</span>
+      <span class='kw'>if</span> <span class='id identifier rubyid_line'>line</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>^S([789])(.*)</span><span class='regexp_end'>/</span></span>
+        <span class='id identifier rubyid_type'>type</span> <span class='op'>=</span> <span class='const'>Regexp</span><span class='period'>.</span><span class='id identifier rubyid_last_match'>last_match</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span>
+        <span class='kw'>case</span> <span class='id identifier rubyid_type'>type</span>
+        <span class='kw'>when</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>7</span><span class='tstring_end'>&#39;</span></span>
+          <span class='kw'>return</span> <span class='id identifier rubyid_line'>line</span><span class='period'>.</span><span class='id identifier rubyid_slice'>slice</span><span class='lparen'>(</span><span class='int'>4</span><span class='comma'>,</span> <span class='int'>8</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span><span class='lparen'>(</span><span class='int'>16</span><span class='rparen'>)</span>
+        <span class='kw'>when</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>8</span><span class='tstring_end'>&#39;</span></span>
+          <span class='kw'>return</span> <span class='id identifier rubyid_line'>line</span><span class='period'>.</span><span class='id identifier rubyid_slice'>slice</span><span class='lparen'>(</span><span class='int'>4</span><span class='comma'>,</span> <span class='int'>6</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span><span class='lparen'>(</span><span class='int'>16</span><span class='rparen'>)</span>
+        <span class='kw'>when</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>9</span><span class='tstring_end'>&#39;</span></span>
+          <span class='kw'>return</span> <span class='id identifier rubyid_line'>line</span><span class='period'>.</span><span class='id identifier rubyid_slice'>slice</span><span class='lparen'>(</span><span class='int'>4</span><span class='comma'>,</span> <span class='int'>4</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span><span class='lparen'>(</span><span class='int'>16</span><span class='rparen'>)</span>
+        <span class='kw'>end</span>
+      <span class='kw'>end</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+
+    <div id="footer">
+  Generated on Fri Aug  7 06:20:22 2015 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.8.7.6 (ruby-2.1.5).
+</div>
+
+  </body>
+</html>
