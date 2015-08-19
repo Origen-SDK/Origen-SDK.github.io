@@ -6,7 +6,7 @@
 <title>
   Class: OrigenSWD::Driver
   
-    &mdash; Origen SWD 0.3.6
+    &mdash; Origen SWD 0.3.7
   
 </title>
 
@@ -181,7 +181,11 @@ DUT object or a protocol abstraction.</p>
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>Recieves data stream with SWD protocol  -size = the length of data  -<a
+href=":compare_data">options</a> = data to be compared, only compared if
+options is set.</p>
+</div></span>
   
 </li>
 
@@ -206,7 +210,7 @@ DUT object or a protocol abstraction.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>A new instance of Driver.</p>
+<p>Initialize class variables.</p>
 </div></span>
   
 </li>
@@ -230,7 +234,9 @@ DUT object or a protocol abstraction.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Hardware interface.</p>
+<p>Sends data stream with SWD protocol  -data = data to be sent  -size = the
+length of data  -<a href=":overlay">options</a> = string for pattern label
+to facilitate pattern overlay  -no return value.</p>
 </div></span>
   
 </li>
@@ -253,7 +259,10 @@ DUT object or a protocol abstraction.</p>
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>Sends specified number of &#39;0&#39; bits  -size = the length of data  -no
+return value.</p>
+</div></span>
   
 </li>
 
@@ -276,7 +285,7 @@ DUT object or a protocol abstraction.</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns a new instance of Driver</p>
+<p>Initialize class variables</p>
 
 
   </div>
@@ -290,14 +299,14 @@ DUT object or a protocol abstraction.</p>
       <pre class="lines">
 
 
-11
 12
 13
 14
-15</pre>
+15
+16</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_swd/driver.rb', line 11</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_swd/driver.rb', line 12</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_owner'>owner</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='ivar'>@owner</span> <span class='op'>=</span> <span class='id identifier rubyid_owner'>owner</span>
@@ -374,24 +383,38 @@ DUT object or a protocol abstraction</p>
   
 
   
-</h3><table class="source_code">
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Recieves data stream with SWD protocol</p>
+
+<pre class="code ruby"><code class="ruby">-size = the length of data
+-options[:compare_data] = data to be compared, only compared if options is set</code></pre>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-38
-39
-40
-41
-42
-43
-44
-45
-46</pre>
+46
+47
+48
+49
+50
+51
+52
+53
+54</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_swd/driver.rb', line 38</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_swd/driver.rb', line 46</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_get_data'>get_data</span><span class='lparen'>(</span><span class='id identifier rubyid_size'>size</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_should_store'>should_store</span> <span class='op'>=</span> <span class='gvar'>$dut</span><span class='period'>.</span><span class='id identifier rubyid_pin'>pin</span><span class='lparen'>(</span><span class='symbol'>:swd_dio</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_is_to_be_stored?'>is_to_be_stored?</span>
@@ -419,7 +442,12 @@ DUT object or a protocol abstraction</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Hardware interface</p>
+<p>Sends data stream with SWD protocol</p>
+
+<pre class="code ruby"><code class="ruby">-data = data to be sent
+-size = the length of data
+-options[:overlay] = string for pattern label to facilitate pattern overlay
+-no return value</code></pre>
 
 
   </div>
@@ -433,11 +461,6 @@ DUT object or a protocol abstraction</p>
       <pre class="lines">
 
 
-18
-19
-20
-21
-22
 23
 24
 25
@@ -451,10 +474,15 @@ DUT object or a protocol abstraction</p>
 33
 34
 35
-36</pre>
+36
+37
+38
+39
+40
+41</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_swd/driver.rb', line 18</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_swd/driver.rb', line 23</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_send_data'>send_data</span><span class='lparen'>(</span><span class='id identifier rubyid_data'>data</span><span class='comma'>,</span> <span class='id identifier rubyid_size'>size</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_key?'>key?</span><span class='lparen'>(</span><span class='symbol'>:overlay</span><span class='rparen'>)</span>
@@ -489,21 +517,35 @@ DUT object or a protocol abstraction</p>
   
 
   
-</h3><table class="source_code">
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Sends specified number of &#39;0&#39; bits</p>
+
+<pre class="code ruby"><code class="ruby">-size = the length of data
+-no return value</code></pre>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-48
-49
-50
-51
-52
-53</pre>
+59
+60
+61
+62
+63
+64</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_swd/driver.rb', line 48</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_swd/driver.rb', line 59</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_swd_dio_to_0'>swd_dio_to_0</span><span class='lparen'>(</span><span class='id identifier rubyid_size'>size</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_owner'>owner</span><span class='period'>.</span><span class='id identifier rubyid_pin'>pin</span><span class='lparen'>(</span><span class='symbol'>:swd_dio</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_drive'>drive</span><span class='lparen'>(</span><span class='int'>0</span><span class='rparen'>)</span>
@@ -521,7 +563,7 @@ DUT object or a protocol abstraction</p>
 </div>
 
     <div id="footer">
-  Generated on Tue Aug 18 15:45:55 2015 by
+  Generated on Tue Aug 18 22:04:31 2015 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.1.5).
 </div>
