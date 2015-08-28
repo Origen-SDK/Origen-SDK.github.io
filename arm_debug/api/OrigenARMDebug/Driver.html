@@ -6,7 +6,7 @@
 <title>
   Class: OrigenARMDebug::Driver
   
-    &mdash; Origen ARM Debug 0.4.2
+    &mdash; Origen ARM Debug 0.4.3
   
 </title>
 
@@ -99,7 +99,23 @@
 </dl>
 <div class="clear"></div>
 
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>To use this driver the owner model must include the SWD or JTAG protocol
+drivers:</p>
 
+<pre class="code ruby"><code class="ruby">include JTAG
+  or
+include SWD</code></pre>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
 
 
 
@@ -374,12 +390,12 @@ address.</p>
       <pre class="lines">
 
 
-15
-16
-17</pre>
+20
+21
+22</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/driver.rb', line 15</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/driver.rb', line 20</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_owner'>owner</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='ivar'>@owner</span> <span class='op'>=</span> <span class='id identifier rubyid_owner'>owner</span>
@@ -423,12 +439,12 @@ DUT object or a protocol abstraction</p>
       <pre class="lines">
 
 
-5
-6
-7</pre>
+10
+11
+12</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/driver.rb', line 5</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/driver.rb', line 10</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_owner'>owner</span>
   <span class='ivar'>@owner</span>
@@ -508,13 +524,13 @@ address</p>
       <pre class="lines">
 
 
-41
-42
-43
-44</pre>
+46
+47
+48
+49</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/driver.rb', line 41</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/driver.rb', line 46</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_add_mem_ap'>add_mem_ap</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_base_address'>base_address</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_instance_variable_set'>instance_variable_set</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>@</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='const'>MemAP</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='kw'>self</span><span class='comma'>,</span> <span class='label'>name:</span> <span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='label'>base_address:</span> <span class='id identifier rubyid_base_address'>base_address</span><span class='rparen'>)</span><span class='rparen'>)</span>
@@ -551,12 +567,12 @@ address</p>
       <pre class="lines">
 
 
-29
-30
-31</pre>
+34
+35
+36</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/driver.rb', line 29</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/driver.rb', line 34</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_mem_ap'>mem_ap</span>
   <span class='ivar'>@mem_ap</span> <span class='op'>||=</span> <span class='const'>MemAP</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='kw'>self</span><span class='rparen'>)</span>
@@ -633,12 +649,12 @@ only (don&#39;t care cycles will be generated for the others).</p>
       <pre class="lines">
 
 
-53
-54
-55</pre>
+58
+59
+60</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/driver.rb', line 53</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/driver.rb', line 58</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_read_register'>read_register</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_mem_ap'>mem_ap</span><span class='period'>.</span><span class='id identifier rubyid_read'>read</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='period'>.</span><span class='id identifier rubyid_address'>address</span><span class='comma'>,</span> <span class='label'>size:</span> <span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span><span class='comma'>,</span> <span class='label'>compare_data:</span> <span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='period'>.</span><span class='id identifier rubyid_data'>data</span><span class='rparen'>)</span>
@@ -674,16 +690,16 @@ only (don&#39;t care cycles will be generated for the others).</p>
       <pre class="lines">
 
 
-20
-21
-22
-23
-24
 25
-26</pre>
+26
+27
+28
+29
+30
+31</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/driver.rb', line 20</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/driver.rb', line 25</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_swj_dp'>swj_dp</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_owner'>owner</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:swd</span><span class='rparen'>)</span>
@@ -764,12 +780,12 @@ only (don&#39;t care cycles will be generated for the others).</p>
       <pre class="lines">
 
 
-64
-65
-66</pre>
+69
+70
+71</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/driver.rb', line 64</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/driver.rb', line 69</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_write_register'>write_register</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_mem_ap'>mem_ap</span><span class='period'>.</span><span class='id identifier rubyid_write'>write</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='period'>.</span><span class='id identifier rubyid_address'>address</span><span class='comma'>,</span> <span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='period'>.</span><span class='id identifier rubyid_data'>data</span><span class='comma'>,</span> <span class='label'>size:</span> <span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span><span class='rparen'>)</span>
@@ -784,7 +800,7 @@ only (don&#39;t care cycles will be generated for the others).</p>
 </div>
 
     <div id="footer">
-  Generated on Thu Aug 27 08:05:43 2015 by
+  Generated on Fri Aug 28 13:22:21 2015 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.1.5).
 </div>
