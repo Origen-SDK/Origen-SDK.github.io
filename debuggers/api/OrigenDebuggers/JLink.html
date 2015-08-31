@@ -1,0 +1,492 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: OrigenDebuggers::JLink
+  
+    &mdash; Origen Debuggers 0.5.0
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '../';
+  framesUrl = "../frames.html#!OrigenDebuggers/JLink.html";
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../_index.html">Index (J)</a> &raquo;
+    <span class='title'><span class='object_link'><a href="../OrigenDebuggers.html" title="OrigenDebuggers (module)">OrigenDebuggers</a></span></span>
+     &raquo; 
+    <span class="title">JLink</span>
+  
+
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="../class_list.html">
+      Class List
+    </a>
+  
+    <a class="full_list_link" id="method_list_link"
+        href="../method_list.html">
+      Method List
+    </a>
+  
+    <a class="full_list_link" id="file_list_link"
+        href="../file_list.html">
+      File List
+    </a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+
+    <iframe id="search_frame"></iframe>
+
+    <div id="content"><h1>Class: OrigenDebuggers::JLink
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName"><span class='object_link'><a href="Base.html" title="OrigenDebuggers::Base (class)">Base</a></span></span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">Origen::Tester::CommandBasedTester</li>
+          
+            <li class="next"><span class='object_link'><a href="Base.html" title="OrigenDebuggers::Base (class)">Base</a></span></li>
+          
+            <li class="next">OrigenDebuggers::JLink</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+      <dt class="r2">Includes:</dt>
+      <dd class="r2"><span class='object_link'><a href="JLink/Common_API.html" title="OrigenDebuggers::JLink::Common_API (module)">Common_API</a></span>, <span class='object_link'><a href="JLink/Custom.html" title="OrigenDebuggers::JLink::Custom (module)">Custom</a></span>, <span class='object_link'><a href="JLink/JTAG_API.html" title="OrigenDebuggers::JLink::JTAG_API (module)">JTAG_API</a></span></dd>
+      
+    
+  
+  
+  
+    <dt class="r1 last">Defined in:</dt>
+    <dd class="r1 last">lib/origen_debuggers/j_link.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>Driver for the Segger J-Link debugger: <a
+href="http://www.segger.com/debug-probes.html">www.segger.com/debug-probes.html</a></p>
+
+<p>For reference here is the complete command list for this debugger. Note
+that while not recommended any of these can be called directly from an
+application by using the dw (direct write) method, e.g.</p>
+
+<pre class="code ruby"><code class="ruby"><span class='gvar'>$tester</span><span class='period'>.</span><span class='id identifier rubyid_dw'>dw</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>hwinfo</span><span class='tstring_end'>&quot;</span></span>
+<span class='gvar'>$tester</span><span class='period'>.</span><span class='id identifier rubyid_dw'>dw</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>mem 0x1234, 10</span><span class='tstring_end'>&quot;</span></span></code></pre>
+
+<p>Available commands are:</p>
+<hr>
+
+<p>f          Firmware info h          halt g          go Sleep      Waits the
+given time (in milliseconds). Syntax: Sleep &lt;delay&gt; s          Single
+step the target chip st         Show hardware status hwinfo     Show
+hardware info mem        Read memory. Syntax: mem  &lt;Addr&gt;,
+&lt;NumBytes&gt; (hex) mem8       Read  8-bit items. Syntax: mem8 
+&lt;Addr&gt;, &lt;NumBytes&gt; (hex) mem16      Read 16-bit items. Syntax:
+mem16 &lt;Addr&gt;, &lt;NumItems&gt; (hex) mem32      Read 32-bit items.
+Syntax: mem32 &lt;Addr&gt;, &lt;NumItems&gt; (hex) w1         Write  8-bit
+items. Syntax: w1 &lt;Addr&gt;, &lt;Data&gt; (hex) w2         Write 16-bit
+items. Syntax: w2 &lt;Addr&gt;, &lt;Data&gt; (hex) w4         Write 32-bit
+items. Syntax: w4 &lt;Addr&gt;, &lt;Data&gt; (hex) erase      Erase
+internal flash of selected device. Syntax: Erase wm         Write test
+words. Syntax: wm &lt;NumWords&gt; is         Identify length of scan chain
+select register ms         Measure length of scan chain. Syntax: ms
+&lt;Scan chain&gt; mr         Measure RTCK react time. Syntax: mr q        
+Quit qc         Close JLink connection and quit r          Reset target    
+(RESET) rx         Reset target         (RESET). Syntax: rx
+&lt;DelayAfterReset&gt; RSetType   Set the current reset type. Syntax:
+RSetType &lt;type&gt; Regs       Display contents of registers wreg      
+Write register.   Syntax: wreg &lt;RegName&gt;, &lt;Value&gt; moe       
+Shows mode-of-entry, meaning: Reason why CPU is halted SetBP      Set
+breakpoint.   Syntax: SetBP &lt;addr&gt; [A/T] [S/H] SetWP      Set
+Watchpoint. Syntax: &lt;Addr&gt; [R/W] [&lt;Data&gt; [&lt;D-Mask&gt;]
+[A-Mask]] ClrBP      Clear breakpoint. Syntax: ClrBP  &lt;BP_Handle&gt;
+ClrWP      Clear watchpoint. Syntax: ClrWP  &lt;WP_Handle&gt; VCatch    
+Write vector catch. Syntax: VCatch &lt;Value&gt; loadbin    Load binary
+file into target memory.</p>
+
+<pre class="code ruby"><code class="ruby">Syntax: loadbin &lt;filename&gt;, &lt;addr&gt;</code></pre>
+
+<p>savebin    Saves target memory into binary file.</p>
+
+<pre class="code ruby"><code class="ruby">Syntax: savebin &lt;filename&gt;, &lt;addr&gt;, &lt;NumBytes&gt;</code></pre>
+
+<p>verifybin  Verfies if the specified binary is already in the target memory
+at th e specified address.</p>
+
+<pre class="code ruby"><code class="ruby">Syntax: verifybin &lt;filename&gt;, &lt;addr&gt;</code></pre>
+
+<p>SetPC      Set the PC to specified value. Syntax: SetPC &lt;Addr&gt; le    
+Change to little endian mode be         Change to big endian mode log      
+Enables log to file.  Syntax: log &lt;filename&gt; unlock     Unlocks a
+device. Syntax: unlock &lt;DeviceName&gt;</p>
+
+<pre class="code ruby"><code class="ruby">Type unlock without &lt;DeviceName&gt; to get a list
+of supported device names.
+nRESET has to be connected</code></pre>
+
+<p>term       Test command to visualize printf output from the target device,</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_using'>using</span> <span class='const'>DCC</span> <span class='lparen'>(</span><span class='const'>SEGGER</span> <span class='const'>DCC</span> <span class='id identifier rubyid_handler'>handler</span> <span class='id identifier rubyid_running'>running</span> <span class='id identifier rubyid_on'>on</span> <span class='id identifier rubyid_target'>target</span><span class='rparen'>)</span></code></pre>
+
+<p>ReadAP     Reads a CoreSight AP register.</p>
+
+<pre class="code ruby"><code class="ruby">Note: First read returns the data of the previous read.
+An additional read of DP reg 3 is necessary to get the data.</code></pre>
+
+<p>ReadDP     Reads a CoreSight DP register.</p>
+
+<pre class="code ruby"><code class="ruby">Note: For SWD data is returned immediately.
+For JTAG the data of the previous read is returned.
+An additional read of DP reg 3 is necessary to get the data.</code></pre>
+
+<p>WriteAP    Writes a CoreSight AP register. WriteDP    Writes a CoreSight DP
+register. SWDSelect  Selects SWD as interface and outputs</p>
+
+<pre class="code ruby"><code class="ruby">the JTAG -&gt; SWD swichting sequence.</code></pre>
+
+<p>SWDReadAP  Reads a CoreSight AP register via SWD.</p>
+
+<pre class="code ruby"><code class="ruby">Note: First read returns the data of the previous read.
+An additional read of DP reg 3 is necessary to get the data.</code></pre>
+
+<p>SWDReadDP  Reads a CoreSight DP register via SWD.</p>
+
+<pre class="code ruby"><code class="ruby">Note: Correct data is returned immediately.</code></pre>
+
+<p>SWDWriteAP Writes a CoreSight AP register via SWD. SWDWriteDP Writes a
+CoreSight DP register via SWD. Device     Selects a specific device J-Link
+shall connect to</p>
+
+<pre class="code ruby"><code class="ruby">and performs a reconnect.
+In most cases explicit selection of the device is not necessary.
+Selecting a device enables the user to make use of the J-Link
+flash programming functionality as well as using unlimited
+breakpoints in flash memory.
+For some devices explicit device selection is mandatory in order
+to allow the DLL to perform special handling needed by the device.</code></pre>
+
+<p>ExpDevList Exports the device names from the DLL internal</p>
+
+<pre class="code ruby"><code class="ruby">device list to a text file
+  Syntax: ExpDevList &lt;Filename&gt;</code></pre>
+
+<p>PowerTrace Perform power trace (not supported by all models) Syntax:
+PowerTrace &lt;LogFile&gt; [&lt;ChannelMask&gt; &lt;RefCountSel&gt;]
+&lt;LogFile&gt;: File to store power trace data to &lt;ChannelMask&gt;:
+32-bit mask to specify what channels shall be enabled &lt;SampleFreq&gt;:
+Sampling frequency in Hz (0 == max) &lt;RefCountSel&gt;:       0: No
+reference count</p>
+
+<pre class="code ruby"><code class="ruby">1: Number of bytes transmitted on SWO</code></pre>
+
+<p>—- CP15 ———— rce        Read CP15.  Syntax: rce &lt;Op1&gt;, &lt;CRn&gt;,
+&lt;CRm&gt;, &lt;Op2&gt; wce        Write CP15. Syntax: wce &lt;Op1&gt;,
+&lt;CRn&gt;, &lt;CRm&gt;, &lt;Op2&gt;, &lt;Data&gt; —- ICE ————- Ice       
+Show state of the embedded ice macrocell (ICE breaker) ri         Read Ice
+reg.  Syntax: ri &lt;RegIndex&gt;(hex) wi         Write Ice reg. Syntax: wi
+&lt;RegIndex&gt;, &lt;Data&gt;(hex) —- TRACE ———– TAddBranch TRACE - Add
+branch instruction to trace buffer. Paras:&lt;Addr&gt;,&lt;BAddr&gt;
+TAddInst   TRACE - Add (non-branch) instruction to trace buffer. Syntax:
+&lt;Addr&gt; TClear     TRACE - Clear buffer TSetSize   TRACE - Set Size of
+trace buffer TSetFormat TRACE - SetFormat TSR        TRACE - Show Regions
+(and analyze trace buffer) TStart     TRACE - Start TStop      TRACE - Stop
+—- SWO ————- SWOSpeed   SWO - Show supported speeds SWOStart   SWO - Start
+SWOStop    SWO - Stop SWOStat    SWO - Display SWO status SWORead    SWO -
+Read and display SWO data SWOShow    SWO - Read and analyze SWO data
+SWOFlush   SWO - Flush data SWOView    SWO - View terminal data —- PERIODIC
+——– PERConf    PERIODIC - Configure PERStart   PERIODIC - Start PERStop   
+PERIODIC - Stop PERStat    PERIODIC - Display status PERRead    PERIODIC -
+Read and display data PERShow    PERIODIC - Read and analyze data —- File
+I/O ——– fwrite     Write file to emulator fread      Read file from
+emulator fshow      Read and display file from emulator fdelete    Delete
+file on emulator fsize      Display size of file on emulator —- Test ————
+TestHaltGo   Run go/halt 1000 times TestStep     Run step 1000 times
+TestCSpeed   Measure CPU speed.</p>
+
+<pre class="code ruby"><code class="ruby">Parameters: [&lt;RAMAddr&gt;]</code></pre>
+
+<p>TestWSpeed   Measure download speed into target memory.</p>
+
+<pre class="code ruby"><code class="ruby">Parameters:  [&lt;Addr&gt; [&lt;Size&gt;]]</code></pre>
+
+<p>TestRSpeed   Measure upload speed from target memory.</p>
+
+<pre class="code ruby"><code class="ruby">Parameters: [&lt;Addr&gt; [&lt;Size&gt;] [&lt;NumBlocks&gt;]]</code></pre>
+
+<p>TestNWSpeed  Measure network download speed.</p>
+
+<pre class="code ruby"><code class="ruby">Parameters: [&lt;NumBytes&gt; [&lt;NumReps&gt;]]</code></pre>
+
+<p>TestNRSpeed  Measure network upload speed.</p>
+
+<pre class="code ruby"><code class="ruby">Parameters: [&lt;NumBytes&gt; [&lt;NumReps&gt;]]</code></pre>
+
+<p>—- JTAG ———— Config     Set number of IR/DR bits before ARM device.</p>
+
+<pre class="code ruby"><code class="ruby">Syntax: Config &lt;IRpre&gt;, &lt;DRpre&gt;</code></pre>
+
+<p>speed      Set JTAG speed. Syntax: speed &lt;freq&gt;|auto|adaptive, e.g.
+speed 2000, speed a i          Read JTAG Id (Host CPU) wjc        Write
+JTAG command (IR). Syntax: wjc &lt;Data&gt;(hex) wjd        Write JTAG data
+(DR). Syntax: wjd &lt;Data64&gt;(hex), &lt;NumBits&gt;(dec) RTAP      
+Reset TAP Controller using state machine (111110) wjraw      Write Raw JTAG
+data. Syntax: wjraw &lt;NumBits(dec)&gt;, &lt;tms&gt;, &lt;tdi&gt; rt      
+Reset TAP Controller (nTRST) —- JTAG-Hardware — c00        Create clock
+with TDI = TMS = 0 c          Clock tck0       Clear TCK tck1       Set  
+TCK 0          Clear TDI 1          Set   TDI t0         Clear TMS t1      
+Set   TMS trst0      Clear TRST trst1      Set   TRST r0         Clear
+RESET r1         Set   RESET —- Connection —— usb        Connect to J-Link
+via USB.  Syntax: usb &lt;port&gt;, where port is 0..3 ip         Connect
+to J-Link ARM Pro or J-Link TCP/IP Server via TCP/IP.</p>
+
+<pre class="code ruby"><code class="ruby">Syntax: ip &lt;ip_addr&gt;</code></pre>
+
+<p>—- Configuration — si         Select target interface. Syntax: si
+&lt;Interface&gt;,</p>
+
+<pre class="code ruby"><code class="ruby">where 0=JTAG and 1=SWD.</code></pre>
+
+<p>power      Switch power supply for target. Syntax: power &lt;State&gt;
+[perm],</p>
+
+<pre class="code ruby"><code class="ruby">where State is either On or Off. Example: power on perm</code></pre>
+
+<p>wconf      Write configuration byte. Syntax: wconf &lt;offset&gt;,
+&lt;data&gt; rconf      Read configuration bytes. Syntax: rconf ipaddr    
+Show/Assign IP address and subnetmask of/to the connected J-Link. gwaddr   
+Show/Assign network gateway address of/to the connected J-Link. dnsaddr   
+Show/Assign network DNS server address of/to the connected J-Link. conf    
+Show configuration of the connected J-Link. ecp        Enable the  J-Link
+control panel. calibrate  Calibrate the target current measurement. selemu 
+Select a emulator to communicate with,</p>
+
+<pre class="code ruby"><code class="ruby">from a list of all emulators which are connected to the host
+The interfaces to search on, can be specified
+  Syntax: selemu [&lt;Interface0&gt; &lt;Interface1&gt; ...]</code></pre>
+
+<p>ShowEmuList Shows a list of all emulators which are connected to the host.</p>
+
+<pre class="code ruby"><code class="ruby">The interfaces to search on, can be specified.
+ Syntax: ShowEmuList [&lt;Interface0&gt; &lt;Interface1&gt; ...]</code></pre>
+<hr>
+
+<p>NOTE: Specifying a filename in command line will start J-Link Commander in
+script mode.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><h2>Defined Under Namespace</h2>
+<p class="children">
+  
+    
+      <strong class="modules">Modules:</strong> <span class='object_link'><a href="JLink/Common_API.html" title="OrigenDebuggers::JLink::Common_API (module)">Common_API</a></span>, <span class='object_link'><a href="JLink/Custom.html" title="OrigenDebuggers::JLink::Custom (module)">Custom</a></span>, <span class='object_link'><a href="JLink/JTAG_API.html" title="OrigenDebuggers::JLink::JTAG_API (module)">JTAG_API</a></span>
+    
+  
+    
+  
+</p>
+
+
+
+
+
+
+
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (JLink) <strong>initialize</strong> </a>
+    
+
+    
+  </span>
+  
+  
+    <span class="note title constructor">constructor</span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>A new instance of JLink.</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <span class='object_link'><a href="JLink/Custom.html" title="OrigenDebuggers::JLink::Custom (module)">Custom</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="JLink/Custom.html#read_memory-instance_method" title="OrigenDebuggers::JLink::Custom#read_memory (method)">#read_memory</a></span></p>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <span class='object_link'><a href="JLink/JTAG_API.html" title="OrigenDebuggers::JLink::JTAG_API (module)">JTAG_API</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="JLink/JTAG_API.html#read_dr-instance_method" title="OrigenDebuggers::JLink::JTAG_API#read_dr (method)">#read_dr</a></span>, <span class='object_link'><a href="JLink/JTAG_API.html#read_ir-instance_method" title="OrigenDebuggers::JLink::JTAG_API#read_ir (method)">#read_ir</a></span>, <span class='object_link'><a href="JLink/JTAG_API.html#write_dr-instance_method" title="OrigenDebuggers::JLink::JTAG_API#write_dr (method)">#write_dr</a></span>, <span class='object_link'><a href="JLink/JTAG_API.html#write_ir-instance_method" title="OrigenDebuggers::JLink::JTAG_API#write_ir (method)">#write_ir</a></span></p>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <span class='object_link'><a href="JLink/Common_API.html" title="OrigenDebuggers::JLink::Common_API (module)">Common_API</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="JLink/Common_API.html#delay-instance_method" title="OrigenDebuggers::JLink::Common_API#delay (method)">#delay</a></span>, <span class='object_link'><a href="JLink/Common_API.html#extract_address-instance_method" title="OrigenDebuggers::JLink::Common_API#extract_address (method)">#extract_address</a></span>, <span class='object_link'><a href="JLink/Common_API.html#extract_data-instance_method" title="OrigenDebuggers::JLink::Common_API#extract_data (method)">#extract_data</a></span>, <span class='object_link'><a href="JLink/Common_API.html#extract_size-instance_method" title="OrigenDebuggers::JLink::Common_API#extract_size (method)">#extract_size</a></span>, <span class='object_link'><a href="JLink/Common_API.html#read-instance_method" title="OrigenDebuggers::JLink::Common_API#read (method)">#read</a></span>, <span class='object_link'><a href="JLink/Common_API.html#read16-instance_method" title="OrigenDebuggers::JLink::Common_API#read16 (method)">#read16</a></span>, <span class='object_link'><a href="JLink/Common_API.html#read32-instance_method" title="OrigenDebuggers::JLink::Common_API#read32 (method)">#read32</a></span>, <span class='object_link'><a href="JLink/Common_API.html#read8-instance_method" title="OrigenDebuggers::JLink::Common_API#read8 (method)">#read8</a></span>, <span class='object_link'><a href="JLink/Common_API.html#write-instance_method" title="OrigenDebuggers::JLink::Common_API#write (method)">#write</a></span>, <span class='object_link'><a href="JLink/Common_API.html#write16-instance_method" title="OrigenDebuggers::JLink::Common_API#write16 (method)">#write16</a></span>, <span class='object_link'><a href="JLink/Common_API.html#write32-instance_method" title="OrigenDebuggers::JLink::Common_API#write32 (method)">#write32</a></span>, <span class='object_link'><a href="JLink/Common_API.html#write8-instance_method" title="OrigenDebuggers::JLink::Common_API#write8 (method)">#write8</a></span></p>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods inherited from <span class='object_link'><a href="Base.html" title="OrigenDebuggers::Base (class)">Base</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="Base.html#cycle-instance_method" title="OrigenDebuggers::Base#cycle (method)">#cycle</a></span>, <span class='object_link'><a href="Base.html#jtag%3F-instance_method" title="OrigenDebuggers::Base#jtag? (method)">#jtag?</a></span></p>
+
+  <div id="constructor_details" class="method_details_list">
+  <h2>Constructor Details</h2>
+  
+    <div class="method_details first">
+  <h3 class="signature first" id="initialize-instance_method">
+  
+    - (<tt><span class='object_link'><a href="" title="OrigenDebuggers::JLink (class)">JLink</a></span></tt>) <strong>initialize</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns a new instance of JLink</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+201
+202
+203
+204
+205
+206
+207</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_debuggers/j_link.rb', line 201</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span>
+  <span class='kw'>super</span>
+  <span class='comment'># The minimum time unit is 1ms
+</span>  <span class='id identifier rubyid_set_timeset'>set_timeset</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>default</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='int'>1_000_000</span><span class='rparen'>)</span>
+  <span class='ivar'>@pat_extension</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>jlk</span><span class='tstring_end'>&#39;</span></span>
+  <span class='ivar'>@comment_char</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>//</span><span class='tstring_end'>&#39;</span></span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+  
+</div>
+
+
+</div>
+
+    <div id="footer">
+  Generated on Mon Aug 31 05:14:59 2015 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.8.7.6 (ruby-2.1.5).
+</div>
+
+  </body>
+</html>

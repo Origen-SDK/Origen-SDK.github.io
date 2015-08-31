@@ -1,0 +1,448 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: OrigenDebuggers::PEmicro
+  
+    &mdash; Origen Debuggers 0.5.0
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '../';
+  framesUrl = "../frames.html#!OrigenDebuggers/PEmicro.html";
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../_index.html">Index (P)</a> &raquo;
+    <span class='title'><span class='object_link'><a href="../OrigenDebuggers.html" title="OrigenDebuggers (module)">OrigenDebuggers</a></span></span>
+     &raquo; 
+    <span class="title">PEmicro</span>
+  
+
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="../class_list.html">
+      Class List
+    </a>
+  
+    <a class="full_list_link" id="method_list_link"
+        href="../method_list.html">
+      Method List
+    </a>
+  
+    <a class="full_list_link" id="file_list_link"
+        href="../file_list.html">
+      File List
+    </a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+
+    <iframe id="search_frame"></iframe>
+
+    <div id="content"><h1>Class: OrigenDebuggers::PEmicro
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName"><span class='object_link'><a href="Base.html" title="OrigenDebuggers::Base (class)">Base</a></span></span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">Origen::Tester::CommandBasedTester</li>
+          
+            <li class="next"><span class='object_link'><a href="Base.html" title="OrigenDebuggers::Base (class)">Base</a></span></li>
+          
+            <li class="next">OrigenDebuggers::PEmicro</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+      <dt class="r2">Includes:</dt>
+      <dd class="r2"><span class='object_link'><a href="PEmicro/Common_API.html" title="OrigenDebuggers::PEmicro::Common_API (module)">Common_API</a></span>, <span class='object_link'><a href="PEmicro/Custom.html" title="OrigenDebuggers::PEmicro::Custom (module)">Custom</a></span>, <span class='object_link'><a href="PEmicro/JTAG_API.html" title="OrigenDebuggers::PEmicro::JTAG_API (module)">JTAG_API</a></span></dd>
+      
+    
+  
+  
+  
+    <dt class="r1 last">Defined in:</dt>
+    <dd class="r1 last">lib/origen_debuggers/p_and_e.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>Driver for the P&amp;E Microsystems debugger: <a
+href="http://www.pemicro.com">www.pemicro.com</a></p>
+
+<p>For reference here is a command list for this debugger. Note, many commands
+can be altered using additional opperands, see help for details.  Note that
+while not recommended any of these can be called directly from an
+application by using the dw (direct write) method, e.g.</p>
+
+<pre class="code ruby"><code class="ruby"><span class='gvar'>$tester</span><span class='period'>.</span><span class='id identifier rubyid_dw'>dw</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>****</span><span class='tstring_end'>&quot;</span></span>
+<span class='gvar'>$tester</span><span class='period'>.</span><span class='id identifier rubyid_dw'>dw</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>****</span><span class='tstring_end'>&quot;</span></span></code></pre>
+
+<p>Available commands are:</p>
+
+<p>write_ir  write “raw” jtag to the instruction register write_dr  write
+“raw” jtag to the data register</p>
+
+<p>ADDSPR 	Sets user-defined SPR name to equal user-defined SPR number.
+ASCIIF3 (ASCIIF6) 	Toggle the F3(F6) memory window between showing
+hexadecimal bytes and ASCII characters.  Nonprintable characters are shown
+as an ASCII period (&#39;.&#39;). ASM 	Assemble instructions. BELL 	Sound
+Bell BF  	Block fill memory. BGND_TIME 	Starts processor execution at the
+current Program Counter and logs time since the last BGND instruction each
+time a BGND instruction is encountered. BR  	Set instruction breakpoint.
+CAPTURE 	Open a capture file named &#39;filename&#39;. CAPTUREOFF 	Turn off
+capturing and close the current capture file. CLEARMAP	Remove all symbolic
+mapfile names. CLEARSYMBOL	Remove all temporary symbols. CLEARVAR 	Clears
+variables list from Variables window. CODE 	Show disassembled code in the
+code window starting at address add.  If you specify an address in the
+middle of an intended instruction, improper results may occur. COLORS
+	Change Debugger Colors COUNT 	Counts the number of times breakpoints in
+internal counter table are executed.  Allows optional stop and start
+parameters to be set. COUNTER 	Add or subtract a location from the internal
+counter table.  Using this command with no address shows the current
+counters. CR  	Set Condition Register. CTR 	Set Counter Register DASM
+	Disassemble Instructions DUMP_TRACE	Dump current trace buffer. DUMP 	Dumps
+memory to screen. EVAL	Evaluate expression. EXECUTE_OPCODE Treats numeric
+parameter as an opcode and executes it. EXIT	Exit debugger. FPSCR 	Set
+Floating Point Status And Control Register FR(x) 	Set Floating Point
+Register. G or GO  	Begin program execution. GOALL  	Begin program
+execution for multi-core devices.. GOEXIT 	Begin program execution without
+breakpoints and terminate debugger software. GOTIL 	Execute until address.
+GOTILROM 	Execute fast single steps without updating the screen, until the
+address is reached.  This is the fastest way to breakpoint in ROM.
+HELP	Bring up the help window. HGO 	Begin Program Execution HGOALL 	Begin
+Program Execution For Multi-Core Devices HLOAD 	Load ELF/DWARF/S19/MAP
+Object And Debug Information HLOADMAP 	Load DWARF/MAP Debug Info Only HSTEP
+	High-Level Language Source Step HSTEPALL 	High-Level Language Source Step
+For Multi-Core Devices HSTEPFOR 	High-Level Language Step Forever LOADDESK
+	Loads the visual layout for the debugger from the last instance it was
+saved, such as with the SAVEDESK command. LOAD_BIN 	Load a binary file of
+byte.  The default filename extension is .BIN. LOADV_BIN 	Perform LOAD_BIN
+command, verify using the same file. LOGFILE 	Open/Close Log File LR   
+	Set Link Register MACRO	Execute a Batch File MACROEND	Stop Saving Commands
+to File MACROSTART	Save Debug Commands to File MACS 	Bring up a window with
+a list of macros.  These are files with the extension .ICD (such as the
+STARTUP.ICD macro).  Use the arrow keys and the &lt;ENTER&gt; key or cancel
+with the &lt;ESC&gt; key. MD	        Set Memory Window 1 to a specific
+address. MD2 	Set Memory Window 2 to a specific address. MM	        Memory
+modify. MSR 	Set Machine Status Register NOBR 	Clear all break points. PC	 
+Set Program Counter. QUIET	Turn off (on) refresh of memory based windows.
+QUIT	Exit debugger. R	        Display and edit registers (requires REG
+software). R(x)	Set General Purpose Register R(x). REM	        Place
+comment in macro file. RESET	Force reset of device into background mode.
+RTVAR 	Displays a specified address and its contents in the Variables
+window for viewing during code execution and while the part is running
+(real time). SAVEDESK 	Saves the current visual layout of the debugger.
+SERIAL	Set up parameters for dumb terminal. SERIALOFF	Disable the status
+window as a dumb terminal. SERIALON	Enable the status window as a dumb
+terminal. SHOWCODE 	Display Code at Address SHOWMMU 	Displays MMU
+Information SHOWPC 	Display Code at PC SHOWSPR 	Displays SPR Information
+SHOWTRACE 	Allows the user to view this trace buffer after having executed
+the TRACE command. SNAPSHOT	Send snapshot of screen to capture file.
+SOURCEPATH 	Search for source code. SPR 	Display/modify the value of the
+special purpose register at address add. SS	        Execute source
+step(s).. ST 	        Execute single step in assembly. STATUS 	Show
+registers. STEP 	Same as ST. STEPALL 	Execute single step in assembly for
+multi-core devices. STEPFOR	Step forever on assembly level. STEPTIL 	Step
+until address on the assembly level. SYMBOL 	Add user symbol. TIME
+	Displays real time elapsed during execution of code _TR 	Add register
+field description to the VAR Window TRACE 	Monitors execution of the CPU
+and logs instructions. UPLOAD_SREC Uloads S records to screen. VAR	       
+Display variable. VERIFY	Compare the contents of program memory with an
+S-record file. VERSION 	Display the version number of the ICD software.
+WATCHDOG	Disable the watchdog if active. WHEREIS	Display symbol value. XER
+	Set Integer Exception Register.</p>
+<hr>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><h2>Defined Under Namespace</h2>
+<p class="children">
+  
+    
+      <strong class="modules">Modules:</strong> <span class='object_link'><a href="PEmicro/Common_API.html" title="OrigenDebuggers::PEmicro::Common_API (module)">Common_API</a></span>, <span class='object_link'><a href="PEmicro/Custom.html" title="OrigenDebuggers::PEmicro::Custom (module)">Custom</a></span>, <span class='object_link'><a href="PEmicro/JTAG_API.html" title="OrigenDebuggers::PEmicro::JTAG_API (module)">JTAG_API</a></span>
+    
+  
+    
+  
+</p>
+
+
+
+
+
+
+
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#footer_template-instance_method" title="#footer_template (instance method)">- (Object) <strong>footer_template</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>if at the end of the file, and still in a jtag mode, close the jtag mode.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (PEmicro) <strong>initialize</strong> </a>
+    
+
+    
+  </span>
+  
+  
+    <span class="note title constructor">constructor</span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>A new instance of PEmicro.</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <span class='object_link'><a href="PEmicro/Custom.html" title="OrigenDebuggers::PEmicro::Custom (module)">Custom</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="PEmicro/Custom.html#enter_jtag-instance_method" title="OrigenDebuggers::PEmicro::Custom#enter_jtag (method)">#enter_jtag</a></span>, <span class='object_link'><a href="PEmicro/Custom.html#exit_jtag-instance_method" title="OrigenDebuggers::PEmicro::Custom#exit_jtag (method)">#exit_jtag</a></span>, <span class='object_link'><a href="PEmicro/Custom.html#go-instance_method" title="OrigenDebuggers::PEmicro::Custom#go (method)">#go</a></span>, <span class='object_link'><a href="PEmicro/Custom.html#halt-instance_method" title="OrigenDebuggers::PEmicro::Custom#halt (method)">#halt</a></span>, <span class='object_link'><a href="PEmicro/Custom.html#set_pc-instance_method" title="OrigenDebuggers::PEmicro::Custom#set_pc (method)">#set_pc</a></span></p>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <span class='object_link'><a href="PEmicro/JTAG_API.html" title="OrigenDebuggers::PEmicro::JTAG_API (module)">JTAG_API</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="PEmicro/JTAG_API.html#read_dr-instance_method" title="OrigenDebuggers::PEmicro::JTAG_API#read_dr (method)">#read_dr</a></span>, <span class='object_link'><a href="PEmicro/JTAG_API.html#read_ir-instance_method" title="OrigenDebuggers::PEmicro::JTAG_API#read_ir (method)">#read_ir</a></span>, <span class='object_link'><a href="PEmicro/JTAG_API.html#write_dr-instance_method" title="OrigenDebuggers::PEmicro::JTAG_API#write_dr (method)">#write_dr</a></span>, <span class='object_link'><a href="PEmicro/JTAG_API.html#write_ir-instance_method" title="OrigenDebuggers::PEmicro::JTAG_API#write_ir (method)">#write_ir</a></span></p>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <span class='object_link'><a href="PEmicro/Common_API.html" title="OrigenDebuggers::PEmicro::Common_API (module)">Common_API</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="PEmicro/Common_API.html#delay-instance_method" title="OrigenDebuggers::PEmicro::Common_API#delay (method)">#delay</a></span>, <span class='object_link'><a href="PEmicro/Common_API.html#extract_address-instance_method" title="OrigenDebuggers::PEmicro::Common_API#extract_address (method)">#extract_address</a></span>, <span class='object_link'><a href="PEmicro/Common_API.html#extract_data-instance_method" title="OrigenDebuggers::PEmicro::Common_API#extract_data (method)">#extract_data</a></span>, <span class='object_link'><a href="PEmicro/Common_API.html#extract_size-instance_method" title="OrigenDebuggers::PEmicro::Common_API#extract_size (method)">#extract_size</a></span>, <span class='object_link'><a href="PEmicro/Common_API.html#read-instance_method" title="OrigenDebuggers::PEmicro::Common_API#read (method)">#read</a></span>, <span class='object_link'><a href="PEmicro/Common_API.html#read16-instance_method" title="OrigenDebuggers::PEmicro::Common_API#read16 (method)">#read16</a></span>, <span class='object_link'><a href="PEmicro/Common_API.html#read32-instance_method" title="OrigenDebuggers::PEmicro::Common_API#read32 (method)">#read32</a></span>, <span class='object_link'><a href="PEmicro/Common_API.html#read8-instance_method" title="OrigenDebuggers::PEmicro::Common_API#read8 (method)">#read8</a></span>, <span class='object_link'><a href="PEmicro/Common_API.html#write-instance_method" title="OrigenDebuggers::PEmicro::Common_API#write (method)">#write</a></span>, <span class='object_link'><a href="PEmicro/Common_API.html#write16-instance_method" title="OrigenDebuggers::PEmicro::Common_API#write16 (method)">#write16</a></span>, <span class='object_link'><a href="PEmicro/Common_API.html#write32-instance_method" title="OrigenDebuggers::PEmicro::Common_API#write32 (method)">#write32</a></span>, <span class='object_link'><a href="PEmicro/Common_API.html#write8-instance_method" title="OrigenDebuggers::PEmicro::Common_API#write8 (method)">#write8</a></span></p>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods inherited from <span class='object_link'><a href="Base.html" title="OrigenDebuggers::Base (class)">Base</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="Base.html#cycle-instance_method" title="OrigenDebuggers::Base#cycle (method)">#cycle</a></span>, <span class='object_link'><a href="Base.html#jtag%3F-instance_method" title="OrigenDebuggers::Base#jtag? (method)">#jtag?</a></span></p>
+
+  <div id="constructor_details" class="method_details_list">
+  <h2>Constructor Details</h2>
+  
+    <div class="method_details first">
+  <h3 class="signature first" id="initialize-instance_method">
+  
+    - (<tt><span class='object_link'><a href="" title="OrigenDebuggers::PEmicro (class)">PEmicro</a></span></tt>) <strong>initialize</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns a new instance of PEmicro</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+111
+112
+113
+114
+115
+116
+117</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_debuggers/p_and_e.rb', line 111</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span>
+  <span class='kw'>super</span>
+  <span class='id identifier rubyid_set_timeset'>set_timeset</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>default</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='int'>1_000_000</span><span class='rparen'>)</span>
+  <span class='ivar'>@pat_extension</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>mac</span><span class='tstring_end'>&#39;</span></span>
+  <span class='ivar'>@comment_char</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>;</span><span class='tstring_end'>&#39;</span></span>
+  <span class='ivar'>@in_jtag</span> <span class='op'>=</span> <span class='kw'>false</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+  
+</div>
+
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="footer_template-instance_method">
+  
+    - (<tt>Object</tt>) <strong>footer_template</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>if at the end of the file, and still in a jtag mode, close the jtag mode.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+301
+302
+303
+304
+305
+306
+307</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_debuggers/p_and_e.rb', line 301</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_footer_template'>footer_template</span> <span class='comment'># if at the end of the file, and still in a jtag mode, close the jtag mode.
+</span>  <span class='kw'>if</span> <span class='ivar'>@in_jtag</span>
+    <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_root!'>root!</span><span class='embexpr_end'>}</span><span class='tstring_content'>/lib/origen_debuggers/p_e/jtag_end.txt</span><span class='tstring_end'>&quot;</span></span>
+  <span class='kw'>else</span>
+    <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_root!'>root!</span><span class='embexpr_end'>}</span><span class='tstring_content'>/lib/origen_debuggers/p_e/none.txt</span><span class='tstring_end'>&quot;</span></span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+
+    <div id="footer">
+  Generated on Mon Aug 31 05:15:00 2015 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.8.7.6 (ruby-2.1.5).
+</div>
+
+  </body>
+</html>
