@@ -85,7 +85,7 @@
 </nav><div class="row">
   <div class="span12">
 
-    <h1>Origen Debuggers <span style="font-size: 14px">(0.5.0)</span>
+    <h1>Origen Debuggers <span style="font-size: 14px">(0.5.1)</span>
 </h1>
 
     <div>    
@@ -106,7 +106,7 @@
 
     <div class="highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre>gem <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">origen_debuggers</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">0.5.0</span><span style="color:#710">'</span></span>
+  <div class="code"><pre>gem <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">origen_debuggers</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">0.5.1</span><span style="color:#710">'</span></span>
 </pre></div>
 </div>
     </div>
@@ -117,7 +117,7 @@
 
     <div class="highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre>spec.add_runtime_dependency <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">origen_debuggers</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">~&gt; 0</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">&gt;= 0.5.0</span><span style="color:#710">'</span></span>
+  <div class="code"><pre>spec.add_runtime_dependency <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">origen_debuggers</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">~&gt; 0</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">&gt;= 0.5.1</span><span style="color:#710">'</span></span>
 </pre></div>
 </div>
     </div>
@@ -150,6 +150,41 @@ to instantiate one of the debuggers that support JTAG, such as J-Link or P&amp;E
 
     <p>Patterns should now generate a debugger command file without any additional application
 modifications.</p>
+
+    <p>For non-JTAG-based protocols, all debuggers support a common API for the protocol to
+interface with, for example:</p>
+
+    <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#777"># Sleep for 40ms</span>
+<span style="color:#d70">$tester</span>.wait(<span style="color:#A60">:time_in_ms</span> =&gt; <span style="color:#00D">40</span>)
+
+<span style="color:#777"># Sleep for 20 cycles</span>
+<span style="color:#d70">$tester</span>.wait(<span style="color:#A60">:cycles</span> =&gt; <span style="color:#00D">20</span>)
+
+<span style="color:#d70">$tester</span>.write_byte(<span style="color:#00D">0x55</span>, <span style="color:#606">address</span>: <span style="color:#00D">0x12</span>)
+
+<span style="color:#d70">$tester</span>.write_word(<span style="color:#00D">0xAA55</span>, <span style="color:#606">address</span>: <span style="color:#00D">0x34</span>)
+
+<span style="color:#d70">$tester</span>.write_longword(<span style="color:#00D">0x1122_AA55</span>, <span style="color:#606">address</span>: <span style="color:#00D">0x5678</span>)
+
+<span style="color:#d70">$tester</span>.read(<span style="color:#00D">10</span>, <span style="color:#606">address</span>: <span style="color:#00D">0x0001234</span>, <span style="color:#606">size</span>: <span style="color:#00D">8</span>)
+</pre></div>
+</div>
+    </div>
+
+    <p>See the API for details on all available methods: <a href="/debuggers/api/OrigenDebuggers/JLink/Common_API.html">Common_API</a></p>
+
+    <p>Finally all debuggers support a direct write method that should be used as a last resort
+to drive debugger-specific functionality that is not otherwise exposed via an official API:</p>
+
+    <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#d70">$tester</span>.dw <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">hwinfo</span><span style="color:#710">"</span></span>
+<span style="color:#d70">$tester</span>.dw <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">mem 0x1234, 10</span><span style="color:#710">"</span></span>
+</pre></div>
+</div>
+    </div>
 
     <div>    
   <a class="anchor" name="How_To_Setup_a_Development_Environment"></a>          
