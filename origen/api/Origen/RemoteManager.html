@@ -6,7 +6,7 @@
 <title>
   Class: Origen::RemoteManager
   
-    &mdash; Origen Core 0.2.6
+    &mdash; Origen Core 0.3.0
   
 </title>
 
@@ -487,17 +487,17 @@ later.</p>
       <pre class="lines">
 
 
+82
+83
+84
+85
+86
+87
 88
-89
-90
-91
-92
-93
-94
-95</pre>
+89</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/remote_manager.rb', line 88</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/remote_manager.rb', line 82</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_create_symlink'>create_symlink</span><span class='lparen'>(</span><span class='id identifier rubyid_from'>from</span><span class='comma'>,</span> <span class='id identifier rubyid_to'>to</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_running_on_windows?'>running_on_windows?</span>
@@ -542,18 +542,18 @@ later.</p>
       <pre class="lines">
 
 
+93
+94
+95
+96
+97
+98
 99
 100
-101
-102
-103
-104
-105
-106
-107</pre>
+101</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/remote_manager.rb', line 99</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/remote_manager.rb', line 93</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_delete_symlink'>delete_symlink</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_running_on_windows?'>running_on_windows?</span>
@@ -609,16 +609,16 @@ load path of the current thread</p>
       <pre class="lines">
 
 
-49
-50
-51</pre>
+43
+44
+45</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/remote_manager.rb', line 49</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/remote_manager.rb', line 43</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_imports_required?'>imports_required?</span>
-  <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_import_manager'>import_manager</span><span class='period'>.</span><span class='id identifier rubyid_required?'>required?</span>
-<span class='kw'>end</span></pre>
+  <span class='kw'>true</span> <span class='comment'># Guaranteed by the boot process
+</span><span class='kw'>end</span></pre>
     </td>
   </tr>
 </table>
@@ -650,12 +650,12 @@ load path of the current thread</p>
       <pre class="lines">
 
 
-76
-77
-78</pre>
+70
+71
+72</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/remote_manager.rb', line 76</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/remote_manager.rb', line 70</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_named_remotes'>named_remotes</span>
   <span class='id identifier rubyid_remotes'>remotes</span>
@@ -691,12 +691,12 @@ load path of the current thread</p>
       <pre class="lines">
 
 
-71
-72
-73</pre>
+65
+66
+67</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/remote_manager.rb', line 71</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/remote_manager.rb', line 65</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_names'>names</span>
   <span class='id identifier rubyid_named_remotes'>named_remotes</span><span class='period'>.</span><span class='id identifier rubyid_keys'>keys</span>
@@ -732,12 +732,12 @@ load path of the current thread</p>
       <pre class="lines">
 
 
-81
-82
-83</pre>
+75
+76
+77</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/remote_manager.rb', line 81</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/remote_manager.rb', line 75</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_origen_root'>origen_root</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_origen_root_for'>origen_root_for</span><span class='lparen'>(</span><span class='id identifier rubyid_named_remotes'>named_remotes</span><span class='lbracket'>[</span><span class='id identifier rubyid_name'>name</span><span class='rbracket'>]</span><span class='rparen'>)</span>
@@ -791,25 +791,13 @@ load path, and require the environments</p>
 30
 31
 32
-33
-34
-35
-36
-37
-38
-39</pre>
+33</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/origen/remote_manager.rb', line 18</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_require!'>require!</span>
   <span class='kw'>unless</span> <span class='id identifier rubyid_required?'>required?</span>
-    <span class='comment'># Make sure the imports have already been required and added
-</span>    <span class='comment'># to the load path of the current thread
-</span>    <span class='kw'>unless</span> <span class='id identifier rubyid_imports_required?'>imports_required?</span>
-      <span class='id identifier rubyid_fail'>fail</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Error: Imports must be required before remotes!</span><span class='tstring_end'>&#39;</span></span>
-    <span class='kw'>end</span>
-
     <span class='kw'>while</span> <span class='id identifier rubyid_updates_required?'>updates_required?</span>
       <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_log'>log</span><span class='period'>.</span><span class='id identifier rubyid_info'>info</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>The following remotes need to be updated, this will now happen automatically:</span><span class='tstring_end'>&#39;</span></span>
       <span class='id identifier rubyid_dirty_remotes'>dirty_remotes</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_remote'>remote</span><span class='op'>|</span>
@@ -869,12 +857,12 @@ load path of the current thread</p>
       <pre class="lines">
 
 
-43
-44
-45</pre>
+37
+38
+39</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/remote_manager.rb', line 43</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/remote_manager.rb', line 37</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_required?'>required?</span>
   <span class='ivar'>@required</span>
@@ -930,16 +918,16 @@ symlink to a path.</p>
       <pre class="lines">
 
 
-113
-114
-115
-116
-117
-118
-119</pre>
+107
+108
+109
+110
+111
+112
+113</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/remote_manager.rb', line 113</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/remote_manager.rb', line 107</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_symlink?'>symlink?</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_running_on_windows?'>running_on_windows?</span>
@@ -968,6 +956,12 @@ symlink to a path.</p>
       <pre class="lines">
 
 
+47
+48
+49
+50
+51
+52
 53
 54
 55
@@ -977,16 +971,10 @@ symlink to a path.</p>
 59
 60
 61
-62
-63
-64
-65
-66
-67
-68</pre>
+62</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/remote_manager.rb', line 53</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/remote_manager.rb', line 47</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_validate_production_status'>validate_production_status</span><span class='lparen'>(</span><span class='id identifier rubyid_force'>force</span> <span class='op'>=</span> <span class='kw'>false</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_mode'>mode</span><span class='period'>.</span><span class='id identifier rubyid_production?'>production?</span> <span class='op'>||</span> <span class='id identifier rubyid_force'>force</span>
@@ -1014,7 +1002,7 @@ symlink to a path.</p>
 </div>
 
     <div id="footer">
-  Generated on Mon Aug 31 04:22:15 2015 by
+  Generated on Wed Sep  2 08:41:28 2015 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.1.5).
 </div>
