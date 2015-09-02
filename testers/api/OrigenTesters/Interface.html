@@ -6,7 +6,7 @@
 <title>
   Module: OrigenTesters::Interface
   
-    &mdash; Origen Testers 0.5.0
+    &mdash; Origen Testers 0.5.1
   
 </title>
 
@@ -736,9 +736,6 @@ identifier will be Origen.config.initials</p>
       <pre class="lines">
 
 
-87
-88
-89
 90
 91
 92
@@ -747,10 +744,13 @@ identifier will be Origen.config.initials</p>
 95
 96
 97
-98</pre>
+98
+99
+100
+101</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/interface.rb', line 87</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/interface.rb', line 90</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_clean_referenced_patterns'>clean_referenced_patterns</span>
   <span class='id identifier rubyid_refs'>refs</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='symbol'>:referenced_patterns</span><span class='rbracket'>]</span>
@@ -784,12 +784,12 @@ identifier will be Origen.config.initials</p>
       <pre class="lines">
 
 
-133
-134
-135</pre>
+136
+137
+138</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/interface.rb', line 133</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/interface.rb', line 136</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_clear_top_level_flow'>clear_top_level_flow</span>
   <span class='cvar'>@@top_level_flow</span> <span class='op'>=</span> <span class='kw'>nil</span>
@@ -859,12 +859,12 @@ identifier will be Origen.config.initials</p>
       <pre class="lines">
 
 
-101
-102
-103</pre>
+104
+105
+106</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/interface.rb', line 101</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/interface.rb', line 104</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_comment'>comment</span><span class='lparen'>(</span><span class='id identifier rubyid_text'>text</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_comments'>comments</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_text'>text</span>
@@ -889,12 +889,12 @@ identifier will be Origen.config.initials</p>
       <pre class="lines">
 
 
-105
-106
-107</pre>
+108
+109
+110</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/interface.rb', line 105</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/interface.rb', line 108</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_comments'>comments</span>
   <span class='cvar'>@@comments</span> <span class='op'>||=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
@@ -940,19 +940,25 @@ identifier will be Origen.config.initials</p>
 37
 38
 39
-40</pre>
+40
+41
+42
+43</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/origen_testers/interface.rb', line 30</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_compile'>compile</span><span class='lparen'>(</span><span class='id identifier rubyid_file'>file</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
+  <span class='comment'># Any options passed in from an interface will be passed to the compiler and to
+</span>  <span class='comment'># the templates being compiled
+</span>  <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:initial_options</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span>
   <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_file_handler'>file_handler</span><span class='period'>.</span><span class='id identifier rubyid_preserve_state'>preserve_state</span> <span class='kw'>do</span>
     <span class='kw'>begin</span>
       <span class='id identifier rubyid_file'>file</span> <span class='op'>=</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_file_handler'>file_handler</span><span class='period'>.</span><span class='id identifier rubyid_clean_path_to_template'>clean_path_to_template</span><span class='lparen'>(</span><span class='id identifier rubyid_file'>file</span><span class='rparen'>)</span>
-      <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_generator'>generator</span><span class='period'>.</span><span class='id identifier rubyid_compile_file_or_directory'>compile_file_or_directory</span><span class='lparen'>(</span><span class='id identifier rubyid_file'>file</span><span class='comma'>,</span> <span class='label'>initial_options:</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
+      <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_generator'>generator</span><span class='period'>.</span><span class='id identifier rubyid_compile_file_or_directory'>compile_file_or_directory</span><span class='lparen'>(</span><span class='id identifier rubyid_file'>file</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
     <span class='kw'>rescue</span>
       <span class='id identifier rubyid_file'>file</span> <span class='op'>=</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_file_handler'>file_handler</span><span class='period'>.</span><span class='id identifier rubyid_clean_path_to'>clean_path_to</span><span class='lparen'>(</span><span class='id identifier rubyid_file'>file</span><span class='rparen'>)</span>
-      <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_generator'>generator</span><span class='period'>.</span><span class='id identifier rubyid_compile_file_or_directory'>compile_file_or_directory</span><span class='lparen'>(</span><span class='id identifier rubyid_file'>file</span><span class='comma'>,</span> <span class='label'>initial_options:</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
+      <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_generator'>generator</span><span class='period'>.</span><span class='id identifier rubyid_compile_file_or_directory'>compile_file_or_directory</span><span class='lparen'>(</span><span class='id identifier rubyid_file'>file</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
     <span class='kw'>end</span>
   <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
@@ -987,14 +993,14 @@ identifier will be Origen.config.initials</p>
       <pre class="lines">
 
 
-114
-115
-116
 117
-118</pre>
+118
+119
+120
+121</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/interface.rb', line 114</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/interface.rb', line 117</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_consume_comments'>consume_comments</span>
   <span class='id identifier rubyid_c'>c</span> <span class='op'>=</span> <span class='id identifier rubyid_comments'>comments</span>
@@ -1036,12 +1042,12 @@ descriptions for all flows that were just created.</p>
       <pre class="lines">
 
 
-143
-144
-145</pre>
+146
+147
+148</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/interface.rb', line 143</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/interface.rb', line 146</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_descriptions'>descriptions</span>
   <span class='cvar'>@@descriptions</span> <span class='op'>||=</span> <span class='const'>Parser</span><span class='op'>::</span><span class='const'>DescriptionLookup</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
@@ -1066,12 +1072,12 @@ descriptions for all flows that were just created.</p>
       <pre class="lines">
 
 
-109
-110
-111</pre>
+112
+113
+114</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/interface.rb', line 109</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/interface.rb', line 112</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_discard_comments'>discard_comments</span>
   <span class='cvar'>@@comments</span> <span class='op'>=</span> <span class='kw'>nil</span>
@@ -1096,12 +1102,12 @@ descriptions for all flows that were just created.</p>
       <pre class="lines">
 
 
-125
-126
-127</pre>
+128
+129
+130</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/interface.rb', line 125</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/interface.rb', line 128</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_flow_generator'>flow_generator</span>
   <span class='id identifier rubyid_flow'>flow</span>
@@ -1137,12 +1143,12 @@ descriptions for all flows that were just created.</p>
       <pre class="lines">
 
 
-161
-162
-163</pre>
+164
+165
+166</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/interface.rb', line 161</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/interface.rb', line 164</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_identity_map'>identity_map</span> <span class='comment'># :nodoc:
 </span>  <span class='cvar'>@@identity_map</span> <span class='op'>||=</span> <span class='op'>::</span><span class='const'>OrigenTesters</span><span class='op'>::</span><span class='const'>Generator</span><span class='op'>::</span><span class='const'>IdentityMap</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
@@ -1167,16 +1173,16 @@ descriptions for all flows that were just created.</p>
       <pre class="lines">
 
 
-42
-43
-44
 45
 46
 47
-48</pre>
+48
+49
+50
+51</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/interface.rb', line 42</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/interface.rb', line 45</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_import'>import</span><span class='lparen'>(</span><span class='id identifier rubyid_file'>file</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='comment'># Attach the import request to the first generator, when it imports
@@ -1205,18 +1211,18 @@ descriptions for all flows that were just created.</p>
       <pre class="lines">
 
 
-165
-166
-167
 168
 169
 170
 171
 172
-173</pre>
+173
+174
+175
+176</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/interface.rb', line 165</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/interface.rb', line 168</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_platform'>platform</span>
   <span class='comment'># This branch to support the ProgramGenerators module where the generator
@@ -1261,12 +1267,12 @@ so that it is captured in the pattern list, e.g.</p>
       <pre class="lines">
 
 
-72
-73
-74</pre>
+75
+76
+77</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/interface.rb', line 72</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/interface.rb', line 75</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_referenced_patterns'>referenced_patterns</span>
   <span class='cvar'>@@referenced_patterns</span> <span class='op'>||=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
@@ -1305,15 +1311,15 @@ subroutine pattern so that it is captured in the pattern list, e.g.</p>
       <pre class="lines">
 
 
-79
-80
-81
 82
 83
-84</pre>
+84
+85
+86
+87</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/interface.rb', line 79</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/interface.rb', line 82</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_referenced_subroutine_patterns'>referenced_subroutine_patterns</span>
   <span class='kw'>unless</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_tester'>tester</span><span class='period'>.</span><span class='id identifier rubyid_v93k?'>v93k?</span>
@@ -1341,16 +1347,16 @@ subroutine pattern so that it is captured in the pattern list, e.g.</p>
       <pre class="lines">
 
 
-50
-51
-52
 53
 54
 55
-56</pre>
+56
+57
+58
+59</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/interface.rb', line 50</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/interface.rb', line 53</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_render'>render</span><span class='lparen'>(</span><span class='id identifier rubyid_file'>file</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_sheet_generators'>sheet_generators</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span> <span class='op'>&gt;</span> <span class='int'>1</span>
@@ -1392,15 +1398,15 @@ generated but flow entries will be inhibited.</p>
       <pre class="lines">
 
 
-150
-151
-152
 153
 154
-155</pre>
+155
+156
+157
+158</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/interface.rb', line 150</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/interface.rb', line 153</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_resources_mode'>resources_mode</span>
   <span class='id identifier rubyid_orig'>orig</span> <span class='op'>=</span> <span class='ivar'>@resources_mode</span>
@@ -1450,12 +1456,12 @@ generated but flow entries will be inhibited.</p>
       <pre class="lines">
 
 
-157
-158
-159</pre>
+160
+161
+162</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/interface.rb', line 157</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/interface.rb', line 160</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_resources_mode?'>resources_mode?</span>
   <span class='ivar'>@resources_mode</span>
@@ -1480,12 +1486,12 @@ generated but flow entries will be inhibited.</p>
       <pre class="lines">
 
 
-129
-130
-131</pre>
+132
+133
+134</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/interface.rb', line 129</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/interface.rb', line 132</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_set_top_level_flow'>set_top_level_flow</span>
   <span class='cvar'>@@top_level_flow</span> <span class='op'>=</span> <span class='id identifier rubyid_flow_generator'>flow_generator</span><span class='period'>.</span><span class='id identifier rubyid_output_file'>output_file</span>
@@ -1514,12 +1520,12 @@ generated but flow entries will be inhibited.</p>
       <pre class="lines">
 
 
-120
-121
-122</pre>
+123
+124
+125</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/interface.rb', line 120</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/interface.rb', line 123</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_top_level_flow'>top_level_flow</span>
   <span class='cvar'>@@top_level_flow</span> <span class='op'>||=</span> <span class='kw'>nil</span>
@@ -1544,19 +1550,19 @@ generated but flow entries will be inhibited.</p>
       <pre class="lines">
 
 
-58
-59
-60
 61
 62
 63
 64
 65
 66
-67</pre>
+67
+68
+69
+70</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/interface.rb', line 58</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/interface.rb', line 61</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_write_files'>write_files</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_sheet_generators'>sheet_generators</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_generator'>generator</span><span class='op'>|</span>
@@ -1578,7 +1584,7 @@ generated but flow entries will be inhibited.</p>
 </div>
 
     <div id="footer">
-  Generated on Tue Sep  1 09:23:50 2015 by
+  Generated on Wed Sep  2 11:44:46 2015 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.1.5).
 </div>
