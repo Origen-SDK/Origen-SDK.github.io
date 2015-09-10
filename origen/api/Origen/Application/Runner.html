@@ -6,7 +6,7 @@
 <title>
   Class: Origen::Application::Runner
   
-    &mdash; Origen Core 0.4.0
+    &mdash; Origen Core 0.4.1
   
 </title>
 
@@ -522,7 +522,13 @@ establish output directories and so on.</p>
 238
 239
 240
-241</pre>
+241
+242
+243
+244
+245
+246
+247</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/origen/application/runner.rb', line 234</span>
@@ -531,7 +537,13 @@ establish output directories and so on.</p>
   <span class='comment'># The caller would have already verified the status before submission
 </span>  <span class='kw'>if</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_running_locally?'>running_locally?</span>
     <span class='kw'>if</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_mode'>mode</span><span class='period'>.</span><span class='id identifier rubyid_production?'>production?</span>
-      <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_app'>app</span><span class='period'>.</span><span class='id identifier rubyid_cm'>cm</span><span class='period'>.</span><span class='id identifier rubyid_ensure_workspace_unmodified!'>ensure_workspace_unmodified!</span>
+      <span class='kw'>unless</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_app'>app</span><span class='period'>.</span><span class='id identifier rubyid_rc'>rc</span><span class='period'>.</span><span class='id identifier rubyid_local_modifications'>local_modifications</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
+        <span class='id identifier rubyid_puts'>puts</span> <span class='heredoc_beg'>&lt;&lt;-EOT</span>
+<span class='tstring_content'>    Your workspace has local modifications that are preventing the requested action
+- run &#39;origen rc mods&#39; to see them.
+</span><span class='heredoc_end'>        EOT
+</span>        <span class='id identifier rubyid_exit'>exit</span> <span class='int'>1</span>
+      <span class='kw'>end</span>
     <span class='kw'>end</span>
   <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
@@ -1279,7 +1291,7 @@ command.</p>
 </div>
 
     <div id="footer">
-  Generated on Wed Sep  2 11:28:56 2015 by
+  Generated on Thu Sep 10 07:40:42 2015 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.1.5).
 </div>
