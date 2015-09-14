@@ -157,16 +157,280 @@
       <h2 class="topic-subtitle">How to Install (Windows)</h2>
 
       <hr>
-<div class="alert alert-danger" role="alert">
-  <strong>Sorry, Documentation Fail</strong>
+<p>Origen can be installed on Linux or Windows, this guide refers to the Windows installation.</p>
+
+      <p>The lack of a package manager in windows makes it harder to install various packages from the command line.</p>
+
+      <p><a href="#Install_Chocolatey">We recommend using chocolatey (http://chocolatey.org); an open source windows package manager.</a></p>
+
+      <p>You can imagine chocolatey to be somewhat like apt-get or other package managers on Linux, but built with Windows in mind.</p>
+
+      <p>This guide will use <strong>chocolatey</strong> as the package manager to:</p>
+
+      <ul>
+<li><a href="#Install_Ruby">Install Ruby</a></li>
+        <li>
+<a href="#Install_Ruby-Dependencies">Install Ruby-Dependencies</a>
+          <ul>
+<li><a href="#Install_Ruby-Development-Kit">Install Ruby-Development-Kit</a></li>
+            <li><a href="#Install_RubyGems">Install RubyGems</a></li>
+            <li><a href="#Install_RubyGems-SSL-workaround">Install RubyGems-SSL-workaround</a></li>
+            <li><a href="#Install_Essential-Gems">Install Essential-Gems</a></li>
+          </ul>
+</li>
+        <li><a href="#Install_Utilities">Install Utilities</a></li>
+      </ul>
+<h5 id="note"><strong>Note:</strong></h5>
+
+      <h6 id="origen-installation-has-been-tested-on-windows-7-only-at-this-time-but-we-dont-think-the-installation-process-will-be-any-different">Origen installation has been tested on Windows 7 only at this time, but we don’t think the installation process will be any different.</h6>
+
+      <h6 id="an-active-internet-connection-is-required-before-proceeding"><em>An active internet connection is required before proceeding.</em></h6>
+
+      <p>If running on Linux is of interest then please see this guide instead:
+<a href="/origen/guides/starting/installing">How to Install Origen on Linux</a></p>
+
+      <div>    
+  <a class="anchor" name="Background"></a>          
+  <h4><a href="#Background">Background</a></h4>          
 </div>
 
-      <p>Unfortunately this guide has not been written yet, but it is an area that is on our road map.</p>
+      <p>Origen is distributed as a Ruby gem, which is the Ruby language’s package manager.</p>
 
-      <p>Please comment below to let us know that you were looking for it, this will help us to prioritize which
-sections to write next.</p>
+      <p>Installation of Origen consists of the following steps:</p>
 
-      <p>If you need help on this item in the meantime, please ask a question in the <a href="https://disqus.com/home/channel/origensdk/">Origen forum</a>.</p>
+      <ul>
+<li><a href="#Install_Ruby">Install Ruby</a></li>
+        <li><a href="#Install_Ruby-Dependencies">Install Ruby-Dependencies</a></li>
+        <li><a href="#Install_Origen">Install Origen</a></li>
+      </ul>
+<div>    
+  <a class="anchor" name="Install_Chocolatey"></a>          
+  <h3><a href="#Install_Chocolatey">Install Chocolatey</a></h3>          
+</div>
+
+      <p>All commands mentioned below need to be typed in the command prompt running as an administrator</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>Start → run → cmd runas /user:Administrator
+</pre></div>
+</div>
+      </div>
+
+      <h5 id="chocolatey">1. Chocolatey</h5>
+
+      <p>To install the package manager (chocolatey), please type the text below in the command prompt (running as administrator)</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>@powershell -NoProfile -ExecutionPolicy Bypass -Command "iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))" &amp;&amp; SET PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin
+</pre></div>
+</div>
+      </div>
+
+      <div>    
+  <a class="anchor" name="Install_Ruby"></a>          
+  <h3><a href="#Install_Ruby">Install Ruby</a></h3>          
+</div>
+
+      <p>With the package manager installed, Installing Ruby is a breeze. Just type the following in the command prompt window (running as administrator)</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>cinst ruby -y --force
+</pre></div>
+</div>
+      </div>
+
+      <p>This should install Ruby v2.1.6 (latest supported by the package manager as of writing this guide)</p>
+
+      <p>If the package manager upgrades to the latest version (v2.2.3), it will install that latest version instead.</p>
+
+      <p>Please check the ruby version and make a note of it. We will need it later for the RubyGems workaround.</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>ruby -v
+</pre></div>
+</div>
+      </div>
+
+      <p>Once the installer finishes, please close the current window and open a new one (as administrator)</p>
+
+      <div>    
+  <a class="anchor" name="Install_Ruby-Dependencies"></a>          
+  <h3><a href="#Install_Ruby-Dependencies">Install Ruby-Dependencies</a></h3>          
+</div>
+
+      <ul>
+<li>
+          <div>    
+  <a class="anchor" name="Install_Ruby-Development-Kit"></a>          
+  <h4><a href="#Install_Ruby-Development-Kit">Install Ruby-Development-Kit</a></h4>          
+</div>
+        </li>
+      </ul>
+<p>In the new window, type the following</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>cinst ruby2.devkit -y --force
+</pre></div>
+</div>
+      </div>
+
+      <div>    
+  <a class="anchor" name="Install_RubyGems"></a>          
+  <h4><a href="#Install_RubyGems">Install RubyGems</a></h4>          
+</div>
+
+      <p>In the same window, now type</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>cinst rubygems -y --force
+</pre></div>
+</div>
+      </div>
+
+      <ul>
+<li>
+          <div>    
+  <a class="anchor" name="Install_RubyGems-SSL-workaround"></a>          
+  <h4><a href="#Install_RubyGems-SSL-workaround">Install RubyGems-SSL-workaround</a></h4>          
+</div>
+        </li>
+      </ul>
+<p>The latest version of Rubygems (that we installed above) is currently broken on Windows.
+However, there is a workaround that has been developed and it involves a series of steps.
+The workaround also depends on which version of Ruby has been installed.</p>
+
+      <p>The following commands will perform all the steps required for the workaround.</p>
+
+      <p>If Ruby version installed is v2.1.X</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>@powershell (new-object System.Net.WebClient).DownloadFile('https://github.com/rubygems/rubygems/releases/download/v2.0.15/rubygems-update-2.0.15.gem','C:\rubygems-update-2.0.15.gem') &amp;&amp; gem install --local C:\rubygems-update-2.0.15.gem &amp;&amp; update_rubygems --no-ri --no-rdoc &amp;&amp; gem uninstall rubygems-update -x
+</pre></div>
+</div>
+      </div>
+
+      <p>If Ruby version installed is v2.2.X</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>@powershell (new-object System.Net.WebClient).DownloadFile('https://github.com/rubygems/rubygems/releases/download/v2.2.3/rubygems-update-2.2.3.gem’,'C:\rubygems-update-2.2.3.gem') &amp;&amp; gem install --local C:\rubygems-update-2.2.3.gem &amp;&amp; update_rubygems --no-ri --no-rdoc &amp;&amp; gem uninstall rubygems-update -x
+</pre></div>
+</div>
+      </div>
+
+      <p>Once the command finishes, please check the gem version installed by typing</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>gem --version
+</pre></div>
+</div>
+      </div>
+
+      <p>The Gem version should be <strong>v2.0.15</strong> for Ruby v2.1.X or v2.2.3 for Ruby v2.2.X</p>
+
+      <ul>
+<li>
+          <div>    
+  <a class="anchor" name="Install_Essential-Gems"></a>          
+  <h4><a href="#Install_Essential-Gems">Install Essential-Gems</a></h4>          
+</div>
+        </li>
+      </ul>
+<p>Now that we have Rubygems installed and working, we need to install a couple of essential gems.</p>
+
+      <p>Please type the following commands:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>gem install bundler --no-ri --no-rdoc
+</pre></div>
+</div>
+      </div>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>gem install nokogiri -v 1.6.4.1 --no-rdoc --no-ri
+</pre></div>
+</div>
+      </div>
+
+      <p>Once the commands finish, please close the command prompt and open an new one (running as administrator)</p>
+
+      <div>    
+  <a class="anchor" name="Install_Origen"></a>          
+  <h3><a href="#Install_Origen">Install Origen</a></h3>          
+</div>
+
+      <p>Origen is available as a packaged gem and can be easily installed by typing:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>gem install origen
+</pre></div>
+</div>
+      </div>
+
+      <h6 id="this-can-take-several-minutes-to-finish-without-updating-the-screen-so-please-be-patient">*this can take several minutes to finish without updating the screen, so please be patient</h6>
+
+      <p>You can then verify Origen availability by running origen -v at which point you should see something like this:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>    Origen: 0.4.2
+</pre></div>
+</div>
+      </div>
+
+      <p>Congratulations, Origen is now installed!</p>
+
+      <p>Note that the version of Origen that is installed to your Ruby installation does not need to
+be kept up to date with the latest version of Origen. You can now consider your Ruby environment
+to be frozen for the foreseeable future.</p>
+
+      <p>See the section on <a href="/origen/guides/starting/gems">Understanding Gems</a> for details on
+why that is.</p>
+
+      <div>    
+  <a class="anchor" name="Install_Utilities"></a>          
+  <h3><a href="#Install_Utilities">Install Utilities</a></h3>          
+</div>
+
+      <p>It is also recommend to install a recent version (2.x) of Git</p>
+
+      <p>We can do that easily now by typing</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>cinst git -y
+</pre></div>
+</div>
+      </div>
+
+      <p>This will install Git v2.5.2 ( latest version available as of writing this guide)</p>
+
+      <p><strong>Optional:</strong></p>
+
+      <p>We recommend that you also install the following utilities for a more UNIX like experience on windows.</p>
+
+      <ul>
+<li>UnxUtils (cinst unxutils -y)</li>
+        <li>ConsoleZ (cinst consoleZ -y)</li>
+        <li>Console2 (download from http://sourceforge.net/projects/console/)</li>
+      </ul>
+<div>    
+  <a class="anchor" name="For_your_convenience,_you_can_also_watch_the_installation_process_in_the_video_below."></a>          
+  <h3><a href="#For_your_convenience,_you_can_also_watch_the_installation_process_in_the_video_below.">For your convenience, you can also watch the installation process in the video below.</a></h3>          
+</div>
+
+      <iframe width="853" height="480" src="https://www.youtube.com/embed/Gt2EvRpZmfY" frameborder="0" allowfullscreen=""></iframe>
 
       <div style="position: relative">
   <hr>
