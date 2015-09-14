@@ -112,13 +112,13 @@
                 Getting Started with Origen
               </a>
             </div>
-            <div id="sidebar-collapse-0" class="panel-collapse collapse in">
+            <div id="sidebar-collapse-0" class="panel-collapse collapse ">
               <div class="panel-body">
                 <ul class="nav nav-list">
 <li class=""><a href="/origen/guides/starting/introduction">Introduction</a></li>
 <li class=""><a href="/origen/guides/starting/core">Core concepts</a></li>
 <li class=""><a href="/origen/guides/starting/installing">How to Install</a></li>
-<li class="active"><a href="/origen/guides/starting/installwin">How to Install (Windows)</a></li>
+<li class=""><a href="/origen/guides/starting/installwin">How to Install (Windows)</a></li>
 <li class=""><a href="/origen/guides/starting/company">Company Customization</a></li>
 <li class=""><a href="/origen/guides/starting/gems">Understanding Gems</a></li>
 <li class=""><a href="/origen/guides/starting/app">Creating a New App</a></li>
@@ -133,12 +133,12 @@
                 Runtime Environment
               </a>
             </div>
-            <div id="sidebar-collapse-1" class="panel-collapse collapse ">
+            <div id="sidebar-collapse-1" class="panel-collapse collapse in">
               <div class="panel-body">
                 <ul class="nav nav-list">
 <li class=""><a href="/origen/guides/runtime/introduction">Introduction</a></li>
 <li class=""><a href="/origen/guides/runtime/mode">Mode</a></li>
-<li class=""><a href="/origen/guides/runtime/environment">Environment</a></li>
+<li class="active"><a href="/origen/guides/runtime/environment">Environment</a></li>
 <li class=""><a href="/origen/guides/runtime/target">Target</a></li>
                 </ul>
 </div>
@@ -152,21 +152,134 @@
   </div>
 
   <div class="col-md-9 nav-page-container">
-    <article><h3 class="topic-title">Getting Started with Origen</h3>
+    <article><h3 class="topic-title">Runtime Environment</h3>
 
-      <h2 class="topic-subtitle">How to Install (Windows)</h2>
+      <h2 class="topic-subtitle">Environment</h2>
 
       <hr>
-<div class="alert alert-danger" role="alert">
-  <strong>Sorry, Documentation Fail</strong>
+<p>All environments are defined by files that reside in the <code>environment</code> directory.
+Environments are regular Ruby files and they should be simply named:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>&lt;identifier&gt;.rb
+</pre></div>
+</div>
+      </div>
+
+      <p>In a test engineering application where the environment is used to select the target test platform,
+they are normally named after the tester, e.g.</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>environment
+|-- j750.rb
+|-- uflex.rb
+|-- v93k.rb
+`-- jlink.rb
+</pre></div>
+</div>
+      </div>
+
+      <div>    
+  <a class="anchor" name="Creating_an_Environment"></a>          
+  <h4><a href="#Creating_an_Environment">Creating an Environment</a></h4>          
 </div>
 
-      <p>Unfortunately this guide has not been written yet, but it is an area that is on our road map.</p>
+      <p>To create a new environment, simply create the file containing whatever Ruby code you need.
+They are usually very concise and in a test engineering application would normally only instantiate the
+target tester driver, here are some examples:</p>
 
-      <p>Please comment below to let us know that you were looking for it, this will help us to prioritize which
-sections to write next.</p>
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#777"># environment/j750.rb</span>
+<span style="color:#d70">$tester</span> = <span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">J750</span>.new
 
-      <p>If you need help on this item in the meantime, please ask a question in the <a href="https://disqus.com/home/channel/origensdk/">Origen forum</a>.</p>
+<span style="color:#777"># environment/v93k.rb</span>
+<span style="color:#d70">$tester</span> = <span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">V93K</span>.new
+
+<span style="color:#777"># environment/jlink.rb</span>
+<span style="color:#d70">$tester</span> = <span style="color:#036;font-weight:bold">OrigenDebuggers</span>::<span style="color:#036;font-weight:bold">JLink</span>.new
+</pre></div>
+</div>
+      </div>
+
+      <p>If the given driver supports configuration options, then you may have some variations
+for a given platform - e.g. <code>j750_probe.rb</code> to configure the driver slightly differently
+for generating probe test patterns:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#777"># environment/j750_probe.rb</span>
+<span style="color:#d70">$tester</span> = <span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">J750</span>.new
+<span style="color:#d70">$tester</span>.available_power_supplies = <span style="color:#00D">64</span>
+</pre></div>
+</div>
+      </div>
+
+      <div>    
+  <a class="anchor" name="Setting_a_Default_Environment"></a>          
+  <h4><a href="#Setting_a_Default_Environment">Setting a Default Environment</a></h4>          
+</div>
+
+      <p>A default environment can be defined that will be used withing a new workspace unless the user
+specifies otherwise. This is not required and should only be added if it makes sense within the
+context of the application - i.e. you may choose not to have a default to avoid the situation where the user
+builds something without really understanding what configuration they are targeting.</p>
+
+      <p>A default is specified by creating an environment file called <code>environment/default.rb</code>,
+typically this is a symbolic link to another environment file:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>ln -s environment/j750.rb environment/default.rb
+</pre></div>
+</div>
+      </div>
+
+      <div>    
+  <a class="anchor" name="Getting_and_Setting_the_Environment"></a>          
+  <h4><a href="#Getting_and_Setting_the_Environment">Getting and Setting the Environment</a></h4>          
+</div>
+
+      <p>The current environment for a given application workspace can be queried by running the
+<code>origen environment</code> command, or <code>origen e</code> for short, this will show
+you the content of the current environment file:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>&gt; origen e
+
+Current environment: j750.rb
+**********************************************************************
+  $tester = OrigenTesters::J750.new
+**********************************************************************
+</pre></div>
+</div>
+      </div>
+
+      <p>The environment can be changed by running the same command and supplying the desired environment:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>&gt; origen e environment/j750.rb
+
+&gt; origen 3 v93k
+</pre></div>
+</div>
+      </div>
+
+      <p>As shown above, a full path or any snippet which is enough to uniquely identify one of the available
+environment files is sufficient.</p>
+
+      <p>Additionally all Origen commands allow an override to be supplied at runtime:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>&gt; origen g my_pattern -e jlink
+</pre></div>
+</div>
+      </div>
 
       <div style="position: relative">
   <hr>

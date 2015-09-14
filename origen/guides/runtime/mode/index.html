@@ -112,13 +112,13 @@
                 Getting Started with Origen
               </a>
             </div>
-            <div id="sidebar-collapse-0" class="panel-collapse collapse in">
+            <div id="sidebar-collapse-0" class="panel-collapse collapse ">
               <div class="panel-body">
                 <ul class="nav nav-list">
 <li class=""><a href="/origen/guides/starting/introduction">Introduction</a></li>
 <li class=""><a href="/origen/guides/starting/core">Core concepts</a></li>
 <li class=""><a href="/origen/guides/starting/installing">How to Install</a></li>
-<li class="active"><a href="/origen/guides/starting/installwin">How to Install (Windows)</a></li>
+<li class=""><a href="/origen/guides/starting/installwin">How to Install (Windows)</a></li>
 <li class=""><a href="/origen/guides/starting/company">Company Customization</a></li>
 <li class=""><a href="/origen/guides/starting/gems">Understanding Gems</a></li>
 <li class=""><a href="/origen/guides/starting/app">Creating a New App</a></li>
@@ -133,11 +133,11 @@
                 Runtime Environment
               </a>
             </div>
-            <div id="sidebar-collapse-1" class="panel-collapse collapse ">
+            <div id="sidebar-collapse-1" class="panel-collapse collapse in">
               <div class="panel-body">
                 <ul class="nav nav-list">
 <li class=""><a href="/origen/guides/runtime/introduction">Introduction</a></li>
-<li class=""><a href="/origen/guides/runtime/mode">Mode</a></li>
+<li class="active"><a href="/origen/guides/runtime/mode">Mode</a></li>
 <li class=""><a href="/origen/guides/runtime/environment">Environment</a></li>
 <li class=""><a href="/origen/guides/runtime/target">Target</a></li>
                 </ul>
@@ -152,21 +152,150 @@
   </div>
 
   <div class="col-md-9 nav-page-container">
-    <article><h3 class="topic-title">Getting Started with Origen</h3>
+    <article><h3 class="topic-title">Runtime Environment</h3>
 
-      <h2 class="topic-subtitle">How to Install (Windows)</h2>
+      <h2 class="topic-subtitle">Mode</h2>
 
       <hr>
-<div class="alert alert-danger" role="alert">
-  <strong>Sorry, Documentation Fail</strong>
+<p>Origen supports the following operating modes:</p>
+
+      <ul>
+<li>
+<strong>Production</strong> - To be used whenever generating output destined for production use.</li>
+        <li>
+<strong>Debug</strong> - To be used whenever developing an application.</li>
+        <li>
+<strong>Simulation</strong> - To be used whenever generating output destined for a simulation.</li>
+      </ul>
+<p>The default operation mode is <em>production</em>, and in this mode Origen will enforce the following
+restrictions:</p>
+
+      <ul>
+<li>Origen will not run if there are modified files within the environment workspace (i.e. edits that are not checked in)</li>
+        <li>Origen will not run if plugins are imported from a <a href="/origen/guides/starting/gems/#Specifying_Gems">local path reference</a>
+</li>
+      </ul>
+<p>Both <em>debug</em> and <em>simulation</em> modes remove these restrictions and are essentially the same
+as far as Origen is concerned. However plugin and application developers may implement
+different behavior if the output is targeting simulation rather than real silicon.</p>
+
+      <div class="alert alert-info" role="alert">
+  Note that the <code>origen new</code> command for creating a new application will make it
+  look as though <em>debug</em> is the default mode, but this is just to make life convenient for the new
+  application developer who is obviously about to go on and develop the new app. If the new
+  app was cloned to a new workspace by another user, 
+  then it would come up in <em>production</em> mode.
 </div>
 
-      <p>Unfortunately this guide has not been written yet, but it is an area that is on our road map.</p>
+      <div>    
+  <a class="anchor" name="Getting_and_Setting_the_Mode"></a>          
+  <h4><a href="#Getting_and_Setting_the_Mode">Getting and Setting the Mode</a></h4>          
+</div>
 
-      <p>Please comment below to let us know that you were looking for it, this will help us to prioritize which
-sections to write next.</p>
+      <p>The current default mode for a given application workspace can be queried by running the
+<code>origen mode</code> command, or <code>origen m</code> for short:</p>
 
-      <p>If you need help on this item in the meantime, please ask a question in the <a href="https://disqus.com/home/channel/origensdk/">Origen forum</a>.</p>
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>&gt; origen m
+
+debug
+</pre></div>
+</div>
+      </div>
+
+      <p>The mode can be changed by running the same command and supplying the desired mode:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>&gt; origen m production
+
+&gt; origen m debug
+
+&gt; origen m simulation
+</pre></div>
+</div>
+      </div>
+
+      <p>Any shortcut which provides enough detail to uniquely identify one of the available modes can be used:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>&gt; origen m sim
+</pre></div>
+</div>
+      </div>
+
+      <p>Additionally all Origen commands allow an override to be supplied at runtime. Aside from overriding
+the current default mode, this will also override any mode setting applied by the current environment
+or target:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>&gt; origen g my_pattern -m simulation
+</pre></div>
+</div>
+      </div>
+
+      <div>    
+  <a class="anchor" name="Programmatically_Getting_and_Setting_the_Mode"></a>          
+  <h4><a href="#Programmatically_Getting_and_Setting_the_Mode">Programmatically Getting and Setting the Mode</a></h4>          
+</div>
+
+      <p><code>Origen.mode</code> returns an <a href="/origen/api/Origen/Mode.html">object representing the current mode</a>,
+this provides the following API for sniffing the mode at runtime:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.mode.production?   <span style="color:#777"># =&gt; false</span>
+<span style="color:#036;font-weight:bold">Origen</span>.mode.debug?        <span style="color:#777"># =&gt; true</span>
+<span style="color:#036;font-weight:bold">Origen</span>.mode.simulation?   <span style="color:#777"># =&gt; false</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>Note that <em>simulation</em> is also considered a <em>debug</em> mode, the API will respond as follows
+if <em>simulation</em> mode is set:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.mode.production?   <span style="color:#777"># =&gt; false</span>
+<span style="color:#036;font-weight:bold">Origen</span>.mode.debug?        <span style="color:#777"># =&gt; true</span>
+<span style="color:#036;font-weight:bold">Origen</span>.mode.simulation?   <span style="color:#777"># =&gt; true</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>For example this API can be used to create simulation workarounds if required:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#080;font-weight:bold">if</span> <span style="color:#036;font-weight:bold">Origen</span>.mode.simulation?
+  <span style="color:#777"># Generate something that is more simulation-friendly</span>
+<span style="color:#080;font-weight:bold">else</span>
+  <span style="color:#777"># Generate a pattern construct which works on the tester, but doesn't simulate well</span>
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>The mode can be set like this:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.mode = <span style="color:#A60">:production</span>
+<span style="color:#036;font-weight:bold">Origen</span>.mode = <span style="color:#A60">:debug</span>
+<span style="color:#036;font-weight:bold">Origen</span>.mode = <span style="color:#A60">:simulation</span>
+</pre></div>
+</div>
+      </div>
+
+      <div class="alert alert-info" role="alert">
+  Note that the mode can be frozen in which case the above will have no effect. If the mode
+  is supplied via a <code>--mode</code> option to the current command, then it will be automatically frozen
+  to allow it to override any mode assignment made by the target or environment files via the
+  above API.
+</div>
 
       <div style="position: relative">
   <hr>
