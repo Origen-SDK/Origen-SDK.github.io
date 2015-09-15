@@ -112,7 +112,7 @@
                 Getting Started with Origen
               </a>
             </div>
-            <div id="sidebar-collapse-0" class="panel-collapse collapse in">
+            <div id="sidebar-collapse-0" class="panel-collapse collapse ">
               <div class="panel-body">
                 <ul class="nav nav-list">
 <li class=""><a href="/origen/guides/starting/introduction">Introduction</a></li>
@@ -122,7 +122,7 @@
 <li class=""><a href="/origen/guides/starting/company">Company Customization</a></li>
 <li class=""><a href="/origen/guides/starting/gems">Understanding Gems</a></li>
 <li class=""><a href="/origen/guides/starting/app">Creating a New App</a></li>
-<li class="active"><a href="/origen/guides/starting/commit">The Initial Commit</a></li>
+<li class=""><a href="/origen/guides/starting/commit">The Initial Commit</a></li>
                 </ul>
 </div>
             </div>
@@ -154,7 +154,7 @@
                 Models
               </a>
             </div>
-            <div id="sidebar-collapse-2" class="panel-collapse collapse ">
+            <div id="sidebar-collapse-2" class="panel-collapse collapse in">
               <div class="panel-body">
                 <ul class="nav nav-list">
 <li class=""><a href="/origen/guides/models/introduction">Introduction</a></li>
@@ -166,7 +166,7 @@
 <li class=""><a href="/origen/guides/models/modes">Package, Mode &amp; Configuration</a></li>
 <li class=""><a href="/origen/guides/models/registers">Registers</a></li>
 <li class=""><a href="/origen/guides/models/pins">Pins</a></li>
-<li class=""><a href="/origen/guides/models/hw">Hardware Attributes</a></li>
+<li class="active"><a href="/origen/guides/models/hw">Hardware Attributes</a></li>
 <li class=""><a href="/origen/guides/models/parameters">Parameters</a></li>
 <li class=""><a href="/origen/guides/models/specs">Specifications</a></li>
                 </ul>
@@ -181,197 +181,136 @@
   </div>
 
   <div class="col-md-9 nav-page-container">
-    <article><h3 class="topic-title">Getting Started with Origen</h3>
+    <article><h3 class="topic-title">Models</h3>
 
-      <h2 class="topic-subtitle">The Initial Commit</h2>
+      <h2 class="topic-subtitle">Hardware Attributes</h2>
 
       <hr>
-<p>Origen applications should be configured with details of the revision control
-repository that they will be checked into, this will enable the following features:</p>
-
-      <ul>
-<li>A release command which will tag and perform common post-release tasks.</li>
-        <li>A common project-level history will be maintained, regardless of the underlying system used.</li>
-        <li>An API for programmatic control of the revision control system, this provides
-application and plugin developers with a common API to call regardless of the underlying system that
-a given application uses - <a href="/origen/api/Origen/RevisionControl/Base.html">Revision Control API</a>.</li>
-        <li>A common command, <code>origen rc</code> to provide a common interface for application users to
-perform basic revision control operations regardless of their proficiency with the underlying system.</li>
-      </ul>
-<div>    
-  <a class="anchor" name="Supported_Systems"></a>          
-  <h4><a href="#Supported_Systems">Supported Systems</a></h4>          
-</div>
-
-      <p>Origen currently supports integration with the following revision control tools:</p>
-
-      <ul>
-<li>Git</li>
-        <li>DesignSync</li>
-      </ul>
-<p>We would like to add support for Subversion and any other commonly used systems. If you have knowledge
-of how an additional target revision control system works and you would like to be involved in developing
-and piloting a driver for it, please get in touch via the <a href="/origen/community">community channels</a>.</p>
-
-      <p>Having said that, the Origen core team recommends using Git, even if you have had little or no
-experience of it so far.
-It has significant advantages and is fast becoming the de facto standard revision control tool used
-in software engineering.</p>
+<p>The need to model abstract hardware properties can sometimes arise, most
+commonly when generating a view of the models which needs to contain some detailed
+information about the RTL architecture - generating an IP-XACT view of the IP for use
+in verification would be a good example of this.</p>
 
       <div>    
-  <a class="anchor" name="Initial_Configuration"></a>          
-  <h4><a href="#Initial_Configuration">Initial Configuration</a></h4>          
+  <a class="anchor" name="HDL_Paths"></a>          
+  <h4><a href="#HDL_Paths">HDL Paths</a></h4>          
 </div>
 
-      <p>Configuration information for your application resides in <code>config/application.rb</code>
-and an initial version of this file will have been created for you.</p>
-
-      <p>This file contains a lot of configuration options which you should find fairly well commented.
-The option that defines the revision control system is called <code>rc_url</code> and it should
-be set as follows.</p>
-
-      <p>For Git:</p>
+      <p>For designers using Origen as the master definition of their registers and other metadata, it
+is always preferable to setup the Origen models to mirror the eventual hierarchy of
+the RTL.
+In that case nothing special is required to extract HDL path information and the
+<code>path</code> method available on all sub-blocks, registers and bits should do a
+good job:</p>
 
       <div class="highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># config/application.rb</span>
-
-<span style="color:#777"># Example for Github</span>
-config.rc_url = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">git@github.com:myaccount/myapp.git</span><span style="color:#710">"</span></span>
-<span style="color:#777"># Example for Atlassian Stash</span>
-config.rc_url = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">ssh://git@sw-stash.mycompany.net/myproject/myapp.git</span><span style="color:#710">"</span></span>
+  <div class="code"><pre><span style="color:#d70">$dut</span>.atd.path             <span style="color:#777"># =&gt; "mydut.atd"            (Where 'mydut' is the lowercased class name)</span>
+<span style="color:#d70">$dut</span>.atd.reg1.path        <span style="color:#777"># =&gt; "mydut.atd.reg1"  </span>
+<span style="color:#d70">$dut</span>.atd.reg1.data.path   <span style="color:#777"># =&gt; "mydut.atd.reg1[15:0]" (Where 'data' are some named bits in reg1)  </span>
 </pre></div>
 </div>
       </div>
 
-      <p>For DesignSync:</p>
+      <p>However in cases where that is not possible the following API exists to reconcile
+any differences.</p>
+
+      <p>For any point in the tree the default can be overridden by setting the <code>@path</code>
+instance variable within the
+given object, this can also be supplied at sub-block declaration time. e.g.</p>
 
       <div class="highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># config/application.rb</span>
+  <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MyDut</span>
+  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">TopLevel</span>
 
-config.rc_url = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">sync://sync-1234:1234/myproject/myapp</span><span style="color:#710">"</span></span>
+  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>
+    sub_block <span style="color:#A60">:atd</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">ATD</span><span style="color:#710">"</span></span>, <span style="color:#606">base</span>: <span style="color:#00D">0x1000_0000</span>, <span style="color:#606">path</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">atds.atd0</span><span style="color:#710">"</span></span>
+  <span style="color:#080;font-weight:bold">end</span>
+<span style="color:#080;font-weight:bold">end</span>
+
+<span style="color:#d70">$dut</span>.atd.reg1.data.path        <span style="color:#777"># =&gt; "mydut.atds.atd0.reg1[15:0]"</span>
+<span style="color:#d70">$dut</span>.atd.path = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">atds.atd1</span><span style="color:#710">"</span></span>
+<span style="color:#d70">$dut</span>.atd.reg1.data.path        <span style="color:#777"># =&gt; "mydut.atds.atd1.reg1[15:0]"</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>Layers can be taken out of the hierarchy altogether by setting the path attribute to <code>:hidden</code>:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>sub_block <span style="color:#A60">:atd</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">ATD</span><span style="color:#710">"</span></span>, <span style="color:#606">base</span>: <span style="color:#00D">0x1000_0000</span>, <span style="color:#606">path</span>: <span style="color:#A60">:hidden</span>
+
+<span style="color:#d70">$dut</span>.atd.reg1.data.path        <span style="color:#777"># =&gt; "mydut.reg1[15:0]"</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>Register and bit definitions can also be given a path override:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>reg <span style="color:#A60">:reg1</span>, <span style="color:#00D">0</span> <span style="color:#080;font-weight:bold">do</span> |reg|
+  reg.bits <span style="color:#00D">31</span>..<span style="color:#00D">0</span>, <span style="color:#A60">:data</span>
+<span style="color:#080;font-weight:bold">end</span>
+
+reg <span style="color:#A60">:reg2</span>, <span style="color:#00D">0x4</span>, <span style="color:#606">path</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">reg2_reg</span><span style="color:#710">"</span></span> <span style="color:#080;font-weight:bold">do</span> |reg|
+  reg.bits <span style="color:#00D">31</span>..<span style="color:#00D">0</span>, <span style="color:#A60">:data</span>
+<span style="color:#080;font-weight:bold">end</span>
+
+reg <span style="color:#A60">:reg3</span>, <span style="color:#00D">0xC</span>, <span style="color:#606">path</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">reg3_reg</span><span style="color:#710">"</span></span> <span style="color:#080;font-weight:bold">do</span> |reg|
+  reg.bits <span style="color:#00D">31</span>..<span style="color:#00D">0</span>, <span style="color:#A60">:data</span>, <span style="color:#606">path</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">data_reg</span><span style="color:#710">"</span></span>
+<span style="color:#080;font-weight:bold">end</span>
+
+reg1.data.path     <span style="color:#777"># =&gt; "mydut.atd.reg1[15:0]"</span>
+reg2.data.path     <span style="color:#777"># =&gt; "mydut.atd.reg2_reg[15:0]"</span>
+reg3.data.path     <span style="color:#777"># =&gt; "mydut.atd.data_reg"</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>Note that in the case of the path being given to the bits it bypasses the
+register altogether, to include the register prefix the bit path name with
+a <code>.</code></p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>reg <span style="color:#A60">:reg3</span>, <span style="color:#00D">0xC</span>, <span style="color:#606">path</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">reg3_reg</span><span style="color:#710">"</span></span> <span style="color:#080;font-weight:bold">do</span> |reg|
+  reg.bits <span style="color:#00D">31</span>..<span style="color:#00D">0</span>, <span style="color:#A60">:data</span>, <span style="color:#606">path</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">.data_reg</span><span style="color:#710">"</span></span>
+<span style="color:#080;font-weight:bold">end</span>
+
+reg3.data.path     <span style="color:#777"># =&gt; "mydut.atd.reg3_reg.data_reg"</span>
 </pre></div>
 </div>
       </div>
 
       <div>    
-  <a class="anchor" name="Setting_Your_Name_and_Email"></a>          
-  <h4><a href="#Setting_Your_Name_and_Email">Setting Your Name and Email</a></h4>          
+  <a class="anchor" name="Absolute_Paths"></a>          
+  <h4><a href="#Absolute_Paths">Absolute Paths</a></h4>          
 </div>
 
-      <p>Origen will maintain a history log for your application at
-<code>doc/history</code>. The name of the person who did each release will be recorded
-if Origen can work out who you are (your name will also included within generated pattern headers
-and similar).</p>
+      <p>Sometimes for a given node that is handled ‘unusually’ in RTL it is easier just
+to give an absolute path, the <code>abs_path</code> attribute can be set in
+place of the <code>path</code> attribute for any of the examples above.</p>
 
-      <p>Setting up your username and email in Git is the recommend way, even if you don’t actually
-use Git for the given application.
-You can set these details by executing the following commands:</p>
+      <p>When resolving paths from a child object the final path will be returned
+immediately when an absolute path is encountered, this is best shown by example:</p>
 
       <div class="highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre>git config --global user.name "John Doe"
-git config --global user.email johndoe@example.com
+  <div class="code"><pre>sub_block <span style="color:#A60">:sub1</span>
+sub_block <span style="color:#A60">:sub2</span>, <span style="color:#606">path</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">memory_block.ram</span><span style="color:#710">"</span></span>
+sub_block <span style="color:#A60">:sub3</span>, <span style="color:#606">abs_path</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">p2.flash</span><span style="color:#710">"</span></span>
+
+sub1.reg1.path      <span style="color:#777"># =&gt; "p1.sub1.reg1" (where p1 is the path of the parent)</span>
+sub2.reg1.path      <span style="color:#777"># =&gt; "p1.memory_block.ram.reg1"</span>
+sub3.reg1.path      <span style="color:#777"># =&gt; "p2.flash.reg1"</span>
 </pre></div>
 </div>
       </div>
 
-      <p>If you don’t have Git available then alternatively you can set the following environment
-variables:</p>
-
-      <div class="highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>ORIGEN_NAME  = "John Doe"
-ORIGEN_EMAIL = "johndoe@example.com"
-</pre></div>
-</div>
-      </div>
-
-      <p>You can test whether your changes have been picked up by opening an Origen console (<code>origen i</code>)
-and running the following:</p>
-
-      <div class="highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">User</span>.current.name    <span style="color:#777"># =&gt; "John Doe"</span>
-<span style="color:#036;font-weight:bold">User</span>.current.email   <span style="color:#777"># =&gt; "johndoe@example.com"</span>
-</pre></div>
-</div>
-      </div>
-
-      <p>An alternative path to determining your details could be via your company’s employee directory
-system. Origen’s <a href="/origen/guides/starting/company">company configuration settings</a> allows
-the credentials for an LDAP system to be entered, and this approach is used within Freescale
-to identify the current user. We are not sure if the current support for this within Origen is
-generic enough to apply to other companies or not, please <a href="/origen/community">get in touch</a> if
-you are interested to help further develop and pilot this system for use within your company.</p>
-
-      <div>    
-  <a class="anchor" name="Commit_and_Tag"></a>          
-  <h4><a href="#Commit_and_Tag">Commit and Tag</a></h4>          
-</div>
-
-      <p>With your repository and user details setup, we can now do an initial commit and tag.</p>
-
-      <div class="alert alert-danger">
-  <strong>Warning!</strong> - 
-  When executing this command pay attention to the prompts and confirm that
-  the target repository reference exists and is correct.
-</div>
-
-      <div class="highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>cd myapp
-
-origen rc init
-</pre></div>
-</div>
-      </div>
-
-      <p>We are now ready to tag, to do this simply execute the following command and
-follow the prompts:</p>
-
-      <div class="highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>origen rc tag
-</pre></div>
-</div>
-      </div>
-
-      <p>At this point Origen would normally have emailed you and your application’s subscribers to
-notify them of the new release, however we are still working on how this subscription system
-should work in the open source world. Expect it to be available within the coming months.</p>
-
-      <div>    
-  <a class="anchor" name="History"></a>          
-  <h4><a href="#History">History</a></h4>          
-</div>
-
-      <p>Your commit history will be saved in your history file which by default lives
-at <code>doc/history</code>.</p>
-
-      <p>The content of that file is automatically formatted for future presentation on a web
-page, the Origen <a href="/origen/release_notes">Release Notes</a> are simply the Origen
-core history file converted to HTML.</p>
-
-      <p>When writing your release notes you can use <a href="http://kramdown.rubyforge.org/quickref.html">markdown</a>
-to control how they will be presented when they are later converted to HTML.</p>
-
-      <p>You can also pre-write your release notes by writing them to <code>release_note.txt</code>
-in the top level of your application directory - 
-run <code>origen rc tag -h</code>
-for more details.</p>
-
-      <div>    
-  <a class="anchor" name="Universal_Revision_Control_Command"></a>          
-  <h4><a href="#Universal_Revision_Control_Command">Universal Revision Control Command</a></h4>          
-</div>
-
-      <p>Once your application has been committed for the first time you can then use the
-<code>origen rc</code> command to work with your revision control system (or you can
-of course continue to use it directly if you prefer).</p>
-
-      <p>See <code>origen rc -h</code> for details of the available commands.</p>
+      <p>Registers and bits will also accept <code>abs_path</code> in place of <code>path</code>.</p>
 
       <div style="position: relative">
   <hr>

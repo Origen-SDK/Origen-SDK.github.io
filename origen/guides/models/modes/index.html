@@ -112,7 +112,7 @@
                 Getting Started with Origen
               </a>
             </div>
-            <div id="sidebar-collapse-0" class="panel-collapse collapse in">
+            <div id="sidebar-collapse-0" class="panel-collapse collapse ">
               <div class="panel-body">
                 <ul class="nav nav-list">
 <li class=""><a href="/origen/guides/starting/introduction">Introduction</a></li>
@@ -122,7 +122,7 @@
 <li class=""><a href="/origen/guides/starting/company">Company Customization</a></li>
 <li class=""><a href="/origen/guides/starting/gems">Understanding Gems</a></li>
 <li class=""><a href="/origen/guides/starting/app">Creating a New App</a></li>
-<li class="active"><a href="/origen/guides/starting/commit">The Initial Commit</a></li>
+<li class=""><a href="/origen/guides/starting/commit">The Initial Commit</a></li>
                 </ul>
 </div>
             </div>
@@ -154,7 +154,7 @@
                 Models
               </a>
             </div>
-            <div id="sidebar-collapse-2" class="panel-collapse collapse ">
+            <div id="sidebar-collapse-2" class="panel-collapse collapse in">
               <div class="panel-body">
                 <ul class="nav nav-list">
 <li class=""><a href="/origen/guides/models/introduction">Introduction</a></li>
@@ -163,7 +163,7 @@
 <li class=""><a href="/origen/guides/models/attributes">Adding Attributes</a></li>
 <li class=""><a href="/origen/guides/models/versioning">Versioning</a></li>
 <li class=""><a href="/origen/guides/models/bugs">Bugs &amp; Features</a></li>
-<li class=""><a href="/origen/guides/models/modes">Package, Mode &amp; Configuration</a></li>
+<li class="active"><a href="/origen/guides/models/modes">Package, Mode &amp; Configuration</a></li>
 <li class=""><a href="/origen/guides/models/registers">Registers</a></li>
 <li class=""><a href="/origen/guides/models/pins">Pins</a></li>
 <li class=""><a href="/origen/guides/models/hw">Hardware Attributes</a></li>
@@ -181,197 +181,186 @@
   </div>
 
   <div class="col-md-9 nav-page-container">
-    <article><h3 class="topic-title">Getting Started with Origen</h3>
+    <article><h3 class="topic-title">Models</h3>
 
-      <h2 class="topic-subtitle">The Initial Commit</h2>
+      <h2 class="topic-subtitle">Package, Mode &amp; Configuration</h2>
 
       <hr>
-<p>Origen applications should be configured with details of the revision control
-repository that they will be checked into, this will enable the following features:</p>
+<p>A given SoC or IP block can typically operate in various modes or configurations
+and may have its feature set modulated by the package that it is in.</p>
 
-      <ul>
-<li>A release command which will tag and perform common post-release tasks.</li>
-        <li>A common project-level history will be maintained, regardless of the underlying system used.</li>
-        <li>An API for programmatic control of the revision control system, this provides
-application and plugin developers with a common API to call regardless of the underlying system that
-a given application uses - <a href="/origen/api/Origen/RevisionControl/Base.html">Revision Control API</a>.</li>
-        <li>A common command, <code>origen rc</code> to provide a common interface for application users to
-perform basic revision control operations regardless of their proficiency with the underlying system.</li>
-      </ul>
-<div>    
-  <a class="anchor" name="Supported_Systems"></a>          
-  <h4><a href="#Supported_Systems">Supported Systems</a></h4>          
-</div>
-
-      <p>Origen currently supports integration with the following revision control tools:</p>
-
-      <ul>
-<li>Git</li>
-        <li>DesignSync</li>
-      </ul>
-<p>We would like to add support for Subversion and any other commonly used systems. If you have knowledge
-of how an additional target revision control system works and you would like to be involved in developing
-and piloting a driver for it, please get in touch via the <a href="/origen/community">community channels</a>.</p>
-
-      <p>Having said that, the Origen core team recommends using Git, even if you have had little or no
-experience of it so far.
-It has significant advantages and is fast becoming the de facto standard revision control tool used
-in software engineering.</p>
+      <p>The following APIs allow such concepts to be modelled so that they can then be used
+to scope things like pin availability.</p>
 
       <div>    
-  <a class="anchor" name="Initial_Configuration"></a>          
-  <h4><a href="#Initial_Configuration">Initial Configuration</a></h4>          
+  <a class="anchor" name="Package"></a>          
+  <h4><a href="#Package">Package</a></h4>          
 </div>
 
-      <p>Configuration information for your application resides in <code>config/application.rb</code>
-and an initial version of this file will have been created for you.</p>
+      <p>This represents the package that the device is in, however this could be a real physical
+package or a pseudo package such as the subset of pins available to a given probecard.
+The package is an a SoC attribute and therefore this API is only available to models
+that include the <code>Origen::TopLevel</code> module.</p>
 
-      <p>This file contains a lot of configuration options which you should find fairly well commented.
-The option that defines the revision control system is called <code>rc_url</code> and it should
-be set as follows.</p>
-
-      <p>For Git:</p>
+      <p>A simple package definition requires simply supplying a name for it, here are
+some examples but the names are completely arbitrary and you can use whatever you
+like:</p>
 
       <div class="highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># config/application.rb</span>
+  <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MyDut</span>
+  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">TopLevel</span>
 
-<span style="color:#777"># Example for Github</span>
-config.rc_url = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">git@github.com:myaccount/myapp.git</span><span style="color:#710">"</span></span>
-<span style="color:#777"># Example for Atlassian Stash</span>
-config.rc_url = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">ssh://git@sw-stash.mycompany.net/myproject/myapp.git</span><span style="color:#710">"</span></span>
+  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>
+    add_package <span style="color:#A60">:probe</span>
+    add_package <span style="color:#A60">:mapbga</span>
+    add_package <span style="color:#A60">:qfp</span>
+  <span style="color:#080;font-weight:bold">end</span>
+<span style="color:#080;font-weight:bold">end</span>
 </pre></div>
 </div>
       </div>
 
-      <p>For DesignSync:</p>
+      <p>By default the model will boot with no package set, this state would be used
+to represent the die with all pins exposed.</p>
+
+      <p>The package state can then be changed as shown:</p>
 
       <div class="highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># config/application.rb</span>
+  <div class="code"><pre><span style="color:#d70">$dut</span>.package                  <span style="color:#777"># =&gt; nil</span>
+<span style="color:#d70">$dut</span>.package = <span style="color:#A60">:mapbga</span>       
+<span style="color:#d70">$dut</span>.package                  <span style="color:#777"># =&gt; &lt;mapbga package object&gt;</span>
+<span style="color:#d70">$dut</span>.with_package <span style="color:#A60">:qfp</span> <span style="color:#080;font-weight:bold">do</span>
+  <span style="color:#d70">$dut</span>.package                <span style="color:#777"># =&gt; &lt;qfp package object&gt;</span>
+<span style="color:#080;font-weight:bold">end</span>
+<span style="color:#d70">$dut</span>.package                  <span style="color:#777"># =&gt; &lt;mapbga package object&gt;</span>
+</pre></div>
+</div>
+      </div>
 
-config.rc_url = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">sync://sync-1234:1234/myproject/myapp</span><span style="color:#710">"</span></span>
+      <p>Packages are objects (an instance of the <a href="/origen/api/Origen/ChipPackage.html"><code>Origen::ChipPackage</code></a> class)
+and additional attributes can be set at definition time like this:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>
+  add_package <span style="color:#A60">:t2080</span> <span style="color:#080;font-weight:bold">do</span> |package|
+    package.number_of_rows = <span style="color:#00D">16</span>
+    package.number_of_columns = <span style="color:#00D">16</span>
+  <span style="color:#080;font-weight:bold">end</span>
+  add_package <span style="color:#A60">:t4080</span> <span style="color:#080;font-weight:bold">do</span> |package|
+    package.number_of_rows = <span style="color:#00D">32</span>
+    package.number_of_columns = <span style="color:#00D">32</span>
+  <span style="color:#080;font-weight:bold">end</span>
+<span style="color:#080;font-weight:bold">end</span>
+
+<span style="color:#d70">$dut</span>.package = <span style="color:#A60">:t2080</span>
+<span style="color:#d70">$dut</span>.package.number_of_columns     <span style="color:#777"># =&gt; 16</span>
+<span style="color:#d70">$dut</span>.package = <span style="color:#A60">:t4080</span>
+<span style="color:#d70">$dut</span>.package.number_of_columns     <span style="color:#777"># =&gt; 32</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>See the <a href="/origen/api/Origen/ChipPackage.html">ChipPackage API</a> for the up to
+date list of available attributes.</p>
+
+      <div>    
+  <a class="anchor" name="Mode"></a>          
+  <h4><a href="#Mode">Mode</a></h4>          
+</div>
+
+      <p>This represents which mode the device is in, again this can represent a real operating mode
+such as user, functional test, RAMBIST, etc. or some abstract concept that is specific to the
+given domain.</p>
+
+      <p>The mode API is available to any object that includes <code>Origen::Model</code> and therefore
+sub-blocks can also define their own modes and have a mode context independent of the top-level
+object.</p>
+
+      <p>Modes are defined and set in the same way as packages, here are some examples:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MyDut</span>
+  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">TopLevel</span>
+
+  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>
+    add_mode <span style="color:#A60">:user</span>
+    add_mode <span style="color:#A60">:rambist</span>
+  <span style="color:#080;font-weight:bold">end</span>
+<span style="color:#080;font-weight:bold">end</span>
+
+<span style="color:#d70">$dut</span>.mode                     <span style="color:#777"># =&gt; nil</span>
+<span style="color:#d70">$dut</span>.mode = <span style="color:#A60">:user</span>          
+<span style="color:#d70">$dut</span>.mode                     <span style="color:#777"># =&gt; &lt;user mode object&gt;</span>
+<span style="color:#d70">$dut</span>.with_mode <span style="color:#A60">:rambist</span> <span style="color:#080;font-weight:bold">do</span>
+  <span style="color:#d70">$dut</span>.mode                   <span style="color:#777"># =&gt; &lt;rambist mode object&gt;</span>
+<span style="color:#080;font-weight:bold">end</span>
+<span style="color:#d70">$dut</span>.mode                     <span style="color:#777"># =&gt; &lt;user mode object&gt;</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>Note that like packages the modes are represented by objects which can be assigned attributes,
+see the <a href="/origen/api/Origen/ChipMode.html">ChipMode API</a> for the up to
+date list of available attributes.</p>
+
+      <p>Mode objects do support a convenience API for checking the current mode:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#d70">$dut</span>.mode.user?      <span style="color:#777"># =&gt; false</span>
+<span style="color:#d70">$dut</span>.mode.rambist?   <span style="color:#777"># =&gt; true</span>
 </pre></div>
 </div>
       </div>
 
       <div>    
-  <a class="anchor" name="Setting_Your_Name_and_Email"></a>          
-  <h4><a href="#Setting_Your_Name_and_Email">Setting Your Name and Email</a></h4>          
+  <a class="anchor" name="Configuration"></a>          
+  <h4><a href="#Configuration">Configuration</a></h4>          
 </div>
 
-      <p>Origen will maintain a history log for your application at
-<code>doc/history</code>. The name of the person who did each release will be recorded
-if Origen can work out who you are (your name will also included within generated pattern headers
-and similar).</p>
+      <p>This is another layer which supports the concept that different configurations may exist within
+the one mode. More generally it is simply another scope that the application can use to describe
+different states/configurations.</p>
 
-      <p>Setting up your username and email in Git is the recommend way, even if you don’t actually
-use Git for the given application.
-You can set these details by executing the following commands:</p>
+      <p>Like modes, the configuration API is available to any object that includes <code>Origen::Model</code> and therefore
+sub-blocks can also define their own configurations and have a configuration context independent of the top-level
+object.</p>
+
+      <p>Here are some examples:</p>
 
       <div class="highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre>git config --global user.name "John Doe"
-git config --global user.email johndoe@example.com
+  <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MyDut</span>
+  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">TopLevel</span>
+
+  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>
+    add_mode <span style="color:#A60">:user</span>
+    add_mode <span style="color:#A60">:bist</span>
+    add_configuration <span style="color:#A60">:nvm</span>
+    add_configuration <span style="color:#A60">:ram</span>
+  <span style="color:#080;font-weight:bold">end</span>
+
+  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">enter_rambist_mode</span>
+    <span style="color:#069">self</span>.mode = <span style="color:#A60">:bist</span>
+    <span style="color:#069">self</span>.configuration = <span style="color:#A60">:ram</span>
+    <span style="color:#777"># In a test application you would generate the necessary vectors to actually do this here</span>
+    <span style="color:#777"># Upon exit from this method 3rd parties will now be able to tell that the DUT is in RAMBIST mode/configuration</span>
+  <span style="color:#080;font-weight:bold">end</span>
+<span style="color:#080;font-weight:bold">end</span>
+
+<span style="color:#d70">$dut</span>.enter_rambist_mode       <span style="color:#777"># =&gt; nil</span>
+<span style="color:#d70">$dut</span>.mode.bist?               <span style="color:#777"># =&gt; true</span>
+<span style="color:#d70">$dut</span>.configuration            <span style="color:#777"># =&gt; :ram</span>
 </pre></div>
 </div>
       </div>
 
-      <p>If you don’t have Git available then alternatively you can set the following environment
-variables:</p>
-
-      <div class="highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>ORIGEN_NAME  = "John Doe"
-ORIGEN_EMAIL = "johndoe@example.com"
-</pre></div>
-</div>
-      </div>
-
-      <p>You can test whether your changes have been picked up by opening an Origen console (<code>origen i</code>)
-and running the following:</p>
-
-      <div class="highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">User</span>.current.name    <span style="color:#777"># =&gt; "John Doe"</span>
-<span style="color:#036;font-weight:bold">User</span>.current.email   <span style="color:#777"># =&gt; "johndoe@example.com"</span>
-</pre></div>
-</div>
-      </div>
-
-      <p>An alternative path to determining your details could be via your company’s employee directory
-system. Origen’s <a href="/origen/guides/starting/company">company configuration settings</a> allows
-the credentials for an LDAP system to be entered, and this approach is used within Freescale
-to identify the current user. We are not sure if the current support for this within Origen is
-generic enough to apply to other companies or not, please <a href="/origen/community">get in touch</a> if
-you are interested to help further develop and pilot this system for use within your company.</p>
-
-      <div>    
-  <a class="anchor" name="Commit_and_Tag"></a>          
-  <h4><a href="#Commit_and_Tag">Commit and Tag</a></h4>          
-</div>
-
-      <p>With your repository and user details setup, we can now do an initial commit and tag.</p>
-
-      <div class="alert alert-danger">
-  <strong>Warning!</strong> - 
-  When executing this command pay attention to the prompts and confirm that
-  the target repository reference exists and is correct.
-</div>
-
-      <div class="highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>cd myapp
-
-origen rc init
-</pre></div>
-</div>
-      </div>
-
-      <p>We are now ready to tag, to do this simply execute the following command and
-follow the prompts:</p>
-
-      <div class="highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>origen rc tag
-</pre></div>
-</div>
-      </div>
-
-      <p>At this point Origen would normally have emailed you and your application’s subscribers to
-notify them of the new release, however we are still working on how this subscription system
-should work in the open source world. Expect it to be available within the coming months.</p>
-
-      <div>    
-  <a class="anchor" name="History"></a>          
-  <h4><a href="#History">History</a></h4>          
-</div>
-
-      <p>Your commit history will be saved in your history file which by default lives
-at <code>doc/history</code>.</p>
-
-      <p>The content of that file is automatically formatted for future presentation on a web
-page, the Origen <a href="/origen/release_notes">Release Notes</a> are simply the Origen
-core history file converted to HTML.</p>
-
-      <p>When writing your release notes you can use <a href="http://kramdown.rubyforge.org/quickref.html">markdown</a>
-to control how they will be presented when they are later converted to HTML.</p>
-
-      <p>You can also pre-write your release notes by writing them to <code>release_note.txt</code>
-in the top level of your application directory - 
-run <code>origen rc tag -h</code>
-for more details.</p>
-
-      <div>    
-  <a class="anchor" name="Universal_Revision_Control_Command"></a>          
-  <h4><a href="#Universal_Revision_Control_Command">Universal Revision Control Command</a></h4>          
-</div>
-
-      <p>Once your application has been committed for the first time you can then use the
-<code>origen rc</code> command to work with your revision control system (or you can
-of course continue to use it directly if you prefer).</p>
-
-      <p>See <code>origen rc -h</code> for details of the available commands.</p>
+      <p>Note that currently the configuration is not represented as an object and therefore cannot
+store additional attributes associated with the given configuration.</p>
 
       <div style="position: relative">
   <hr>
