@@ -112,7 +112,7 @@
                 Getting Started with Origen
               </a>
             </div>
-            <div id="sidebar-collapse-0" class="panel-collapse collapse in">
+            <div id="sidebar-collapse-0" class="panel-collapse collapse ">
               <div class="panel-body">
                 <ul class="nav nav-list">
 <li class=""><a href="/origen/guides/starting/introduction">Introduction</a></li>
@@ -122,7 +122,7 @@
 <li class=""><a href="/origen/guides/starting/company">Company Customization</a></li>
 <li class=""><a href="/origen/guides/starting/gems">Understanding Gems</a></li>
 <li class=""><a href="/origen/guides/starting/app">Creating a New App</a></li>
-<li class="active"><a href="/origen/guides/starting/commit">The Initial Commit</a></li>
+<li class=""><a href="/origen/guides/starting/commit">The Initial Commit</a></li>
                 </ul>
 </div>
             </div>
@@ -133,7 +133,7 @@
                 Runtime Environment
               </a>
             </div>
-            <div id="sidebar-collapse-1" class="panel-collapse collapse ">
+            <div id="sidebar-collapse-1" class="panel-collapse collapse in">
               <div class="panel-body">
                 <ul class="nav nav-list">
 <li class=""><a href="/origen/guides/runtime/introduction">Introduction</a></li>
@@ -143,7 +143,7 @@
 <li class=""><a href="/origen/guides/runtime/production">Production Targets</a></li>
 <li class=""><a href="/origen/guides/runtime/global">Global Setup</a></li>
 <li class=""><a href="/origen/guides/runtime/loadorder">Load Order</a></li>
-<li class=""><a href="/origen/guides/runtime/programming">Programming</a></li>
+<li class="active"><a href="/origen/guides/runtime/programming">Programming</a></li>
                 </ul>
 </div>
             </div>
@@ -156,197 +156,175 @@
   </div>
 
   <div class="col-md-9 nav-page-container">
-    <article><h3 class="topic-title">Getting Started with Origen</h3>
+    <article><h3 class="topic-title">Runtime Environment</h3>
 
-      <h2 class="topic-subtitle">The Initial Commit</h2>
+      <h2 class="topic-subtitle">Programming</h2>
 
       <hr>
-<p>Origen applications should be configured with details of the revision control
-repository that they will be checked into, this will enable the following features:</p>
-
-      <ul>
-<li>A release command which will tag and perform common post-release tasks.</li>
-        <li>A common project-level history will be maintained, regardless of the underlying system used.</li>
-        <li>An API for programmatic control of the revision control system, this provides
-application and plugin developers with a common API to call regardless of the underlying system that
-a given application uses - <a href="/origen/api/Origen/RevisionControl/Base.html">Revision Control API</a>.</li>
-        <li>A common command, <code>origen rc</code> to provide a common interface for application users to
-perform basic revision control operations regardless of their proficiency with the underlying system.</li>
-      </ul>
-<div>    
-  <a class="anchor" name="Supported_Systems"></a>          
-  <h4><a href="#Supported_Systems">Supported Systems</a></h4>          
+<div class="alert alert-info">
+This guide discusses how to programmatically change the target, note that this will also
+reload the environment as discussed here: 
+<a href="/origen/guides/runtime/introduction/#How_the_Runtime_Environment_is_Applied">How the Runtime Environment is Applied</a>
 </div>
 
-      <p>Origen currently supports integration with the following revision control tools:</p>
+      <p>If you start <a href="/origen/guides/custom/commands">writing your own commands</a>
+you may want to programmatically define or manipulate the target.</p>
 
-      <ul>
-<li>Git</li>
-        <li>DesignSync</li>
-      </ul>
-<p>We would like to add support for Subversion and any other commonly used systems. If you have knowledge
-of how an additional target revision control system works and you would like to be involved in developing
-and piloting a driver for it, please get in touch via the <a href="/origen/community">community channels</a>.</p>
-
-      <p>Having said that, the Origen core team recommends using Git, even if you have had little or no
-experience of it so far.
-It has significant advantages and is fast becoming the de facto standard revision control tool used
-in software engineering.</p>
-
-      <div>    
-  <a class="anchor" name="Initial_Configuration"></a>          
-  <h4><a href="#Initial_Configuration">Initial Configuration</a></h4>          
-</div>
-
-      <p>Configuration information for your application resides in <code>config/application.rb</code>
-and an initial version of this file will have been created for you.</p>
-
-      <p>This file contains a lot of configuration options which you should find fairly well commented.
-The option that defines the revision control system is called <code>rc_url</code> and it should
-be set as follows.</p>
-
-      <p>For Git:</p>
+      <p>A single target should always be loaded by using the following method, it
+can be called again to later switch to a different target:</p>
 
       <div class="highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># config/application.rb</span>
-
-<span style="color:#777"># Example for Github</span>
-config.rc_url = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">git@github.com:myaccount/myapp.git</span><span style="color:#710">"</span></span>
-<span style="color:#777"># Example for Atlassian Stash</span>
-config.rc_url = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">ssh://git@sw-stash.mycompany.net/myproject/myapp.git</span><span style="color:#710">"</span></span>
+  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.load_target(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">falcon_1</span><span style="color:#710">"</span></span>)
 </pre></div>
 </div>
       </div>
-
-      <p>For DesignSync:</p>
-
-      <div class="highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># config/application.rb</span>
-
-config.rc_url = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">sync://sync-1234:1234/myproject/myapp</span><span style="color:#710">"</span></span>
-</pre></div>
-</div>
-      </div>
-
-      <div>    
-  <a class="anchor" name="Setting_Your_Name_and_Email"></a>          
-  <h4><a href="#Setting_Your_Name_and_Email">Setting Your Name and Email</a></h4>          
-</div>
-
-      <p>Origen will maintain a history log for your application at
-<code>doc/history</code>. The name of the person who did each release will be recorded
-if Origen can work out who you are (your name will also included within generated pattern headers
-and similar).</p>
-
-      <p>Setting up your username and email in Git is the recommend way, even if you don’t actually
-use Git for the given application.
-You can set these details by executing the following commands:</p>
-
-      <div class="highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>git config --global user.name "John Doe"
-git config --global user.email johndoe@example.com
-</pre></div>
-</div>
-      </div>
-
-      <p>If you don’t have Git available then alternatively you can set the following environment
-variables:</p>
-
-      <div class="highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>ORIGEN_NAME  = "John Doe"
-ORIGEN_EMAIL = "johndoe@example.com"
-</pre></div>
-</div>
-      </div>
-
-      <p>You can test whether your changes have been picked up by opening an Origen console (<code>origen i</code>)
-and running the following:</p>
-
-      <div class="highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">User</span>.current.name    <span style="color:#777"># =&gt; "John Doe"</span>
-<span style="color:#036;font-weight:bold">User</span>.current.email   <span style="color:#777"># =&gt; "johndoe@example.com"</span>
-</pre></div>
-</div>
-      </div>
-
-      <p>An alternative path to determining your details could be via your company’s employee directory
-system. Origen’s <a href="/origen/guides/starting/company">company configuration settings</a> allows
-the credentials for an LDAP system to be entered, and this approach is used within Freescale
-to identify the current user. We are not sure if the current support for this within Origen is
-generic enough to apply to other companies or not, please <a href="/origen/community">get in touch</a> if
-you are interested to help further develop and pilot this system for use within your company.</p>
-
-      <div>    
-  <a class="anchor" name="Commit_and_Tag"></a>          
-  <h4><a href="#Commit_and_Tag">Commit and Tag</a></h4>          
-</div>
-
-      <p>With your repository and user details setup, we can now do an initial commit and tag.</p>
 
       <div class="alert alert-danger">
-  <strong>Warning!</strong> - 
-  When executing this command pay attention to the prompts and confirm that
-  the target repository reference exists and is correct.
+  <strong>Warning</strong> - 
+  If you browse the API you may see some similar methods described for loading
+  the target, however these should be avoided. The above method is the intended
+  public API and will ensure that all dependencies are setup correctly.
 </div>
+
+      <p>With the above warning in mind the <a href="/origen/api/Origen/Application/Target">Origen::Application::Target API</a>
+can be consulted to see what additional methods are available to work with
+the target,
+an instance of that class is available via <code>Origen.target</code>.</p>
+
+      <p>For example to get the name of the current target:</p>
 
       <div class="highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre>cd myapp
-
-origen rc init
+  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.target.name   <span style="color:#777"># =&gt; "falcon_1"</span>
 </pre></div>
 </div>
       </div>
 
-      <p>We are now ready to tag, to do this simply execute the following command and
-follow the prompts:</p>
+      <div>    
+  <a class="anchor" name="Configurable_Targets"></a>          
+  <h4><a href="#Configurable_Targets">Configurable Targets</a></h4>          
+</div>
+
+      <p>Any options passed into the <code>Origen.load_target</code> method can be accessed
+from within the target and used to customize it by the caller.</p>
+
+      <p>For example here is a target where the device version is left for the caller
+to specify:</p>
 
       <div class="highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre>origen rc tag
+  <div class="code"><pre><span style="color:#777"># target/falcon.rb</span>
+<span style="color:#d70">$dut</span> = <span style="color:#036;font-weight:bold">MyApp</span>::<span style="color:#036;font-weight:bold">Falcon</span>.new(<span style="color:#606">version</span>: options[<span style="color:#A60">:version</span>])
 </pre></div>
 </div>
       </div>
 
-      <p>At this point Origen would normally have emailed you and your application’s subscribers to
-notify them of the new release, however we are still working on how this subscription system
-should work in the open source world. Expect it to be available within the coming months.</p>
+      <p>This would be used like this:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.load_target(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">falcon</span><span style="color:#710">"</span></span>, <span style="color:#606">version</span>: <span style="color:#00D">1</span>)
+<span style="color:#d70">$dut</span>.version   <span style="color:#777"># =&gt; 1</span>
+<span style="color:#036;font-weight:bold">Origen</span>.load_target(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">falcon</span><span style="color:#710">"</span></span>, <span style="color:#606">version</span>: <span style="color:#00D">2</span>)
+<span style="color:#d70">$dut</span>.version   <span style="color:#777"># =&gt; 2</span>
+</pre></div>
+</div>
+      </div>
 
       <div>    
-  <a class="anchor" name="History"></a>          
-  <h4><a href="#History">History</a></h4>          
+  <a class="anchor" name="Target_Loops"></a>          
+  <h4><a href="#Target_Loops">Target Loops</a></h4>          
 </div>
 
-      <p>Your commit history will be saved in your history file which by default lives
-at <code>doc/history</code>.</p>
+      <p>Target loops (where some code is repeated for a collection of targets) are
+very common and Origen provides some dedicated helpers for this.</p>
 
-      <p>The content of that file is automatically formatted for future presentation on a web
-page, the Origen <a href="/origen/release_notes">Release Notes</a> are simply the Origen
-core history file converted to HTML.</p>
+      <p>The <code>Origen.target.loop</code> method is the most useful in a
+command situation and is designed to
+generate a loop based on the value of a <code>:target</code> key in an
+options hash. This option can contain the name of a target or an array
+containing multiple names, and if none are present it will fall back to the
+default target following the normal conventions.</p>
 
-      <p>When writing your release notes you can use <a href="http://kramdown.rubyforge.org/quickref.html">markdown</a>
-to control how they will be presented when they are later converted to HTML.</p>
+      <p>It is therefore ideally suited to creating a command where the user can
+supply one or more targets and could be used like this:</p>
 
-      <p>You can also pre-write your release notes by writing them to <code>release_note.txt</code>
-in the top level of your application directory - 
-run <code>origen rc tag -h</code>
-for more details.</p>
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>opt_parser = <span style="color:#036;font-weight:bold">OptionParser</span>.new <span style="color:#080;font-weight:bold">do</span> |opts|
+  opts.on(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">-t</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">--target NAME1,NAME2,NAME3</span><span style="color:#710">"</span></span>, <span style="color:#036;font-weight:bold">Array</span>,
+    <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Override the default target, NAME can be a full path or a fragment of a target name</span><span style="color:#710">"</span></span>) { |t| options[<span style="color:#A60">:target</span>] = t }
+<span style="color:#080;font-weight:bold">end</span>
+opt_parser.parse! <span style="color:#069">ARGV</span>
+
+<span style="color:#036;font-weight:bold">Origen</span>.target.loop(options) <span style="color:#080;font-weight:bold">do</span> |options|
+  <span style="color:#777"># The current target is already loaded, the name of the current target has been substituted into options[:target]</span>
+  puts <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">The name of the current target is: </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>options[<span style="color:#A60">:target</span>]<span style="font-weight:bold;color:#666">}</span></span><span style="color:#710">"</span></span>
+  <span style="color:#777"># Implement your command logic here...</span>
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>The above would work with any of the following inputs:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre># Execute for the current default target
+origen my_command      
+
+# Execute for a single specific target
+origen my_command -t falcon    
+
+# Execute for multiple specific targets
+origen my_command -t falcon,eagle    
+</pre></div>
+</div>
+      </div>
 
       <div>    
-  <a class="anchor" name="Universal_Revision_Control_Command"></a>          
-  <h4><a href="#Universal_Revision_Control_Command">Universal Revision Control Command</a></h4>          
+  <a class="anchor" name="Production_Target_Loops"></a>          
+  <h4><a href="#Production_Target_Loops">Production Target Loops</a></h4>          
 </div>
 
-      <p>Once your application has been committed for the first time you can then use the
-<code>origen rc</code> command to work with your revision control system (or you can
-of course continue to use it directly if you prefer).</p>
+      <p>If your application has defined a <a href="/origen/guides/targets/production">production target map</a>
+then some additional methods are available to loop on that:</p>
 
-      <p>See <code>origen rc -h</code> for details of the available commands.</p>
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.target.each_production <span style="color:#080;font-weight:bold">do</span> |maskset|
+  <span style="color:#777"># Do something for each maskset line defined in the map</span>
+<span style="color:#080;font-weight:bold">end</span>
+
+<span style="color:#036;font-weight:bold">Origen</span>.target.each_unique_production <span style="color:#080;font-weight:bold">do</span> |masksets|
+  <span style="color:#777"># Do something for each unique target defined in the map</span>
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>The latter will only execute for unique target files, so if the same file is used
+by multiple maskset numbers it will only be looped once and the <code>masksets</code> argument
+will be an array containing all maskset numbers that use that target.</p>
+
+      <div>    
+  <a class="anchor" name="Forcing_Debug_Mode"></a>          
+  <h4><a href="#Forcing_Debug_Mode">Forcing Debug Mode</a></h4>          
+</div>
+
+      <p>All of the above looping methods accept an option to force all targets to debug mode,
+this can be useful depending on the purpose of your command, but should obviously
+be avoided in cases where the command is concerned with generating production IP.</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.target.each_production <span style="color:#606">force_debug</span>: <span style="color:#069">true</span> <span style="color:#080;font-weight:bold">do</span> |maskset|
+  <span style="color:#777"># As above except Origen is running in debug mode regardless of the mode defined by the environment</span>
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+      </div>
 
       <div style="position: relative">
   <hr>

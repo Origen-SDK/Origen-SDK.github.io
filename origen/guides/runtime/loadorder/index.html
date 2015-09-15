@@ -112,7 +112,7 @@
                 Getting Started with Origen
               </a>
             </div>
-            <div id="sidebar-collapse-0" class="panel-collapse collapse in">
+            <div id="sidebar-collapse-0" class="panel-collapse collapse ">
               <div class="panel-body">
                 <ul class="nav nav-list">
 <li class=""><a href="/origen/guides/starting/introduction">Introduction</a></li>
@@ -122,7 +122,7 @@
 <li class=""><a href="/origen/guides/starting/company">Company Customization</a></li>
 <li class=""><a href="/origen/guides/starting/gems">Understanding Gems</a></li>
 <li class=""><a href="/origen/guides/starting/app">Creating a New App</a></li>
-<li class="active"><a href="/origen/guides/starting/commit">The Initial Commit</a></li>
+<li class=""><a href="/origen/guides/starting/commit">The Initial Commit</a></li>
                 </ul>
 </div>
             </div>
@@ -133,7 +133,7 @@
                 Runtime Environment
               </a>
             </div>
-            <div id="sidebar-collapse-1" class="panel-collapse collapse ">
+            <div id="sidebar-collapse-1" class="panel-collapse collapse in">
               <div class="panel-body">
                 <ul class="nav nav-list">
 <li class=""><a href="/origen/guides/runtime/introduction">Introduction</a></li>
@@ -142,7 +142,7 @@
 <li class=""><a href="/origen/guides/runtime/target">Target</a></li>
 <li class=""><a href="/origen/guides/runtime/production">Production Targets</a></li>
 <li class=""><a href="/origen/guides/runtime/global">Global Setup</a></li>
-<li class=""><a href="/origen/guides/runtime/loadorder">Load Order</a></li>
+<li class="active"><a href="/origen/guides/runtime/loadorder">Load Order</a></li>
 <li class=""><a href="/origen/guides/runtime/programming">Programming</a></li>
                 </ul>
 </div>
@@ -156,197 +156,127 @@
   </div>
 
   <div class="col-md-9 nav-page-container">
-    <article><h3 class="topic-title">Getting Started with Origen</h3>
+    <article><h3 class="topic-title">Runtime Environment</h3>
 
-      <h2 class="topic-subtitle">The Initial Commit</h2>
+      <h2 class="topic-subtitle">Load Order</h2>
 
       <hr>
-<p>Origen applications should be configured with details of the revision control
-repository that they will be checked into, this will enable the following features:</p>
+<p>The number of global objects instantiated by a runtime environment should be kept to a minimum,
+however even the most basic of setups is likely to instantiate both a <code>$dut</code>
+and a <code>$tester</code> object.</p>
 
-      <ul>
-<li>A release command which will tag and perform common post-release tasks.</li>
-        <li>A common project-level history will be maintained, regardless of the underlying system used.</li>
-        <li>An API for programmatic control of the revision control system, this provides
-application and plugin developers with a common API to call regardless of the underlying system that
-a given application uses - <a href="/origen/api/Origen/RevisionControl/Base.html">Revision Control API</a>.</li>
-        <li>A common command, <code>origen rc</code> to provide a common interface for application users to
-perform basic revision control operations regardless of their proficiency with the underlying system.</li>
-      </ul>
-<div>    
-  <a class="anchor" name="Supported_Systems"></a>          
-  <h4><a href="#Supported_Systems">Supported Systems</a></h4>          
-</div>
+      <p>It is important that the initialization of each of these objects does not depend on the other
+to avoid introducing a dependency on the order in which they must be instantiated.
+Such a dependency is fine when the application is young and the number of configurations is small, but as
+it grows this can become painful to manage and hard to anticipate when new engineers
+come onto the team.</p>
 
-      <p>Origen currently supports integration with the following revision control tools:</p>
+      <p>Nonetheless it is very likely that sooner or later the case will arise where an object
+must be initially configured differently depending on what tester platform it is
+running on, or on what top-level device object it has been integrated into.</p>
 
-      <ul>
-<li>Git</li>
-        <li>DesignSync</li>
-      </ul>
-<p>We would like to add support for Subversion and any other commonly used systems. If you have knowledge
-of how an additional target revision control system works and you would like to be involved in developing
-and piloting a driver for it, please get in touch via the <a href="/origen/community">community channels</a>.</p>
+      <p>So how to do that initial configuration without introducing an instantiation
+order dependency?</p>
 
-      <p>Having said that, the Origen core team recommends using Git, even if you have had little or no
-experience of it so far.
-It has significant advantages and is fast becoming the de facto standard revision control tool used
-in software engineering.</p>
+      <p>The answer is to use an <code>on_create</code> method to complete any initialization
+operations that depend on other objects.</p>
 
       <div>    
-  <a class="anchor" name="Initial_Configuration"></a>          
-  <h4><a href="#Initial_Configuration">Initial Configuration</a></h4>          
+  <a class="anchor" name="Using_on_create"></a>          
+  <h4><a href="#Using_on_create">Using on_create</a></h4>          
 </div>
 
-      <p>Configuration information for your application resides in <code>config/application.rb</code>
-and an initial version of this file will have been created for you.</p>
+      <p><code>on_create</code> is an Origen callback
+and the <a href="/origen/guides/custom/callbacks">callback guide</a> should be consulted 
+for background information and for details on how to setup your model to use callbacks.</p>
 
-      <p>This file contains a lot of configuration options which you should find fairly well commented.
-The option that defines the revision control system is called <code>rc_url</code> and it should
-be set as follows.</p>
+      <p>Whenever Origen loads a runtime environment it will automatically call the <code>on_create</code>
+methods of any objects that have just come into being at the end of loading the target/environment files.</p>
 
-      <p>For Git:</p>
+      <p>It is therefore guaranteed that <code>on_create</code> will be run before any
+operations are invoked on the model outside of the target/environment files and it should be though of
+as similar to the standard Ruby <code>initialize</code> method but with the guarantee
+that all runtime objects already exist by the time it is called.</p>
+
+      <p>Here are some examples of cases where <code>on_create</code> should be used in
+preference to <code>initialize</code>:</p>
 
       <div class="highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># config/application.rb</span>
+  <div class="code"><pre><span style="color:#777"># In the $dut model</span>
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>
+  <span style="color:#777"># This would be creating an instantiation order dependency by doing this here,</span>
+  <span style="color:#777"># i.e. $tester must exist before the $dut</span>
+  <span style="color:#777"># $tester.do_something</span>
+<span style="color:#080;font-weight:bold">end</span>
 
-<span style="color:#777"># Example for Github</span>
-config.rc_url = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">git@github.com:myaccount/myapp.git</span><span style="color:#710">"</span></span>
-<span style="color:#777"># Example for Atlassian Stash</span>
-config.rc_url = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">ssh://git@sw-stash.mycompany.net/myproject/myapp.git</span><span style="color:#710">"</span></span>
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">on_create</span>
+  <span style="color:#777"># But not here</span>
+  <span style="color:#d70">$tester</span>.do_something
+<span style="color:#080;font-weight:bold">end</span>
 </pre></div>
 </div>
       </div>
 
-      <p>For DesignSync:</p>
-
       <div class="highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># config/application.rb</span>
+  <div class="code"><pre><span style="color:#777"># In a model that is not $dut</span>
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>
+  <span style="color:#777"># This would be creating an instantiation order dependency by doing this here,</span>
+  <span style="color:#777"># i.e. $dut must exist before this model</span>
+  <span style="color:#777"># if $dut.test_pin_muxed_with_reset?</span>
+  <span style="color:#777">#   add_pin_alias :test, :reset</span>
+  <span style="color:#777"># else</span>
+  <span style="color:#777">#   add_pin :test</span>
+  <span style="color:#777"># end</span>
+<span style="color:#080;font-weight:bold">end</span>
 
-config.rc_url = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">sync://sync-1234:1234/myproject/myapp</span><span style="color:#710">"</span></span>
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">on_create</span>
+  <span style="color:#777"># But not here</span>
+  <span style="color:#080;font-weight:bold">if</span> <span style="color:#d70">$dut</span>.test_pin_muxed_with_reset?
+    add_pin_alias <span style="color:#A60">:test</span>, <span style="color:#A60">:reset</span>
+  <span style="color:#080;font-weight:bold">else</span>
+    add_pin <span style="color:#A60">:test</span>
+  <span style="color:#080;font-weight:bold">end</span>
+<span style="color:#080;font-weight:bold">end</span>
 </pre></div>
 </div>
       </div>
 
       <div>    
-  <a class="anchor" name="Setting_Your_Name_and_Email"></a>          
-  <h4><a href="#Setting_Your_Name_and_Email">Setting Your Name and Email</a></h4>          
+  <a class="anchor" name="Any_Downside_to_Using_on_create_Instead_of_initialize?"></a>          
+  <h4><a href="#Any_Downside_to_Using_on_create_Instead_of_initialize?">Any Downside to Using on_create Instead of initialize?</a></h4>          
 </div>
 
-      <p>Origen will maintain a history log for your application at
-<code>doc/history</code>. The name of the person who did each release will be recorded
-if Origen can work out who you are (your name will also included within generated pattern headers
-and similar).</p>
+      <p>Not really.</p>
 
-      <p>Setting up your username and email in Git is the recommend way, even if you don’t actually
-use Git for the given application.
-You can set these details by executing the following commands:</p>
+      <p>Using <code>initialize</code> for object construction/initialization is perhaps preferable in some
+sense since it is a standard Ruby method and therefore clearer for someone new to Origen
+to understand how the model is initially being configured.</p>
+
+      <p>However generally anything that can be done in <code>initialize</code> can be safely
+moved to <code>on_create</code> and the eventual state of the model instantiated by the
+runtime environment files will be identical.</p>
+
+      <p>One major difference is that parameter options cannot be passed into <code>on_create</code>
+from the target, whereas options can be passed into the <code>initialize</code> method.
+Such parameter dependent cases can still be moved to <code>on_create</code> but the
+options will need to be saved by the <code>initialize</code> method.</p>
 
       <div class="highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre>git config --global user.name "John Doe"
-git config --global user.email johndoe@example.com
+  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options={})
+  <span style="color:#33B">@intial_options</span> = options
+<span style="color:#080;font-weight:bold">end</span>
+
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">on_create</span>
+  <span style="color:#080;font-weight:bold">if</span> <span style="color:#33B">@intial_options</span>[<span style="color:#A60">:uti</span>]
+    <span style="color:#d70">$tester</span>.do_something
+  <span style="color:#080;font-weight:bold">end</span>
+<span style="color:#080;font-weight:bold">end</span>
 </pre></div>
 </div>
       </div>
-
-      <p>If you don’t have Git available then alternatively you can set the following environment
-variables:</p>
-
-      <div class="highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>ORIGEN_NAME  = "John Doe"
-ORIGEN_EMAIL = "johndoe@example.com"
-</pre></div>
-</div>
-      </div>
-
-      <p>You can test whether your changes have been picked up by opening an Origen console (<code>origen i</code>)
-and running the following:</p>
-
-      <div class="highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">User</span>.current.name    <span style="color:#777"># =&gt; "John Doe"</span>
-<span style="color:#036;font-weight:bold">User</span>.current.email   <span style="color:#777"># =&gt; "johndoe@example.com"</span>
-</pre></div>
-</div>
-      </div>
-
-      <p>An alternative path to determining your details could be via your company’s employee directory
-system. Origen’s <a href="/origen/guides/starting/company">company configuration settings</a> allows
-the credentials for an LDAP system to be entered, and this approach is used within Freescale
-to identify the current user. We are not sure if the current support for this within Origen is
-generic enough to apply to other companies or not, please <a href="/origen/community">get in touch</a> if
-you are interested to help further develop and pilot this system for use within your company.</p>
-
-      <div>    
-  <a class="anchor" name="Commit_and_Tag"></a>          
-  <h4><a href="#Commit_and_Tag">Commit and Tag</a></h4>          
-</div>
-
-      <p>With your repository and user details setup, we can now do an initial commit and tag.</p>
-
-      <div class="alert alert-danger">
-  <strong>Warning!</strong> - 
-  When executing this command pay attention to the prompts and confirm that
-  the target repository reference exists and is correct.
-</div>
-
-      <div class="highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>cd myapp
-
-origen rc init
-</pre></div>
-</div>
-      </div>
-
-      <p>We are now ready to tag, to do this simply execute the following command and
-follow the prompts:</p>
-
-      <div class="highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>origen rc tag
-</pre></div>
-</div>
-      </div>
-
-      <p>At this point Origen would normally have emailed you and your application’s subscribers to
-notify them of the new release, however we are still working on how this subscription system
-should work in the open source world. Expect it to be available within the coming months.</p>
-
-      <div>    
-  <a class="anchor" name="History"></a>          
-  <h4><a href="#History">History</a></h4>          
-</div>
-
-      <p>Your commit history will be saved in your history file which by default lives
-at <code>doc/history</code>.</p>
-
-      <p>The content of that file is automatically formatted for future presentation on a web
-page, the Origen <a href="/origen/release_notes">Release Notes</a> are simply the Origen
-core history file converted to HTML.</p>
-
-      <p>When writing your release notes you can use <a href="http://kramdown.rubyforge.org/quickref.html">markdown</a>
-to control how they will be presented when they are later converted to HTML.</p>
-
-      <p>You can also pre-write your release notes by writing them to <code>release_note.txt</code>
-in the top level of your application directory - 
-run <code>origen rc tag -h</code>
-for more details.</p>
-
-      <div>    
-  <a class="anchor" name="Universal_Revision_Control_Command"></a>          
-  <h4><a href="#Universal_Revision_Control_Command">Universal Revision Control Command</a></h4>          
-</div>
-
-      <p>Once your application has been committed for the first time you can then use the
-<code>origen rc</code> command to work with your revision control system (or you can
-of course continue to use it directly if you prefer).</p>
-
-      <p>See <code>origen rc -h</code> for details of the available commands.</p>
 
       <div style="position: relative">
   <hr>
