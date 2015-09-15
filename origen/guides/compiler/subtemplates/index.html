@@ -154,7 +154,7 @@
                 Models
               </a>
             </div>
-            <div id="sidebar-collapse-2" class="panel-collapse collapse in">
+            <div id="sidebar-collapse-2" class="panel-collapse collapse ">
               <div class="panel-body">
                 <ul class="nav nav-list">
 <li class=""><a href="/origen/guides/models/introduction">Introduction</a></li>
@@ -162,7 +162,7 @@
 <li class=""><a href="/origen/guides/models/defining">Definition &amp; Hierarchy</a></li>
 <li class=""><a href="/origen/guides/models/attributes">Adding Attributes</a></li>
 <li class=""><a href="/origen/guides/models/versioning">Versioning</a></li>
-<li class="active"><a href="/origen/guides/models/bugs">Bugs &amp; Features</a></li>
+<li class=""><a href="/origen/guides/models/bugs">Bugs &amp; Features</a></li>
 <li class=""><a href="/origen/guides/models/modes">Package, Mode &amp; Configuration</a></li>
 <li class=""><a href="/origen/guides/models/registers">Registers</a></li>
 <li class=""><a href="/origen/guides/models/pins">Pins</a></li>
@@ -179,12 +179,12 @@
                 Compiler
               </a>
             </div>
-            <div id="sidebar-collapse-3" class="panel-collapse collapse ">
+            <div id="sidebar-collapse-3" class="panel-collapse collapse in">
               <div class="panel-body">
                 <ul class="nav nav-list">
 <li class=""><a href="/origen/guides/compiler/introduction">Introduction</a></li>
 <li class=""><a href="/origen/guides/compiler/creating">Creating Templates</a></li>
-<li class=""><a href="/origen/guides/compiler/subtemplates">Using Sub-Templates</a></li>
+<li class="active"><a href="/origen/guides/compiler/subtemplates">Using Sub-Templates</a></li>
 <li class=""><a href="/origen/guides/compiler/helpers">Helpers</a></li>
 <li class=""><a href="/origen/guides/compiler/running">Running The Compiler</a></li>
 <li class=""><a href="/origen/guides/compiler/inline">Inline Compiler</a></li>
@@ -200,161 +200,267 @@
   </div>
 
   <div class="col-md-9 nav-page-container">
-    <article><h3 class="topic-title">Models</h3>
+    <article><h3 class="topic-title">Compiler</h3>
 
-      <h2 class="topic-subtitle">Bugs &amp; Features</h2>
+      <h2 class="topic-subtitle">Using Sub-Templates</h2>
 
       <hr>
-<p>The <a href="/origen/guides/models/versioning">example code</a> for tracking versions may seem like a
-lot of effort but it is very quick to implement additional
-configurations by copying and pasting the previous one, and remember that this only
-needs to be done for revisions that make it to silicon.</p>
+<p>Sub-templates can be used to make parameterizable snippets that can then be
+re-used throughout your main templates.</p>
 
-      <p>While it may seem like overkill initially, the benefit will become apparent as the
-number of silicon derivatives that your application must support begins to grow. By following
-this architecture you will find that your application can scale to any number of derivatives easily and
-most importantly you will continue to feel in control of it - especially when it comes to tracking which
-bugs and features exist on each device.</p>
+      <p>A sub-template is like a regular template with the following differences:</p>
+
+      <ul>
+<li>Its name must begin with an underscore</li>
+        <li>It has access to an <code>options</code> hash which contains any parameters
+passed in by the parent template</li>
+      </ul>
+<p>The underscore is used in the name to identify the file as a sub-template
+to Origen and this will prevent it from trying to compile the file standalone
+when it is working through a directory.</p>
+
+      <p>Here is an example sub-template in file <code>templates/_sub_template.txt.erb</code>:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>This is a sub-template.
+
+% options[:x].times do
+  You will see this X times
+% end  
+
+The value of Y is: <span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> options[<span style="color:#A60">:y</span>] <span style="font-weight:bold;color:#666">%&gt;</span></span>
+</pre></div>
+</div>
+      </div>
+
+      <p>Sub-templates are called from a top-level template by using the <code>render</code>
+method, here is an example top-level template that calls this sub-template, this file
+is <code>templates/example.txt.erb</code>:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>This is a top-level template
+
+<span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> render <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">sub_template</span><span style="color:#710">'</span></span>, <span style="color:#606">x</span>: <span style="color:#00D">3</span>, <span style="color:#606">y</span>: <span style="color:#00D">10</span> <span style="font-weight:bold;color:#666">%&gt;</span></span>
+</pre></div>
+</div>
+      </div>
+
+      <p>This would compile to:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>This is a top-level template
+
+This is a sub-template.
+
+  You will see this X times
+  You will see this X times
+  You will see this X times
+
+The value of Y is: 10
+</pre></div>
+</div>
+      </div>
+
+      <p><code>import</code> can also be used as an alias for <code>render</code>, this may
+be more intuitive if the sub-template originates from a plugin for example.</p>
 
       <div>    
-  <a class="anchor" name="Assigning_Bugs_to_the_Responsible_Module"></a>          
-  <h4><a href="#Assigning_Bugs_to_the_Responsible_Module">Assigning Bugs to the Responsible Module</a></h4>          
+  <a class="anchor" name="A_Note_on_Path_References"></a>          
+  <h4><a href="#A_Note_on_Path_References">A Note on Path References</a></h4>          
 </div>
 
-      <p>A primary goal of Origen is to help with the creation of complex applications that remain easy to manage and a key
-component of this is the creation of high level code flows that are both easy to follow and to understand. Therefore we do
-not want our application to be littered with things like <em>“if the device version is 50 then do this…“</em>, but rather to use the
-more descriptive <em>“if the device has the low reference voltage bug then do this…“</em>.</p>
+      <p>Origen is fairly flexible when it comes to working out the path to a sub-template
+from a <code>render</code> method call.</p>
 
-      <p>Furthermore bugs should be assigned to the sub-block that is actually responsible for them - <strong>they should not
-be assigned at SoC level</strong>. Adding bugs at SoC-level is equivalent to adding branches to your code like
-<em>“if the device is an Eagle then do this…”</em> which may seem reasonable but that has proven to be the path to a maintenance
-nightmare.</p>
+      <p>Generally the following rules apply:</p>
 
-      <p>The problem with that approach is that you have now set yourself up to have to answer the question <em>“does this
-device have this bug?”</em> for every new device that you ever add support for in the future. As the number of
-devices and bugs (and features) grows, the number of such cases to manually track will grow exponentially.</p>
-
-      <p>The solution to this problem is to track the bug or feature at component level and change your branch to
-<em>“if the analog module in the NVM module of the current device has the low reference voltage bug then do this…“</em>. 
-Then in the future simply add new device configurations
-by declaring the BOM as we have seen in the <a href="/origen/guides/models/versioning">versioning guide</a>.</p>
-
-      <p>Your job is then done.</p>
-
-      <p>This is because the bug workaround has been implemented in a way that requires no further human interaction
-ever again - if we create a new device that instantiates a version of the NVM analog that has the bug then
-our workaround will kick in automatically. Similarly if we add a new device which instantiates a version 
-of the analog that doesn’t have the bug then the workaround will be bypassed automatically.</p>
+      <ul>
+<li>The leading underscore does not need to be added</li>
+        <li>The .erb does not need to be added</li>
+        <li>The filetype extension does not need to be added if it is the same as the calling
+template’s extension</li>
+        <li>Paths can be either:
+          <ul>
+<li>Relative to the calling template</li>
+            <li>Relative to <code>Origen.root</code>
+</li>
+            <li>Absolute</li>
+          </ul>
+</li>
+      </ul>
+<p>Paths can also be a reference to a plugin’s shared directory, see here for
+details - <a href="/origen/guides/libraries/creating">Sharing Templates</a></p>
 
       <div>    
-  <a class="anchor" name="Recording_a_Bug"></a>          
-  <h4><a href="#Recording_a_Bug">Recording a Bug</a></h4>          
+  <a class="anchor" name="Defining_Defaults"></a>          
+  <h4><a href="#Defining_Defaults">Defining Defaults</a></h4>          
 </div>
 
-      <p>Here are some examples of adding bugs to the analog module within our example NVM module, note that bug
-method is a class method that must be called outside of the initialize (or any other) instance method:</p>
+      <p>A sub-template can define parameter defaults similar to a regular Ruby method,
+here is the above example re-written to add default values that will be used
+if the parent template does not specify one of both of the options:</p>
 
       <div class="highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># file: lib/nvm/analog_t921.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">NVM</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">ANALOG_T921</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
+  <div class="code"><pre>% # Default option values...
+% options = {
+%  x: 5,
+%  y: 20,
+% }.merge(options)
+This is a sub-template.
 
-    bug <span style="color:#A60">:low_vref</span>, <span style="color:#A60">:affected_version</span> =&gt; <span style="color:#00D">11</span>
-    bug <span style="color:#A60">:low_iref</span>, <span style="color:#A60">:affected_versions</span> =&gt; [<span style="color:#00D">11</span>, <span style="color:#00D">12</span>]
-    bug <span style="color:#A60">:dac_code</span>, <span style="color:#A60">:fixed_on_version</span> =&gt; <span style="color:#00D">12</span>
-    bug <span style="color:#A60">:unfixable</span>
+% options[:x].times do
+  You will see this X times
+% end  
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options={})
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
-
-      <p>We have defined these bugs in terms of the affected versions and since our models already contain
-version information the presence of bugs will be modelled accurately.</p>
-
-      <p>We can test this in the console:</p>
-
-      <div class="highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># This will instantiate version 11 of the analog block</span>
-<span style="color:#d70">$dut</span> = <span style="color:#036;font-weight:bold">SOC</span>::<span style="color:#036;font-weight:bold">EAGLE_M352</span>.new(<span style="color:#606">version</span>: <span style="color:#00D">0</span>)
-<span style="color:#d70">$dut</span>.nvm.analog.has_bug?(<span style="color:#A60">:low_vref</span>)    <span style="color:#777"># =&gt; true</span>
-<span style="color:#d70">$dut</span>.nvm.analog.has_bug?(<span style="color:#A60">:low_iref</span>)    <span style="color:#777"># =&gt; true</span>
-<span style="color:#d70">$dut</span>.nvm.analog.has_bug?(<span style="color:#A60">:dac_code</span>)    <span style="color:#777"># =&gt; true</span>
-<span style="color:#d70">$dut</span>.nvm.analog.has_bug?(<span style="color:#A60">:unfixable</span>)   <span style="color:#777"># =&gt; true</span>
-
-<span style="color:#777"># This will instantiate version 12 of the analog block</span>
-<span style="color:#d70">$dut</span> = <span style="color:#036;font-weight:bold">SOC</span>::<span style="color:#036;font-weight:bold">EAGLE_M352</span>.new(<span style="color:#606">version</span>: <span style="color:#00D">1</span>)
-<span style="color:#d70">$dut</span>.nvm.analog.has_bug?(<span style="color:#A60">:low_vref</span>)    <span style="color:#777"># =&gt; false</span>
-<span style="color:#d70">$dut</span>.nvm.analog.has_bug?(<span style="color:#A60">:low_iref</span>)    <span style="color:#777"># =&gt; true</span>
-<span style="color:#d70">$dut</span>.nvm.analog.has_bug?(<span style="color:#A60">:dac_code</span>)    <span style="color:#777"># =&gt; false</span>
-<span style="color:#d70">$dut</span>.nvm.analog.has_bug?(<span style="color:#A60">:unfixable</span>)   <span style="color:#777"># =&gt; true</span>
-</pre></div>
-</div>
-      </div>
-
-      <p>When we get to the point of implementing a template or source file we will then be able to deal with these
-bugs via logic like:</p>
-
-      <div class="highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">if</span> <span style="color:#d70">$dut</span>.nvm.analog.has_bug?(<span style="color:#A60">:low_vref</span>)
-  <span style="color:#777"># Workaround the bug</span>
-<span style="color:#080;font-weight:bold">else</span>
-  <span style="color:#777"># Proceed as normal</span>
-<span style="color:#080;font-weight:bold">end</span>
+The value of Y is: <span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> options[<span style="color:#A60">:y</span>] <span style="font-weight:bold;color:#666">%&gt;</span></span>
 </pre></div>
 </div>
       </div>
 
       <div>    
-  <a class="anchor" name="Recording_a_Feature"></a>          
-  <h4><a href="#Recording_a_Feature">Recording a Feature</a></h4>          
+  <a class="anchor" name="Using_Sub-Templates_for_Layout"></a>          
+  <h4><a href="#Using_Sub-Templates_for_Layout">Using Sub-Templates for Layout</a></h4>          
 </div>
 
-      <p>Feature identification can be added in a similar way, this API also supports optionally adding descriptions:</p>
+      <p>The <code>render</code> method also supports a block form which can be used
+to surround content from the parent template with header and footer content
+from the sub-template.
+Define where the parent content should go using the <code>yield</code> keyword
+within the sub-template:</p>
 
       <div class="highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># file: lib/nvm/analog_t921.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">NVM</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">ANALOG_T921</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
+  <div class="code"><pre>This is some header content from the sub-template.
 
-    feature <span style="color:#A60">:feature1</span>
-    feature <span style="color:#A60">:feature2</span>, <span style="color:#A60">:description</span> =&gt;<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">feature2 description, this API for tools</span><span style="color:#710">"</span></span>
-    <span style="color:#777"># This is feature 3 description, this API is for humans</span>
-    <span style="color:#777"># and markdown should be used for formatting</span>
-    feature <span style="color:#A60">:feature3</span>
+<span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> <span style="color:#080;font-weight:bold">yield</span> <span style="font-weight:bold;color:#666">%&gt;</span></span>
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options={})
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-
-<span style="color:#d70">$dut</span> = <span style="color:#036;font-weight:bold">SOC</span>::<span style="color:#036;font-weight:bold">EAGLE_M352</span>.new(<span style="color:#606">version</span>: <span style="color:#00D">0</span>)
-
-<span style="color:#d70">$dut</span>.nvm.analog.has_feature?(<span style="color:#A60">:feature1</span>)    <span style="color:#777"># =&gt; true</span>
-<span style="color:#d70">$dut</span>.nvm.analog.has_feature?(<span style="color:#A60">:feature2</span>)    <span style="color:#777"># =&gt; true</span>
-<span style="color:#d70">$dut</span>.nvm.analog.has_feature?(<span style="color:#A60">:feature3</span>)    <span style="color:#777"># =&gt; true</span>
-<span style="color:#d70">$dut</span>.nvm.analog.has_feature?(<span style="color:#A60">:feature4</span>)    <span style="color:#777"># =&gt; false</span>
-
-
-<span style="color:#d70">$dut</span>.nvm.analog.feature(<span style="color:#A60">:feature1</span>).description    <span style="color:#777"># =&gt; []</span>
-<span style="color:#d70">$dut</span>.nvm.analog.feature(<span style="color:#A60">:feature2</span>).description    <span style="color:#777"># =&gt; ["feature2 description, this API for tools"]</span>
-<span style="color:#d70">$dut</span>.nvm.analog.feature(<span style="color:#A60">:feature3</span>).description    <span style="color:#777"># =&gt; ["This is feature 3...", "and markdown should be.."]</span>
+This is some footer content from the sub-template.
 </pre></div>
 </div>
       </div>
 
-      <p>Note that it is not currently possible to track features by version like it is for bugs, however it would not
-be very difficult to add this should the need arise.</p>
+      <p>Call in a parent template like this:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>% render "sub_template" do
+
+This is some content from the parent template.
+
+% end
+</pre></div>
+</div>
+      </div>
+
+      <p>This will compile to:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>This is some header content from the sub-template.
+
+This is some content from the parent template.
+
+This is some footer content from the sub-template.
+</pre></div>
+</div>
+      </div>
+
+      <p>Options can be passed to the block form as you would expect:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>% render "sub_template", x: 5 do
+</pre></div>
+</div>
+      </div>
+
+      <div>    
+  <a class="anchor" name="Nesting"></a>          
+  <h4><a href="#Nesting">Nesting</a></h4>          
+</div>
+
+      <p>Sub-templates can themselves render other sub-templates. There is no limit on
+the depth of template nesting and this can be used to build complex output from
+layers of building blocks.</p>
+
+      <div>    
+  <a class="anchor" name="Indenting"></a>          
+  <h4><a href="#Indenting">Indenting</a></h4>          
+</div>
+
+      <p>Render will accept an <code>:indent</code> option to indent the compiled text
+by the given number of spaces:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> render <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">sub_template</span><span style="color:#710">'</span></span> <span style="font-weight:bold;color:#666">%&gt;</span></span>
+<span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> render <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">sub_template</span><span style="color:#710">'</span></span>, <span style="color:#606">indent</span>: <span style="color:#00D">2</span> <span style="font-weight:bold;color:#666">%&gt;</span></span>
+<span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> render <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">sub_template</span><span style="color:#710">'</span></span>, <span style="color:#606">indent</span>: <span style="color:#00D">4</span> <span style="font-weight:bold;color:#666">%&gt;</span></span>
+</pre></div>
+</div>
+      </div>
+
+      <p>This would produce:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>Some lines from
+the sub template
+  Some lines from
+  the sub template
+    Some lines from
+    the sub template
+</pre></div>
+</div>
+      </div>
+
+      <div>    
+  <a class="anchor" name="A_Note_on_Performance"></a>          
+  <h4><a href="#A_Note_on_Performance">A Note on Performance</a></h4>          
+</div>
+
+      <p>Sub-templates are much slower to process than content generated from a
+<a href="/origen/guides/compiler/helpers">helper</a>. Normally this is not
+a problem but if for example a sub-template is rendered 1000 times within
+a template file then you might be waiting quite some time for it to process.</p>
+
+      <p>Normally this type of situation would occur when the sub-template is only generating
+a single line and replacing it with a helper would immediately solve the
+performance problem.</p>
+
+      <p>As a general rule of thumb if you need to generate one or two lines of content
+then use a helper, otherwise use a sub-template.</p>
+
+      <div>    
+  <a class="anchor" name="A_Note_on_State"></a>          
+  <h4><a href="#A_Note_on_State">A Note on State</a></h4>          
+</div>
+
+      <p>A sub-template is always evaluated with a fresh target load which means that state
+cannot be carried forward from the parent template via the target models.</p>
+
+      <p>Generally this makes for more predictable behavior and ensures that customization of
+the sub-template output can only be done via option arguments.</p>
+
+      <p>Over time use of the model state to customize the sub-template output can result
+in compile order dependencies starting to creep in, and potentially this can be
+very dangerous when it comes to compiling production critical output like test
+program sheets.</p>
+
+      <p>However in cases where rendering performance is an issue and the implications of preserving
+model state into the sub-template are understood, the target refresh can be inhibited
+by using the following option:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> render <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">sub_template</span><span style="color:#710">'</span></span>, <span style="color:#606">preserve_target</span>: <span style="color:#069">true</span> <span style="font-weight:bold;color:#666">%&gt;</span></span>
+</pre></div>
+</div>
+      </div>
 
       <div style="position: relative">
   <hr>

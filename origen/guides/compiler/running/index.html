@@ -154,7 +154,7 @@
                 Models
               </a>
             </div>
-            <div id="sidebar-collapse-2" class="panel-collapse collapse in">
+            <div id="sidebar-collapse-2" class="panel-collapse collapse ">
               <div class="panel-body">
                 <ul class="nav nav-list">
 <li class=""><a href="/origen/guides/models/introduction">Introduction</a></li>
@@ -162,7 +162,7 @@
 <li class=""><a href="/origen/guides/models/defining">Definition &amp; Hierarchy</a></li>
 <li class=""><a href="/origen/guides/models/attributes">Adding Attributes</a></li>
 <li class=""><a href="/origen/guides/models/versioning">Versioning</a></li>
-<li class="active"><a href="/origen/guides/models/bugs">Bugs &amp; Features</a></li>
+<li class=""><a href="/origen/guides/models/bugs">Bugs &amp; Features</a></li>
 <li class=""><a href="/origen/guides/models/modes">Package, Mode &amp; Configuration</a></li>
 <li class=""><a href="/origen/guides/models/registers">Registers</a></li>
 <li class=""><a href="/origen/guides/models/pins">Pins</a></li>
@@ -179,14 +179,14 @@
                 Compiler
               </a>
             </div>
-            <div id="sidebar-collapse-3" class="panel-collapse collapse ">
+            <div id="sidebar-collapse-3" class="panel-collapse collapse in">
               <div class="panel-body">
                 <ul class="nav nav-list">
 <li class=""><a href="/origen/guides/compiler/introduction">Introduction</a></li>
 <li class=""><a href="/origen/guides/compiler/creating">Creating Templates</a></li>
 <li class=""><a href="/origen/guides/compiler/subtemplates">Using Sub-Templates</a></li>
 <li class=""><a href="/origen/guides/compiler/helpers">Helpers</a></li>
-<li class=""><a href="/origen/guides/compiler/running">Running The Compiler</a></li>
+<li class="active"><a href="/origen/guides/compiler/running">Running The Compiler</a></li>
 <li class=""><a href="/origen/guides/compiler/inline">Inline Compiler</a></li>
                 </ul>
 </div>
@@ -200,161 +200,152 @@
   </div>
 
   <div class="col-md-9 nav-page-container">
-    <article><h3 class="topic-title">Models</h3>
+    <article><h3 class="topic-title">Compiler</h3>
 
-      <h2 class="topic-subtitle">Bugs &amp; Features</h2>
+      <h2 class="topic-subtitle">Running The Compiler</h2>
 
       <hr>
-<p>The <a href="/origen/guides/models/versioning">example code</a> for tracking versions may seem like a
-lot of effort but it is very quick to implement additional
-configurations by copying and pasting the previous one, and remember that this only
-needs to be done for revisions that make it to silicon.</p>
-
-      <p>While it may seem like overkill initially, the benefit will become apparent as the
-number of silicon derivatives that your application must support begins to grow. By following
-this architecture you will find that your application can scale to any number of derivatives easily and
-most importantly you will continue to feel in control of it - especially when it comes to tracking which
-bugs and features exist on each device.</p>
-
-      <div>    
-  <a class="anchor" name="Assigning_Bugs_to_the_Responsible_Module"></a>          
-  <h4><a href="#Assigning_Bugs_to_the_Responsible_Module">Assigning Bugs to the Responsible Module</a></h4>          
-</div>
-
-      <p>A primary goal of Origen is to help with the creation of complex applications that remain easy to manage and a key
-component of this is the creation of high level code flows that are both easy to follow and to understand. Therefore we do
-not want our application to be littered with things like <em>“if the device version is 50 then do this…“</em>, but rather to use the
-more descriptive <em>“if the device has the low reference voltage bug then do this…“</em>.</p>
-
-      <p>Furthermore bugs should be assigned to the sub-block that is actually responsible for them - <strong>they should not
-be assigned at SoC level</strong>. Adding bugs at SoC-level is equivalent to adding branches to your code like
-<em>“if the device is an Eagle then do this…”</em> which may seem reasonable but that has proven to be the path to a maintenance
-nightmare.</p>
-
-      <p>The problem with that approach is that you have now set yourself up to have to answer the question <em>“does this
-device have this bug?”</em> for every new device that you ever add support for in the future. As the number of
-devices and bugs (and features) grows, the number of such cases to manually track will grow exponentially.</p>
-
-      <p>The solution to this problem is to track the bug or feature at component level and change your branch to
-<em>“if the analog module in the NVM module of the current device has the low reference voltage bug then do this…“</em>. 
-Then in the future simply add new device configurations
-by declaring the BOM as we have seen in the <a href="/origen/guides/models/versioning">versioning guide</a>.</p>
-
-      <p>Your job is then done.</p>
-
-      <p>This is because the bug workaround has been implemented in a way that requires no further human interaction
-ever again - if we create a new device that instantiates a version of the NVM analog that has the bug then
-our workaround will kick in automatically. Similarly if we add a new device which instantiates a version 
-of the analog that doesn’t have the bug then the workaround will be bypassed automatically.</p>
-
-      <div>    
-  <a class="anchor" name="Recording_a_Bug"></a>          
-  <h4><a href="#Recording_a_Bug">Recording a Bug</a></h4>          
-</div>
-
-      <p>Here are some examples of adding bugs to the analog module within our example NVM module, note that bug
-method is a class method that must be called outside of the initialize (or any other) instance method:</p>
+<p>The compiler is launched via the Origen compile command, see the command line
+help to get details of the most up to date options:</p>
 
       <div class="highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># file: lib/nvm/analog_t921.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">NVM</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">ANALOG_T921</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
-
-    bug <span style="color:#A60">:low_vref</span>, <span style="color:#A60">:affected_version</span> =&gt; <span style="color:#00D">11</span>
-    bug <span style="color:#A60">:low_iref</span>, <span style="color:#A60">:affected_versions</span> =&gt; [<span style="color:#00D">11</span>, <span style="color:#00D">12</span>]
-    bug <span style="color:#A60">:dac_code</span>, <span style="color:#A60">:fixed_on_version</span> =&gt; <span style="color:#00D">12</span>
-    bug <span style="color:#A60">:unfixable</span>
-
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options={})
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
+  <div class="code"><pre>origen compile -h
 </pre></div>
 </div>
       </div>
 
-      <p>We have defined these bugs in terms of the affected versions and since our models already contain
-version information the presence of bugs will be modelled accurately.</p>
-
-      <p>We can test this in the console:</p>
+      <p>As this is such a common command it has a short cut alias:</p>
 
       <div class="highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># This will instantiate version 11 of the analog block</span>
-<span style="color:#d70">$dut</span> = <span style="color:#036;font-weight:bold">SOC</span>::<span style="color:#036;font-weight:bold">EAGLE_M352</span>.new(<span style="color:#606">version</span>: <span style="color:#00D">0</span>)
-<span style="color:#d70">$dut</span>.nvm.analog.has_bug?(<span style="color:#A60">:low_vref</span>)    <span style="color:#777"># =&gt; true</span>
-<span style="color:#d70">$dut</span>.nvm.analog.has_bug?(<span style="color:#A60">:low_iref</span>)    <span style="color:#777"># =&gt; true</span>
-<span style="color:#d70">$dut</span>.nvm.analog.has_bug?(<span style="color:#A60">:dac_code</span>)    <span style="color:#777"># =&gt; true</span>
-<span style="color:#d70">$dut</span>.nvm.analog.has_bug?(<span style="color:#A60">:unfixable</span>)   <span style="color:#777"># =&gt; true</span>
-
-<span style="color:#777"># This will instantiate version 12 of the analog block</span>
-<span style="color:#d70">$dut</span> = <span style="color:#036;font-weight:bold">SOC</span>::<span style="color:#036;font-weight:bold">EAGLE_M352</span>.new(<span style="color:#606">version</span>: <span style="color:#00D">1</span>)
-<span style="color:#d70">$dut</span>.nvm.analog.has_bug?(<span style="color:#A60">:low_vref</span>)    <span style="color:#777"># =&gt; false</span>
-<span style="color:#d70">$dut</span>.nvm.analog.has_bug?(<span style="color:#A60">:low_iref</span>)    <span style="color:#777"># =&gt; true</span>
-<span style="color:#d70">$dut</span>.nvm.analog.has_bug?(<span style="color:#A60">:dac_code</span>)    <span style="color:#777"># =&gt; false</span>
-<span style="color:#d70">$dut</span>.nvm.analog.has_bug?(<span style="color:#A60">:unfixable</span>)   <span style="color:#777"># =&gt; true</span>
+  <div class="code"><pre>origen c -h
 </pre></div>
 </div>
       </div>
 
-      <p>When we get to the point of implementing a template or source file we will then be able to deal with these
-bugs via logic like:</p>
+      <p>The compiler can be run on a single file:</p>
 
       <div class="highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">if</span> <span style="color:#d70">$dut</span>.nvm.analog.has_bug?(<span style="color:#A60">:low_vref</span>)
-  <span style="color:#777"># Workaround the bug</span>
-<span style="color:#080;font-weight:bold">else</span>
-  <span style="color:#777"># Proceed as normal</span>
-<span style="color:#080;font-weight:bold">end</span>
+  <div class="code"><pre>origen c templates/bench/dut_regs.h.erb
+</pre></div>
+</div>
+      </div>
+
+      <p>or on a whole directory:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>origen c templates/bench
+</pre></div>
+</div>
+      </div>
+
+      <p>In the case of running on a directory the compiler will recursively compile the
+contents of all contained sub-directories.
+The sub-directory structure will be maintained and mirrored in the compiler output directory.</p>
+
+      <p>The given path can even be somewhere outside of the Origen application:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>origen c /proj/c28/eagle/jim/rtl_v
+</pre></div>
+</div>
+      </div>
+
+      <p>A commonly used option is to specify the output directory:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>origen c templates/bench -o output/compiled_bench_code
+</pre></div>
+</div>
+      </div>
+
+      <p>By default the compiled files will be put in <code>output</code> or whatever directory
+is returned by the <code>config.output_directory</code> attribute defined by <code>config/application.rb</code>.</p>
+
+      <p>Submit to the LSF, by appending <code>-l</code> and optionally interactively
+wait for completion:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>origen c templates/bench -l -w
 </pre></div>
 </div>
       </div>
 
       <div>    
-  <a class="anchor" name="Recording_a_Feature"></a>          
-  <h4><a href="#Recording_a_Feature">Recording a Feature</a></h4>          
+  <a class="anchor" name="Regression_Testing"></a>          
+  <h4><a href="#Regression_Testing">Regression Testing</a></h4>          
 </div>
 
-      <p>Feature identification can be added in a similar way, this API also supports optionally adding descriptions:</p>
+      <p>Every time Origen compiles a file it will check to see if it has compiled it before, and
+if so it will compare the current version to the previous version and alert if there is a
+difference. This can be used to check for regressions when making changes that you don’t want
+to affect the output, or to verify that the change is what you intended in cases where you
+are intentionally modifying the output.</p>
+
+      <p>In the case of a difference being found Origen will automatically present you with the diff command
+to run if you want to view the change.</p>
+
+      <p>To accept changes or to start tracking the differences in a file (or files) run the following command
+after compiling:</p>
 
       <div class="highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># file: lib/nvm/analog_t921.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">NVM</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">ANALOG_T921</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
-
-    feature <span style="color:#A60">:feature1</span>
-    feature <span style="color:#A60">:feature2</span>, <span style="color:#A60">:description</span> =&gt;<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">feature2 description, this API for tools</span><span style="color:#710">"</span></span>
-    <span style="color:#777"># This is feature 3 description, this API is for humans</span>
-    <span style="color:#777"># and markdown should be used for formatting</span>
-    feature <span style="color:#A60">:feature3</span>
-
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options={})
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-
-<span style="color:#d70">$dut</span> = <span style="color:#036;font-weight:bold">SOC</span>::<span style="color:#036;font-weight:bold">EAGLE_M352</span>.new(<span style="color:#606">version</span>: <span style="color:#00D">0</span>)
-
-<span style="color:#d70">$dut</span>.nvm.analog.has_feature?(<span style="color:#A60">:feature1</span>)    <span style="color:#777"># =&gt; true</span>
-<span style="color:#d70">$dut</span>.nvm.analog.has_feature?(<span style="color:#A60">:feature2</span>)    <span style="color:#777"># =&gt; true</span>
-<span style="color:#d70">$dut</span>.nvm.analog.has_feature?(<span style="color:#A60">:feature3</span>)    <span style="color:#777"># =&gt; true</span>
-<span style="color:#d70">$dut</span>.nvm.analog.has_feature?(<span style="color:#A60">:feature4</span>)    <span style="color:#777"># =&gt; false</span>
-
-
-<span style="color:#d70">$dut</span>.nvm.analog.feature(<span style="color:#A60">:feature1</span>).description    <span style="color:#777"># =&gt; []</span>
-<span style="color:#d70">$dut</span>.nvm.analog.feature(<span style="color:#A60">:feature2</span>).description    <span style="color:#777"># =&gt; ["feature2 description, this API for tools"]</span>
-<span style="color:#d70">$dut</span>.nvm.analog.feature(<span style="color:#A60">:feature3</span>).description    <span style="color:#777"># =&gt; ["This is feature 3...", "and markdown should be.."]</span>
+  <div class="code"><pre>origen save all
 </pre></div>
 </div>
       </div>
 
-      <p>Note that it is not currently possible to track features by version like it is for bugs, however it would not
-be very difficult to add this should the need arise.</p>
+      <div>    
+  <a class="anchor" name="Programmatically_Launching_the_Compiler"></a>          
+  <h4><a href="#Programmatically_Launching_the_Compiler">Programmatically Launching the Compiler</a></h4>          
+</div>
+
+      <p>If you start writing your own <a href="/origen/guides/custom/commands">commands</a> you may want
+to launch the compiler from Ruby, do that as follows:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.app.runner.launch <span style="color:#606">action</span>: <span style="color:#A60">:compile</span>,
+                          <span style="color:#606">files</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">path/to/input/file.erb</span><span style="color:#710">"</span></span>
+</pre></div>
+</div>
+      </div>
+
+      <p>Additionally the following options can be supplied:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#606">output</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">path/to/output/dir</span><span style="color:#710">"</span></span>,       <span style="color:#777"># Override the default output directory</span>
+<span style="color:#606">output_file_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">my_name.txt</span><span style="color:#710">"</span></span>,    <span style="color:#777"># Specify the output file name, by default is the name of the input file</span>
+<span style="color:#606">output_sub_dir</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">testflow</span><span style="color:#710">"</span></span>,         <span style="color:#777"># Specify a subdirectory to be appended to the default output directory</span>
+<span style="color:#777"># The combination of these two options will run the compiler silently, allowing your application</span>
+<span style="color:#777"># code to handle all presentation of information about the created file to the user </span>
+<span style="color:#606">quiet</span>: <span style="color:#069">true</span>,                        <span style="color:#777"># Don't log to the console</span>
+<span style="color:#606">check_for_changes</span>: <span style="color:#069">false</span>,           <span style="color:#777"># Don't check the output file for changes to a previous version</span>
+<span style="color:#777"># You can supply a hash of options that will be accessible within the template as 'options'</span>
+<span style="color:#606">options</span>: { <span style="color:#606">some_attr</span>: <span style="color:#069">true</span>, <span style="color:#606">some_other_attr</span>: <span style="color:#00D">20</span> }
+</pre></div>
+</div>
+      </div>
+
+      <p>This can be combined with <a href="/origen/guides/targets/programming">Target Loops</a> to run the
+compiler for multiple targets.</p>
+
+      <p>A compile job can also be posted to the LSF by supplying the same options that you would use
+on the command line like this:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.lsf.submit_origen_job(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">c path/to/input</span><span style="color:#710">"</span></span>)
+</pre></div>
+</div>
+      </div>
 
       <div style="position: relative">
   <hr>
