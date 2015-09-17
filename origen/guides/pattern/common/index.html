@@ -19,8 +19,8 @@
     <link rel="author" href="https://plus.google.com/u/1/b/106463981272125989995/106463981272125989">
   
   
-    <meta property="og:url" content="http://origen-sdk.org/origen/guides/controllers/shadow">
-    <meta name="twitter:url" content="http://origen-sdk.org/origen/guides/controllers/shadow">
+    <meta property="og:url" content="http://origen-sdk.org/origen/guides/pattern/common">
+    <meta name="twitter:url" content="http://origen-sdk.org/origen/guides/pattern/common">
   
   
     <meta property="og:image" content="http://origen-sdk.org/favicon-260x260.png">
@@ -225,11 +225,11 @@
                 Controllers
               </a>
             </div>
-            <div id="sidebar-collapse-4" class="panel-collapse collapse in">
+            <div id="sidebar-collapse-4" class="panel-collapse collapse ">
               <div class="panel-body">
                 <ul class="nav nav-list">
 <li class=""><a href="/origen/guides/controllers/introduction">Introduction</a></li>
-<li class="active"><a href="/origen/guides/controllers/shadow">Shadow Controllers</a></li>
+<li class=""><a href="/origen/guides/controllers/shadow">Shadow Controllers</a></li>
 <li class=""><a href="/origen/guides/controllers/direct">Direct Controllers</a></li>
                 </ul>
 </div>
@@ -241,7 +241,7 @@
                 Pattern Generator
               </a>
             </div>
-            <div id="sidebar-collapse-5" class="panel-collapse collapse ">
+            <div id="sidebar-collapse-5" class="panel-collapse collapse in">
               <div class="panel-body">
                 <ul class="nav nav-list">
 <li class=""><a href="/origen/guides/pattern/introduction">Introduction</a></li>
@@ -251,7 +251,7 @@
 <li class=""><a href="/origen/guides/pattern/registers">Registers</a></li>
 <li class=""><a href="/origen/guides/pattern/documenting">Documenting Patterns</a></li>
 <li class=""><a href="/origen/guides/pattern/name">Generating by Name</a></li>
-<li class=""><a href="/origen/guides/pattern/common">Common API</a></li>
+<li class="active"><a href="/origen/guides/pattern/common">Common API</a></li>
 <li class=""><a href="/origen/guides/pattern/j750">J750 API</a></li>
 <li class=""><a href="/origen/guides/pattern/v93k">V93K API</a></li>
 <li class=""><a href="/origen/guides/pattern/ultraflex">UltraFlex API</a></li>
@@ -269,267 +269,357 @@
   </div>
 
   <div class="col-md-9 nav-page-container">
-    <article><h3 class="topic-title">Controllers</h3>
+    <article><h3 class="topic-title">Pattern Generator</h3>
 
-      <h2 class="topic-subtitle">Shadow Controllers</h2>
+      <h2 class="topic-subtitle">Common API</h2>
 
       <hr>
-<p>There are two flavors of controller. These provide exactly the same functionality, but
-they are setup slightly differently and are designed to support two distinct approaches of
-creating models within a test engineering application.</p>
+<p>All tester drivers support the common API described in this guide. By building your patterns
+using this API your will be able to generate them for any ATE that is supported by Origen.</p>
 
-      <p>The first type, the so called Shadow Controller, supports the case where the model
-is created and maintained by the test engineer for the given IP block.</p>
-
-      <p>So for example, let’s say we have a test engineer who is responsible for an analog-to-digital
-converter (ATD) IP, and they have decided to create an Origen plugin which will provide
-a complete test solution for this IP.
-This plugin will provide both the model and the controller as shown below:</p>
-
-      <p><img src="/origen/img/shadow_controller.png" style="display: block; margin: auto; width: 350px; height: 133px;"></p>
-
-      <p>Here is a simple ATD model implementation which defines some register:</p>
+      <p>Some tester drivers may expose additional methods to leverage some key features of
+the given ATE which do not have direct equivalents on other systems. You may or may not
+choose to use these in your application. If you do, then be aware that you are introducing
+some logic which cannot be automatically translated to other ATEs. In that case you will have to implement
+the alternative implementation for other platforms on the application side,
+something like this:</p>
 
       <div class="highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/atd_test_block/atd.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">ATDTestBlock</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">ATD</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
+  <div class="code"><pre><span style="color:#080;font-weight:bold">if</span> <span style="color:#d70">$tester</span>.uflex?
+  <span style="color:#777"># An implementation that uses a method that only exists on the UltraFLEX driver,</span>
+  <span style="color:#777"># this will make the test run more efficiently on that platform</span>
+<span style="color:#080;font-weight:bold">else</span>
+  <span style="color:#777"># Conventional implementation using the common API for all other platforms</span>
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+      </div>
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options = {})
-      instantiate_registers
-    <span style="color:#080;font-weight:bold">end</span>
+      <p>Of course some applications may only ever wish to target a specific ATE, in that case you
+can freely pick from the common and ATE-specific APIs.</p>
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">instantiate_registers</span>
-      <span style="color:#777"># ATD control register</span>
-      reg <span style="color:#A60">:ctrl</span>, <span style="color:#00D">0x0024</span> <span style="color:#080;font-weight:bold">do</span> |reg|
-        reg.bit <span style="color:#00D">7</span>, <span style="color:#A60">:coco</span>, <span style="color:#606">access</span>: <span style="color:#A60">:ro</span>
-        reg.bit <span style="color:#00D">6</span>, <span style="color:#A60">:aien</span>
-        reg.bit <span style="color:#00D">5</span>, <span style="color:#A60">:diff</span>
-        reg.bit <span style="color:#00D">4</span>..<span style="color:#00D">0</span>, <span style="color:#A60">:adch</span>, <span style="color:#606">reset</span>: <span style="color:#00D">0x1F</span>
-      <span style="color:#080;font-weight:bold">end</span>
+      <p>This API is currently provided by the <a href="http://origen-sdk.org/testers">Origen Testers plugin</a>. In addition
+to the primary methods discussed below, all tester drivers support the methods described in the following
+API docs:</p>
 
-      <span style="color:#777"># ATD data result register</span>
-      reg <span style="color:#A60">:result</span>, <span style="color:#00D">0x0028</span> <span style="color:#080;font-weight:bold">do</span> |reg|
-        reg.bit <span style="color:#00D">15</span>..<span style="color:#00D">0</span>, <span style="color:#A60">:d</span>
-      <span style="color:#080;font-weight:bold">end</span>
-    <span style="color:#080;font-weight:bold">end</span>
+      <ul>
+<li><a href="http://origen-sdk.org/testers/api/OrigenTesters/VectorGenerator.html">OrigenTesters::VectorGenerator</a></li>
+        <li><a href="http://origen-sdk.org/testers/api/OrigenTesters/Timing.html">OrigenTesters::Timing</a></li>
+        <li><a href="http://origen-sdk.org/testers/api/OrigenTesters/API.html">OrigenTesters::API</a></li>
+      </ul>
+<div>    
+  <a class="anchor" name="API_Methods"></a>          
+  <h3><a href="#API_Methods">API Methods</a></h3>          
+</div>
+
+      <p>Here are each of the main methods supported by the common API.</p>
+
+      <div>    
+  <a class="anchor" name="Generating_Cycles"></a>          
+  <h4><a href="#Generating_Cycles">Generating Cycles</a></h4>          
+</div>
+
+      <p>These are the basic methods for generating vectors.</p>
+
+      <h5 id="cycleoptions--">cycle(options = {})</h5>
+
+      <p>Generate a tester cycle or cycles:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#d70">$tester</span>.cycle
+<span style="color:#d70">$tester</span>.cycle <span style="color:#606">repeat</span>: <span style="color:#00D">1000</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>As this is such a commonly used method, there are some convenience methods available, this is
+equivalent to the above example:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#00D">1</span>.cycle
+<span style="color:#00D">1000</span>.cycles
+</pre></div>
+</div>
+      </div>
+
+      <p>A very common pattern when working at this level is to setup some pin states and
+then trigger a cycle:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>pin(<span style="color:#A60">:tdi</span>).drive(<span style="color:#00D">1</span>)
+<span style="color:#d70">$tester</span>.cycle
+pin(<span style="color:#A60">:tdi</span>).drive(<span style="color:#00D">0</span>)
+<span style="color:#d70">$tester</span>.cycle
+</pre></div>
+</div>
+      </div>
+
+      <p>All of the pin state methods support a bang (<code>!</code>) variant which will automatically
+call a single cycle after setting the pin state, this is equivalent to the above:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>pin(<span style="color:#A60">:tdi</span>).drive!(<span style="color:#00D">1</span>)
+pin(<span style="color:#A60">:tdi</span>).drive!(<span style="color:#00D">0</span>)
+</pre></div>
+</div>
+      </div>
+
+      <h5 id="waitoptions--">wait(options = {})</h5>
+
+      <p>Repeats the last vector for the specified about of time. The time can be specified in cycles
+or a time, multiple arguments will be added together:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#d70">$tester</span>.wait <span style="color:#606">cycles</span>: <span style="color:#00D">1000</span>         <span style="color:#777"># Equivalent to $tester.cycle(repeat: 1000)</span>
+<span style="color:#d70">$tester</span>.wait <span style="color:#606">time_in_us</span>: <span style="color:#00D">1000</span>     <span style="color:#777"># Wait for 1000us</span>
+<span style="color:#d70">$tester</span>.wait <span style="color:#606">time_in_ms</span>: <span style="color:#00D">1</span>        <span style="color:#777"># Wait for 1ms</span>
+
+<span style="color:#d70">$tester</span>.wait <span style="color:#606">time_in_ms</span>: <span style="color:#00D">1</span>, <span style="color:#606">time_in_us</span>: <span style="color:#00D">1000</span>, <span style="color:#606">cycles</span>: <span style="color:#00D">100</span>     <span style="color:#777"># Wait for 2ms + 100 cycles</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>The wait method can also be called with additional arguments to generate a dynamic wait,
+i.e. a match loop.
+Here for example to wait for up to 2 seconds for the done pin to go high:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#d70">$tester</span>.wait <span style="color:#606">match</span>: <span style="color:#069">true</span>, <span style="color:#606">time_in_s</span>: <span style="color:#00D">2</span>, <span style="color:#606">pin</span>: pin(<span style="color:#A60">:done</span>), <span style="color:#606">state</span>: high
+</pre></div>
+</div>
+      </div>
+
+      <p>The above API is somewhat verbose, a cleaner one is available by supplying a block to generate
+the vectors which much pass for the match to resolve.
+This is equivalent to the previous example:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#d70">$tester</span>.wait <span style="color:#606">match</span>: <span style="color:#069">true</span>, <span style="color:#606">time_in_s</span>: <span style="color:#00D">2</span> <span style="color:#080;font-weight:bold">do</span>
+  pin(<span style="color:#A60">:done</span>).assert!(<span style="color:#00D">1</span>)
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>This block form also allows much more complex match conditions to be described, here to wait
+for either the fail pin to go high, OR the done pin to go high:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#d70">$tester</span>.wait <span style="color:#606">match</span>: <span style="color:#069">true</span>, <span style="color:#606">time_in_s</span>: <span style="color:#00D">2</span> <span style="color:#080;font-weight:bold">do</span> |conditions, fail|
+  conditions.add <span style="color:#080;font-weight:bold">do</span>
+    pin(<span style="color:#A60">:done</span>).assert!(<span style="color:#00D">1</span>)
   <span style="color:#080;font-weight:bold">end</span>
+  conditions.add <span style="color:#080;font-weight:bold">do</span>
+    pin(<span style="color:#A60">:fail</span>).assert!(<span style="color:#00D">1</span>)
+  <span style="color:#080;font-weight:bold">end</span>
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>To AND these conditions would simply be:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#d70">$tester</span>.wait <span style="color:#606">match</span>: <span style="color:#069">true</span>, <span style="color:#606">time_in_s</span>: <span style="color:#00D">2</span> <span style="color:#080;font-weight:bold">do</span>
+  pin(<span style="color:#A60">:done</span>).assert(<span style="color:#00D">1</span>)
+  pin(<span style="color:#A60">:fail</span>).assert(<span style="color:#00D">1</span>)
+  <span style="color:#00D">1</span>.cycle
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+      </div>
+
+      <h5 id="ignorefailspins">ignore_fails(*pins)</h5>
+
+      <p>Ignore fails on the given pins for the duration of the given block, this
+has the effect of temporarily setting the states of the given pins to
+don’t care.</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#777"># Temporarily ignore mis-compares on the fail and data pins</span>
+<span style="color:#d70">$tester</span>.ignore_fails(pin(<span style="color:#A60">:fail</span>), pins(<span style="color:#A60">:data</span>)) <span style="color:#080;font-weight:bold">do</span>
+  <span style="color:#777"># Any vectors generated in here will force the state of the given pins to X</span>
 <span style="color:#080;font-weight:bold">end</span>
 </pre></div>
 </div>
       </div>
 
       <div>    
-  <a class="anchor" name="Controller_Implementation"></a>          
-  <h4><a href="#Controller_Implementation">Controller Implementation</a></h4>          
+  <a class="anchor" name="Data_Capture"></a>          
+  <h4><a href="#Data_Capture">Data Capture</a></h4>          
 </div>
 
-      <p>A common thing that users of our test block might want to do is to use it to make the ATD perform a conversion.</p>
+      <h5 id="storepins">store(*pins)</h5>
 
-      <p>Let’s create a controller to provide the user with the following API:</p>
+      <p>Instruct the tester to capture the data on the given pins from the vector that was generated last,
+note that it does not actually generate a new vector.</p>
+
+      <p>Sometimes when generating vectors within a loop you may want to retrospectively capture
+a previous vector, passing in an offset option will allow you to do this.</p>
+
+      <p>Here are some examples:</p>
 
       <div class="highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre>result = <span style="color:#d70">$dut</span>.atd.convert(<span style="color:#00D">10</span>)   <span style="color:#777"># Perform a conversion on the voltage at ATD input channel 10 and return the result</span>
+  <div class="code"><pre><span style="color:#d70">$tester</span>.cycle                        <span style="color:#777"># This is the vector that we want to capture</span>
+<span style="color:#d70">$tester</span>.store pin(<span style="color:#A60">:d0</span>), pin(<span style="color:#A60">:d1</span>)     <span style="color:#777"># Capture the data on the d0 and d1 pins</span>
 
-<span style="color:#777"># The caller can then process the result as they wish, here for example to capture it to the tester</span>
-result.store!
+<span style="color:#d70">$tester</span>.cycle                        <span style="color:#777"># This one gets stored</span>
+<span style="color:#d70">$tester</span>.cycle
+<span style="color:#d70">$tester</span>.cycle
+<span style="color:#d70">$tester</span>.store pin(<span style="color:#A60">:d0</span>), pin(<span style="color:#A60">:d1</span>), <span style="color:#606">offset</span>: <span style="color:#00D">-2</span>  <span style="color:#777"># Just realized I need to capture that earlier vector</span>
 </pre></div>
 </div>
       </div>
 
-      <p>A controller is implemented as follows, this is just a regular Ruby class that includes the
-<code>Origen::Controller</code> module:</p>
+      <p>Note that this API is for engineers who are writing protocol drivers, most test IP would be
+written at a higher level, e.g.</p>
 
       <div class="highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/atd_test_block/atd_controller.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">ATDTestBlock</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">ATDController</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Controller</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
+  <div class="code"><pre>atd_result.data.store!   <span style="color:#777"># Capture the value of the ATD result bits to the tester</span>
 </pre></div>
 </div>
       </div>
 
-      <p>Naming of controllers can be significant, here Origen will know that this this the controller for the
-<code>ATD</code> model since we have followed the naming convention:</p>
+      <h5 id="storenextcyclepins">store_next_cycle(*pins)</h5>
+
+      <p>Similar to the above, this API allows driver creators to indicate that the next vector,
+wherever that may be generated, should be captured:</p>
 
       <div class="highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre>&lt;model name&gt;Controller
-</pre></div>
-</div>
-      </div>
+  <div class="code"><pre><span style="color:#d70">$tester</span>.store_next_cycle pin(<span style="color:#A60">:d0</span>), pin(<span style="color:#A60">:d1</span>)
 
-      <p>If you cannot follow this convention (the main reason would be if the model lives in a different namespace), 
-then you can supply the class of the model like this:</p>
-
-      <div class="highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/atd_test_block/atd_controller.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">ATDTestBlock</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">ATDController</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Controller</span>
-
-    model <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">SomeOtherNamespace::ATD_M325</span><span style="color:#710">"</span></span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
-
-      <p>The controller now gives us the place to create our pattern API, here is the <code>covert</code> method 
-implementation:</p>
-
-      <div class="highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/atd_test_block/atd_controller.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">ATDTestBlock</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">ATDController</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Controller</span>
-
-    <span style="color:#777"># Convert the input on the given channel to a digital representation.</span>
-    <span style="color:#777">#</span>
-    <span style="color:#777"># An Origen::Register::BitCollection will be returned containing the result.</span>
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">convert</span>(channel)
-      <span style="color:#777"># Launch the conversion by setting the channel</span>
-      ctrl.adch.write!(channel)
-      <span style="color:#777"># Wait to complete</span>
-      tester.wait(<span style="color:#606">time_in_us</span>: <span style="color:#00D">100</span>)
-      <span style="color:#777"># Verify the conversion has completed</span>
-      ctrl.coco.assert!(<span style="color:#00D">1</span>)
-      <span style="color:#777"># Return the result (the data bits from the result register)</span>
-      result.d
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
-
-      <p>A key point to note from the above is that the controller has direct access to the registers of
-the model that it controls, that is you can call <code>ctrl</code> instead of having to drill
-down through the global namespace (<code>$dut.atd.ctrl</code>).</p>
-
-      <div>    
-  <a class="anchor" name="Instantiating_the_Controller"></a>          
-  <h4><a href="#Instantiating_the_Controller">Instantiating the Controller</a></h4>          
-</div>
-
-      <p>Shadow controllers are never instantiated directly, instead Origen will automatically materialize
-them whenever a new instance of the model comes into being.</p>
-
-      <div class="highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>atd = <span style="color:#036;font-weight:bold">ATDTestBlock</span>::<span style="color:#036;font-weight:bold">ATD</span>.new    <span style="color:#777"># Instantiates the model, a controller will also be created automatically</span>
-</pre></div>
-</div>
-      </div>
-
-      <p>This is where the name comes from, whenever a model is created it is shadowed by a corresponding
-controller.</p>
-
-      <p>So how do we invoke our controller API? We simply call the methods on the model:</p>
-
-      <div class="highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>atd = <span style="color:#036;font-weight:bold">ATDTestBlock</span>::<span style="color:#036;font-weight:bold">ATD</span>.new
-
-atd.convert(<span style="color:#00D">10</span>)  <span style="color:#777"># =&gt; &lt;BitCollection&gt;</span>
-</pre></div>
-</div>
-      </div>
-
-      <p>Origen employs some Ruby trickery such that the object assigned to <code>atd</code> above will
-respond to the methods available to the model and the controller - models will proxy (send) methods
-that they don’t recognize to their controller and vice versa.</p>
-
-      <p>Most of the time then, it doesn’t matter whether the <code>atd</code> object is actually the model
-or the controller, they will respond the same.</p>
-
-      <p>However if for some reason you really do need to deal directly with one or the other then you can
-use the following API:</p>
-
-      <div class="highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>atd.model       <span style="color:#777"># =&gt; &lt;ATD instance&gt;</span>
-atd.controller  <span style="color:#777"># =&gt; &lt;ATDController instance&gt;</span>
+<span style="color:#777"># This is the vector that will be captured, in real life this could be done after returning</span>
+<span style="color:#777"># to a caller</span>
+<span style="color:#d70">$tester</span>.cycle  
 </pre></div>
 </div>
       </div>
 
       <div>    
-  <a class="anchor" name="Typical_Integration"></a>          
-  <h4><a href="#Typical_Integration">Typical Integration</a></h4>          
+  <a class="anchor" name="Subroutines"></a>          
+  <h4><a href="#Subroutines">Subroutines</a></h4>          
 </div>
 
-      <p>Such a test block would normally be plugged into a top-level application in order to generate
-patterns for a target device.</p>
+      <h5 id="startsubroutinename-endsubroutine">start_subroutine(name), end_subroutine</h5>
 
-      <p>The ATD test block’s integration guide should instruct the top-level test engineer to instantiate the
-ATD model within the top-level model like this:</p>
+      <p>Use these methods to write a pattern subroutine:</p>
 
       <div class="highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/eagle.rb</span>
-<span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">Eagle</span>
-  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">TopLevel</span>
-
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options = {})
-    sub_block <span style="color:#A60">:atd</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">ATDTestBlock::ATD</span><span style="color:#710">"</span></span>, <span style="color:#606">base_address</span>: <span style="color:#00D">0x1000_2000</span>
-  <span style="color:#080;font-weight:bold">end</span>
+  <div class="code"><pre><span style="color:#d70">$tester</span>.start_subroutine <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">wait_for_done</span><span style="color:#710">"</span></span>
+<span style="color:#d70">$tester</span>.wait <span style="color:#606">match</span>: <span style="color:#069">true</span>, <span style="color:#606">time_in_s</span>: <span style="color:#00D">2</span> <span style="color:#080;font-weight:bold">do</span>
+  pin(<span style="color:#A60">:done</span>).assert!(<span style="color:#00D">1</span>)
 <span style="color:#080;font-weight:bold">end</span>
+<span style="color:#d70">$tester</span>.end_subroutine
 </pre></div>
 </div>
       </div>
 
-      <p>The ATD API provided by the ATD test engineer is now available to the Eagle device’s test
-engineers:</p>
+      <h5 id="callsubroutinename-options--">call_subroutine(name, options = {})</h5>
+
+      <p>Call a pattern subroutine, an offset can be given to retrospectively jump to a subroutine
+from a previous vector:</p>
 
       <div class="highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$dut</span> = <span style="color:#036;font-weight:bold">Eagle</span>.new
-
-<span style="color:#d70">$dut</span>.atd.convert(<span style="color:#00D">10</span>)  <span style="color:#777"># =&gt; &lt;BitCollection&gt;</span>
+  <div class="code"><pre><span style="color:#d70">$tester</span>.call_subroutine <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">wait_for_done</span><span style="color:#710">"</span></span>
+<span style="color:#00D">1</span>.cycle
+<span style="color:#00D">1</span>.cycle    <span style="color:#777">#  A branch will also be made after completing this vector</span>
+<span style="color:#00D">1</span>.cycle
+<span style="color:#00D">1</span>.cycle
+<span style="color:#d70">$tester</span>.call_subroutine <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">wait_for_done</span><span style="color:#710">"</span></span>, <span style="color:#606">offset</span>: <span style="color:#00D">-2</span>
 </pre></div>
 </div>
       </div>
 
       <div>    
-  <a class="anchor" name="Transitioning_to_an_Imported_Model"></a>          
-  <h4><a href="#Transitioning_to_an_Imported_Model">Transitioning to an Imported Model</a></h4>          
+  <a class="anchor" name="Loops_and_Branching"></a>          
+  <h4><a href="#Loops_and_Branching">Loops and Branching</a></h4>          
 </div>
 
-      <p>If at some point the ATD test engineer gets access to an XML-based or similar definition of
-the ATD registers from the design team, then the model can be simplified like this:</p>
+      <h5 id="labelname">label(name)</h5>
+
+      <p>Inject an arbitrary label into the pattern:</p>
 
       <div class="highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/atd_test_block/atd.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">ATDTestBlock</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">ATD</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
-    include <span style="color:#036;font-weight:bold">CrossOrigen</span>
+  <div class="code"><pre><span style="color:#d70">$tester</span>.label <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">on_failed</span><span style="color:#710">"</span></span>
+</pre></div>
+</div>
+      </div>
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options = {})
-      cr_import(<span style="color:#606">path</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.root!<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">/ipxact_files/atd_regs.xml</span><span style="color:#710">"</span></span>)
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
+      <h5 id="branchtolabel">branch_to(label)</h5>
+
+      <p>Branch to a label:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#d70">$tester</span>.branch_to <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">on_failed</span><span style="color:#710">"</span></span>
+</pre></div>
+</div>
+      </div>
+
+      <h5 id="loopvectorsname-numberofloops">loop_vectors(name, number_of_loops)</h5>
+
+      <p>Execute the vectors generated within the given block <em>n</em> times:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#d70">$tester</span>.loop_vectors(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">my_loop</span><span style="color:#710">"</span></span>, <span style="color:#00D">3</span>) <span style="color:#080;font-weight:bold">do</span>   <span style="color:#777"># Do this 3 times...</span>
+  <span style="color:#d70">$tester</span>.cycle
 <span style="color:#080;font-weight:bold">end</span>
 </pre></div>
 </div>
       </div>
 
-      <p>See the <a href="http://origen-sdk.org/cross_origen">Cross Origen</a> plugin for more details on
-importing 3rd party data formats.</p>
+      <div>    
+  <a class="anchor" name="Miscellaneous"></a>          
+  <h4><a href="#Miscellaneous">Miscellaneous</a></h4>          
+</div>
 
-      <p>If on the other hand someone comes along and says, “ok everyone, from now on a full IP-XACT
-representation will be available for every device”, then it would be time to move to
-a <a href="/origen/guides/controllers/direct">Direct Controller…</a></p>
+      <h5 id="freqcountpin">freq_count(pin)</h5>
+
+      <p>Setup to measure the frequency on the given pin:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#d70">$tester</span>.freq_count pin(<span style="color:#A60">:clk_out</span>)
+</pre></div>
+</div>
+      </div>
+
+      <h5 id="microcodecode-options--">microcode(code, options = {})</h5>
+
+      <p>This can be used to inject arbitrary microcode into the pattern, which of course is
+inherently coupling your logic to a specific test platform - so use sparingly!</p>
+
+      <p>An offset can be given to apply the microcode to previously generated vectors.</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#d70">$tester</span>.microcode <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">set_cpu (cpuC)</span><span style="color:#710">'</span></span>
+<span style="color:#00D">1</span>.cycle
+<span style="color:#00D">1</span>.cycle    <span style="color:#777"># cpuB will be set here </span>
+<span style="color:#00D">1</span>.cycle
+<span style="color:#00D">1</span>.cycle
+<span style="color:#d70">$tester</span>.microcode <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">set_cpu (cpuB)</span><span style="color:#710">'</span></span>, <span style="color:#606">offset</span>: <span style="color:#00D">-2</span>
+</pre></div>
+</div>
+      </div>
 
       <div style="position: relative">
   <hr>
