@@ -86,7 +86,7 @@
     <p>This plugin provides an Origen API to use the Nexus protocol.</p>
 
     <p>This plugin supports Read/Write Access of system memory mapped resources,
-including IPS mapped registers via the conventional Origen Register API.</p>
+including registers via the conventional Origen Register API.</p>
 
     <div>    
   <a class="anchor" name="How_To_Import"></a>          
@@ -162,10 +162,10 @@ hash:</p>
   <span style="color:#777"># TCK covers 4 tester cycles, 2 high then 2 low for each effective TCK pulse</span>
   <span style="color:#777"># Strobe TDO only when TCK high.  Only store TDO on last cycle (3)</span>
   <span style="color:#036;font-weight:bold">NEXUS_CONFIG</span> = {
-    <span style="color:#A60">:tclk_format</span> =&gt; <span style="color:#A60">:rl</span>,
-    <span style="color:#A60">:tclk_multiple</span> =&gt; <span style="color:#00D">4</span>,
-    <span style="color:#A60">:tdo_strobe</span> =&gt; <span style="color:#A60">:tclk_high</span>,
-    <span style="color:#A60">:tdo_store_cycle</span> =&gt; <span style="color:#00D">3</span>,
+    <span style="color:#606">tclk_format</span>:     <span style="color:#A60">:rl</span>,
+    <span style="color:#606">tclk_multiple</span>:   <span style="color:#00D">4</span>,
+    <span style="color:#606">tdo_strobe</span>:      <span style="color:#A60">:tclk_high</span>,
+    <span style="color:#606">tdo_store_cycle</span>: <span style="color:#00D">3</span>
   }
 
   <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>
@@ -175,10 +175,11 @@ hash:</p>
     add_pin <span style="color:#A60">:tdo</span>
     add_pin <span style="color:#A60">:tms</span>
 
-    add_reg32 <span style="color:#A60">:testme32</span>, <span style="color:#00D">0x007a</span>, <span style="color:#A60">:portA</span> =&gt; {<span style="color:#606">pos</span>: <span style="color:#00D">8</span>, <span style="color:#606">bits</span>: <span style="color:#00D">8</span>},
-                                 <span style="color:#A60">:portB</span> =&gt; {<span style="color:#606">pos</span>: <span style="color:#00D">16</span>, <span style="color:#606">bits</span>: <span style="color:#00D">16</span>},
-                                 <span style="color:#A60">:enable</span> =&gt; {<span style="color:#606">pos</span>: <span style="color:#00D">0</span>}
-
+    reg <span style="color:#A60">:myreg</span>, <span style="color:#00D">0x007A</span>, <span style="color:#606">size</span>: <span style="color:#00D">32</span> <span style="color:#080;font-weight:bold">do</span> |reg|
+      reg.bits <span style="color:#00D">31</span>..<span style="color:#00D">16</span>, <span style="color:#A60">:portb</span> 
+      reg.bits <span style="color:#00D">15</span>..<span style="color:#00D">8</span>,  <span style="color:#A60">:porta</span> 
+      reg.bit  <span style="color:#00D">0</span>, <span style="color:#A60">:enable</span>
+    <span style="color:#080;font-weight:bold">end</span>
   <span style="color:#080;font-weight:bold">end</span>
 
   <span style="color:#777"># Hook the Nexus module into the register API, any register read</span>
@@ -204,33 +205,33 @@ hash:</p>
 
   <span style="color:#777"># Generate an overlay subroutine for a register</span>
   <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">overlay_register</span>(reg, options={})
-    <span style="color:#080;font-weight:bold">if</span> <span style="color:#d70">$tester</span>.respond_to?(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">start_subroutine</span><span style="color:#710">'</span></span>)
-      <span style="color:#d70">$tester</span>.start_subroutine(options[<span style="color:#A60">:label</span>])
+    <span style="color:#080;font-weight:bold">if</span> tester.respond_to?(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">start_subroutine</span><span style="color:#710">'</span></span>)
+      tester.start_subroutine(options[<span style="color:#A60">:label</span>])
     <span style="color:#080;font-weight:bold">end</span>
 
     nexus.write_data_only(reg, options)
 
-    <span style="color:#080;font-weight:bold">if</span> <span style="color:#d70">$tester</span>.respond_to?(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">end_subroutine</span><span style="color:#710">'</span></span>)
-      <span style="color:#d70">$tester</span>.end_subroutine
+    <span style="color:#080;font-weight:bold">if</span> tester.respond_to?(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">end_subroutine</span><span style="color:#710">'</span></span>)
+      tester.end_subroutine
     <span style="color:#080;font-weight:bold">end</span>
   <span style="color:#080;font-weight:bold">end</span>
 
 
 <span style="color:#080;font-weight:bold">end</span>
 
-<span style="color:#036;font-weight:bold">Panther2</span>.new.reg(<span style="color:#A60">:testme32</span>).write!(<span style="color:#00D">0x55AA55AA</span>)  <span style="color:#777"># =&gt; Will perform the write using the Nexus protocol</span>
+<span style="color:#036;font-weight:bold">Panther2</span>.new.myreg.write!(<span style="color:#00D">0x55AA55AA</span>)  <span style="color:#777"># =&gt; Will perform the write using the Nexus protocol</span>
 
-<span style="color:#036;font-weight:bold">Panther2</span>.new.reg(<span style="color:#A60">:testme32</span>).bits(<span style="color:#A60">:portA</span>).read!(<span style="color:#00D">0xAA</span>)  <span style="color:#777"># =&gt; Only the portA bits will be read</span>
+<span style="color:#036;font-weight:bold">Panther2</span>.new.myreg.bits(<span style="color:#A60">:portA</span>).read!(<span style="color:#00D">0xAA</span>)  <span style="color:#777"># =&gt; Only the portA bits will be read</span>
 </pre></div>
 </div>
     </div>
 
-    <p>Access to the underlying <a href="http://origen-sdk.org/jtag/">JTAG</a> hardware
+    <p>Access to the underlying <a href="http://origen-sdk.org/jtag/">OrigenJTAG</a> hardware
 driver:</p>
 
     <div class="highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre>nexus.jtag    <span style="color:#777"># =&gt; an instance of JTAG::Driver</span>
+  <div class="code"><pre>nexus.jtag    <span style="color:#777"># =&gt; an instance of OrigenJTAG::Driver</span>
 </pre></div>
 </div>
     </div>
@@ -240,22 +241,22 @@ driver:</p>
     <div class="highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#777"># Transform the default register address</span>
-nexus.write_register(reg, <span style="color:#A60">:address</span> =&gt; reg.address &lt;&lt; <span style="color:#00D">2</span>)
+nexus.write_register(reg, <span style="color:#606">address</span>: reg.address &lt;&lt; <span style="color:#00D">2</span>)
 </pre></div>
 </div>
     </div>
 
     <p>The driver will also accept flat data values in place of a register.</p>
 
-    <p>This can also be used to write to any IPS memory mapped location, even if not a register!</p>
+    <p>This can also be used to write to any memory mapped location, even if not a register!</p>
 
     <div class="highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Write 0x1234 to IPS address 0x12</span>
-nexus.write(<span style="color:#00D">0x1234</span>, <span style="color:#A60">:address</span> =&gt; <span style="color:#00D">0x12</span>)
+  <div class="code"><pre><span style="color:#777"># Write 0x1234 to address 0x12</span>
+nexus.write(<span style="color:#00D">0x1234</span>, <span style="color:#606">address</span>: <span style="color:#00D">0x12</span>)
 
-<span style="color:#777"># Read and expect 0x1234 from IPS address 0x12</span>
-nexus.read(<span style="color:#00D">0x1234</span>, <span style="color:#A60">:address</span> =&gt; <span style="color:#00D">0x12</span>)
+<span style="color:#777"># Read and expect 0x1234 from address 0x12</span>
+nexus.read(<span style="color:#00D">0x1234</span>, <span style="color:#606">address</span>: <span style="color:#00D">0x12</span>)
 </pre></div>
 </div>
     </div>
@@ -271,7 +272,7 @@ nexus.read(<span style="color:#00D">0x1234</span>, <span style="color:#A60">:add
 
     <p>Follow the instructions here if you want to make a 3rd party app
 workspace use your development copy of the OrigenNexus plugin:
-<a href="http://origen-sdk.org/origen/latest/guides/plugins">Setting up a Plugin Development Environment</a></p>
+<a href="http://origen-sdk.org/origen/guides/plugins">Setting up a Plugin Development Environment</a></p>
 
     <p>This plugin also contains a test suite, makes sure this passes before committing
 any changes!</p>
