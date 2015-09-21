@@ -5,10 +5,26 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta property="og:locale" content="en_US">
+    <meta name="content-language" content="en_US">
 
-    <title>Origen ARM Debug</title>
-        
     
+    <title>Origen ARM Debug</title>
+    <meta property="og:title" content="Origen ARM Debug">
+    <meta name="twitter:title" content="Origen ARM Debug">
+    <meta itemprop="name" content="Origen ARM Debug">
+      
+  
+  
+  
+  
+    <meta property="og:image" content="http://origen-sdk.org/favicon-260x260.png">
+    <meta name="twitter:image" content="http://origen-sdk.org/favicon-260x260.png">
+    <meta itemprop="image" content="http://origen-sdk.org/favicon-260x260.png">
+    <meta name="twitter:card" content="summary">
+  
+  
+  
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
@@ -74,17 +90,10 @@
 <li class=""><a href="/arm_debug/api/">API</a></li>
         <li class=""><a href="/arm_debug/coverage">Coverage</a></li>
         <li class=""><a href="/arm_debug/release_notes">Release Notes</a></li>
-        <li><a href="https://github.com/Origen-SDK/origen_swd">Github</a></li>
+        <li><a href="https://github.com/Origen-SDK/origen_arm_debug">Github</a></li>
       </ul>
-<div class="pull-right logo-rgen" style="margin-top: 5px; margin-left: 5px">
-  <a href="http://origen-sdk.org" style="text-decoration: none; color: #ffffff; font-weight: 500; font-size: 30px; font-family: 'Roboto','Helvetica Neue',Helvetica,Arial,sans-serif;">
-  <span>Origen</span>
-  </a>
-</div>
-<div class="pull-right">
-  <a href="http://origen-sdk.org">
-    <img src="http://origen-sdk.org/android-chrome-48x48.png" style="height:40px; margin-top: 5px;"></a>
-</div>
+<a href="http://origen-sdk.org" class=" pull-right">
+  <img src="http://origen-sdk.org/img/origen-device.png" style="height:30px; margin-top: 10px;"><img src="http://origen-sdk.org/img/origen-text.png" style="height:15px; margin-top: 10px; margin-left: 5px;"></a>
 
     </div>
 <!--/.nav-collapse -->
@@ -125,23 +134,25 @@
 </div>
     </div>
 
-    <p><strong>NOTE:</strong> You will also need to include <code>require 'origen_arm_debug'</code> somewhere in your environment.  This can be done in <code>config/environment.rb</code> for example.</p>
+    <p><strong>NOTE:</strong> You will also need to include <code>require 'origen_arm_debug'</code> somewhere in your environment
+if your app is a plugin.</p>
 
     <div>    
   <a class="anchor" name="How_To_Use"></a>          
   <h3><a href="#How_To_Use">How To Use</a></h3>          
 </div>
 
-    <p>Include the <code>OrigenARMDebug</code> module in your DUT class, this provides
-<code>read_register</code> and <code>write_register</code> methods that will
-be used automatically by any register read/write operations.
-It also provides meathods using the ARM Debug protocol including:
-accessing device memory, accessing core and floating point regesters (coretx M cores only),
-entering/exiting debug mode (coretx M cores only), setting the PC (coretx M cores only)
-and stepping through code (coretx M cores only).</p>
+    <p>Include the <code>OrigenARMDebug</code> module in your DUT class, then hook it up
+to the Origen register API via
+<code>read_register</code> and <code>write_register</code> methods.</p>
+
+    <p>The <code>OrigenARMDebug</code> module also provides additional methods to use the ARM Debug protocol including:
+accessing device memory, accessing core and floating point registers (cortex M cores only),
+entering/exiting debug mode (cortex M cores only), setting the PC (cortex M cores only)
+and stepping through code (cortex M cores only).</p>
 
     <p>You must also include a compatible physical driver depending on what debug
-interface your DUT has, one of the following can be used:</p>
+interface your device has, one of the following can be used:</p>
 
     <ul>
 <li><a href="http://origen-sdk.org/jtag">JTAG</a></li>
@@ -153,16 +164,29 @@ interface your DUT has, one of the following can be used:</p>
 
   include <span style="color:#036;font-weight:bold">OrigenARMDebug</span>
   include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Registers</span>
-  <span style="color:#777"># Also include the required physical driver (not shown here)</span>
+  <span style="color:#777"># Also include the required physical driver, JTAG in this example</span>
+  include <span style="color:#036;font-weight:bold">OrigenJTAG</span>
 
   <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>
-    add_reg <span style="color:#A60">:test</span>, <span style="color:#00D">0x0012</span>, <span style="color:#00D">16</span>, <span style="color:#A60">:upper_byte</span> =&gt; {<span style="color:#606">pos</span>: <span style="color:#00D">8</span>, <span style="color:#606">bits</span>: <span style="color:#00D">8</span>},
-                               <span style="color:#A60">:lower_byte</span> =&gt; {<span style="color:#606">pos</span>: <span style="color:#00D">0</span>, <span style="color:#606">bits</span>: <span style="color:#00D">8</span>}
+    reg <span style="color:#A60">:myreg</span>, <span style="color:#00D">0x0012</span>, <span style="color:#606">size</span>: <span style="color:#00D">16</span> <span style="color:#080;font-weight:bold">do</span> |reg|
+      reg.bits <span style="color:#00D">15</span>..<span style="color:#00D">8</span>, <span style="color:#A60">:upper_byte</span>
+      reg.bits <span style="color:#00D">7</span>..<span style="color:#00D">0</span>,  <span style="color:#A60">:lower_byte</span>
+    <span style="color:#080;font-weight:bold">end</span>                           
   <span style="color:#080;font-weight:bold">end</span>
 
+  <span style="color:#777"># Hook the ARMDebug module into the register API, any register read</span>
+  <span style="color:#777"># requests will use the ARM Debug protocol by default</span>
+  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">read_register</span>(reg, options={})
+    arm_debug.read_register(reg, options)
+  <span style="color:#080;font-weight:bold">end</span>
+
+  <span style="color:#777"># As above for write requests</span>
+  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">write_register</span>(reg, options={})
+    arm_debug.write_register(reg, options)
+  <span style="color:#080;font-weight:bold">end</span>
 <span style="color:#080;font-weight:bold">end</span>
 
-<span style="color:#036;font-weight:bold">DUT</span>.new.reg(<span style="color:#A60">:test</span>).write!(<span style="color:#00D">0x55AA</span>)  <span style="color:#777"># =&gt; Will generate the required vectors using the ARM debug protocol</span>
+<span style="color:#036;font-weight:bold">DUT</span>.new.myreg.write!(<span style="color:#00D">0x55AA</span>)  <span style="color:#777"># =&gt; Will generate the required vectors using the ARM debug protocol</span>
 </pre></div>
 </div>
     </div>
@@ -179,13 +203,13 @@ object for use in the console:</p>
 
     <pre><code>origen i
 
-&gt; $dut.arm_debug
+&gt; dut.arm_debug
 =&gt; #&lt;OrigenARMDebug::Driver:0x0000001ee48e78&gt;
 </code></pre>
 
     <p>Follow the instructions here if you want to make a 3rd party app
 workspace use your development copy of the OrigenARMDebug plugin:
-<a href="http://origen-sdk.org/origen/latest/guides/plugins">Setting up a Plugin Development Environment</a></p>
+<a href="http://origen-sdk.org/origen/guides/plugins">Setting up a Plugin Development Environment</a></p>
 
     <p>This plugin also contains a test suite, makes sure this passes before committing
 any changes!</p>
