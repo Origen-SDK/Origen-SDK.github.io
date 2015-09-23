@@ -1,30 +1,5 @@
 {
-  "/": {
-    "title": null,
-    "subtitle": null,
-    "body": ""
-  },
-  "/examples/": {
-    "title": null,
-    "subtitle": null,
-    "body": ""
-  },
-  "/release_notes/": {
-    "title": null,
-    "subtitle": null,
-    "body": ""
-  },
   "/examples/disqus/": {
-    "title": null,
-    "subtitle": null,
-    "body": ""
-  },
-  "/examples/yammer/": {
-    "title": null,
-    "subtitle": null,
-    "body": ""
-  },
-  "/examples/test/flow/": {
     "title": null,
     "subtitle": null,
     "body": ""
@@ -37,7 +12,7 @@
   "/examples/searchable/intro/": {
     "title": "Creating Searchable Documents",
     "subtitle": null,
-    "body": "Creating Searchable Documents This helper provides a layout that will create a nested collection of\ndocuments like this one and which are searchable via the box on the \ntop left. The Document Index The application must supply a hash to describe the page index that has been built\non the the left of the page.\nHere is the index used for this page: index = {}\nindex[ nil ] = { intro : \" Introduction \" , page2 : \" Page 2 \" ,\n}\nindex[ \" Topic 1 \" ] = { topic1_item1 : \" First Item \" , topic1_item2 : \" Second Item \" ,\n} The sub-hash keys describe where each document lives and what its title is, for example\nthe document with title “Second Item” should live in _documents_root_/topic1/item2.md.erb . By default the root is \"#{Origen.root}/templates/web/docs\" but this can be overridden\nby supplying a :root option which should describe the relative path from \"#{Origen.root}/templates/web\" . The Layout Helper A layout helper is provided to include a document in the search and wrap it\nwith the indexed layout: % render \"doc_helpers/searchable.html\", index: index do\n\nBlah blah blah\n\n% end The :index option is mandatory, but the following are optional: :heading - Each wrapped document will have the heading (e.g. \"First Item\") inserted at the top of the page,\n to override it supply this option. A common example would be if the topic is long and\n so an abbreviated version has been used in the index. e.g. \"First Item and Other Stuff\"\n:topic - Each wrapped document will have the topic (e.g. \"Topic 1\") inserted at the top of the page,\n to override it supply this option. A common example would be if the topic is long and\n so an abbreviated version has been used in the index. e.g. \"Topic 1 and Other Stuff\"\n:root - override the top-level folder containing your documents, e.g. \"tutorials/guides\"\n:tab - the helper should automatically work out what tab to select for each document, however\n if it is struggling for some reason you can force it by supplying the hash key from the\n index that the given document should be associated with, e.g. :topic1_item1 Incorporating in Your Own Layout Normally the searchable layout will be wrapped in your own application specific layout\nto insert your custom navigation bar, etc. As an example here is the actual layout that has been used to generate this page: ---\ntitle: Origen Documentation Helpers\n--- <%= render \" partials/navbar.html \" , tab : :examples %> % index = {}\n% index[nil] = {\n% intro: \"Introduction\",\n% page2: \"Page 2\",\n% }\n% index[\"Topic 1\"] = {\n% topic1_item1: \"First Item\",\n% topic1_item2: \"Second Item\",\n% }\n\n% opts = options.merge(index: index, root: \"examples/searchable\")\n% render \"doc_helpers/searchable.html\", options.merge(opts) do <%= yield %> % end Writing Your Documents With the layout setup, writing documents is very simple; these should normally\nbe regular markdown that is wrapped in your layout. The top-level header size in your document should be h3 or ### in markdown. .html.erb files will also work if you want to use them. Here is the actual code used behind the Topic 1 - First Item page (where the layout being rendered is the one above): % render \"templates/web/layouts/doc.html\" do\n\nHello I'm item 1\n\n% end Comments /* * * CONFIGURATION VARIABLES * * */\n var disqus_shortname = 'origen-sdk';\n var disqus_title;\n var disqus_url = 'http://' + window.location.hostname + window.location.pathname;\n\n disqus_title = $(\"h1\").text();\n if (disqus_title.length == 0) {\n disqus_title = $(\"h2\").text();\n }\n if (disqus_title.length == 0) {\n disqus_title = $(\"h3\").text();\n }\n if (disqus_title.length == 0) {\n disqus_title = $(\"title\").text();\n } else {\n disqus_title = disqus_title + ' (' + $(\"title\").text() + ')';\n }\n\n /* * * DON'T EDIT BELOW THIS LINE * * */\n (function() {\n var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;\n dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';\n (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);\n })(); Please enable JavaScript to view the comments powered by Disqus."
+    "body": "Creating Searchable Documents This helper provides a layout that will create a nested collection of\ndocuments like this one and which are searchable via the box on the \ntop left. The Document Index The application must supply a hash to describe the page index that has been built\non the the left of the page.\nHere is the index used for this page: index = {}\nindex[ nil ] = { : intro \" Introduction Topic 1 \" , : page2 \" Page 2 \" ,\n}\nindex[ \" ] = { \" : topic1_item1 \" First Item \" , : topic1_item2 ,\n} \" Second Item \" The sub-hash keys describe where each document lives and what its title is, for example\nthe document with title “Second Item” should live in . _documents_root_/topic1/item2.md.erb By default the root is but this can be overridden\nby supplying a \"#{Origen.root}/templates/web/docs\" option which should describe the relative path from :root . \"#{Origen.root}/templates/web\" The Layout Helper A layout helper is provided to include a document in the search and wrap it\nwith the indexed layout: % render \"doc_helpers/searchable.html\", index: index do\n\nBlah blah blah\n\n% end The option is mandatory, but the following are optional: :index :heading - Each wrapped document will have the heading (e.g. \"First Item\") inserted at the top of the page,\n to override it supply this option. A common example would be if the topic is long and\n so an abbreviated version has been used in the index. e.g. \"First Item and Other Stuff\"\n:topic - Each wrapped document will have the topic (e.g. \"Topic 1\") inserted at the top of the page,\n to override it supply this option. A common example would be if the topic is long and\n so an abbreviated version has been used in the index. e.g. \"Topic 1 and Other Stuff\"\n:root - override the top-level folder containing your documents, e.g. \"tutorials/guides\"\n:tab - the helper should automatically work out what tab to select for each document, however\n if it is struggling for some reason you can force it by supplying the hash key from the\n index that the given document should be associated with, e.g. :topic1_item1\n:prompt - the search box prompt, by default is \"Search these docs...\" Incorporating in Your Own Layout Normally the searchable layout will be wrapped in your own application specific layout\nto insert your custom navigation bar, etc. As an example here is the actual layout that has been used to generate this page: ---\ntitle: Origen Documentation Helpers\n--- \" partials/navbar.html % index = {}\n% index[nil] = {\n% intro: \"Introduction\",\n% page2: \"Page 2\",\n% }\n% index[\"Topic 1\"] = {\n% topic1_item1: \"First Item\",\n% topic1_item2: \"Second Item\",\n% }\n\n% opts = options.merge(index: index, root: \"examples/searchable\")\n% render \"doc_helpers/searchable.html\", options.merge(opts) do render <%= , \" tab : :examples %> % end <%= yield %> Writing Your Documents With the layout setup, writing documents is very simple; these should normally\nbe regular markdown that is wrapped in your layout. The top-level header size in your document should be h3 or in markdown. ### .html.erb files will also work if you want to use them. Here is the actual code used behind the page (where the layout being rendered is the one above): Topic 1 - First Item % render \"templates/web/layouts/doc.html\" do\n\nHello I'm item 1\n\n% end Comments /* * * CONFIGURATION VARIABLES * * */\n var disqus_shortname = 'origen-sdk';\n var disqus_title;\n var disqus_url = 'http://' + window.location.hostname + window.location.pathname;\n\n disqus_title = $(\"h1\").text();\n if (disqus_title.length == 0) {\n disqus_title = $(\"h2\").text();\n }\n if (disqus_title.length == 0) {\n disqus_title = $(\"h3\").text();\n }\n if (disqus_title.length == 0) {\n disqus_title = $(\"title\").text();\n } else {\n disqus_title = disqus_title + ' (' + $(\"title\").text() + ')';\n }\n\n /* * * DON'T EDIT BELOW THIS LINE * * */\n (function() {\n var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;\n dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';\n (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);\n })(); Please enable JavaScript to view the comments powered by Disqus."
   },
   "/examples/searchable/page2/": {
     "title": "Page 2",
@@ -53,5 +28,30 @@
     "title": "Second Item",
     "subtitle": "Topic 1",
     "body": "Topic 1 Second Item Hello I'm item 2, blah blah blah Comments /* * * CONFIGURATION VARIABLES * * */\n var disqus_shortname = 'origen-sdk';\n var disqus_title;\n var disqus_url = 'http://' + window.location.hostname + window.location.pathname;\n\n disqus_title = $(\"h1\").text();\n if (disqus_title.length == 0) {\n disqus_title = $(\"h2\").text();\n }\n if (disqus_title.length == 0) {\n disqus_title = $(\"h3\").text();\n }\n if (disqus_title.length == 0) {\n disqus_title = $(\"title\").text();\n } else {\n disqus_title = disqus_title + ' (' + $(\"title\").text() + ')';\n }\n\n /* * * DON'T EDIT BELOW THIS LINE * * */\n (function() {\n var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;\n dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';\n (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);\n })(); Please enable JavaScript to view the comments powered by Disqus."
+  },
+  "/examples/test/flow/": {
+    "title": null,
+    "subtitle": null,
+    "body": ""
+  },
+  "/examples/yammer/": {
+    "title": null,
+    "subtitle": null,
+    "body": ""
+  },
+  "/examples/": {
+    "title": null,
+    "subtitle": null,
+    "body": ""
+  },
+  "/": {
+    "title": null,
+    "subtitle": null,
+    "body": ""
+  },
+  "/release_notes/": {
+    "title": null,
+    "subtitle": null,
+    "body": ""
   }
 }
