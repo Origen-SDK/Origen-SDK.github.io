@@ -6,7 +6,7 @@
 <title>
   Class: OrigenARMDebug::SWJ_DP
   
-    &mdash; Origen ARM Debug 0.6.0
+    &mdash; Origen ARM Debug 0.7.0
   
 </title>
 
@@ -586,10 +586,7 @@ value.</p>
 61
 62
 63
-64
-65
-66
-67</pre>
+64</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/swj_dp.rb', line 30</span>
@@ -601,10 +598,7 @@ value.</p>
     <span class='ivar'>@imp</span> <span class='op'>=</span> <span class='id identifier rubyid_implementation'>implementation</span>
   <span class='kw'>else</span>
     <span class='id identifier rubyid_msg'>msg</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>SWJ-DP: &#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_implementation'>implementation</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39; implementation not supported.  JTAG and SWD only</span><span class='tstring_end'>&quot;</span></span>
-    <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_log'>log</span><span class='period'>.</span><span class='id identifier rubyid_error'>error</span> <span class='id identifier rubyid_msg'>msg</span>
-
-    <span class='comment'># Just default to jtag for now
-</span>    <span class='ivar'>@imp</span> <span class='op'>=</span> <span class='symbol'>:jtag</span>
+    <span class='id identifier rubyid_fail'>fail</span> <span class='id identifier rubyid_msg'>msg</span>
   <span class='kw'>end</span>
 
   <span class='ivar'>@write_ap_dly</span> <span class='op'>=</span> <span class='int'>8</span>
@@ -916,6 +910,9 @@ transaction</p>
       <pre class="lines">
 
 
+138
+139
+140
 141
 142
 143
@@ -931,13 +928,10 @@ transaction</p>
 153
 154
 155
-156
-157
-158
-159</pre>
+156</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/swj_dp.rb', line 141</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/swj_dp.rb', line 138</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_read_ap'>read_ap</span><span class='lparen'>(</span><span class='id identifier rubyid_addr'>addr</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_rwb'>rwb</span> <span class='op'>=</span> <span class='int'>1</span>
@@ -946,7 +940,7 @@ transaction</p>
   <span class='comment'># Create another copy of options with select keys removed.
 </span>  <span class='comment'># This first read is junk so we do not want to store it or compare it.
 </span>  <span class='id identifier rubyid_junk_options'>junk_options</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_clone'>clone</span><span class='period'>.</span><span class='id identifier rubyid_delete_if'>delete_if</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='id identifier rubyid_val'>val</span><span class='op'>|</span>
-    <span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='period'>.</span><span class='id identifier rubyid_eql?'>eql?</span><span class='lparen'>(</span><span class='symbol'>:r_mask</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_val'>val</span><span class='period'>.</span><span class='id identifier rubyid_eql?'>eql?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>store</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='rparen'>)</span> <span class='op'>||</span> <span class='id identifier rubyid_key'>key</span><span class='period'>.</span><span class='id identifier rubyid_eql?'>eql?</span><span class='lparen'>(</span><span class='symbol'>:compare_data</span><span class='rparen'>)</span>
+    <span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='period'>.</span><span class='id identifier rubyid_eql?'>eql?</span><span class='lparen'>(</span><span class='symbol'>:r_mask</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_val'>val</span><span class='period'>.</span><span class='id identifier rubyid_eql?'>eql?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>store</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='rparen'>)</span> <span class='op'>||</span> <span class='id identifier rubyid_key'>key</span><span class='period'>.</span><span class='id identifier rubyid_eql?'>eql?</span><span class='lparen'>(</span><span class='symbol'>:compare_data</span><span class='rparen'>)</span> <span class='op'>||</span> <span class='id identifier rubyid_key'>key</span><span class='period'>.</span><span class='id identifier rubyid_eql?'>eql?</span><span class='lparen'>(</span><span class='symbol'>:reg</span><span class='rparen'>)</span>
   <span class='kw'>end</span>
 
   <span class='id identifier rubyid_apacc_access'>apacc_access</span><span class='lparen'>(</span><span class='id identifier rubyid_addr'>addr</span><span class='comma'>,</span> <span class='id identifier rubyid_rwb'>rwb</span><span class='comma'>,</span> <span class='id identifier rubyid_random'>random</span><span class='comma'>,</span> <span class='int'>0</span><span class='comma'>,</span> <span class='id identifier rubyid_junk_options'>junk_options</span><span class='rparen'>)</span>
@@ -1052,17 +1046,17 @@ transaction</p>
       <pre class="lines">
 
 
+76
+77
+78
 79
 80
 81
 82
-83
-84
-85
-86</pre>
+83</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/swj_dp.rb', line 79</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/swj_dp.rb', line 76</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_read_dp'>read_dp</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span> <span class='label'>r_attempts:</span> <span class='int'>1</span><span class='comma'>,</span> <span class='label'>mask:</span> <span class='int'>0xffffffff</span> <span class='rbrace'>}</span><span class='period'>.</span><span class='id identifier rubyid_merge'>merge</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
@@ -1162,17 +1156,17 @@ value</p>
       <pre class="lines">
 
 
-166
-167
-168
-169</pre>
+163
+164
+165
+166</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/swj_dp.rb', line 166</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/swj_dp.rb', line 163</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_read_expect_ap'>read_expect_ap</span><span class='lparen'>(</span><span class='id identifier rubyid_addr'>addr</span><span class='comma'>,</span> <span class='id identifier rubyid_edata'>edata</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:edata</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_edata'>edata</span>
-  <span class='id identifier rubyid_read_ap'>read_ap</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_read_ap'>read_ap</span><span class='lparen'>(</span><span class='id identifier rubyid_addr'>addr</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1260,13 +1254,13 @@ value</p>
       <pre class="lines">
 
 
-94
-95
-96
-97</pre>
+91
+92
+93
+94</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/swj_dp.rb', line 94</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/swj_dp.rb', line 91</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_read_expect_dp'>read_expect_dp</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_edata'>edata</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:edata</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_edata'>edata</span>
@@ -1357,6 +1351,9 @@ value</p>
       <pre class="lines">
 
 
+174
+175
+176
 177
 178
 179
@@ -1368,13 +1365,10 @@ value</p>
 185
 186
 187
-188
-189
-190
-191</pre>
+188</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/swj_dp.rb', line 177</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/swj_dp.rb', line 174</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_write_ap'>write_ap</span><span class='lparen'>(</span><span class='id identifier rubyid_addr'>addr</span><span class='comma'>,</span> <span class='id identifier rubyid_wdata'>wdata</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_rwb'>rwb</span> <span class='op'>=</span> <span class='int'>0</span>
@@ -1477,17 +1471,17 @@ value</p>
       <pre class="lines">
 
 
+102
+103
+104
 105
 106
 107
 108
-109
-110
-111
-112</pre>
+109</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/swj_dp.rb', line 105</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/swj_dp.rb', line 102</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_write_dp'>write_dp</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_wdata'>wdata</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span> <span class='label'>w_attempts:</span> <span class='int'>1</span> <span class='rbrace'>}</span><span class='period'>.</span><span class='id identifier rubyid_merge'>merge</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
@@ -1582,6 +1576,9 @@ value</p>
       <pre class="lines">
 
 
+195
+196
+197
 198
 199
 200
@@ -1591,13 +1588,10 @@ value</p>
 204
 205
 206
-207
-208
-209
-210</pre>
+207</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/swj_dp.rb', line 198</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/swj_dp.rb', line 195</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_write_read_ap'>write_read_ap</span><span class='lparen'>(</span><span class='id identifier rubyid_addr'>addr</span><span class='comma'>,</span> <span class='id identifier rubyid_wdata'>wdata</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_write_ap'>write_ap</span><span class='lparen'>(</span><span class='id identifier rubyid_addr'>addr</span><span class='comma'>,</span> <span class='id identifier rubyid_wdata'>wdata</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
@@ -1698,6 +1692,9 @@ value</p>
       <pre class="lines">
 
 
+117
+118
+119
 120
 121
 122
@@ -1705,13 +1702,10 @@ value</p>
 124
 125
 126
-127
-128
-129
-130</pre>
+127</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/swj_dp.rb', line 120</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/swj_dp.rb', line 117</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_write_read_dp'>write_read_dp</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_wdata'>wdata</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_write_dp'>write_dp</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_wdata'>wdata</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
@@ -1734,7 +1728,7 @@ value</p>
 </div>
 
     <div id="footer">
-  Generated on Mon Oct  5 20:29:51 2015 by
+  Generated on Mon Oct  5 21:12:35 2015 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.1.5).
 </div>
