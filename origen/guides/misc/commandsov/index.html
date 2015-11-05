@@ -5,37 +5,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta property="og:locale" content="en_US">
-    <meta name="content-language" content="en_US">
 
-    
     <title>Origen - Guides</title>
-    <meta property="og:title" content="Origen - Guides">
-    <meta name="twitter:title" content="Origen - Guides">
-    <meta itemprop="name" content="Origen - Guides">
-      
-  
-  
-    <link rel="author" href="https://plus.google.com/u/1/b/106463981272125989995/106463981272125989">
-  
-  
-    <meta property="og:url" content="http://origen-sdk.org/origen/guides/misc/commandsov">
-    <meta name="twitter:url" content="http://origen-sdk.org/origen/guides/misc/commandsov">
-  
-  
-    <meta property="og:image" content="http://origen-sdk.org/favicon-260x260.png">
-    <meta name="twitter:image" content="http://origen-sdk.org/favicon-260x260.png">
-    <meta itemprop="image" content="http://origen-sdk.org/favicon-260x260.png">
-    <meta name="twitter:card" content="summary">
-  
-    <meta property="og:site_name" content="Origen - The Semiconductor Developer's Kit">
-  
-  
-    <meta property="fb:admins" content="origensdk">
-  
-  
-    <meta name="twitter:site" content="@origensdk">
-  
+        
+    
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
@@ -412,8 +385,11 @@ attr_accessor <span style="color:#A60">:no_md5</span>
 <span style="color:#777"># Add an additional option to the standard command, important not</span>
 <span style="color:#777"># to exit here to allow the standard Origen command to run afterwards</span>
 <span style="color:#080;font-weight:bold">when</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">generate</span><span style="color:#710">"</span></span>
+  <span style="color:#777"># Option definitions must be pushed into the @application_options array, don't re-assign it!</span>
   <span style="color:#33B">@application_options</span> &lt;&lt; [<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">--no_md5</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Don't apply the MD5 checksum to pattern names</span><span style="color:#710">"</span></span>],
-  <span style="color:#036;font-weight:bold">Origen</span>.app.no_md5 = <span style="color:#069">true</span> <span style="color:#080;font-weight:bold">if</span> <span style="color:#069">ARGV</span>.delete(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">--no_md5</span><span style="color:#710">"</span></span>)
+  <span style="color:#777"># Note that it is important not to delete the argument from ARGV, this is necessary to make Origen</span>
+  <span style="color:#777"># fully aware of it, so that it can be passed on to any additional jobs invoked from this process</span>
+  <span style="color:#036;font-weight:bold">Origen</span>.app.no_md5 = <span style="color:#069">true</span> <span style="color:#080;font-weight:bold">if</span> <span style="color:#069">ARGV</span>.include?(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">--no_md5</span><span style="color:#710">"</span></span>)
   <span style="color:#777"># Don't exit here, allow the flow to fall through to Origen to implement the rest of the command</span>
 </pre></div>
 </div>
