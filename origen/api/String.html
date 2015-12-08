@@ -6,7 +6,7 @@
 <title>
   Class: String
   
-    &mdash; Origen Core 0.5.7
+    &mdash; Origen Core 0.5.8
   
 </title>
 
@@ -545,13 +545,13 @@ symbol version of the string.</p>
       <pre class="lines">
 
 
-93
 94
 95
-96</pre>
+96
+97</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/core_ext/string.rb', line 93</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/core_ext/string.rb', line 94</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_is_numeric?'>is_numeric?</span>
   <span class='kw'>return</span> <span class='kw'>true</span> <span class='kw'>if</span> <span class='kw'>self</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>\A\d+\Z</span><span class='regexp_end'>/</span></span>
@@ -611,12 +611,12 @@ symbol version of the string.</p>
       <pre class="lines">
 
 
-77
 78
-79</pre>
+79
+80</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/core_ext/string.rb', line 77</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/core_ext/string.rb', line 78</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_squeeze_lines'>squeeze_lines</span>
   <span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>\n+</span><span class='regexp_end'>/</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> </span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_squeeze'>squeeze</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> </span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
@@ -655,13 +655,15 @@ symbol version of the string</p>
 
 57
 58
-59</pre>
+59
+60</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/origen/core_ext/string.rb', line 57</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_symbolize'>symbolize</span>
-  <span class='id identifier rubyid_gsub'>gsub</span><span class='lparen'>(</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>(\n|\s|\(|\)|\.|\[|\]|-|{|})</span><span class='regexp_end'>/</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>_</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_downcase'>downcase</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span>
+  <span class='cvar'>@@symbolize</span> <span class='op'>||=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+  <span class='cvar'>@@symbolize</span><span class='lbracket'>[</span><span class='kw'>self</span><span class='rbracket'>]</span> <span class='op'>||=</span> <span class='id identifier rubyid_gsub'>gsub</span><span class='lparen'>(</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>(\n|\s|\(|\)|\.|\[|\]|-|{|})</span><span class='regexp_end'>/</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>_</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_downcase'>downcase</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -694,7 +696,6 @@ symbol version of the string</p>
       <pre class="lines">
 
 
-114
 115
 116
 117
@@ -703,10 +704,11 @@ symbol version of the string</p>
 120
 121
 122
-123</pre>
+123
+124</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/core_ext/string.rb', line 114</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/core_ext/string.rb', line 115</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_titleize'>titleize</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span>
@@ -749,7 +751,6 @@ symbol version of the string</p>
       <pre class="lines">
 
 
-82
 83
 84
 85
@@ -757,10 +758,11 @@ symbol version of the string</p>
 87
 88
 89
-90</pre>
+90
+91</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/core_ext/string.rb', line 82</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/core_ext/string.rb', line 83</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_to_bool'>to_bool</span>
   <span class='kw'>if</span> <span class='kw'>self</span> <span class='op'>==</span> <span class='kw'>true</span> <span class='op'>||</span> <span class='kw'>self</span> <span class='op'>=~</span> <span class='lparen'>(</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>^(true|t|yes|y|1)$</span><span class='regexp_end'>/i</span></span><span class='rparen'>)</span>
@@ -904,7 +906,6 @@ symbol version of the string</p>
       <pre class="lines">
 
 
-100
 101
 102
 103
@@ -914,10 +915,11 @@ symbol version of the string</p>
 107
 108
 109
-110</pre>
+110
+111</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/core_ext/string.rb', line 100</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/core_ext/string.rb', line 101</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_to_numeric'>to_numeric</span>
   <span class='kw'>if</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_numeric?'>numeric?</span>
@@ -954,13 +956,13 @@ symbol version of the string</p>
       <pre class="lines">
 
 
-71
 72
 73
-74</pre>
+74
+75</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/core_ext/string.rb', line 71</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/core_ext/string.rb', line 72</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_to_snakecase'>to_snakecase</span>
   <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_deprecate'>deprecate</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>String#to_snakecase is deprecated, use String#underscore instead since it is aware of FSL acronyms</span><span class='tstring_end'>&#39;</span></span>
@@ -1001,16 +1003,16 @@ symbol version of the string</p>
       <pre class="lines">
 
 
-62
 63
 64
 65
 66
 67
-68</pre>
+68
+69</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/core_ext/string.rb', line 62</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/core_ext/string.rb', line 63</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_to_snakecase!'>to_snakecase!</span>
   <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_deprecate'>deprecate</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>String#to_snakecase! is deprecated, use String#underscore instead since it is aware of FSL acronyms</span><span class='tstring_end'>&#39;</span></span>
@@ -1029,7 +1031,7 @@ symbol version of the string</p>
 </div>
 
     <div id="footer">
-  Generated on Fri Oct  2 08:51:15 2015 by
+  Generated on Tue Dec  8 11:21:32 2015 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.1.5).
 </div>

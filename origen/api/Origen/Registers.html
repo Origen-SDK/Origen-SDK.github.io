@@ -6,7 +6,7 @@
 <title>
   Module: Origen::Registers
   
-    &mdash; Origen Core 0.5.7
+    &mdash; Origen Core 0.5.8
   
 </title>
 
@@ -1354,7 +1354,13 @@ filled with dummy bit objects that are not writable and will read back as
 331
 332
 333
-334</pre>
+334
+335
+336
+337
+338
+339
+340</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 287</span>
@@ -1386,6 +1392,12 @@ filled with dummy bit objects that are not writable and will read back as
     <span class='ivar'>@new_reg_attrs</span> <span class='op'>=</span> <span class='lbrace'>{</span> <span class='label'>meta:</span> <span class='id identifier rubyid_bit_info'>bit_info</span> <span class='rbrace'>}</span>
     <span class='kw'>yield</span> <span class='kw'>self</span>
     <span class='id identifier rubyid_bit_info'>bit_info</span> <span class='op'>=</span> <span class='ivar'>@new_reg_attrs</span>
+  <span class='kw'>else</span>
+    <span class='comment'># If no block given then init with all writable bits unless bit_info has
+</span>    <span class='comment'># been supplied
+</span>    <span class='kw'>unless</span> <span class='id identifier rubyid_bit_info'>bit_info</span><span class='period'>.</span><span class='id identifier rubyid_any?'>any?</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_k'>k</span><span class='comma'>,</span> <span class='id identifier rubyid_v'>v</span><span class='op'>|</span> <span class='id identifier rubyid_v'>v</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'>Hash</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_v'>v</span><span class='lbracket'>[</span><span class='symbol'>:pos</span><span class='rbracket'>]</span> <span class='rbrace'>}</span>
+      <span class='id identifier rubyid_bit_info'>bit_info</span> <span class='op'>=</span> <span class='lbrace'>{</span> <span class='label'>d:</span> <span class='lbrace'>{</span> <span class='label'>pos:</span> <span class='int'>0</span><span class='comma'>,</span> <span class='label'>bits:</span> <span class='id identifier rubyid_size'>size</span> <span class='rbrace'>}</span><span class='period'>.</span><span class='id identifier rubyid_merge'>merge</span><span class='lparen'>(</span><span class='id identifier rubyid_bit_info'>bit_info</span><span class='rparen'>)</span> <span class='rbrace'>}</span>
+    <span class='kw'>end</span>
   <span class='kw'>end</span>
   <span class='kw'>if</span> <span class='id identifier rubyid__registers'>_registers</span><span class='lbracket'>[</span><span class='id identifier rubyid_id'>id</span><span class='rbracket'>]</span> <span class='op'>&amp;&amp;</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_strict_errors'>strict_errors</span>
     <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span>
@@ -1427,13 +1439,13 @@ filled with dummy bit objects that are not writable and will read back as
       <pre class="lines">
 
 
-428
-429
-430
-431</pre>
+434
+435
+436
+437</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 428</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 434</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_add_reg32'>add_reg32</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_address'>address</span><span class='comma'>,</span> <span class='id identifier rubyid_args'>args</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
   <span class='ivar'>@reg_define_file</span> <span class='op'>=</span> <span class='id identifier rubyid_define_file'>define_file</span><span class='lparen'>(</span><span class='id identifier rubyid_caller'>caller</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='rparen'>)</span>
@@ -1474,12 +1486,6 @@ filled with dummy bit objects that are not writable and will read back as
       <pre class="lines">
 
 
-352
-353
-354
-355
-356
-357
 358
 359
 360
@@ -1508,10 +1514,16 @@ filled with dummy bit objects that are not writable and will read back as
 383
 384
 385
-386</pre>
+386
+387
+388
+389
+390
+391
+392</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 352</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 358</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_bit'>bit</span><span class='lparen'>(</span><span class='id identifier rubyid_index'>index</span><span class='comma'>,</span> <span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_attrs'>attrs</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_index'>index</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'>Range</span><span class='rparen'>)</span>
@@ -1627,18 +1639,18 @@ containers (bit collection, reg or container).</p>
       <pre class="lines">
 
 
-403
-404
-405
-406
-407
-408
 409
 410
-411</pre>
+411
+412
+413
+414
+415
+416
+417</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 403</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 409</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_default_bit_metadata'>default_bit_metadata</span>
   <span class='const'>Origen</span><span class='op'>::</span><span class='const'>Registers</span><span class='period'>.</span><span class='id identifier rubyid_bit_metadata'>bit_metadata</span><span class='lbracket'>[</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='rbracket'>]</span> <span class='op'>||=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
@@ -1685,18 +1697,18 @@ registers defined within a given class</p>
       <pre class="lines">
 
 
-392
-393
-394
-395
-396
-397
 398
 399
-400</pre>
+400
+401
+402
+403
+404
+405
+406</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 392</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 398</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_default_reg_metadata'>default_reg_metadata</span>
   <span class='const'>Origen</span><span class='op'>::</span><span class='const'>Registers</span><span class='period'>.</span><span class='id identifier rubyid_reg_metadata'>reg_metadata</span><span class='lbracket'>[</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='rbracket'>]</span> <span class='op'>||=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
@@ -1740,17 +1752,17 @@ registers defined within a given class</p>
       <pre class="lines">
 
 
-342
-343
-344
-345
-346
-347
 348
-349</pre>
+349
+350
+351
+352
+353
+354
+355</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 342</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 348</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_define_file'>define_file</span><span class='lparen'>(</span><span class='id identifier rubyid_file'>file</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_running_on_windows?'>running_on_windows?</span>
@@ -1791,12 +1803,12 @@ registers defined within a given class</p>
       <pre class="lines">
 
 
-337
-338
-339</pre>
+343
+344
+345</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 337</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 343</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_del_reg'>del_reg</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='rparen'>)</span>
   <span class='id identifier rubyid__registers'>_registers</span><span class='period'>.</span><span class='id identifier rubyid_delete'>delete</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='rparen'>)</span>
@@ -1864,12 +1876,12 @@ or write! on the dummy register object.</p>
       <pre class="lines">
 
 
-616
-617
-618</pre>
+622
+623
+624</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 616</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 622</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_dummy_reg'>dummy_reg</span><span class='lparen'>(</span><span class='id identifier rubyid_size'>size</span> <span class='op'>=</span> <span class='int'>16</span><span class='rparen'>)</span>
   <span class='const'>Reg</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='kw'>self</span><span class='comma'>,</span> <span class='int'>0</span><span class='comma'>,</span> <span class='id identifier rubyid_size'>size</span><span class='comma'>,</span> <span class='symbol'>:dummy</span><span class='comma'>,</span> <span class='label'>init_as_writable:</span> <span class='kw'>true</span><span class='rparen'>)</span>
@@ -1922,20 +1934,20 @@ or write! on the dummy register object.</p>
       <pre class="lines">
 
 
-456
-457
-458
-459
-460
-461
 462
 463
 464
 465
-466</pre>
+466
+467
+468
+469
+470
+471
+472</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 456</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 462</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_has_reg?'>has_reg?</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_params'>params</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_params'>params</span> <span class='op'>=</span> <span class='lbrace'>{</span>
@@ -1981,21 +1993,21 @@ or write! on the dummy register object.</p>
       <pre class="lines">
 
 
-415
-416
-417
-418
-419
-420
 421
 422
 423
 424
 425
-426</pre>
+426
+427
+428
+429
+430
+431
+432</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 415</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 421</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_instantiate_reg'>instantiate_reg</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_attrs'>attrs</span><span class='rparen'>)</span>
   <span class='kw'>return</span> <span class='id identifier rubyid__registers'>_registers</span><span class='lbracket'>[</span><span class='id identifier rubyid_id'>id</span><span class='rbracket'>]</span> <span class='kw'>unless</span> <span class='id identifier rubyid__registers'>_registers</span><span class='lbracket'>[</span><span class='id identifier rubyid_id'>id</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'>Origen</span><span class='op'>::</span><span class='const'>Registers</span><span class='op'>::</span><span class='const'>Placeholder</span><span class='rparen'>)</span>
@@ -2096,12 +2108,12 @@ addresses containing registers</p>
       <pre class="lines">
 
 
-446
-447
-448</pre>
+452
+453
+454</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 446</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 452</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_max_address_reg_size'>max_address_reg_size</span>
   <span class='ivar'>@max_address_reg_size</span>
@@ -2137,12 +2149,12 @@ addresses containing registers</p>
       <pre class="lines">
 
 
-439
-440
-441</pre>
+445
+446
+447</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 439</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 445</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_max_reg_address'>max_reg_address</span>
   <span class='ivar'>@max_reg_address</span> <span class='op'>||</span> <span class='int'>0</span>
@@ -2178,12 +2190,12 @@ addresses containing registers</p>
       <pre class="lines">
 
 
-434
-435
-436</pre>
+440
+441
+442</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 434</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 440</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_min_reg_address'>min_reg_address</span>
   <span class='ivar'>@min_reg_address</span> <span class='op'>||</span> <span class='int'>0</span>
@@ -2208,12 +2220,6 @@ addresses containing registers</p>
       <pre class="lines">
 
 
-637
-638
-639
-640
-641
-642
 643
 644
 645
@@ -2223,10 +2229,16 @@ addresses containing registers</p>
 649
 650
 651
-652</pre>
+652
+653
+654
+655
+656
+657
+658</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 637</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 643</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_read_register_missing!'>read_register_missing!</span><span class='lparen'>(</span><span class='id identifier rubyid_reg'>reg</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_klass'>klass</span> <span class='op'>=</span> <span class='lparen'>(</span><span class='id identifier rubyid_try'>try</span><span class='lparen'>(</span><span class='symbol'>:controller</span><span class='rparen'>)</span> <span class='op'>||</span> <span class='kw'>self</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span>
@@ -2283,12 +2295,6 @@ case it is equivalent to calling add_reg with a block.</p>
       <pre class="lines">
 
 
-474
-475
-476
-477
-478
-479
 480
 481
 482
@@ -2359,13 +2365,19 @@ case it is equivalent to calling add_reg with a block.</p>
 547
 548
 549
-550</pre>
+550
+551
+552
+553
+554
+555
+556</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 474</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 480</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_reg'>reg</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
-  <span class='kw'>if</span> <span class='id identifier rubyid_block_given?'>block_given?</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_block_given?'>block_given?</span> <span class='op'>||</span> <span class='lparen'>(</span><span class='id identifier rubyid_args'>args</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'>Fixnum</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='op'>!</span><span class='id identifier rubyid_try'>try</span><span class='lparen'>(</span><span class='symbol'>:initialized?</span><span class='rparen'>)</span><span class='rparen'>)</span>
     <span class='ivar'>@reg_define_file</span> <span class='op'>=</span> <span class='id identifier rubyid_define_file'>define_file</span><span class='lparen'>(</span><span class='id identifier rubyid_caller'>caller</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='rparen'>)</span>
     <span class='id identifier rubyid_add_reg'>add_reg</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
   <span class='kw'>else</span>
@@ -2472,12 +2484,12 @@ case it is equivalent to calling add_reg with a block.</p>
       <pre class="lines">
 
 
-451
-452
-453</pre>
+457
+458
+459</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 451</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 457</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_reset_registers'>reset_registers</span>
   <span class='id identifier rubyid_regs'>regs</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid__name'>_name</span><span class='comma'>,</span> <span class='id identifier rubyid_reg'>reg</span><span class='op'>|</span> <span class='id identifier rubyid_reg'>reg</span><span class='period'>.</span><span class='id identifier rubyid_reset'>reset</span> <span class='rbrace'>}</span>
@@ -2556,12 +2568,6 @@ case it is equivalent to calling add_reg with a block.</p>
       <pre class="lines">
 
 
-620
-621
-622
-623
-624
-625
 626
 627
 628
@@ -2571,10 +2577,16 @@ case it is equivalent to calling add_reg with a block.</p>
 632
 633
 634
-635</pre>
+635
+636
+637
+638
+639
+640
+641</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 620</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 626</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_write_register_missing!'>write_register_missing!</span><span class='lparen'>(</span><span class='id identifier rubyid_reg'>reg</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_klass'>klass</span> <span class='op'>=</span> <span class='lparen'>(</span><span class='id identifier rubyid_try'>try</span><span class='lparen'>(</span><span class='symbol'>:controller</span><span class='rparen'>)</span> <span class='op'>||</span> <span class='kw'>self</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span>
@@ -2602,7 +2614,7 @@ method in the </span><span class='embexpr_beg'>#{</span><span class='id identifi
 </div>
 
     <div id="footer">
-  Generated on Fri Oct  2 08:51:09 2015 by
+  Generated on Tue Dec  8 11:21:25 2015 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.1.5).
 </div>
