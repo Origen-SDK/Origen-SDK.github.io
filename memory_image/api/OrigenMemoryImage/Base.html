@@ -6,7 +6,7 @@
 <title>
   Class: OrigenMemoryImage::Base
   
-    &mdash; Origen Memory Image 0.5.0
+    &mdash; Origen Memory Image 0.5.1
   
 </title>
 
@@ -494,12 +494,12 @@ must be supplied as the second argument.</p>
       <pre class="lines">
 
 
-59
-60
-61</pre>
+76
+77
+78</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_memory_image/base.rb', line 59</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_memory_image/base.rb', line 76</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_file_name'>file_name</span>
   <span class='id identifier rubyid_file'>file</span> <span class='op'>||</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>From source string</span><span class='tstring_end'>&#39;</span></span>
@@ -544,18 +544,18 @@ must be supplied as the second argument</p>
       <pre class="lines">
 
 
-49
-50
-51
-52
-53
-54
-55
-56
-57</pre>
+66
+67
+68
+69
+70
+71
+72
+73
+74</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_memory_image/base.rb', line 49</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_memory_image/base.rb', line 66</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_flip_endianness'>flip_endianness</span><span class='lparen'>(</span><span class='id identifier rubyid_data'>data</span><span class='comma'>,</span> <span class='id identifier rubyid_width_in_bytes'>width_in_bytes</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_v'>v</span> <span class='op'>=</span> <span class='int'>0</span>
@@ -586,16 +586,16 @@ must be supplied as the second argument</p>
       <pre class="lines">
 
 
-63
-64
-65
-66
-67
-68
-69</pre>
+80
+81
+82
+83
+84
+85
+86</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_memory_image/base.rb', line 63</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_memory_image/base.rb', line 80</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_lines'>lines</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_file'>file</span>
@@ -721,7 +721,24 @@ endianness changed</p>
 38
 39
 40
-41</pre>
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/origen_memory_image/base.rb', line 28</span>
@@ -729,9 +746,26 @@ endianness changed</p>
 <span class='kw'>def</span> <span class='id identifier rubyid_to_a'>to_a</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span>
     <span class='label'>flip_endianness:</span>     <span class='kw'>false</span><span class='comma'>,</span>
-    <span class='label'>data_width_in_bytes:</span> <span class='int'>4</span>
+    <span class='label'>data_width_in_bytes:</span> <span class='int'>4</span><span class='comma'>,</span>
+    <span class='label'>crop:</span>                <span class='lbracket'>[</span><span class='rbracket'>]</span>
   <span class='rbrace'>}</span><span class='period'>.</span><span class='id identifier rubyid_merge'>merge</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_data'>data</span> <span class='op'>=</span> <span class='id identifier rubyid_extract_addr_data'>extract_addr_data</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
+
+  <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:crop</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_count'>count</span> <span class='op'>&gt;</span> <span class='int'>0</span>
+    <span class='id identifier rubyid_cropped_data'>cropped_data</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
+    <span class='id identifier rubyid_data'>data</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_addr'>addr</span><span class='comma'>,</span> <span class='id identifier rubyid_data'>data</span><span class='op'>|</span>
+      <span class='kw'>case</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:crop</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_count'>count</span>
+        <span class='kw'>when</span> <span class='int'>1</span>
+          <span class='id identifier rubyid_cropped_data'>cropped_data</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span><span class='lparen'>(</span><span class='lbracket'>[</span><span class='id identifier rubyid_addr'>addr</span><span class='comma'>,</span> <span class='id identifier rubyid_data'>data</span><span class='rbracket'>]</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_addr'>addr</span> <span class='op'>&gt;=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:crop</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span>
+        <span class='kw'>when</span> <span class='int'>2</span>
+          <span class='id identifier rubyid_cropped_data'>cropped_data</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span><span class='lparen'>(</span><span class='lbracket'>[</span><span class='id identifier rubyid_addr'>addr</span><span class='comma'>,</span> <span class='id identifier rubyid_data'>data</span><span class='rbracket'>]</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_addr'>addr</span> <span class='op'>&gt;=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:crop</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_addr'>addr</span> <span class='op'>&lt;=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:crop</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span>
+        <span class='kw'>else</span>
+          <span class='id identifier rubyid_fail'>fail</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>crop option can only be array of size 1 or 2</span><span class='tstring_end'>&#39;</span></span>
+      <span class='kw'>end</span>
+    <span class='kw'>end</span>
+    <span class='id identifier rubyid_data'>data</span> <span class='op'>=</span> <span class='id identifier rubyid_cropped_data'>cropped_data</span>
+  <span class='kw'>end</span>
+
   <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:flip_endianness</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:endianness_change</span><span class='rbracket'>]</span>
     <span class='id identifier rubyid_data'>data</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_v'>v</span><span class='op'>|</span>
       <span class='lbracket'>[</span><span class='id identifier rubyid_v'>v</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_flip_endianness'>flip_endianness</span><span class='lparen'>(</span><span class='id identifier rubyid_v'>v</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='int'>4</span><span class='rparen'>)</span><span class='rbracket'>]</span>
@@ -750,7 +784,7 @@ endianness changed</p>
 </div>
 
     <div id="footer">
-  Generated on Fri Aug  7 06:20:22 2015 by
+  Generated on Wed Dec 16 19:19:18 2015 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.1.5).
 </div>
