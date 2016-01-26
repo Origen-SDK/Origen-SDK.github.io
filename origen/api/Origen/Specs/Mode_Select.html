@@ -6,7 +6,7 @@
 <title>
   Class: Origen::Specs::Mode_Select
   
-    &mdash; Origen Core 0.5.8
+    &mdash; Origen Core 0.5.9
   
 </title>
 
@@ -138,7 +138,61 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Returns the value of attribute block.</p>
+<p>Block Name at the SoC (e.g. DDRC1, DDRC2, DDRC3).</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#diff_loc-instance_method" title="#diff_loc (instance method)">- (Object) <strong>diff_loc</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Use Information from different data source.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#ds_header-instance_method" title="#ds_header (instance method)">- (Object) <strong>ds_header</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Data Sheet Header/Group Name.</p>
 </div></span>
   
 </li>
@@ -165,7 +219,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Returns the value of attribute location.</p>
+<p>Location of the block to read.</p>
 </div></span>
   
 </li>
@@ -192,7 +246,61 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Returns the value of attribute mode.</p>
+<p>Mode Reference Name.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#supply-instance_method" title="#supply (instance method)">- (Object) <strong>supply</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>SoC Supply List.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#supply_level-instance_method" title="#supply_level (instance method)">- (Object) <strong>supply_level</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>SoC Supply Voltage Level.</p>
 </div></span>
   
 </li>
@@ -219,7 +327,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Returns the value of attribute supported.</p>
+<p>SoC Supports this mode?.</p>
 </div></span>
   
 </li>
@@ -246,7 +354,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Returns the value of attribute usage.</p>
+<p>Block Use at the SoC Level.</p>
 </div></span>
   
 </li>
@@ -268,7 +376,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#initialize-instance_method" title="#initialize (instance method)">- (Mode_Select) <strong>initialize</strong>(blk, use, mode_ref, support, loc) </a>
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (Mode_Select) <strong>initialize</strong>(block_information, mode_usage, power_information) </a>
     
 
     
@@ -285,7 +393,9 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>A new instance of Mode_Select.</p>
+<p>There are three sub-blocks of information in Mode Select *
+block_information: ** name : The name of the block as instiniated in the
+SoC ** ds_header:  Data Sheet Header/Group.</p>
 </div></span>
   
 </li>
@@ -300,7 +410,7 @@
     <div class="method_details first">
   <h3 class="signature first" id="initialize-instance_method">
   
-    - (<tt><span class='object_link'><a href="" title="Origen::Specs::Mode_Select (class)">Mode_Select</a></span></tt>) <strong>initialize</strong>(blk, use, mode_ref, support, loc) 
+    - (<tt><span class='object_link'><a href="" title="Origen::Specs::Mode_Select (class)">Mode_Select</a></span></tt>) <strong>initialize</strong>(block_information, mode_usage, power_information) 
   
 
   
@@ -309,7 +419,29 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns a new instance of Mode_Select</p>
+<p>There are three sub-blocks of information in Mode Select</p>
+<ul><li>
+<p>block_information:</p>
+</li></ul>
+
+<p>** name : The name of the block as instiniated in the SoC ** ds_header: 
+Data Sheet Header/Group.  Allows for multiple instantation to be grouped
+under one header in datasheet or allows for them to broken out ** usage: 
+Block is used in this SoC be starting point for license plate
+support ** location:  File path to the specml location</p>
+<ul><li>
+<p>mode_usage:</p>
+</li></ul>
+
+<p>** mode: The mode name at the IP Level ** usage: Does this IP in this SoC
+support this mode?</p>
+<ul><li>
+<p>power_information:</p>
+</li></ul>
+
+<p>** supply:  Name of the supply for that Interface. ** voltage_level:  Array
+of the possible values for this supply e.g. [1.8, 2.5, 3.3] or [1.8] **
+use_diff:  Use information from a different location</p>
 
 
   </div>
@@ -323,23 +455,31 @@
       <pre class="lines">
 
 
-7
-8
-9
-10
-11
-12
-13</pre>
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/specs/mode_select.rb', line 7</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/specs/mode_select.rb', line 47</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_blk'>blk</span><span class='comma'>,</span> <span class='id identifier rubyid_use'>use</span><span class='comma'>,</span> <span class='id identifier rubyid_mode_ref'>mode_ref</span><span class='comma'>,</span> <span class='id identifier rubyid_support'>support</span><span class='comma'>,</span> <span class='id identifier rubyid_loc'>loc</span><span class='rparen'>)</span>
-  <span class='ivar'>@block</span> <span class='op'>=</span> <span class='id identifier rubyid_blk'>blk</span>
-  <span class='ivar'>@usage</span> <span class='op'>=</span> <span class='id identifier rubyid_use'>use</span>
-  <span class='ivar'>@mode</span> <span class='op'>=</span> <span class='id identifier rubyid_mode_ref'>mode_ref</span>
-  <span class='ivar'>@supported</span> <span class='op'>=</span> <span class='id identifier rubyid_support'>support</span>
-  <span class='ivar'>@location</span> <span class='op'>=</span> <span class='id identifier rubyid_loc'>loc</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_block_information'>block_information</span><span class='comma'>,</span> <span class='id identifier rubyid_mode_usage'>mode_usage</span><span class='comma'>,</span> <span class='id identifier rubyid_power_information'>power_information</span><span class='rparen'>)</span>
+  <span class='ivar'>@block</span> <span class='op'>=</span> <span class='id identifier rubyid_block_information'>block_information</span><span class='lbracket'>[</span><span class='symbol'>:name</span><span class='rbracket'>]</span>
+  <span class='ivar'>@ds_header</span> <span class='op'>=</span> <span class='id identifier rubyid_block_information'>block_information</span><span class='lbracket'>[</span><span class='symbol'>:ds_header</span><span class='rbracket'>]</span>
+  <span class='ivar'>@usage</span> <span class='op'>=</span> <span class='id identifier rubyid_block_information'>block_information</span><span class='lbracket'>[</span><span class='symbol'>:usage</span><span class='rbracket'>]</span>
+  <span class='ivar'>@location</span> <span class='op'>=</span> <span class='id identifier rubyid_block_information'>block_information</span><span class='lbracket'>[</span><span class='symbol'>:location</span><span class='rbracket'>]</span>
+  <span class='ivar'>@mode</span> <span class='op'>=</span> <span class='id identifier rubyid_mode_usage'>mode_usage</span><span class='lbracket'>[</span><span class='symbol'>:mode</span><span class='rbracket'>]</span>
+  <span class='ivar'>@supported</span> <span class='op'>=</span> <span class='id identifier rubyid_mode_usage'>mode_usage</span><span class='lbracket'>[</span><span class='symbol'>:supported</span><span class='rbracket'>]</span>
+  <span class='ivar'>@supply</span> <span class='op'>=</span> <span class='id identifier rubyid_power_information'>power_information</span><span class='lbracket'>[</span><span class='symbol'>:supply</span><span class='rbracket'>]</span>
+  <span class='ivar'>@supply_level</span> <span class='op'>=</span> <span class='id identifier rubyid_power_information'>power_information</span><span class='lbracket'>[</span><span class='symbol'>:voltage_level</span><span class='rbracket'>]</span>
+  <span class='ivar'>@diff_loc</span> <span class='op'>=</span> <span class='id identifier rubyid_power_information'>power_information</span><span class='lbracket'>[</span><span class='symbol'>:use_diff</span><span class='rbracket'>]</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -365,7 +505,7 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns the value of attribute block</p>
+<p>Block Name at the SoC (e.g. DDRC1, DDRC2, DDRC3)</p>
 
 
   </div>
@@ -379,15 +519,101 @@
       <pre class="lines">
 
 
-5
 6
-7</pre>
+7
+8</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/specs/mode_select.rb', line 5</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/specs/mode_select.rb', line 6</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_block'>block</span>
   <span class='ivar'>@block</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id="diff_loc=-instance_method"></span>
+      <div class="method_details ">
+  <h3 class="signature " id="diff_loc-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../../Object.html" title="Object (class)">Object</a></span></tt>) <strong>diff_loc</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Use Information from different data source</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+27
+28
+29</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/specs/mode_select.rb', line 27</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_diff_loc'>diff_loc</span>
+  <span class='ivar'>@diff_loc</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id="ds_header=-instance_method"></span>
+      <div class="method_details ">
+  <h3 class="signature " id="ds_header-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../../Object.html" title="Object (class)">Object</a></span></tt>) <strong>ds_header</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Data Sheet Header/Group Name</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+9
+10
+11</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/specs/mode_select.rb', line 9</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_ds_header'>ds_header</span>
+  <span class='ivar'>@ds_header</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -408,7 +634,7 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns the value of attribute location</p>
+<p>Location of the block to read</p>
 
 
   </div>
@@ -422,12 +648,12 @@
       <pre class="lines">
 
 
-5
-6
-7</pre>
+30
+31
+32</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/specs/mode_select.rb', line 5</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/specs/mode_select.rb', line 30</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_location'>location</span>
   <span class='ivar'>@location</span>
@@ -451,7 +677,7 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns the value of attribute mode</p>
+<p>Mode Reference Name</p>
 
 
   </div>
@@ -465,15 +691,101 @@
       <pre class="lines">
 
 
-5
-6
-7</pre>
+15
+16
+17</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/specs/mode_select.rb', line 5</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/specs/mode_select.rb', line 15</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_mode'>mode</span>
   <span class='ivar'>@mode</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id="supply=-instance_method"></span>
+      <div class="method_details ">
+  <h3 class="signature " id="supply-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../../Object.html" title="Object (class)">Object</a></span></tt>) <strong>supply</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>SoC Supply List</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+21
+22
+23</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/specs/mode_select.rb', line 21</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_supply'>supply</span>
+  <span class='ivar'>@supply</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id="supply_level=-instance_method"></span>
+      <div class="method_details ">
+  <h3 class="signature " id="supply_level-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../../Object.html" title="Object (class)">Object</a></span></tt>) <strong>supply_level</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>SoC Supply Voltage Level</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+24
+25
+26</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/specs/mode_select.rb', line 24</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_supply_level'>supply_level</span>
+  <span class='ivar'>@supply_level</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -494,7 +806,7 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns the value of attribute supported</p>
+<p>SoC Supports this mode?</p>
 
 
   </div>
@@ -508,12 +820,12 @@
       <pre class="lines">
 
 
-5
-6
-7</pre>
+18
+19
+20</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/specs/mode_select.rb', line 5</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/specs/mode_select.rb', line 18</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_supported'>supported</span>
   <span class='ivar'>@supported</span>
@@ -537,7 +849,7 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns the value of attribute usage</p>
+<p>Block Use at the SoC Level</p>
 
 
   </div>
@@ -551,12 +863,12 @@
       <pre class="lines">
 
 
-5
-6
-7</pre>
+12
+13
+14</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/specs/mode_select.rb', line 5</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/specs/mode_select.rb', line 12</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_usage'>usage</span>
   <span class='ivar'>@usage</span>
@@ -572,7 +884,7 @@
 </div>
 
     <div id="footer">
-  Generated on Tue Dec  8 11:21:32 2015 by
+  Generated on Tue Jan 26 11:26:02 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.1.5).
 </div>
