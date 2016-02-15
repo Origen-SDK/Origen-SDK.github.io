@@ -6,7 +6,7 @@
 <title>
   Class: Origen::FileHandler
   
-    &mdash; Origen Core 0.6.0
+    &mdash; Origen Core 0.6.1
   
 </title>
 
@@ -1885,16 +1885,16 @@ of ensuring that the directory exists prior to attempting to open the file</p>
       <pre class="lines">
 
 
-430
-431
-432
-433
 434
 435
-436</pre>
+436
+437
+438
+439
+440</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/file_handler.rb', line 430</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/file_handler.rb', line 434</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_open_for_write'>open_for_write</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_dir'>dir</span> <span class='op'>=</span> <span class='const'>Pathname</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_dirname'>dirname</span>
@@ -2038,8 +2038,6 @@ found, if not will raise an error</p>
       <pre class="lines">
 
 
-398
-399
 400
 401
 402
@@ -2052,16 +2050,21 @@ found, if not will raise an error</p>
 409
 410
 411
-412</pre>
+412
+413
+414
+415
+416</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/file_handler.rb', line 398</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/file_handler.rb', line 400</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_preserve_and_clear_state'>preserve_and_clear_state</span>
   <span class='id identifier rubyid_file'>file</span> <span class='op'>=</span> <span class='id identifier rubyid_current_file'>current_file</span>
   <span class='id identifier rubyid_dir'>dir</span> <span class='op'>=</span> <span class='id identifier rubyid_base_directory'>base_directory</span>
   <span class='id identifier rubyid_output'>output</span> <span class='op'>=</span> <span class='id identifier rubyid_output_directory'>output_directory</span>
   <span class='id identifier rubyid_ref'>ref</span> <span class='op'>=</span> <span class='id identifier rubyid_reference_directory'>reference_directory</span>
+  <span class='id identifier rubyid_ext'>ext</span> <span class='op'>=</span> <span class='id identifier rubyid_default_extension'>default_extension</span>
   <span class='id identifier rubyid_current_file'>current_file</span> <span class='op'>=</span> <span class='kw'>nil</span>
   <span class='id identifier rubyid_base_directory'>base_directory</span> <span class='op'>=</span> <span class='kw'>nil</span>
   <span class='id identifier rubyid_output_directory'>output_directory</span> <span class='op'>=</span> <span class='kw'>nil</span>
@@ -2071,6 +2074,7 @@ found, if not will raise an error</p>
   <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_current_file'>current_file</span> <span class='op'>=</span> <span class='id identifier rubyid_file'>file</span> <span class='kw'>if</span> <span class='id identifier rubyid_file'>file</span>
   <span class='id identifier rubyid_set_output_directory'>set_output_directory</span><span class='lparen'>(</span><span class='label'>output:</span> <span class='id identifier rubyid_output'>output</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_output'>output</span>
   <span class='id identifier rubyid_set_reference_directory'>set_reference_directory</span><span class='lparen'>(</span><span class='label'>reference:</span> <span class='id identifier rubyid_ref'>ref</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_ref'>ref</span>
+  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_default_extension'>default_extension</span> <span class='op'>=</span> <span class='id identifier rubyid_ext'>ext</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -2136,7 +2140,9 @@ found, if not will raise an error</p>
 393
 394
 395
-396</pre>
+396
+397
+398</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/origen/file_handler.rb', line 386</span>
@@ -2146,11 +2152,13 @@ found, if not will raise an error</p>
   <span class='id identifier rubyid_dir'>dir</span> <span class='op'>=</span> <span class='id identifier rubyid_base_directory'>base_directory</span>
   <span class='id identifier rubyid_output'>output</span> <span class='op'>=</span> <span class='id identifier rubyid_output_directory'>output_directory</span>
   <span class='id identifier rubyid_ref'>ref</span> <span class='op'>=</span> <span class='id identifier rubyid_reference_directory'>reference_directory</span>
+  <span class='id identifier rubyid_ext'>ext</span> <span class='op'>=</span> <span class='id identifier rubyid_default_extension'>default_extension</span>
   <span class='kw'>yield</span>
   <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_base_directory'>base_directory</span> <span class='op'>=</span> <span class='id identifier rubyid_dir'>dir</span> <span class='kw'>if</span> <span class='id identifier rubyid_dir'>dir</span>
   <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_current_file'>current_file</span> <span class='op'>=</span> <span class='id identifier rubyid_file'>file</span> <span class='kw'>if</span> <span class='id identifier rubyid_file'>file</span>
   <span class='id identifier rubyid_set_output_directory'>set_output_directory</span><span class='lparen'>(</span><span class='label'>output:</span> <span class='id identifier rubyid_output'>output</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_output'>output</span>
   <span class='id identifier rubyid_set_reference_directory'>set_reference_directory</span><span class='lparen'>(</span><span class='label'>reference:</span> <span class='id identifier rubyid_ref'>ref</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_ref'>ref</span>
+  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_default_extension'>default_extension</span> <span class='op'>=</span> <span class='id identifier rubyid_ext'>ext</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -2507,19 +2515,19 @@ is in</p>
       <pre class="lines">
 
 
-416
-417
-418
-419
 420
 421
 422
 423
 424
-425</pre>
+425
+426
+427
+428
+429</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/file_handler.rb', line 416</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/file_handler.rb', line 420</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_sub_dir_of'>sub_dir_of</span><span class='lparen'>(</span><span class='id identifier rubyid_file'>file</span><span class='comma'>,</span> <span class='id identifier rubyid_base'>base</span> <span class='op'>=</span> <span class='id identifier rubyid_base_directory'>base_directory</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_file'>file</span> <span class='op'>=</span> <span class='const'>Pathname</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_file'>file</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='id identifier rubyid_file'>file</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:relative_path_from</span><span class='rparen'>)</span>
@@ -2541,7 +2549,7 @@ is in</p>
 </div>
 
     <div id="footer">
-  Generated on Tue Feb  9 06:32:39 2016 by
+  Generated on Mon Feb 15 04:19:47 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.1.5).
 </div>
