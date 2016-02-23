@@ -343,7 +343,7 @@
 <li class=""><a href="/origen/guides/misc/lint">Lint Testing</a></li>
 <li class=""><a href="/origen/guides/misc/session">Session Store</a></li>
 <li class=""><a href="/origen/guides/misc/lsf">LSF API</a></li>
-<li class="active"><a href="/origen/guides/misc/users">Users &amp; Emails</a></li>
+<li class="active"><a href="/origen/guides/misc/users">Users, Emails &amp; Maillists</a></li>
 <li class=""><a href="/origen/guides/misc/coreext">Ruby Extensions</a></li>
 <li class=""><a href="/origen/guides/misc/logger">Logger</a></li>
 <li class=""><a href="/origen/guides/misc/commands">Adding Commands</a></li>
@@ -364,7 +364,7 @@
   <div class="col-md-9 nav-page-container">
     <article><h3 class="topic-title">Miscellaneous</h3>
 
-      <h2 class="topic-subtitle">Users &amp; Emails</h2>
+      <h2 class="topic-subtitle">Users, Emails &amp; Maillists</h2>
 
       <hr>
 <p>This guide describes some APIs that are available to customize the output or behavior of
@@ -490,6 +490,59 @@ END</span></span>
 distribution_list = [<span style="color:#036;font-weight:bold">User</span>.new(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">r49409</span><span style="color:#710">"</span></span>), <span style="color:#036;font-weight:bold">User</span>.new(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">r6aanf</span><span style="color:#710">"</span></span>)]
 
 <span style="color:#036;font-weight:bold">Origen</span>.mailer.send_email(<span style="color:#606">subject</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Hello</span><span style="color:#710">"</span></span>, <span style="color:#606">to</span>: distribution_list, <span style="color:#606">body</span>: message)
+</pre></div>
+</div>
+      </div>
+
+      <div>    
+  <a class="anchor" name="Maillists"></a>          
+  <h4><a href="#Maillists">Maillists</a></h4>          
+</div>
+
+      <p>Origen uses maillists to send notifications of development and production releases.  The maillist files
+should be located at <code>config/maillist_dev.txt</code> and <code>config/maillist_prod.txt</code></p>
+
+      <p>Sample lists:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre># config/maillist_dev.txt
+#
+# Product team X  (handles commenting like this)
+first.last@company.com
+john.smith@company.com
+</pre></div>
+</div>
+      </div>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre># config/maillist_prod.txt
+#
+# Some other product team
+memory.expert@company.com       # Memory Test Lead (commenting like this is ok too)
+# Example of an ID only
+last.first
+x49509
+</pre></div>
+</div>
+      </div>
+
+      <p>To get a list of your application’s mailists:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.app.maillist_dev    <span style="color:#777"># =&gt; [&lt;first.last@company.com&gt;, &lt;john.smith@company.com&gt;]</span>
+<span style="color:#036;font-weight:bold">Origen</span>.app.maillist_prod   <span style="color:#777"># =&gt; [&lt;memory.expert@company.com&gt;, &lt;last.first@MYcompany.com&gt;, &lt;x49509@MYcompany.com&gt;]</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>You can pass the returned array directly to the send_email method:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.mailer.send_email(<span style="color:#606">subject</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Hello</span><span style="color:#710">"</span></span>, <span style="color:#606">to</span>: <span style="color:#036;font-weight:bold">Origen</span>.app.maillist_dev, <span style="color:#606">body</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Hello to all developers!</span><span style="color:#710">"</span></span>)
 </pre></div>
 </div>
       </div>
