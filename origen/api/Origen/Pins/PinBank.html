@@ -6,7 +6,7 @@
 <title>
   Class: Origen::Pins::PinBank
   
-    &mdash; Origen Core 0.6.5
+    &mdash; Origen Core 0.6.6
   
 </title>
 
@@ -327,6 +327,54 @@ Origen.pin_bank.</p>
         <li class="public ">
   <span class="summary_signature">
     
+      <a href="#all_virtual_pin_groups-instance_method" title="#all_virtual_pin_groups (instance method)">- (Object) <strong>all_virtual_pin_groups</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns a hash containing all virtual pin groups stored by context.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#all_virtual_pins-instance_method" title="#all_virtual_pins (instance method)">- (Object) <strong>all_virtual_pins</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns a hash containing all virtual pins stored by their primary ID.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#before_load_target-instance_method" title="#before_load_target (instance method)">- (Object) <strong>before_load_target</strong> </a>
     
 
@@ -634,6 +682,53 @@ context stored by their primary ID.</p>
 </li>
 
       
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#virtual_pin_groups-instance_method" title="#virtual_pin_groups (instance method)">- (Object) <strong>virtual_pin_groups</strong>(options = {}) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns a hash containing all virtual_pin_groups available in the current
+context stored by their primary ID.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#virtual_pins-instance_method" title="#virtual_pins (instance method)">- (Object) <strong>virtual_pins</strong>(options = {}) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
     </ul>
   
 
@@ -723,7 +818,9 @@ context stored by their primary ID.</p>
 42
 43
 44
-45</pre>
+45
+46
+47</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_bank.rb', line 21</span>
@@ -733,6 +830,8 @@ context stored by their primary ID.</p>
     <span class='id identifier rubyid_bank'>bank</span> <span class='op'>=</span> <span class='id identifier rubyid_all_power_pins'>all_power_pins</span>
   <span class='kw'>elsif</span> <span class='id identifier rubyid_pin'>pin</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'>GroundPin</span><span class='rparen'>)</span>
     <span class='id identifier rubyid_bank'>bank</span> <span class='op'>=</span> <span class='id identifier rubyid_all_ground_pins'>all_ground_pins</span>
+  <span class='kw'>elsif</span> <span class='id identifier rubyid_pin'>pin</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'>VirtualPin</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_bank'>bank</span> <span class='op'>=</span> <span class='id identifier rubyid_all_virtual_pins'>all_virtual_pins</span>
   <span class='kw'>else</span>
     <span class='id identifier rubyid_bank'>bank</span> <span class='op'>=</span> <span class='id identifier rubyid_all_pins'>all_pins</span>
   <span class='kw'>end</span>
@@ -773,18 +872,18 @@ context stored by their primary ID.</p>
       <pre class="lines">
 
 
-47
-48
 49
 50
 51
 52
 53
 54
-55</pre>
+55
+56
+57</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_bank.rb', line 47</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_bank.rb', line 49</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_add_pin_group'>add_pin_group</span><span class='lparen'>(</span><span class='id identifier rubyid_group'>group</span><span class='comma'>,</span> <span class='id identifier rubyid_owner'>owner</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='kw'>unless</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:pins_exist</span><span class='rbracket'>]</span>
@@ -826,12 +925,12 @@ context stored by their primary ID.</p>
       <pre class="lines">
 
 
-123
-124
-125</pre>
+143
+144
+145</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_bank.rb', line 123</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_bank.rb', line 143</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_all_ground_pin_groups'>all_ground_pin_groups</span>
   <span class='ivar'>@all_ground_pin_groups</span> <span class='op'>||=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
@@ -867,12 +966,12 @@ context stored by their primary ID.</p>
       <pre class="lines">
 
 
-113
-114
-115</pre>
+128
+129
+130</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_bank.rb', line 113</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_bank.rb', line 128</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_all_ground_pins'>all_ground_pins</span>
   <span class='ivar'>@all_ground_pins</span> <span class='op'>||=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
@@ -908,12 +1007,12 @@ context stored by their primary ID.</p>
       <pre class="lines">
 
 
-103
-104
-105</pre>
+118
+119
+120</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_bank.rb', line 103</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_bank.rb', line 118</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_all_pin_groups'>all_pin_groups</span>
   <span class='ivar'>@all_pin_groups</span> <span class='op'>||=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
@@ -949,12 +1048,12 @@ context stored by their primary ID.</p>
       <pre class="lines">
 
 
-98
-99
-100</pre>
+113
+114
+115</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_bank.rb', line 98</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_bank.rb', line 113</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_all_pins'>all_pins</span>
   <span class='ivar'>@all_pins</span> <span class='op'>||=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
@@ -990,12 +1089,12 @@ context stored by their primary ID.</p>
       <pre class="lines">
 
 
-118
-119
-120</pre>
+138
+139
+140</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_bank.rb', line 118</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_bank.rb', line 138</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_all_power_pin_groups'>all_power_pin_groups</span>
   <span class='ivar'>@all_power_pin_groups</span> <span class='op'>||=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
@@ -1031,15 +1130,97 @@ context stored by their primary ID.</p>
       <pre class="lines">
 
 
-108
-109
-110</pre>
+123
+124
+125</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_bank.rb', line 108</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_bank.rb', line 123</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_all_power_pins'>all_power_pins</span>
   <span class='ivar'>@all_power_pins</span> <span class='op'>||=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="all_virtual_pin_groups-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../../Object.html" title="Object (class)">Object</a></span></tt>) <strong>all_virtual_pin_groups</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns a hash containing all virtual pin groups stored by context</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+148
+149
+150</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_bank.rb', line 148</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_all_virtual_pin_groups'>all_virtual_pin_groups</span>
+  <span class='ivar'>@all_virtual_pin_groups</span> <span class='op'>||=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="all_virtual_pins-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../../Object.html" title="Object (class)">Object</a></span></tt>) <strong>all_virtual_pins</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns a hash containing all virtual pins stored by their primary ID</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+133
+134
+135</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_bank.rb', line 133</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_all_virtual_pins'>all_virtual_pins</span>
+  <span class='ivar'>@all_virtual_pins</span> <span class='op'>||=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1118,41 +1299,45 @@ the target is changed</p>
       <pre class="lines">
 
 
-178
-179
-180
-181
-182
-183
-184
-185
-186
-187
-188
-189
-190
-191
-192
-193
-194
-195
-196
-197
-198
-199
-200
-201
-202
-203</pre>
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_bank.rb', line 178</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_bank.rb', line 207</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_delete_pin'>delete_pin</span><span class='lparen'>(</span><span class='id identifier rubyid_pin'>pin</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_pin'>pin</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'>PowerPin</span><span class='rparen'>)</span>
     <span class='id identifier rubyid_bank'>bank</span> <span class='op'>=</span> <span class='id identifier rubyid_all_power_pins'>all_power_pins</span>
   <span class='kw'>elsif</span> <span class='id identifier rubyid_pin'>pin</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'>GroundPin</span><span class='rparen'>)</span>
     <span class='id identifier rubyid_bank'>bank</span> <span class='op'>=</span> <span class='id identifier rubyid_all_ground_pins'>all_ground_pins</span>
+  <span class='kw'>elsif</span> <span class='id identifier rubyid_pin'>pin</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'>VirtualPin</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_bank'>bank</span> <span class='op'>=</span> <span class='id identifier rubyid_all_virtual_pins'>all_virtual_pins</span>
   <span class='kw'>else</span>
     <span class='id identifier rubyid_bank'>bank</span> <span class='op'>=</span> <span class='id identifier rubyid_all_pins'>all_pins</span>
   <span class='kw'>end</span>
@@ -1205,26 +1390,28 @@ the target is changed</p>
       <pre class="lines">
 
 
-206
-207
-208
-209
-210
-211
-212
-213
-214
-215
-216
-217
-218
-219
-220
-221
-222</pre>
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_bank.rb', line 206</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_bank.rb', line 237</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_delete_pingroup'>delete_pingroup</span><span class='lparen'>(</span><span class='id identifier rubyid_group'>group</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_found_group'>found_group</span> <span class='op'>=</span> <span class='kw'>false</span>
@@ -1232,6 +1419,8 @@ the target is changed</p>
     <span class='id identifier rubyid_base'>base</span> <span class='op'>=</span> <span class='id identifier rubyid_all_power_pin_groups'>all_power_pin_groups</span>
   <span class='kw'>elsif</span> <span class='id identifier rubyid_group'>group</span><span class='period'>.</span><span class='id identifier rubyid_ground_pins?'>ground_pins?</span>
     <span class='id identifier rubyid_base'>base</span> <span class='op'>=</span> <span class='id identifier rubyid_all_ground_pin_groups'>all_ground_pin_groups</span>
+  <span class='kw'>elsif</span> <span class='id identifier rubyid_group'>group</span><span class='period'>.</span><span class='id identifier rubyid_virtual_pins?'>virtual_pins?</span>
+    <span class='id identifier rubyid_base'>base</span> <span class='op'>=</span> <span class='id identifier rubyid_all_virtual_pin_groups'>all_virtual_pin_groups</span>
   <span class='kw'>else</span>
     <span class='id identifier rubyid_base'>base</span> <span class='op'>=</span> <span class='id identifier rubyid_all_pin_groups'>all_pin_groups</span>
   <span class='kw'>end</span>
@@ -1263,24 +1452,26 @@ the target is changed</p>
       <pre class="lines">
 
 
-127
-128
-129
-130
-131
-132
-133
-134
-135
-136
-137
-138
-139
-140
-141</pre>
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_bank.rb', line 127</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_bank.rb', line 152</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_find'>find</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_id'>id</span> <span class='op'>=</span> <span class='id identifier rubyid_id'>id</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span>
@@ -1288,6 +1479,8 @@ the target is changed</p>
     <span class='id identifier rubyid_pin'>pin</span> <span class='op'>=</span> <span class='id identifier rubyid_all_power_pins'>all_power_pins</span><span class='lbracket'>[</span><span class='id identifier rubyid_id'>id</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='id identifier rubyid_find_pin_group'>find_pin_group</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
   <span class='kw'>elsif</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:ground_pin</span><span class='rbracket'>]</span>
     <span class='id identifier rubyid_pin'>pin</span> <span class='op'>=</span> <span class='id identifier rubyid_all_ground_pins'>all_ground_pins</span><span class='lbracket'>[</span><span class='id identifier rubyid_id'>id</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='id identifier rubyid_find_pin_group'>find_pin_group</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
+  <span class='kw'>elsif</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:virtual_pin</span><span class='rbracket'>]</span>
+    <span class='id identifier rubyid_pin'>pin</span> <span class='op'>=</span> <span class='id identifier rubyid_all_virtual_pins'>all_virtual_pins</span><span class='lbracket'>[</span><span class='id identifier rubyid_id'>id</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='id identifier rubyid_find_pin_group'>find_pin_group</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
   <span class='kw'>else</span>
     <span class='id identifier rubyid_pin'>pin</span> <span class='op'>=</span> <span class='id identifier rubyid_all_pins'>all_pins</span><span class='lbracket'>[</span><span class='id identifier rubyid_id'>id</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='id identifier rubyid_find_by_alias'>find_by_alias</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span> <span class='op'>||</span> <span class='id identifier rubyid_find_pin_group'>find_pin_group</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
   <span class='kw'>end</span>
@@ -1329,18 +1522,18 @@ otherwise create one</p>
       <pre class="lines">
 
 
-167
-168
-169
-170
-171
-172
-173
-174
-175</pre>
+196
+197
+198
+199
+200
+201
+202
+203
+204</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_bank.rb', line 167</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_bank.rb', line 196</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_find_or_create_pin_group'>find_or_create_pin_group</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_owner'>owner</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_group'>group</span> <span class='op'>=</span> <span class='id identifier rubyid_find_pin_group'>find_pin_group</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
@@ -1371,25 +1564,27 @@ otherwise create one</p>
       <pre class="lines">
 
 
-143
-144
-145
-146
-147
-148
-149
-150
-151
-152
-153
-154
-155
-156
-157
-158</pre>
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_bank.rb', line 143</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_bank.rb', line 170</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_find_pin_group'>find_pin_group</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span>
@@ -1399,6 +1594,8 @@ otherwise create one</p>
     <span class='id identifier rubyid_base'>base</span> <span class='op'>=</span> <span class='id identifier rubyid_all_power_pin_groups'>all_power_pin_groups</span>
   <span class='kw'>elsif</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:ground_pin</span><span class='rbracket'>]</span>
     <span class='id identifier rubyid_base'>base</span> <span class='op'>=</span> <span class='id identifier rubyid_all_ground_pin_groups'>all_ground_pin_groups</span>
+  <span class='kw'>elsif</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:virtual_pin</span><span class='rbracket'>]</span>
+    <span class='id identifier rubyid_base'>base</span> <span class='op'>=</span> <span class='id identifier rubyid_all_virtual_pin_groups'>all_virtual_pin_groups</span>
   <span class='kw'>else</span>
     <span class='id identifier rubyid_base'>base</span> <span class='op'>=</span> <span class='id identifier rubyid_all_pin_groups'>all_pin_groups</span>
   <span class='kw'>end</span>
@@ -1439,14 +1636,14 @@ context stored by their primary ID</p>
       <pre class="lines">
 
 
-91
-92
-93
-94
-95</pre>
+99
+100
+101
+102
+103</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_bank.rb', line 91</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_bank.rb', line 99</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_ground_pin_groups'>ground_pin_groups</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_current_pin_group_store'>current_pin_group_store</span><span class='lparen'>(</span><span class='id identifier rubyid_all_ground_pin_groups'>all_ground_pin_groups</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid__id'>_id</span><span class='comma'>,</span> <span class='id identifier rubyid_group'>group</span><span class='op'>|</span>
@@ -1473,14 +1670,14 @@ context stored by their primary ID</p>
       <pre class="lines">
 
 
-70
-71
 72
 73
-74</pre>
+74
+75
+76</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_bank.rb', line 70</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_bank.rb', line 72</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_ground_pins'>ground_pins</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_all_ground_pins'>all_ground_pins</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid__id'>_id</span><span class='comma'>,</span> <span class='id identifier rubyid_pin'>pin</span><span class='op'>|</span>
@@ -1519,14 +1716,14 @@ stored by their primary ID</p>
       <pre class="lines">
 
 
-77
-78
-79
-80
-81</pre>
+85
+86
+87
+88
+89</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_bank.rb', line 77</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_bank.rb', line 85</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_pin_groups'>pin_groups</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_current_pin_group_store'>current_pin_group_store</span><span class='lparen'>(</span><span class='id identifier rubyid_all_pin_groups'>all_pin_groups</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid__id'>_id</span><span class='comma'>,</span> <span class='id identifier rubyid_group'>group</span><span class='op'>|</span>
@@ -1565,14 +1762,14 @@ by their primary ID</p>
       <pre class="lines">
 
 
-58
-59
 60
 61
-62</pre>
+62
+63
+64</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_bank.rb', line 58</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_bank.rb', line 60</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_pins'>pins</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_all_pins'>all_pins</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid__id'>_id</span><span class='comma'>,</span> <span class='id identifier rubyid_pin'>pin</span><span class='op'>|</span>
@@ -1611,14 +1808,14 @@ context stored by their primary ID</p>
       <pre class="lines">
 
 
-84
-85
-86
-87
-88</pre>
+92
+93
+94
+95
+96</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_bank.rb', line 84</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_bank.rb', line 92</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_power_pin_groups'>power_pin_groups</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_current_pin_group_store'>current_pin_group_store</span><span class='lparen'>(</span><span class='id identifier rubyid_all_power_pin_groups'>all_power_pin_groups</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid__id'>_id</span><span class='comma'>,</span> <span class='id identifier rubyid_group'>group</span><span class='op'>|</span>
@@ -1645,14 +1842,14 @@ context stored by their primary ID</p>
       <pre class="lines">
 
 
-64
-65
 66
 67
-68</pre>
+68
+69
+70</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_bank.rb', line 64</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_bank.rb', line 66</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_power_pins'>power_pins</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_all_power_pins'>all_power_pins</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid__id'>_id</span><span class='comma'>,</span> <span class='id identifier rubyid_pin'>pin</span><span class='op'>|</span>
@@ -1690,17 +1887,97 @@ context stored by their primary ID</p>
       <pre class="lines">
 
 
-161
-162
-163
-164</pre>
+190
+191
+192
+193</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_bank.rb', line 161</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_bank.rb', line 190</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_register_alias'>register_alias</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_pin'>pin</span><span class='comma'>,</span> <span class='id identifier rubyid__options'>_options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_known_aliases'>known_aliases</span><span class='lbracket'>[</span><span class='id identifier rubyid_id'>id</span><span class='rbracket'>]</span> <span class='op'>||=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
   <span class='id identifier rubyid_known_aliases'>known_aliases</span><span class='lbracket'>[</span><span class='id identifier rubyid_id'>id</span><span class='rbracket'>]</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_pin'>pin</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="virtual_pin_groups-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../../Object.html" title="Object (class)">Object</a></span></tt>) <strong>virtual_pin_groups</strong>(options = {}) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns a hash containing all virtual_pin_groups available in the current
+context stored by their primary ID</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+106
+107
+108
+109
+110</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_bank.rb', line 106</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_virtual_pin_groups'>virtual_pin_groups</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_current_pin_group_store'>current_pin_group_store</span><span class='lparen'>(</span><span class='id identifier rubyid_all_virtual_pin_groups'>all_virtual_pin_groups</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid__id'>_id</span><span class='comma'>,</span> <span class='id identifier rubyid_group'>group</span><span class='op'>|</span>
+    <span class='id identifier rubyid_group'>group</span><span class='period'>.</span><span class='id identifier rubyid_enabled?'>enabled?</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="virtual_pins-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../../Object.html" title="Object (class)">Object</a></span></tt>) <strong>virtual_pins</strong>(options = {}) 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+78
+79
+80
+81
+82</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_bank.rb', line 78</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_virtual_pins'>virtual_pins</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_all_virtual_pins'>all_virtual_pins</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid__id'>_id</span><span class='comma'>,</span> <span class='id identifier rubyid_pin'>pin</span><span class='op'>|</span>
+    <span class='id identifier rubyid_pin'>pin</span><span class='period'>.</span><span class='id identifier rubyid_enabled?'>enabled?</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1712,7 +1989,7 @@ context stored by their primary ID</p>
 </div>
 
     <div id="footer">
-  Generated on Thu Feb 25 08:58:08 2016 by
+  Generated on Wed Mar  2 03:54:47 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.1.5).
 </div>
