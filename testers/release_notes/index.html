@@ -91,10 +91,84 @@
 </nav><div class="row">
   <div class="span12">
 
+    <p><a class="anchor release_tag" name="v0_5_7"></a></p>
+    <h1><a href="#v0_5_7">Tag: v0.5.7</a></h1>
+
+    <h5 id="branch-master">Branch: ‘master’</h5>
+
+    <h5 id="by-stephen-mcginty-on-08-mar-2016-0654am">by Stephen McGinty on 08-Mar-2016 06:54AM</h5>
+
+    <ul>
+<li>Added ATE_Hardware Code and related syntatic sugar code for Origen Core #7 (Scott Chen)
+        <ul>
+<li>Minor Updates for Import_chanmap method.</li>
+          <li>Added ATEHardware Class for PPMU/Supply spec look-up for Test Program Generation.</li>
+        </ul>
+</li>
+    </ul>
+<div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#777"># Importing UltraFLEX tester config</span>
+<span style="color:#d70">$tester</span>.import_tester_config(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">FT</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.root<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">/spec/atehardware/CurrentConfig_sample.txt</span><span style="color:#710">"</span></span>)
+<span style="color:#d70">$tester</span>.default_testerconfig                <span style="color:#777"># =&gt; 'FT'</span>
+<span style="color:#d70">$tester</span>.get_tester_instrument(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">FT</span><span style="color:#710">'</span></span>, <span style="color:#00D">1</span>)      <span style="color:#777"># =&gt; 'HSD-4G'</span>
+<span style="color:#d70">$tester</span>.get_instrument_slots(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">FT</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">HSD-U</span><span style="color:#710">'</span></span>) <span style="color:#777"># =&gt; [12, 14, 15, 17, 20]</span>
+
+<span style="color:#777"># Importing UltraFLEX channel map</span>
+<span style="color:#d70">$tester</span>.import_chanmap(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">FTx4</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.root<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">/spec/atehardware/atehardware_chanmap.txt</span><span style="color:#710">"</span></span>)
+<span style="color:#d70">$tester</span>.default_channelmap                      <span style="color:#777"># =&gt; 'FTx4'</span>
+<span style="color:#d70">$tester</span>.get_tester_channel(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">FTx4</span><span style="color:#710">'</span></span>, <span style="color:#A60">:pin1</span>, <span style="color:#00D">0</span>)    <span style="color:#777"># =&gt; '14.ch28'</span>
+<span style="color:#d70">$tester</span>.get_tester_channel(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">FTx4</span><span style="color:#710">'</span></span>, <span style="color:#A60">:pin2</span>, <span style="color:#00D">3</span>)    <span style="color:#777"># =&gt; '20.ch231'</span>
+<span style="color:#d70">$tester</span>.channelmap[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">FTx4</span><span style="color:#710">'</span></span>].size                 <span style="color:#777"># =&gt; 4</span>
+<span style="color:#d70">$tester</span>.merged_channels(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">FTx4</span><span style="color:#710">'</span></span>, <span style="color:#A60">:avdd</span>, <span style="color:#00D">1</span>)       <span style="color:#777"># =&gt; 'x2'</span>
+<span style="color:#d70">$tester</span>.is_hexvs_plus(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">FT</span><span style="color:#710">'</span></span>, <span style="color:#00D">18</span>)                 <span style="color:#777"># =&gt; '+'</span>
+<span style="color:#d70">$tester</span>.is_vhdvs_plus(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">FT</span><span style="color:#710">'</span></span>, <span style="color:#00D">0</span>)                  <span style="color:#777"># =&gt; '+'</span>
+<span style="color:#d70">$tester</span>.is_vhdvs_hc(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">FTx4</span><span style="color:#710">'</span></span>, <span style="color:#A60">:cvdd</span>, <span style="color:#00D">2</span>)           <span style="color:#777"># '_HC'</span>
+
+<span style="color:#777"># Retrieving ATEHardware data properly</span>
+<span style="color:#d70">$tester</span>.ate_hardware(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">HSD-M</span><span style="color:#710">'</span></span>).ppmu.vclamp.min                 <span style="color:#777"># =&gt; -2</span>
+<span style="color:#d70">$tester</span>.ate_hardware(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">HSD-4G</span><span style="color:#710">'</span></span>).ppmu.measv.min                 <span style="color:#777"># =&gt; -1</span>
+<span style="color:#d70">$tester</span>.ate_hardware(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">HSS-6G</span><span style="color:#710">'</span></span>).ppmu.vclamp.max                <span style="color:#777"># =&gt; 3.9</span>
+<span style="color:#d70">$tester</span>.ate_hardware(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">VSM</span><span style="color:#710">'</span></span>).supply.forcev.max                 <span style="color:#777"># =&gt; 4</span>
+<span style="color:#d70">$tester</span>.ate_hardware(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">VSMx2</span><span style="color:#710">'</span></span>).supply.irange.max               <span style="color:#777"># =&gt; 162</span>
+<span style="color:#d70">$tester</span>.ate_hardware(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">HexVS</span><span style="color:#710">'</span></span>).supply.forcev.max               <span style="color:#777"># =&gt; 5.5</span>
+<span style="color:#d70">$tester</span>.ate_hardware(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">HexVSx2</span><span style="color:#710">'</span></span>).supply.filter                 <span style="color:#777"># =&gt; 10_000</span>
+<span style="color:#d70">$tester</span>.ate_hardware(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">HexVSx4</span><span style="color:#710">'</span></span>).supply.bandwidth.size         <span style="color:#777"># =&gt; 8</span>
+<span style="color:#d70">$tester</span>.ate_hardware(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">HexVSx6</span><span style="color:#710">'</span></span>).supply.irange.size            <span style="color:#777"># =&gt; 2</span>
+<span style="color:#d70">$tester</span>.ate_hardware(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">HexVS+</span><span style="color:#710">'</span></span>).supply.forcev.max              <span style="color:#777"># =&gt; 5.5</span>
+<span style="color:#d70">$tester</span>.ate_hardware(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">HexVS+x2</span><span style="color:#710">'</span></span>).supply.filter                <span style="color:#777"># =&gt; 10_000</span>
+<span style="color:#d70">$tester</span>.ate_hardware(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">HexVS+x4</span><span style="color:#710">'</span></span>).supply.bandwidth.size        <span style="color:#777"># =&gt; 8</span>
+<span style="color:#d70">$tester</span>.ate_hardware(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">HexVS+x6</span><span style="color:#710">'</span></span>).supply.irange.size           <span style="color:#777"># =&gt; 2</span>
+<span style="color:#d70">$tester</span>.ate_hardware(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">HDVS1</span><span style="color:#710">'</span></span>).supply.sink_fold_i.min          <span style="color:#777"># =&gt; 5.mA</span>
+<span style="color:#d70">$tester</span>.ate_hardware(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">HDVS1x2</span><span style="color:#710">'</span></span>).supply.meter_vrange           <span style="color:#777"># =&gt; 7</span>
+<span style="color:#d70">$tester</span>.ate_hardware(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">HDVS1x4</span><span style="color:#710">'</span></span>).supply.source_fold_i.max      <span style="color:#777"># =&gt; 4</span>
+<span style="color:#d70">$tester</span>.ate_hardware(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">VHDVS</span><span style="color:#710">'</span></span>).supply.irange.size              <span style="color:#777"># =&gt; 6</span>
+<span style="color:#d70">$tester</span>.ate_hardware(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">VHDVS_HC</span><span style="color:#710">'</span></span>).supply.sink_fold_t.max       <span style="color:#777"># =&gt; 2</span>
+<span style="color:#d70">$tester</span>.ate_hardware(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">VHDVSx2</span><span style="color:#710">'</span></span>).supply.meter_vrange           <span style="color:#777"># =&gt; 18</span>
+<span style="color:#d70">$tester</span>.ate_hardware(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">VHDVS_HCx2</span><span style="color:#710">'</span></span>).supply.forcev.min          <span style="color:#777"># =&gt; -2</span>
+<span style="color:#d70">$tester</span>.ate_hardware(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">VHDVS_HCx4</span><span style="color:#710">'</span></span>).supply.source_fold_t.min   <span style="color:#777"># =&gt; 300.uS</span>
+<span style="color:#d70">$tester</span>.ate_hardware(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">VHDVS_HCx8</span><span style="color:#710">'</span></span>).supply.bandwidth.max       <span style="color:#777"># =&gt; 255</span>
+<span style="color:#d70">$tester</span>.ate_hardware(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">VHDVS+</span><span style="color:#710">'</span></span>).supply.irange.size             <span style="color:#777"># =&gt; 6</span>
+<span style="color:#d70">$tester</span>.ate_hardware(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">VHDVS_HC+</span><span style="color:#710">'</span></span>).supply.sink_fold_t.max      <span style="color:#777"># =&gt; 2</span>
+<span style="color:#d70">$tester</span>.ate_hardware(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">VHDVS+x2</span><span style="color:#710">'</span></span>).supply.meter_vrange          <span style="color:#777"># =&gt; 18</span>
+<span style="color:#d70">$tester</span>.ate_hardware(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">VHDVS_HC+x2</span><span style="color:#710">'</span></span>).supply.forcev.min         <span style="color:#777"># =&gt; -2</span>
+<span style="color:#d70">$tester</span>.ate_hardware(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">VHDVS_HC+x4</span><span style="color:#710">'</span></span>).supply.source_fold_t.min  <span style="color:#777"># =&gt; 300.uS</span>
+<span style="color:#d70">$tester</span>.ate_hardware(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">VHDVS_HC+x8</span><span style="color:#710">'</span></span>).supply.bandwidth.max      <span style="color:#777"># =&gt; 255</span>
+
+<span style="color:#777"># Pin objects are connected up to their underlying tester resource</span>
+<span style="color:#d70">$dut</span>.pins(<span style="color:#A60">:pin1</span>).ate_hardware.instrument                          <span style="color:#777"># =&gt; 'HSD-U'</span>
+<span style="color:#d70">$dut</span>.pins(<span style="color:#A60">:pin1</span>).ate_hardware.ppmu.forcei.max                     <span style="color:#777"># =&gt; 0.05</span>
+<span style="color:#d70">$dut</span>.pins(<span style="color:#A60">:k1</span>).instrument_type.instrument                         <span style="color:#777"># =&gt; 'SupportBoard'</span>
+<span style="color:#d70">$dut</span>.power_pin_groups(<span style="color:#A60">:avdd</span>).ate_hardware.instrument              <span style="color:#777"># =&gt; 'VHDVS_HC+x2'</span>
+<span style="color:#d70">$dut</span>.power_pin_groups(<span style="color:#A60">:avdd</span>).ate_hardware.supply.forcev.cover?(<span style="color:#00D">4</span>) <span style="color:#777"># =&gt; true</span>
+</pre></div>
+</div>
+    </div>
+
     <p><a class="anchor release_tag" name="v0_5_6"></a></p>
     <h1><a href="#v0_5_6">Tag: v0.5.6</a></h1>
 
-    <h5 id="branch-master">Branch: ‘master’</h5>
+    <h5 id="branch-master-1">Branch: ‘master’</h5>
 
     <h5 id="by-stephen-mcginty-on-03-feb-2016-0930am">by Stephen McGinty on 03-Feb-2016 09:30AM</h5>
 
@@ -114,7 +188,7 @@ get_instrument_slots are associated methods to quickly get slot/instrument infor
     <p><a class="anchor release_tag" name="v0_5_5"></a></p>
     <h1><a href="#v0_5_5">Tag: v0.5.5</a></h1>
 
-    <h5 id="branch-master-1">Branch: ‘master’</h5>
+    <h5 id="branch-master-2">Branch: ‘master’</h5>
 
     <h5 id="by-daniel-hadad-on-12-nov-2015-1756pm">by Daniel Hadad on 12-Nov-2015 17:56PM</h5>
 
@@ -131,7 +205,7 @@ Mainly for regression testing support.</p>
     <p><a class="anchor release_tag" name="v0_5_4"></a></p>
     <h1><a href="#v0_5_4">Tag: v0.5.4</a></h1>
 
-    <h5 id="branch-master-2">Branch: ‘master’</h5>
+    <h5 id="branch-master-3">Branch: ‘master’</h5>
 
     <h5 id="by-stephen-mcginty-on-30-sep-2015-0932am">by Stephen McGinty on 30-Sep-2015 09:32AM</h5>
 
@@ -141,7 +215,7 @@ be called on all instances.</p>
     <p><a class="anchor release_tag" name="v0_5_3"></a></p>
     <h1><a href="#v0_5_3">Tag: v0.5.3</a></h1>
 
-    <h5 id="branch-master-3">Branch: ‘master’</h5>
+    <h5 id="branch-master-4">Branch: ‘master’</h5>
 
     <h5 id="by-stephen-mcginty-on-29-sep-2015-1448pm">by Stephen McGinty on 29-Sep-2015 14:48PM</h5>
 
@@ -209,7 +283,7 @@ be called on all instances.</p>
     <p><a class="anchor release_tag" name="v0_5_2"></a></p>
     <h1><a href="#v0_5_2">Tag: v0.5.2</a></h1>
 
-    <h5 id="branch-master-4">Branch: ‘master’</h5>
+    <h5 id="branch-master-5">Branch: ‘master’</h5>
 
     <h5 id="by-stephen-mcginty-on-09-sep-2015-0507am">by Stephen McGinty on 09-Sep-2015 05:07AM</h5>
 
@@ -220,7 +294,7 @@ block.</p>
     <p><a class="anchor release_tag" name="v0_5_1"></a></p>
     <h1><a href="#v0_5_1">Tag: v0.5.1</a></h1>
 
-    <h5 id="branch-master-5">Branch: ‘master’</h5>
+    <h5 id="branch-master-6">Branch: ‘master’</h5>
 
     <h5 id="by-stephen-mcginty-on-02-sep-2015-1143am">by Stephen McGinty on 02-Sep-2015 11:43AM</h5>
 
@@ -248,7 +322,7 @@ self-testing these newly added features.</p>
     <p><a class="anchor release_tag" name="v0_5_0"></a></p>
     <h1><a href="#v0_5_0">Tag: v0.5.0</a></h1>
 
-    <h5 id="branch-master-6">Branch: ‘master’</h5>
+    <h5 id="branch-master-7">Branch: ‘master’</h5>
 
     <h5 id="by-stephen-mcginty-on-01-sep-2015-0923am">by Stephen McGinty on 01-Sep-2015 09:23AM</h5>
 
@@ -265,7 +339,7 @@ clr_fail if the loop exists successfully</li>
 <p><a class="anchor release_tag" name="v0_4_1"></a></p>
     <h1><a href="#v0_4_1">Tag: v0.4.1</a></h1>
 
-    <h5 id="branch-master-7">Branch: ‘master’</h5>
+    <h5 id="branch-master-8">Branch: ‘master’</h5>
 
     <h5 id="by-stephen-mcginty-on-31-aug-2015-0859am">by Stephen McGinty on 31-Aug-2015 08:59AM</h5>
 
@@ -274,7 +348,7 @@ clr_fail if the loop exists successfully</li>
     <p><a class="anchor release_tag" name="v0_4_0"></a></p>
     <h1><a href="#v0_4_0">Tag: v0.4.0</a></h1>
 
-    <h5 id="branch-master-8">Branch: ‘master’</h5>
+    <h5 id="branch-master-9">Branch: ‘master’</h5>
 
     <h5 id="by-stephen-mcginty-on-31-aug-2015-0506am">by Stephen McGinty on 31-Aug-2015 05:06AM</h5>
 
