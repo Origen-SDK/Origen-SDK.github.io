@@ -655,6 +655,51 @@ ground_pin_groups.each <span style="color:#080;font-weight:bold">do</span> |id, 
       </div>
 
       <div>    
+  <a class="anchor" name="Virtual_Pin_Modelling"></a>          
+  <h4><a href="#Virtual_Pin_Modelling">Virtual Pin Modelling</a></h4>          
+</div>
+
+      <p>The API supports modelling virtual pins.  Virtual pins are essentially user-defined pins that may not necessarily be
+associated with the SoC, such as:
+  *  Tester utility pins that control relay states on the device interface board (DIB)
+  *  Tester channels to control components on the DIB</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>add_virtual_pin(<span style="color:#A60">:virtual1</span>, <span style="color:#606">type</span>: <span style="color:#A60">:utility_pin</span>)
+add_virtual_pin(<span style="color:#A60">:virtual2</span>, <span style="color:#606">type</span>: <span style="color:#A60">:utility_pin</span>)
+add_virtual_pin(<span style="color:#A60">:virtual3</span>, <span style="color:#606">type</span>: <span style="color:#A60">:relay_pin</span>)
+
+add_virtual_pin_group <span style="color:#A60">:utility</span>, <span style="color:#A60">:virtual1</span>, <span style="color:#A60">:virtual2</span>
+add_virtual_pin_group <span style="color:#A60">:relay</span>, <span style="color:#A60">:virtual3</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>This will cause these pins to be stored in separate collections to make content generation easier:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#777"># Based on the above example</span>
+virtual_pins.size           <span style="color:#777"># =&gt; 3</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>Virtual pin lookup should be done via a dedicated method:</p>
+
+      <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>virtual_pin(<span style="color:#A60">:virtual1</span>)
+
+virtual_pin_groups.each <span style="color:#080;font-weight:bold">do</span> |id, group|
+  <span style="color:#777"># Do this for each virtual pin group</span>
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+      </div>
+
+      <div>    
   <a class="anchor" name="Changing_Data_State"></a>          
   <h4><a href="#Changing_Data_State">Changing Data State</a></h4>          
 </div>
