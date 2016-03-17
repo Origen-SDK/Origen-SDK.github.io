@@ -6,7 +6,7 @@
 <title>
   Class: Origen::Specs::Spec
   
-    &mdash; Origen Core 0.6.11
+    &mdash; Origen Core 0.6.12
   
 </title>
 
@@ -149,6 +149,7 @@
   <span class='label'>constraints:</span>                <span class='const'>SpecAttribute</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:constraints</span><span class='comma'>,</span> <span class='const'>String</span><span class='comma'>,</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='symbol'>:design</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Single logical expression or a CSV list of logical expressions required for the spec to be valid (e.g. &#39;GVDD == 1.2V&#39;</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='comma'>,</span>
   <span class='label'>limit_type:</span>                 <span class='const'>SpecAttribute</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:limit_type</span><span class='comma'>,</span> <span class='const'>Symbol</span><span class='comma'>,</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='symbol'>:design</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Auto-generated attribute based on analysis of the spec limits. Acceptable values are :single_sided and :double_sided</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='comma'>,</span>
   <span class='label'>notes:</span>                      <span class='const'>SpecAttribute</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:notes</span><span class='comma'>,</span> <span class='const'>Hash</span><span class='comma'>,</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='symbol'>:design</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Specification notes</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='comma'>,</span>
+  <span class='label'>hidespec:</span>                   <span class='const'>SpecAttribute</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:hidespec</span><span class='comma'>,</span> <span class='lbracket'>[</span><span class='const'>String</span><span class='comma'>,</span> <span class='const'>Array</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='symbol'>:design</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Add the ability to hide specs based off license plate</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='comma'>,</span>
   <span class='label'>disposition_required:</span>       <span class='const'>SpecAttribute</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:disposition_required</span><span class='comma'>,</span> <span class='const'>TrueClass</span><span class='comma'>,</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='symbol'>:pde</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Boolean representation of whether a specification needs a disposition based on silicon results or customer input</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='comma'>,</span>
   <span class='label'>priority:</span>                   <span class='const'>SpecAttribute</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:priority</span><span class='comma'>,</span> <span class='const'>TrueClass</span><span class='comma'>,</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='symbol'>:pde</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Integer value (1-4) to indicate which priority the cz for this spec will be:  1. Highest priority, for critical or historically risky specs   2. Medium priority, relatively low risk. Not required until all priority 1 specs have been handled  3. Lowest priority, very low risk, low performance specs  4. No plans to characterize</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='comma'>,</span>
   <span class='label'>target:</span>                     <span class='const'>SpecAttribute</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:target</span><span class='comma'>,</span> <span class='const'>String</span><span class='comma'>,</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='symbol'>:pde</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Specification target limit.  Not used for pass/fail results but for data analysis</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='comma'>,</span>
@@ -496,7 +497,6 @@ to be unique</p>
       <pre class="lines">
 
 
-82
 83
 84
 85
@@ -522,10 +522,11 @@ to be unique</p>
 105
 106
 107
-108</pre>
+108
+109</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/specs/spec.rb', line 82</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/specs/spec.rb', line 83</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_type'>type</span><span class='comma'>,</span> <span class='id identifier rubyid_mode'>mode</span><span class='comma'>,</span> <span class='id identifier rubyid_owner_name'>owner_name</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
   <span class='ivar'>@name</span> <span class='op'>=</span> <span class='id identifier rubyid_name_audit'>name_audit</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
@@ -582,7 +583,6 @@ to be unique</p>
       <pre class="lines">
 
 
-180
 181
 182
 183
@@ -597,10 +597,11 @@ to be unique</p>
 192
 193
 194
-195</pre>
+195
+196</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/specs/spec.rb', line 180</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/specs/spec.rb', line 181</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_method_missing'>method_missing</span><span class='lparen'>(</span><span class='id identifier rubyid_method'>method</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_ivar'>ivar</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>@</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_method'>method</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='period'>.</span><span class='id identifier rubyid_gsub'>gsub</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>=</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
@@ -656,16 +657,16 @@ to be unique</p>
       <pre class="lines">
 
 
-252
 253
 254
 255
 256
 257
-258</pre>
+258
+259</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/specs/spec.rb', line 252</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/specs/spec.rb', line 253</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_add_note'>add_note</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span>
@@ -707,7 +708,6 @@ that differed</p>
       <pre class="lines">
 
 
-200
 201
 202
 203
@@ -750,10 +750,11 @@ that differed</p>
 240
 241
 242
-243</pre>
+243
+244</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/specs/spec.rb', line 200</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/specs/spec.rb', line 201</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_diff'>diff</span><span class='lparen'>(</span><span class='id identifier rubyid_compare_spec'>compare_spec</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_diff_results'>diff_results</span> <span class='op'>=</span> <span class='const'>Hash</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_h'>h</span><span class='comma'>,</span> <span class='id identifier rubyid_k'>k</span><span class='op'>|</span>
@@ -844,12 +845,12 @@ Origen::Specs#specs can return a single Spec instance or an Array of Specs</p>
       <pre class="lines">
 
 
-247
 248
-249</pre>
+249
+250</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/specs/spec.rb', line 247</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/specs/spec.rb', line 248</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='id identifier rubyid_s'>s</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_s'>s</span> <span class='op'>==</span> <span class='ivar'>@name</span> <span class='op'>?</span> <span class='kw'>true</span> <span class='op'>:</span> <span class='kw'>false</span>
@@ -874,14 +875,14 @@ Origen::Specs#specs can return a single Spec instance or an Array of Specs</p>
       <pre class="lines">
 
 
-110
 111
 112
 113
-114</pre>
+114
+115</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/specs/spec.rb', line 110</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/specs/spec.rb', line 111</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_inspect'>inspect</span>
   <span class='gvar'>$dut</span><span class='period'>.</span><span class='id identifier rubyid_send'>send</span><span class='lparen'>(</span><span class='symbol'>:specs_to_table_string</span><span class='comma'>,</span> <span class='lbracket'>[</span><span class='kw'>self</span><span class='rbracket'>]</span><span class='rparen'>)</span>
@@ -919,12 +920,12 @@ Origen::Specs#specs can return a single Spec instance or an Array of Specs</p>
       <pre class="lines">
 
 
-267
 268
-269</pre>
+269
+270</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/specs/spec.rb', line 267</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/specs/spec.rb', line 268</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_note_count'>note_count</span>
   <span class='ivar'>@notes</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span>
@@ -960,13 +961,13 @@ Origen::Specs#specs can return a single Spec instance or an Array of Specs</p>
       <pre class="lines">
 
 
-261
 262
 263
-264</pre>
+264
+265</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/specs/spec.rb', line 261</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/specs/spec.rb', line 262</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_notes'>notes</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
   <span class='kw'>return</span> <span class='kw'>nil</span> <span class='kw'>if</span> <span class='ivar'>@notes</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
@@ -1012,7 +1013,6 @@ Origen::Specs#specs can return a single Spec instance or an Array of Specs</p>
       <pre class="lines">
 
 
-121
 122
 123
 124
@@ -1052,10 +1052,11 @@ Origen::Specs#specs can return a single Spec instance or an Array of Specs</p>
 158
 159
 160
-161</pre>
+161
+162</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/specs/spec.rb', line 121</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/specs/spec.rb', line 122</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_trace_matrix_name'>trace_matrix_name</span>
   <span class='id identifier rubyid_name_set'>name_set</span> <span class='op'>=</span> <span class='id identifier rubyid_trace_matrix_name_choose'>trace_matrix_name_choose</span>
@@ -1134,7 +1135,6 @@ element End goal will be code:xml</p>
       <pre class="lines">
 
 
-168
 169
 170
 171
@@ -1144,10 +1144,11 @@ element End goal will be code:xml</p>
 175
 176
 177
-178</pre>
+178
+179</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/specs/spec.rb', line 168</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/specs/spec.rb', line 169</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_trace_matrix_name_to_dita'>trace_matrix_name_to_dita</span>
   <span class='id identifier rubyid_tmp_doc'>tmp_doc</span> <span class='op'>=</span> <span class='const'>Nokogiri</span><span class='op'>::</span><span class='const'>XML</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>&lt;foo&gt;&lt;bar /&gt;&lt;/foo&gt;</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>EUC-JP</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
@@ -1170,7 +1171,7 @@ element End goal will be code:xml</p>
 </div>
 
     <div id="footer">
-  Generated on Wed Mar 16 05:39:20 2016 by
+  Generated on Thu Mar 17 11:55:32 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.3.0).
 </div>

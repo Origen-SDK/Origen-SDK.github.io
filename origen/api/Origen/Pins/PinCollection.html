@@ -6,7 +6,7 @@
 <title>
   Class: Origen::Pins::PinCollection
   
-    &mdash; Origen Core 0.6.11
+    &mdash; Origen Core 0.6.12
   
 </title>
 
@@ -1717,7 +1717,6 @@ regular pins.</p>
       <pre class="lines">
 
 
-478
 479
 480
 481
@@ -1740,10 +1739,11 @@ regular pins.</p>
 498
 499
 500
-501</pre>
+501
+502</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_collection.rb', line 478</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_collection.rb', line 479</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_method_missing'>method_missing</span><span class='lparen'>(</span><span class='id identifier rubyid_method'>method</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
   <span class='comment'># Where the collection is only comprised of one pin delegate missing methods/attributes
@@ -2059,16 +2059,18 @@ regular pins.</p>
 334
 335
 336
-337</pre>
+337
+338</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_collection.rb', line 327</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_assert'>assert</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_each_with_index'>each_with_index</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_pin'>pin</span><span class='comma'>,</span> <span class='id identifier rubyid_i'>i</span><span class='op'>|</span>
-    <span class='kw'>if</span> <span class='op'>!</span><span class='id identifier rubyid_value'>value</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>is_to_be_read?</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='op'>||</span> <span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='id identifier rubyid_size'>size</span> <span class='op'>-</span> <span class='id identifier rubyid_i'>i</span> <span class='op'>-</span> <span class='int'>1</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_is_to_be_read?'>is_to_be_read?</span>
-      <span class='id identifier rubyid_value'>value</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span><span class='period'>.</span><span class='id identifier rubyid_data'>data</span> <span class='kw'>if</span> <span class='id identifier rubyid_value'>value</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>data</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+    <span class='kw'>if</span> <span class='op'>!</span><span class='id identifier rubyid_value'>value</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>data</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
       <span class='id identifier rubyid_pin'>pin</span><span class='period'>.</span><span class='id identifier rubyid_assert'>assert</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='id identifier rubyid_size'>size</span> <span class='op'>-</span> <span class='id identifier rubyid_i'>i</span> <span class='op'>-</span> <span class='int'>1</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
+    <span class='kw'>elsif</span> <span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='id identifier rubyid_size'>size</span> <span class='op'>-</span> <span class='id identifier rubyid_i'>i</span> <span class='op'>-</span> <span class='int'>1</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_is_to_be_read?'>is_to_be_read?</span>
+      <span class='id identifier rubyid_pin'>pin</span><span class='period'>.</span><span class='id identifier rubyid_assert'>assert</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='id identifier rubyid_size'>size</span> <span class='op'>-</span> <span class='id identifier rubyid_i'>i</span> <span class='op'>-</span> <span class='int'>1</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_data'>data</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
     <span class='kw'>else</span>
       <span class='id identifier rubyid_pin'>pin</span><span class='period'>.</span><span class='id identifier rubyid_dont_care'>dont_care</span>
     <span class='kw'>end</span>
@@ -2099,13 +2101,13 @@ regular pins.</p>
       <pre class="lines">
 
 
-341
 342
 343
-344</pre>
+344
+345</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_collection.rb', line 341</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_collection.rb', line 342</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_assert!'>assert!</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_assert'>assert</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
@@ -2146,13 +2148,13 @@ regular pins.</p>
       <pre class="lines">
 
 
-349
 350
 351
-352</pre>
+352
+353</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_collection.rb', line 349</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_collection.rb', line 350</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_assert_hi'>assert_hi</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_each'>each</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_pin'>pin</span><span class='op'>|</span> <span class='id identifier rubyid_pin'>pin</span><span class='period'>.</span><span class='id identifier rubyid_assert_hi'>assert_hi</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span> <span class='rbrace'>}</span>
@@ -2182,13 +2184,13 @@ regular pins.</p>
       <pre class="lines">
 
 
-356
 357
 358
-359</pre>
+359
+360</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_collection.rb', line 356</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_collection.rb', line 357</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_assert_hi!'>assert_hi!</span>
   <span class='id identifier rubyid_assert_hi'>assert_hi</span>
@@ -2229,13 +2231,13 @@ regular pins.</p>
       <pre class="lines">
 
 
-364
 365
 366
-367</pre>
+367
+368</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_collection.rb', line 364</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_collection.rb', line 365</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_assert_lo'>assert_lo</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_each'>each</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_pin'>pin</span><span class='op'>|</span> <span class='id identifier rubyid_pin'>pin</span><span class='period'>.</span><span class='id identifier rubyid_assert_lo'>assert_lo</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span> <span class='rbrace'>}</span>
@@ -2265,13 +2267,13 @@ regular pins.</p>
       <pre class="lines">
 
 
-371
 372
 373
-374</pre>
+374
+375</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_collection.rb', line 371</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_collection.rb', line 372</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_assert_lo!'>assert_lo!</span>
   <span class='id identifier rubyid_assert_lo'>assert_lo</span>
@@ -2402,12 +2404,12 @@ regular pins.</p>
       <pre class="lines">
 
 
-393
 394
-395</pre>
+395
+396</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_collection.rb', line 393</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_collection.rb', line 394</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_comparing?'>comparing?</span>
   <span class='id identifier rubyid_all?'>all?</span><span class='lparen'>(</span><span class='op'>&amp;</span><span class='symbol'>:comparing?</span><span class='rparen'>)</span>
@@ -2454,12 +2456,12 @@ regular pins.</p>
       <pre class="lines">
 
 
-397
 398
-399</pre>
+399
+400</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_collection.rb', line 397</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_collection.rb', line 398</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_comparing_mem?'>comparing_mem?</span>
   <span class='id identifier rubyid_all?'>all?</span><span class='lparen'>(</span><span class='op'>&amp;</span><span class='symbol'>:comparing_mem?</span><span class='rparen'>)</span>
@@ -2623,12 +2625,12 @@ regular pins.</p>
       <pre class="lines">
 
 
-426
 427
-428</pre>
+428
+429</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_collection.rb', line 426</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_collection.rb', line 427</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_delete'>delete</span><span class='lparen'>(</span><span class='id identifier rubyid_p'>p</span><span class='rparen'>)</span>
   <span class='ivar'>@store</span><span class='period'>.</span><span class='id identifier rubyid_delete'>delete</span><span class='lparen'>(</span><span class='id identifier rubyid_p'>p</span><span class='rparen'>)</span>
@@ -2664,12 +2666,12 @@ regular pins.</p>
       <pre class="lines">
 
 
-450
 451
-452</pre>
+452
+453</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_collection.rb', line 450</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_collection.rb', line 451</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_delete!'>delete!</span>
   <span class='id identifier rubyid_owner'>owner</span><span class='period'>.</span><span class='id identifier rubyid_delete_pin'>delete_pin</span><span class='lparen'>(</span><span class='kw'>self</span><span class='rparen'>)</span>
@@ -2705,12 +2707,12 @@ regular pins.</p>
       <pre class="lines">
 
 
-431
 432
-433</pre>
+433
+434</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_collection.rb', line 431</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_collection.rb', line 432</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_delete_at'>delete_at</span><span class='lparen'>(</span><span class='id identifier rubyid_index'>index</span><span class='rparen'>)</span>
   <span class='ivar'>@store</span><span class='period'>.</span><span class='id identifier rubyid_delete_at'>delete_at</span><span class='lparen'>(</span><span class='id identifier rubyid_index'>index</span><span class='rparen'>)</span>
@@ -2826,13 +2828,13 @@ in :name will display pin.name</p>
       <pre class="lines">
 
 
-379
 380
 381
-382</pre>
+382
+383</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_collection.rb', line 379</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_collection.rb', line 380</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_dont_care'>dont_care</span>
   <span class='id identifier rubyid_each'>each</span><span class='lparen'>(</span><span class='op'>&amp;</span><span class='symbol'>:dont_care</span><span class='rparen'>)</span>
@@ -2858,13 +2860,13 @@ in :name will display pin.name</p>
       <pre class="lines">
 
 
-384
 385
 386
-387</pre>
+387
+388</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_collection.rb', line 384</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_collection.rb', line 385</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_dont_care!'>dont_care!</span>
   <span class='id identifier rubyid_dont_care'>dont_care</span>
@@ -3273,12 +3275,12 @@ state would be set to “2”</p>
       <pre class="lines">
 
 
-401
 402
-403</pre>
+403
+404</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_collection.rb', line 401</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_collection.rb', line 402</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_driving?'>driving?</span>
   <span class='id identifier rubyid_all?'>all?</span><span class='lparen'>(</span><span class='op'>&amp;</span><span class='symbol'>:driving?</span><span class='rparen'>)</span>
@@ -3325,12 +3327,12 @@ state would be set to “2”</p>
       <pre class="lines">
 
 
-405
 406
-407</pre>
+407
+408</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_collection.rb', line 405</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_collection.rb', line 406</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_driving_mem?'>driving_mem?</span>
   <span class='id identifier rubyid_all?'>all?</span><span class='lparen'>(</span><span class='op'>&amp;</span><span class='symbol'>:driving_mem?</span><span class='rparen'>)</span>
@@ -3552,12 +3554,12 @@ pins</p>
       <pre class="lines">
 
 
-409
 410
-411</pre>
+411
+412</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_collection.rb', line 409</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_collection.rb', line 410</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_high_voltage?'>high_voltage?</span>
   <span class='id identifier rubyid_all?'>all?</span><span class='lparen'>(</span><span class='op'>&amp;</span><span class='symbol'>:high_voltage?</span><span class='rparen'>)</span>
@@ -3707,12 +3709,12 @@ pins</p>
       <pre class="lines">
 
 
-389
 390
-391</pre>
+391
+392</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_collection.rb', line 389</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_collection.rb', line 390</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_inverted?'>inverted?</span>
   <span class='id identifier rubyid_all?'>all?</span><span class='lparen'>(</span><span class='op'>&amp;</span><span class='symbol'>:inverted?</span><span class='rparen'>)</span>
@@ -3808,7 +3810,6 @@ pins</p>
       <pre class="lines">
 
 
-435
 436
 437
 438
@@ -3820,10 +3821,11 @@ pins</p>
 444
 445
 446
-447</pre>
+447
+448</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_collection.rb', line 435</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_collection.rb', line 436</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_pins'>pins</span><span class='lparen'>(</span><span class='id identifier rubyid_nick'>nick</span> <span class='op'>=</span> <span class='symbol'>:id</span><span class='rparen'>)</span>
   <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_deprecate'>deprecate</span> <span class='heredoc_beg'>&lt;&lt;-END</span>
@@ -3967,12 +3969,12 @@ pins</p>
       <pre class="lines">
 
 
-413
 414
-415</pre>
+415
+416</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_collection.rb', line 413</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_collection.rb', line 414</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_repeat_previous?'>repeat_previous?</span>
   <span class='id identifier rubyid_all?'>all?</span><span class='lparen'>(</span><span class='op'>&amp;</span><span class='symbol'>:repeat_previous?</span><span class='rparen'>)</span>
@@ -4153,12 +4155,12 @@ pins</p>
       <pre class="lines">
 
 
-418
 419
-420</pre>
+420
+421</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_collection.rb', line 418</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins/pin_collection.rb', line 419</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_to_be_captured?'>to_be_captured?</span>
   <span class='id identifier rubyid_all?'>all?</span><span class='lparen'>(</span><span class='op'>&amp;</span><span class='symbol'>:to_be_captured?</span><span class='rparen'>)</span>
@@ -4427,7 +4429,7 @@ regular pins</p>
 </div>
 
     <div id="footer">
-  Generated on Wed Mar 16 05:39:26 2016 by
+  Generated on Thu Mar 17 11:55:39 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.3.0).
 </div>
