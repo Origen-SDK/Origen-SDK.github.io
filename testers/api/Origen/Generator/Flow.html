@@ -1,0 +1,396 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: Origen::Generator::Flow
+  
+    &mdash; Origen Testers 0.6.0
+  
+</title>
+
+  <link rel="stylesheet" href="../../css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="../../css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '../../';
+  framesUrl = "../../frames.html#!Origen/Generator/Flow.html";
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../../_index.html">Index (F)</a> &raquo;
+    <span class='title'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span> &raquo; <span class='title'><span class='object_link'><a href="../Generator.html" title="Origen::Generator (class)">Generator</a></span></span>
+     &raquo; 
+    <span class="title">Flow</span>
+  
+
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="../../class_list.html">
+      Class List
+    </a>
+  
+    <a class="full_list_link" id="method_list_link"
+        href="../../method_list.html">
+      Method List
+    </a>
+  
+    <a class="full_list_link" id="file_list_link"
+        href="../../file_list.html">
+      File List
+    </a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+
+    <iframe id="search_frame"></iframe>
+
+    <div id="content"><h1>Class: Origen::Generator::Flow
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName">Object</span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">Origen::Generator::Flow</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+  
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">lib/origen_testers/origen_ext/generator/flow.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+
+
+
+
+
+
+
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#_extract_comments-instance_method" title="#_extract_comments (instance method)">- (Object) <strong>_extract_comments</strong>(file, flow_line) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#create-instance_method" title="#create (instance method)">- (Object) <strong>create</strong>(options = {}, &amp;block) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Create a call stack of flows so that we can work out where the nodes of the
+ATP AST originated from.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#orig_create-instance_method" title="#orig_create (instance method)">- (Object) <strong>orig_create</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="_extract_comments-instance_method">
+  
+    - (<tt>Object</tt>) <strong>_extract_comments</strong>(file, flow_line) 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/origen_ext/generator/flow.rb', line 41</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid__extract_comments'>_extract_comments</span><span class='lparen'>(</span><span class='id identifier rubyid_file'>file</span><span class='comma'>,</span> <span class='id identifier rubyid_flow_line'>flow_line</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_flow_comments'>flow_comments</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
+  <span class='id identifier rubyid_comments'>comments</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+  <span class='id identifier rubyid_comment'>comment</span> <span class='op'>=</span> <span class='kw'>nil</span>
+  <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_readlines'>readlines</span><span class='lparen'>(</span><span class='id identifier rubyid_file'>file</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_each_with_index'>each_with_index</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_line'>line</span><span class='comma'>,</span> <span class='id identifier rubyid_i'>i</span><span class='op'>|</span>
+    <span class='kw'>if</span> <span class='id identifier rubyid_comment'>comment</span>
+      <span class='kw'>if</span> <span class='id identifier rubyid_line'>line</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>^\s*#-(.*)</span><span class='regexp_end'>/</span></span>
+        <span class='comment'># Nothing, just ignore but keep the comment open
+</span>      <span class='kw'>elsif</span> <span class='id identifier rubyid_line'>line</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>^\s*#(.*)</span><span class='regexp_end'>/</span></span>
+        <span class='id identifier rubyid_comment'>comment</span> <span class='op'>&lt;&lt;</span> <span class='const'>Regexp</span><span class='period'>.</span><span class='id identifier rubyid_last_match'>last_match</span><span class='lparen'>(</span><span class='int'>1</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_strip'>strip</span>
+      <span class='kw'>else</span>
+        <span class='id identifier rubyid_comment'>comment</span> <span class='op'>=</span> <span class='kw'>nil</span>
+      <span class='kw'>end</span>
+    <span class='kw'>else</span>
+      <span class='kw'>if</span> <span class='id identifier rubyid_line'>line</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>^\s*#[^-](.*)</span><span class='regexp_end'>/</span></span>
+        <span class='kw'>if</span> <span class='id identifier rubyid_i'>i</span> <span class='op'>&lt;</span> <span class='id identifier rubyid_flow_line'>flow_line</span>
+          <span class='id identifier rubyid_comment'>comment</span> <span class='op'>=</span> <span class='id identifier rubyid_flow_comments'>flow_comments</span>
+        <span class='kw'>else</span>
+          <span class='id identifier rubyid_comment'>comment</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
+          <span class='id identifier rubyid_comments'>comments</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span> <span class='op'>+</span> <span class='int'>1</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_comment'>comment</span>
+        <span class='kw'>end</span>
+        <span class='id identifier rubyid_comment'>comment</span> <span class='op'>&lt;&lt;</span> <span class='const'>Regexp</span><span class='period'>.</span><span class='id identifier rubyid_last_match'>last_match</span><span class='lparen'>(</span><span class='int'>1</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_strip'>strip</span>
+      <span class='kw'>end</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+  <span class='lbracket'>[</span><span class='id identifier rubyid_flow_comments'>flow_comments</span><span class='comma'>,</span> <span class='id identifier rubyid_comments'>comments</span><span class='rbracket'>]</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="create-instance_method">
+  
+    - (<tt>Object</tt>) <strong>create</strong>(options = {}, &amp;block) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Create a call stack of flows so that we can work out where the nodes of the
+ATP AST originated from</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/origen_ext/generator/flow.rb', line 15</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_create'>create</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_file'>file</span><span class='comma'>,</span> <span class='id identifier rubyid_line'>line</span> <span class='op'>=</span> <span class='op'>*</span><span class='id identifier rubyid_caller'>caller</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>:</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+  <span class='const'>OrigenTesters</span><span class='op'>::</span><span class='const'>Flow</span><span class='period'>.</span><span class='id identifier rubyid_callstack'>callstack</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_file'>file</span>
+  <span class='id identifier rubyid_flow_comments'>flow_comments</span><span class='comma'>,</span> <span class='id identifier rubyid_comments'>comments</span> <span class='op'>=</span> <span class='op'>*</span><span class='id identifier rubyid__extract_comments'>_extract_comments</span><span class='lparen'>(</span><span class='const'>OrigenTesters</span><span class='op'>::</span><span class='const'>Flow</span><span class='period'>.</span><span class='id identifier rubyid_callstack'>callstack</span><span class='period'>.</span><span class='id identifier rubyid_last'>last</span><span class='comma'>,</span> <span class='id identifier rubyid_line'>line</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span><span class='rparen'>)</span>
+  <span class='const'>OrigenTesters</span><span class='op'>::</span><span class='const'>Flow</span><span class='period'>.</span><span class='id identifier rubyid_comment_stack'>comment_stack</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_comments'>comments</span>
+  <span class='kw'>if</span> <span class='const'>OrigenTesters</span><span class='op'>::</span><span class='const'>Flow</span><span class='period'>.</span><span class='id identifier rubyid_flow_comments'>flow_comments</span>
+    <span class='id identifier rubyid_top'>top</span> <span class='op'>=</span> <span class='kw'>false</span>
+    <span class='id identifier rubyid_name'>name</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:name</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='const'>Pathname</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_file'>file</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_basename'>basename</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>.rb</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='period'>.</span><span class='id identifier rubyid_sub'>sub</span><span class='lparen'>(</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>^_</span><span class='regexp_end'>/</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+    <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_flow'>flow</span><span class='period'>.</span><span class='id identifier rubyid_group'>group</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='id identifier rubyid_flow_comments'>flow_comments</span><span class='rparen'>)</span> <span class='kw'>do</span>
+      <span class='id identifier rubyid_orig_create'>orig_create</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+    <span class='kw'>end</span>
+  <span class='kw'>else</span>
+    <span class='const'>OrigenTesters</span><span class='op'>::</span><span class='const'>Flow</span><span class='period'>.</span><span class='id identifier rubyid_flow_comments'>flow_comments</span> <span class='op'>=</span> <span class='id identifier rubyid_flow_comments'>flow_comments</span>
+    <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_key?'>key?</span><span class='lparen'>(</span><span class='symbol'>:unique_ids</span><span class='rparen'>)</span>
+      <span class='const'>OrigenTesters</span><span class='op'>::</span><span class='const'>Flow</span><span class='period'>.</span><span class='id identifier rubyid_unique_ids'>unique_ids</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_delete'>delete</span><span class='lparen'>(</span><span class='symbol'>:unique_ids</span><span class='rparen'>)</span>
+    <span class='kw'>else</span>
+      <span class='const'>OrigenTesters</span><span class='op'>::</span><span class='const'>Flow</span><span class='period'>.</span><span class='id identifier rubyid_unique_ids'>unique_ids</span> <span class='op'>=</span> <span class='kw'>true</span>
+    <span class='kw'>end</span>
+    <span class='id identifier rubyid_top'>top</span> <span class='op'>=</span> <span class='kw'>true</span>
+    <span class='id identifier rubyid_orig_create'>orig_create</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+  <span class='const'>OrigenTesters</span><span class='op'>::</span><span class='const'>Flow</span><span class='period'>.</span><span class='id identifier rubyid_callstack'>callstack</span><span class='period'>.</span><span class='id identifier rubyid_pop'>pop</span>
+  <span class='const'>OrigenTesters</span><span class='op'>::</span><span class='const'>Flow</span><span class='period'>.</span><span class='id identifier rubyid_comment_stack'>comment_stack</span><span class='period'>.</span><span class='id identifier rubyid_pop'>pop</span>
+  <span class='const'>OrigenTesters</span><span class='op'>::</span><span class='const'>Flow</span><span class='period'>.</span><span class='id identifier rubyid_flow_comments'>flow_comments</span> <span class='op'>=</span> <span class='kw'>nil</span> <span class='kw'>if</span> <span class='id identifier rubyid_top'>top</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="orig_create-instance_method">
+  
+    - (<tt>Object</tt>) <strong>orig_create</strong> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+11</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/origen_ext/generator/flow.rb', line 11</span>
+
+<span class='id identifier rubyid_alias_method'>alias_method</span> <span class='symbol'>:orig_create</span><span class='comma'>,</span> <span class='symbol'>:create</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+
+    <div id="footer">
+  Generated on Wed Mar 23 12:58:33 2016 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.8.7.6 (ruby-2.3.0).
+</div>
+
+  </body>
+</html>
