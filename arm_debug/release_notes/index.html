@@ -75,7 +75,8 @@
   <body>
     
       <div class="container">
-        <nav class="navbar navbar-inverse navbar-fixed-top"><div class="container">
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
         <span class="sr-only">Toggle navigation</span>
@@ -87,24 +88,83 @@
     </div>
     <div id="navbar" class="collapse navbar-collapse">
       <ul class="nav navbar-nav">
-<li class=""><a href="/arm_debug/api/">API</a></li>
+        <li class=""><a href="/arm_debug/api/">API</a></li>
         <li class=""><a href="/arm_debug/coverage">Coverage</a></li>
         <li class="active"><a href="/arm_debug/release_notes">Release Notes</a></li>
         <li><a href="https://github.com/Origen-SDK/origen_arm_debug">Github</a></li>
       </ul>
 <a href="http://origen-sdk.org" class=" pull-right">
-  <img src="http://origen-sdk.org/img/origen-device.png" style="height:30px; margin-top: 10px;"><img src="http://origen-sdk.org/img/origen-text.png" style="height:15px; margin-top: 10px; margin-left: 5px;"></a>
+  <img src="http://origen-sdk.org/img/origen-device.png" style="height:30px; margin-top: 10px;">
+  <img src="http://origen-sdk.org/img/origen-text.png" style="height:15px; margin-top: 10px; margin-left: 5px;">
+</a>
 
     </div>
 <!--/.nav-collapse -->
   </div>
-</nav><div class="row">
+</nav>
+
+<div class="row">
   <div class="span12">
+
+    <p><a class="anchor release_tag" name="v0_9_0"></a></p>
+    <h1><a href="#v0_9_0">Tag: v0.9.0</a></h1>
+
+    <h5 id="branch-master">Branch: ‘master’</h5>
+
+    <h5 id="by-ronnie-lajaunie-on-29-mar-2016-1251pm">by Ronnie Lajaunie on 29-Mar-2016 12:51PM</h5>
+
+    <div>    
+  <a class="anchor" name="1:_Update_write_register/read_register_to_follow_standard_of_requiring_%E2%80%98data%E2%80%99_argument"></a>          
+  <h1><a href="#1:_Update_write_register/read_register_to_follow_standard_of_requiring_%E2%80%98data%E2%80%99_argument">1: Update write_register/read_register to follow standard of requiring ‘data’ argument</a></h1>          
+</div>
+    <p>for non-register based transactions.</p>
+
+    <p>For example:</p>
+
+    <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>  arm_debug.write_register(<span style="color:#00D">0x20000000</span>, <span style="color:#00D">0x55555555</span>)             <span style="color:#777"># OLD STYLE</span>
+  arm_debug.read_register(<span style="color:#00D">0x20000000</span>, <span style="color:#606">edata</span>: <span style="color:#00D">0x55555555</span>)       <span style="color:#777"># OLD STYLE</span>
+
+
+  arm_debug.write_register(<span style="color:#00D">0x55555555</span>, <span style="color:#606">address</span>: <span style="color:#00D">0x20000000</span>)    <span style="color:#777"># OLD STYLE</span>
+  arm_debug.read_register(<span style="color:#00D">0x55555555</span>, <span style="color:#606">address</span>: <span style="color:#00D">0x20000000</span>)     <span style="color:#777"># OLD STYLE</span>
+</pre></div>
+</div>
+    </div>
+
+    <div>    
+  <a class="anchor" name="2_Switch_ARMDebug_module_to_be_Origen::Model_to_be_used_as_a_sub_block_by_the_top-level."></a>          
+  <h1><a href="#2_Switch_ARMDebug_module_to_be_Origen::Model_to_be_used_as_a_sub_block_by_the_top-level.">2 Switch ARMDebug module to be Origen::Model to be used as a sub_block by the top-level.</a></h1>          
+</div>
+
+    <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">DUT</span>
+  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">TopLevel</span>
+  include <span style="color:#036;font-weight:bold">OrigenARMDebug</span>
+
+  <span style="color:#777"># Also include the required physical driver, JTAG in this example</span>
+  include <span style="color:#036;font-weight:bold">OrigenJTAG</span>
+
+  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>
+    reg <span style="color:#A60">:myreg</span>, <span style="color:#00D">0x0012</span>, <span style="color:#606">size</span>: <span style="color:#00D">16</span> <span style="color:#080;font-weight:bold">do</span> |reg|
+      reg.bits <span style="color:#00D">15</span>..<span style="color:#00D">8</span>, <span style="color:#A60">:upper_byte</span>
+      reg.bits <span style="color:#00D">7</span>..<span style="color:#00D">0</span>,  <span style="color:#A60">:lower_byte</span>
+    <span style="color:#080;font-weight:bold">end</span>
+
+    sub_block <span style="color:#A60">:arm_debug</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">OrigenARMDebug::Driver</span><span style="color:#710">"</span></span>, <span style="color:#606">aps</span>: { <span style="color:#606">mem_ap</span>: <span style="color:#00D">0x00000000</span>,
+<span style="color:#606">mdmap</span>: <span style="color:#00D">0x01000000</span> }
+  <span style="color:#080;font-weight:bold">end</span>
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+    </div>
 
     <p><a class="anchor release_tag" name="v0_8_4"></a></p>
     <h1><a href="#v0_8_4">Tag: v0.8.4</a></h1>
 
-    <h5 id="branch-master">Branch: ‘master’</h5>
+    <h5 id="branch-master-1">Branch: ‘master’</h5>
 
     <h5 id="by-ronnie-lajaunie-on-07-jan-2016-0930am">by Ronnie Lajaunie on 07-Jan-2016 09:30AM</h5>
 
@@ -113,7 +173,7 @@
     <p><a class="anchor release_tag" name="v0_8_3"></a></p>
     <h1><a href="#v0_8_3">Tag: v0.8.3</a></h1>
 
-    <h5 id="branch-master-1">Branch: ‘master’</h5>
+    <h5 id="branch-master-2">Branch: ‘master’</h5>
 
     <h5 id="by-ronnie-lajaunie-on-11-dec-2015-1706pm">by Ronnie Lajaunie on 11-Dec-2015 17:06PM</h5>
 
@@ -122,7 +182,7 @@
     <p><a class="anchor release_tag" name="v0_8_2"></a></p>
     <h1><a href="#v0_8_2">Tag: v0.8.2</a></h1>
 
-    <h5 id="branch-master-2">Branch: ‘master’</h5>
+    <h5 id="branch-master-3">Branch: ‘master’</h5>
 
     <h5 id="by-ronnie-lajaunie-on-08-dec-2015-1251pm">by Ronnie Lajaunie on 08-Dec-2015 12:51PM</h5>
 
@@ -131,7 +191,7 @@
     <p><a class="anchor release_tag" name="v0_8_1"></a></p>
     <h1><a href="#v0_8_1">Tag: v0.8.1</a></h1>
 
-    <h5 id="branch-master-3">Branch: ‘master’</h5>
+    <h5 id="branch-master-4">Branch: ‘master’</h5>
 
     <h5 id="by-ronnie-lajaunie-on-03-dec-2015-0927am">by Ronnie Lajaunie on 03-Dec-2015 09:27AM</h5>
 
@@ -140,7 +200,7 @@
     <p><a class="anchor release_tag" name="v0_8_0"></a></p>
     <h1><a href="#v0_8_0">Tag: v0.8.0</a></h1>
 
-    <h5 id="branch-master-4">Branch: ‘master’</h5>
+    <h5 id="branch-master-5">Branch: ‘master’</h5>
 
     <h5 id="by-ronnie-lajaunie-on-03-dec-2015-0835am">by Ronnie Lajaunie on 03-Dec-2015 08:35AM</h5>
 
@@ -149,7 +209,7 @@
     <p><a class="anchor release_tag" name="v0_7_0"></a></p>
     <h1><a href="#v0_7_0">Tag: v0.7.0</a></h1>
 
-    <h5 id="branch-master-5">Branch: ‘master’</h5>
+    <h5 id="branch-master-6">Branch: ‘master’</h5>
 
     <h5 id="by-ronnie-lajaunie-on-05-oct-2015-2111pm">by Ronnie Lajaunie on 05-Oct-2015 21:11PM</h5>
 
@@ -158,7 +218,7 @@
     <p><a class="anchor release_tag" name="v0_6_0"></a></p>
     <h1><a href="#v0_6_0">Tag: v0.6.0</a></h1>
 
-    <h5 id="branch-master-6">Branch: ‘master’</h5>
+    <h5 id="branch-master-7">Branch: ‘master’</h5>
 
     <h5 id="by-ronnie-lajaunie-on-05-oct-2015-2028pm">by Ronnie Lajaunie on 05-Oct-2015 20:28PM</h5>
 
@@ -167,7 +227,7 @@
     <p><a class="anchor release_tag" name="v0_4_3"></a></p>
     <h1><a href="#v0_4_3">Tag: v0.4.3</a></h1>
 
-    <h5 id="branch-master-7">Branch: ‘master’</h5>
+    <h5 id="branch-master-8">Branch: ‘master’</h5>
 
     <h5 id="by-ronnie-lajaunie-on-28-aug-2015-1321pm">by Ronnie Lajaunie on 28-Aug-2015 13:21PM</h5>
 
@@ -176,7 +236,7 @@
     <p><a class="anchor release_tag" name="v0_4_2"></a></p>
     <h1><a href="#v0_4_2">Tag: v0.4.2</a></h1>
 
-    <h5 id="branch-master-8">Branch: ‘master’</h5>
+    <h5 id="branch-master-9">Branch: ‘master’</h5>
 
     <h5 id="by-ronnie-lajaunie-on-27-aug-2015-0804am">by Ronnie Lajaunie on 27-Aug-2015 08:04AM</h5>
 
@@ -185,7 +245,7 @@
     <p><a class="anchor release_tag" name="v0_4_1"></a></p>
     <h1><a href="#v0_4_1">Tag: v0.4.1</a></h1>
 
-    <h5 id="branch-master-9">Branch: ‘master’</h5>
+    <h5 id="branch-master-10">Branch: ‘master’</h5>
 
     <h5 id="by-ronnie-lajaunie-on-25-aug-2015-1016am">by Ronnie Lajaunie on 25-Aug-2015 10:16AM</h5>
 
@@ -194,7 +254,7 @@
     <p><a class="anchor release_tag" name="v0_4_0"></a></p>
     <h1><a href="#v0_4_0">Tag: v0.4.0</a></h1>
 
-    <h5 id="branch-master-10">Branch: ‘master’</h5>
+    <h5 id="branch-master-11">Branch: ‘master’</h5>
 
     <h5 id="by-ronnie-lajaunie-on-24-aug-2015-2137pm">by Ronnie Lajaunie on 24-Aug-2015 21:37PM</h5>
 
@@ -202,7 +262,7 @@
 
     <div style="position: relative">
   <hr>
-<div>    
+  <div>    
   <a class="anchor" name="Comments"></a>          
   <h4><a href="#Comments">Comments</a></h4>          
 </div>
@@ -233,11 +293,15 @@
         dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
     })();
-</script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</script>
+
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
 </noscript>
 
   </div>
 </div>
+
+
       </div><!-- /.container -->
     
 
@@ -256,5 +320,6 @@
     <script src="http://origen-sdk.org/js/lunr.min.js"></script>
     <script src="http://origen-sdk.org/js/highlight.js"></script>
     <script src="http://origen-sdk.org/js/custom.js"></script>
+    
   </body>
 </html>

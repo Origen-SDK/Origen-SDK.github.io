@@ -6,7 +6,7 @@
 <title>
   Class: OrigenARMDebug::DUT
   
-    &mdash; Origen ARM Debug 0.8.4
+    &mdash; Origen ARM Debug 0.9.0
   
 </title>
 
@@ -91,7 +91,7 @@
   
     
       <dt class="r2">Includes:</dt>
-      <dd class="r2">Origen::Callbacks, Origen::Registers, <span class='object_link'><a href="../OrigenARMDebug.html" title="OrigenARMDebug (module)">OrigenARMDebug</a></span></dd>
+      <dd class="r2">Origen::TopLevel, <span class='object_link'><a href="../OrigenARMDebug.html" title="OrigenARMDebug (module)">OrigenARMDebug</a></span></dd>
       
     
   
@@ -244,13 +244,7 @@ ARMDebug locally during development.</p>
   
   
   
-  
-  
-  
-  
-  <h3 class="inherited">Methods included from <span class='object_link'><a href="../OrigenARMDebug.html" title="OrigenARMDebug (module)">OrigenARMDebug</a></span></h3>
-  <p class="inherited"><span class='object_link'><a href="../OrigenARMDebug.html#arm_debug-instance_method" title="OrigenARMDebug#arm_debug (method)">#arm_debug</a></span></p>
-<div id="constructor_details" class="method_details_list">
+  <div id="constructor_details" class="method_details_list">
   <h2>Constructor Details</h2>
   
     <div class="method_details first">
@@ -287,6 +281,7 @@ ARMDebug locally during development.</p>
       <pre class="lines">
 
 
+16
 17
 18
 19
@@ -296,10 +291,12 @@ ARMDebug locally during development.</p>
 23
 24
 25
-26</pre>
+26
+27
+28</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/dut.rb', line 17</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/dut.rb', line 16</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span>
   <span class='id identifier rubyid_add_reg'>add_reg</span> <span class='symbol'>:dap</span><span class='comma'>,</span>  <span class='int'>0x0</span><span class='comma'>,</span> <span class='int'>35</span><span class='comma'>,</span> <span class='label'>data:</span> <span class='lbrace'>{</span> <span class='label'>pos:</span> <span class='int'>0</span><span class='comma'>,</span> <span class='label'>bits:</span> <span class='int'>35</span> <span class='rbrace'>}</span>
@@ -307,10 +304,13 @@ ARMDebug locally during development.</p>
   <span class='id identifier rubyid_add_reg'>add_reg</span> <span class='symbol'>:test</span><span class='comma'>,</span> <span class='int'>0x0</span><span class='comma'>,</span> <span class='int'>32</span><span class='comma'>,</span> <span class='label'>data:</span> <span class='lbrace'>{</span> <span class='label'>pos:</span> <span class='int'>0</span><span class='comma'>,</span> <span class='label'>bits:</span> <span class='int'>32</span> <span class='rbrace'>}</span><span class='comma'>,</span>
                           <span class='label'>bit:</span>  <span class='lbrace'>{</span> <span class='label'>pos:</span> <span class='int'>0</span> <span class='rbrace'>}</span>
 
-  <span class='id identifier rubyid_arm_debug'>arm_debug</span><span class='period'>.</span><span class='id identifier rubyid_add_mem_ap'>add_mem_ap</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>mem_ap</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='int'>0x00000000</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_arm_debug'>arm_debug</span><span class='period'>.</span><span class='id identifier rubyid_add_mem_ap'>add_mem_ap</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>mdm_ap</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='int'>0x01000000</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_sub_block'>sub_block</span> <span class='symbol'>:arm_debug</span><span class='comma'>,</span> <span class='label'>class_name:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>OrigenARMDebug::Driver</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>aps:</span> <span class='lbrace'>{</span> <span class='label'>mem_ap:</span> <span class='int'>0x00000000</span><span class='comma'>,</span> <span class='label'>mdm_ap:</span> <span class='int'>0x01000000</span> <span class='rbrace'>}</span>
   <span class='id identifier rubyid_arm_debug'>arm_debug</span><span class='period'>.</span><span class='id identifier rubyid_add_mem_ap'>add_mem_ap</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>alt_ahbapi</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='int'>0x02000000</span><span class='rparen'>)</span>
-<span class='kw'>end</span></pre>
+
+  <span class='comment'># arm_debug.add_mem_ap(&#39;mem_ap&#39;, 0x00000000)
+</span>  <span class='comment'># arm_debug.add_mem_ap(&#39;mdm_ap&#39;, 0x01000000)
+</span>  <span class='comment'># arm_debug.add_mem_ap(&#39;alt_ahbapi&#39;, 0x02000000)
+</span><span class='kw'>end</span></pre>
     </td>
   </tr>
 </table>
@@ -387,12 +387,12 @@ ARMDebug locally during development.</p>
       <pre class="lines">
 
 
-39
-40
-41</pre>
+41
+42
+43</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/dut.rb', line 39</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/dut.rb', line 41</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_read_register'>read_register</span><span class='lparen'>(</span><span class='id identifier rubyid_reg'>reg</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_arm_debug'>arm_debug</span><span class='period'>.</span><span class='id identifier rubyid_read_register'>read_register</span><span class='lparen'>(</span><span class='id identifier rubyid_reg'>reg</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
@@ -448,12 +448,12 @@ ARMDebug locally during development.</p>
       <pre class="lines">
 
 
-31
-32
-33</pre>
+33
+34
+35</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/dut.rb', line 31</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/dut.rb', line 33</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_startup'>startup</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
   <span class='gvar'>$tester</span><span class='period'>.</span><span class='id identifier rubyid_set_timeset'>set_timeset</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>arm_debug</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='int'>40</span><span class='rparen'>)</span>
@@ -527,12 +527,12 @@ ARMDebug locally during development.</p>
       <pre class="lines">
 
 
-47
-48
-49</pre>
+49
+50
+51</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/dut.rb', line 47</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/dut.rb', line 49</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_write_register'>write_register</span><span class='lparen'>(</span><span class='id identifier rubyid_reg'>reg</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_arm_debug'>arm_debug</span><span class='period'>.</span><span class='id identifier rubyid_write_register'>write_register</span><span class='lparen'>(</span><span class='id identifier rubyid_reg'>reg</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
@@ -547,9 +547,9 @@ ARMDebug locally during development.</p>
 </div>
 
     <div id="footer">
-  Generated on Thu Jan  7 09:31:14 2016 by
+  Generated on Tue Mar 29 12:54:25 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.7.6 (ruby-2.1.5).
+  0.8.7.6 (ruby-2.3.0).
 </div>
 
   </body>
