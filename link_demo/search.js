@@ -29,7 +29,7 @@ $(function() {
     search(true);
   });
   $("#search input").keypress(function(e) {
-    if(e.which == 13) {
+    if(e.which === 13) {
       e.preventDefault();
       search(false);
     }
@@ -42,11 +42,11 @@ function search(go) {
   while (!window.index) {};
   var results = window.index.search(term);
 
-  if(results && results.length == 1) {
-    window.location.replace("/link_demo/" + results[0].ref + "?highlight=" + escape(term));
+  if(results && results.length === 1) {
+    window.location = "/link_demo/" + results[0].ref + "?highlight=" + escape(term);
   } else if(results && results.length > 1) {
     if (go) {
-      window.location.replace("/link_demo/" + results[0].ref + "?highlight=" + escape(term));
+      window.location = "/link_demo/" + results[0].ref + "?highlight=" + escape(term);
     } else {
       displayResults(results, term);
     }
@@ -58,13 +58,22 @@ function search(go) {
 function displayResults(results, term) {
   var resultTemplate = $("search-view-template");
   var container = $(".search-results");  
+  if (!container[0]) {
+    // Fall back to original behavior
+    container = $("article");  
+  }
 
   container.empty();
-  container.append("<h2>Results</h2>");
+  container.append("<h2>Search Results</h2>");
 
   $.each(results, function(i, result) {
     var article = window.articles[result.ref];
-    container.append("<p><a href=\"/link_demo/" + result.ref + "?highlight=" + escape(term) + "\">" + article.title + " - " + article.subtitle + "</a></p>");
+    var text = article.title;
+    if (article.subtitle) {
+      text = text + " - " + article.subtitle;
+    }
+ 
+    container.append("<p><a href=\"/link_demo/" + result.ref + "?highlight=" + escape(term) + "\">" + text + "</a></p>");
   });
 }
 
