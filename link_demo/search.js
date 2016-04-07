@@ -41,9 +41,8 @@ $(function() {
 function search(go) {
   // If the search index has populated
   if (window.index) {
-
-    var results = window.index.search(term);
     var term = $("#search input").val();
+    var results = window.index.search(term);
 
     if(results && results.length === 1) {
       window.location = "/link_demo/" + results[0].ref + "?highlight=" + escape(term);
