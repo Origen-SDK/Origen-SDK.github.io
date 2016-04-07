@@ -57,7 +57,7 @@ function search(go) {
 
 function displayResults(results, term) {
   var resultTemplate = $("search-view-template");
-  var container = $("article");  
+  var container = $(".search-results");  
 
   container.empty();
   container.append("<h2>Results</h2>");
