@@ -39,21 +39,26 @@ $(function() {
 })
 
 function search(go) {
-  var term = $("#search input").val();
-  // Wait for search index to populate
-  while (!window.index) {};
-  var results = window.index.search(term);
+  // If the search index has populated
+  if (window.index) {
 
-  if(results && results.length === 1) {
-    window.location = "/link_demo/" + results[0].ref + "?highlight=" + escape(term);
-  } else if(results && results.length > 1) {
-    if (go) {
+    var results = window.index.search(term);
+    var term = $("#search input").val();
+
+    if(results && results.length === 1) {
       window.location = "/link_demo/" + results[0].ref + "?highlight=" + escape(term);
+    } else if(results && results.length > 1) {
+      if (go) {
+        window.location = "/link_demo/" + results[0].ref + "?highlight=" + escape(term);
+      } else {
+        displayResults(results, term);
+      }
     } else {
-      displayResults(results, term);
+      alert("Found nothing");
     }
   } else {
-    alert("Found nothing");
+  // Otherwise try again in 200ms
+    setTimeout(search(go), 200);
   }
 }
 
