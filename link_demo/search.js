@@ -25,13 +25,15 @@ $.getJSON("/link_demo/" + "/" + search_json, function(json) {
 });
 
 $(function() {
-  $("#search button").click(function() {
+  $("#search button").click(function(e) {
     search(true);
+    return false;
   });
   $("#search input").keypress(function(e) {
     if(e.which === 13) {
       e.preventDefault();
       search(false);
+      return false;
     }
   });
 })
