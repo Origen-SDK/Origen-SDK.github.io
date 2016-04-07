@@ -70,7 +70,11 @@ function displayResults(results, term) {
     var article = window.articles[result.ref];
     var text = article.title;
     if (article.subtitle) {
-      text = text + " - " + article.subtitle;
+      if (text) {
+        text = text + " - " + article.subtitle;
+      } else {
+        text = article.subtitle;
+      }
     }
  
     container.append("<p><a href=\"/link_demo/" + result.ref + "?highlight=" + escape(term) + "\">" + text + "</a></p>");
