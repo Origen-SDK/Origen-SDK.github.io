@@ -88,7 +88,7 @@
     </div>
     <div id="navbar" class="collapse navbar-collapse">
       <ul class="nav navbar-nav">
-        <li class=""><a href="/doc_helpers/helpers">Helpers</a></li>
+        <li class="active"><a href="/doc_helpers/helpers">Helpers</a></li>
         <li class=""><a href="/doc_helpers/release_notes">Release Notes</a></li>
         <li><a href="https://github.com/Origen-SDK/origen_doc_helpers">Github</a></li>
       </ul>
@@ -105,59 +105,110 @@
 <div class="row">
   <div class="span12">
 
-    <h1>Origen Documentation Helpers <span style="font-size: 14px">(0.4.0)</span>
-</h1>
+    <h1 id="yammer-comments">Yammer Comments</h1>
 
-    <div>    
-  <a class="anchor" name="Purpose"></a>          
-  <h3><a href="#Purpose">Purpose</a></h3>          
-</div>
+    <p>These helpers wrap the <a href="https://developer.yammer.com/connect/">Yammer Embed API</a>
+which allows Yammer feeds to be embedded in any web page.</p>
 
-    <p>This plugin contains a collection of pre-written documentation layouts and helpers for use in
-many typical Origen documentation scenarios.</p>
+    <p>The most useful application of this is to provide a comment stream which will be
+unique to each page, like the one you see below!</p>
 
-    <p>Additional contributions are welcome, see below for how to setup a development environment,
-please add examples for any new features.</p>
-
-    <div>    
-  <a class="anchor" name="How_To_Import"></a>          
-  <h3><a href="#How_To_Import">How To Import</a></h3>          
-</div>
-
-    <p>In your Gemfile add:</p>
+    <p>To include comments simply add this to the bottom of any given page, or your
+layout file to add comments to every page:</p>
 
     <div class="highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre>gem <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">origen_doc_helpers</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">&gt;= 0.4.0</span><span style="color:#710">"</span></span>
+  <div class="code"><pre><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> yammer_comments <span style="font-weight:bold;color:#666">%&gt;</span></span>
 </pre></div>
 </div>
     </div>
 
-    <p>or if your application is a plugin add this to your <code>.gemspec</code></p>
+    <p>The following options are available:</p>
 
     <div class="highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre>spec.add_development_dependency <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">origen_doc_helpers</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">&gt;= 0.4.0</span><span style="color:#710">"</span></span>
+  <div class="code"><pre>:prompt   - Set what the prompt for new comments should be, 'Comment on this page' is the default
+:group_id - Specify a specific Yammer group ID, defaults to config.yammer_group in the application config, and if not defined falls back to the
+            Origen User's Group
 </pre></div>
 </div>
     </div>
 
-    <div>    
-  <a class="anchor" name="How_To_Use"></a>          
-  <h3><a href="#How_To_Use">How To Use</a></h3>          
+    <div style="position: relative">
+  <hr>
+  <div>    
+  <a class="anchor" name="Comments"></a>          
+  <h4><a href="#Comments">Comments</a></h4>          
 </div>
 
-    <p>See the <a href="/doc_helpers/helpers">Available Helpers</a> page to see the current list of helpers
-and how to use them.</p>
-
-    <div>    
-  <a class="anchor" name="How_To_Setup_a_Development_Environment"></a>          
-  <h3><a href="#How_To_Setup_a_Development_Environment">How To Setup a Development Environment</a></h3>          
+  <div id="embedded-follow" style="position:absolute; top: 18px; left: 100px;"></div>
+  <div id="embedded-feed" style="height:800px;width:600px;"></div>
 </div>
 
-    <p><a href="https://github.com/Origen-SDK/origen_doc_helpers">Clone the repository from Github</a>.</p>
+    <script type="text/javascript" src="https://c64.assets-yammer.com/assets/platform_embed.js"></script>
 
-    <p>All templates can be found in <code>templates/shared</code>.</p>
+    <script>
+  yam.connect.actionButton({
+   container: "#embedded-follow",
+   network: "freescale.com",
+   action: "follow"
+  });
+</script>
+
+    <script>
+  yam.connect.embedFeed({
+    container: "#embedded-feed",
+    feedType: "open-graph",
+    config: {
+      header: false,
+      footer: false,
+      defaultGroupId: '',
+      promptText: 'Comment on this page'
+    },
+    objectProperties: {
+      type: 'page',
+      url: 'http://origen-sdk.org/doc_helpers/helpers/yammer'
+    }
+  });
+</script>
+
+    <div style="position: relative">
+  <hr>
+  <div>    
+  <a class="anchor" name="Comments"></a>          
+  <h4><a href="#Comments">Comments</a></h4>          
+</div>
+</div>
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = 'origen-sdk';
+    var disqus_title;
+    var disqus_url = 'http://' + window.location.hostname + window.location.pathname;
+
+    disqus_title = $("h1").text();
+    if (disqus_title.length == 0) {
+      disqus_title = $("h2").text();
+    }
+    if (disqus_title.length == 0) {
+      disqus_title = $("h3").text();
+    }
+    if (disqus_title.length == 0) {
+      disqus_title = $("title").text();
+    } else {
+      disqus_title = disqus_title + ' (' + $("title").text() + ')';
+    }
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</noscript>
 
   </div>
 </div>
