@@ -6,7 +6,7 @@
 <title>
   Class: OrigenARMDebug::Driver
   
-    &mdash; Origen ARM Debug 0.10.0
+    &mdash; Origen ARM Debug 0.10.1
   
 </title>
 
@@ -125,6 +125,36 @@ include SWD</code></pre>
 
   <h2>Instance Attribute Summary <small>(<a href="#" class="summary_toggle">collapse</a>)</small></h2>
   <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#latency-instance_method" title="#latency (instance method)">- (Object) <strong>latency</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Customizable delay that will be applied after any read/write register
+transaction defaults to 0.</p>
+</div></span>
+  
+</li>
+
     
       <li class="public ">
   <span class="summary_signature">
@@ -425,22 +455,24 @@ address.</p>
       <pre class="lines">
 
 
-21
-22
-23
-24
 25
 26
-27</pre>
+27
+28
+29
+30
+31
+32</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/driver.rb', line 21</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/driver.rb', line 25</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='comment'># &#39;buffer&#39; register to bridge the actual memory-mapped register to the internal DAP transactions
 </span>  <span class='comment'>#   (also used to support case on non-register based calls)
 </span>  <span class='id identifier rubyid_add_reg'>add_reg</span> <span class='symbol'>:buffer</span><span class='comma'>,</span> <span class='int'>0x00</span><span class='comma'>,</span> <span class='int'>32</span><span class='comma'>,</span> <span class='label'>data:</span> <span class='lbrace'>{</span> <span class='label'>pos:</span> <span class='int'>0</span><span class='comma'>,</span> <span class='label'>bits:</span> <span class='int'>32</span> <span class='rbrace'>}</span>
 
+  <span class='ivar'>@latency</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:latency</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='int'>0</span>
   <span class='id identifier rubyid_instantiate_subblocks'>instantiate_subblocks</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -456,7 +488,51 @@ address.</p>
       
       <span id=""></span>
       <div class="method_details first">
-  <h3 class="signature first" id="owner-instance_method">
+  <h3 class="signature first" id="latency-instance_method">
+  
+    - (<tt>Object</tt>) <strong>latency</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Customizable delay that will be applied after any read/write register
+transaction defaults to 0</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+16
+17
+18</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/driver.rb', line 16</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_latency'>latency</span>
+  <span class='ivar'>@latency</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="owner-instance_method">
   
     - (<tt>Object</tt>) <strong>owner</strong>  <span class="extras">(readonly)</span>
   
@@ -543,12 +619,12 @@ DUT object or a protocol abstraction</p>
       <pre class="lines">
 
 
-62
-63
-64</pre>
+67
+68
+69</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/driver.rb', line 62</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/driver.rb', line 67</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_abs_if'>abs_if</span>
   <span class='id identifier rubyid_swj_dp'>swj_dp</span>
@@ -621,13 +697,13 @@ address</p>
       <pre class="lines">
 
 
-49
-50
-51
-52</pre>
+54
+55
+56
+57</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/driver.rb', line 49</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/driver.rb', line 54</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_add_mem_ap'>add_mem_ap</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_base_address'>base_address</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_domain'>domain</span> <span class='id identifier rubyid_name'>name</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span>
@@ -653,20 +729,20 @@ address</p>
       <pre class="lines">
 
 
-29
-30
-31
-32
-33
 34
 35
 36
 37
 38
-39</pre>
+39
+40
+41
+42
+43
+44</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/driver.rb', line 29</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/driver.rb', line 34</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_instantiate_subblocks'>instantiate_subblocks</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_sub_block'>sub_block</span> <span class='symbol'>:swj_dp</span><span class='comma'>,</span> <span class='label'>class_name:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>OrigenARMDebug::SWJ_DP</span><span class='tstring_end'>&#39;</span></span>
@@ -699,12 +775,12 @@ address</p>
       <pre class="lines">
 
 
-100
-101
-102</pre>
+105
+106
+107</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/driver.rb', line 100</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/driver.rb', line 105</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_jtag'>jtag</span>
   <span class='id identifier rubyid_parent'>parent</span><span class='period'>.</span><span class='id identifier rubyid_jtag'>jtag</span>
@@ -781,17 +857,17 @@ only (don&#39;t care cycles will be generated for the others).</p>
       <pre class="lines">
 
 
-75
-76
-77
-78
-79
 80
 81
-82</pre>
+82
+83
+84
+85
+86
+87</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/driver.rb', line 75</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/driver.rb', line 80</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_read_register'>read_register</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:ap</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
@@ -821,12 +897,12 @@ only (don&#39;t care cycles will be generated for the others).</p>
       <pre class="lines">
 
 
-104
-105
-106</pre>
+109
+110
+111</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/driver.rb', line 104</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/driver.rb', line 109</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_swd'>swd</span>
   <span class='id identifier rubyid_parent'>parent</span><span class='period'>.</span><span class='id identifier rubyid_swd'>swd</span>
@@ -903,17 +979,17 @@ only (don&#39;t care cycles will be generated for the others).</p>
       <pre class="lines">
 
 
-91
-92
-93
-94
-95
 96
 97
-98</pre>
+98
+99
+100
+101
+102
+103</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/driver.rb', line 91</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/driver.rb', line 96</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_write_register'>write_register</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:ap</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
@@ -933,7 +1009,7 @@ only (don&#39;t care cycles will be generated for the others).</p>
 </div>
 
     <div id="footer">
-  Generated on Thu Apr  7 08:02:02 2016 by
+  Generated on Wed Apr 13 18:44:34 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.3.0).
 </div>
