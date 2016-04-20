@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta property="og:locale" content="en_US">
+    <meta name="content-language" content="en_US">
+
+    
+    <title>Creating the Tests for a Test Program</title>
+    <meta property="og:title" content="Creating the Tests for a Test Program">
+    <meta name="twitter:title" content="Creating the Tests for a Test Program">
+    <meta itemprop="name" content="Creating the Tests for a Test Program">
+      
+  
+  
+    <link rel="author" href="https://plus.google.com/u/1/b/106463981272125989995/106463981272125989">
+  
+  
+    <meta property="og:url" content="http://origen-sdk.org/origen/videos/6-create-program-tests">
+    <meta name="twitter:url" content="http://origen-sdk.org/origen/videos/6-create-program-tests">
+  
+  
+    <meta property="og:image" content="http://origen-sdk.org/favicon-260x260.png">
+    <meta name="twitter:image" content="http://origen-sdk.org/favicon-260x260.png">
+    <meta itemprop="image" content="http://origen-sdk.org/favicon-260x260.png">
+    <meta name="twitter:card" content="summary">
+  
+    <meta property="og:site_name" content="Origen - The Semiconductor Developer's Kit">
+  
+  
+    <meta property="fb:admins" content="origensdk">
+  
+  
+    <meta name="twitter:site" content="@origensdk">
+  
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="http://origen-sdk.org/css/bootstrap_custom.css"></script>
+    <!-- Load this up top to allow pages to execute JQuery snippets -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    
+      <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      
+        ga('create', 'UA-64455560-1', 'auto');
+        ga('send', 'pageview');
+      </script>
+    
+
+    <!-- Fav and touch icons -->
+    <link rel="apple-touch-icon" sizes="57x57" href="http://origen-sdk.org/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="http://origen-sdk.org/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="http://origen-sdk.org/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="http://origen-sdk.org/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="http://origen-sdk.org/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="http://origen-sdk.org/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="http://origen-sdk.org/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="http://origen-sdk.org/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="http://origen-sdk.org/apple-touch-icon-180x180.png">
+    <link rel="icon" type="image/png" href="http://origen-sdk.org/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="http://origen-sdk.org/android-chrome-192x192.png" sizes="192x192">
+    <link rel="icon" type="image/png" href="http://origen-sdk.org/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="http://origen-sdk.org/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="http://origen-sdk.org/manifest.json">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-TileImage" content="/mstile-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+  </head>
+
+  <body>
+    
+      <div class="container">
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <a href="/" class="navbar-brand" style="margin-top: -4px;">
+        <img src="http://origen-sdk.org/img/origen-device.png" style="height:30px; margin-right: 2px; display: inline; margin-top: -2px;">
+        <img src="http://origen-sdk.org/img/origen-text.png" style="height:15px; display: inline;">
+      </a>
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div id="navbar" class="collapse navbar-collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown ">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="tour">Tour <span class="caret"></span></a>
+          <ul class="dropdown-menu" aria-labelledby="tour">
+            <li><a href="/origen/tour/basics">Basics</a></li>
+            <li class="divider">
+            </li>
+<li><a href="/origen/tour/test-engineering">Test Engineers</a></li>
+            <li><a href="/origen/tour/design-engineering">Design Engineers</a></li>
+          </ul>
+        </li>
+        <li class=""><a href="/origen/guides/starting/introduction">Guides</a></li>
+        <li class="active"><a href="/origen/videos/1-pattern-in-20-minutes">Videos</a></li>
+        <li class=""><a href="/origen/api">API</a></li>
+        <li class=""><a href="https://github.com/Origen-SDK">Github</a></li>
+        <li class=""><a href="/origen/community">Community</a></li>
+        <li class=""><a href="/origen/release_notes">Release Notes</a></li>
+        <li class=""><a href="/origen/plugins">Plugins</a></li>
+      </ul>
+    </div>
+<!--/.nav-collapse -->
+  </div>
+</nav>
+
+<div class="row">
+  <div class="col-md-3 sidebar-nav-container">
+    <div class="well sidebar-nav" style="margin-top: 20px;">
+        <div id="search">
+          <form style="margin-bottom: 15px;">
+            <div class="input-group">
+              <input class="form-control" type="search" placeholder="Search the videos...">
+              <span class="input-group-btn">
+                <button type="submit" class="btn btn-search">GO!</button>
+              </span>
+            </div>
+          </form>
+        </div>
+        <div class="panel-group" id="sidebar-accordion">
+
+          <ul class="nav nav-list">
+<li class=""><a href="/origen/videos/1-pattern-in-20-minutes/">1 - A Pattern in 20 Minutes</a></li>
+<li class=""><a href="/origen/videos/2-model-data-import/">2 - Model Data Import</a></li>
+<li class=""><a href="/origen/videos/3-the-compiler/">3 - The Compiler</a></li>
+<li class=""><a href="/origen/videos/4-create-header/">4 - Creating a Header File</a></li>
+<li class=""><a href="/origen/videos/5-create-program-flow/">5 - Create Test Program Flow</a></li>
+<li class="active"><a href="/origen/videos/6-create-program-tests/">6 - Create Test Program Tests</a></li>
+           </ul>
+      
+
+        </div>
+
+    </div>
+  </div>
+
+  <div class="col-md-9 nav-page-container">
+    <article>
+
+      <h3 class="topic-title">Videos</h3>
+
+      <h2 class="topic-subtitle">Creating the Tests for a Test Program</h2>
+
+      <hr>
+
+      <p>How to use the Origen Testers APIs to create tests for Teradyne and Advantest platforms</p>
+
+      <div style="text-align: center; margin-bottom: 20px;">
+  <iframe width="640" height="360" src="https://www.youtube.com/embed/OsLYVTekbCk?rel=0" frameborder="0" allowfullscreen=""></iframe>
+</div>
+
+      <div>
+
+  <!-- Nav tabs -->
+  <ul id="videoTabs" class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#code" aria-controls="code" role="tab" data-toggle="tab">Code</a></li>
+    <li role="presentation"><a href="#comments" aria-controls="comments" role="tab" data-toggle="tab">Comments</a></li>
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="code">
+
+            <div>    
+  <a class="anchor" name="References"></a>          
+  <h4><a href="#References">References</a></h4>          
+</div>
+
+            <ul>
+              <li><a href="https://github.com/Origen-Demos/6-creating-tests">Full source code on Github</a></li>
+              <li><a href="/origen/guides/program/introduction">Test Program Generator Guide</a></li>
+              <li><a href="http://origen-sdk.org/testers/release_notes/">Origen Testers Release Notes</a></li>
+              <li><a href="http://origen-sdk.org/testers/api/OrigenTesters/SmartestBasedTester/Base/TestSuite.html">Test Suite API</a></li>
+              <li><a href="http://origen-sdk.org/testers/api/OrigenTesters/SmartestBasedTester/Base/TestMethods/AcTml.html">ACTml API</a></li>
+              <li><a href="http://origen-sdk.org/testers/api/OrigenTesters/SmartestBasedTester/Base/TestMethods/DcTml.html">DCTml API</a></li>
+            </ul>
+
+            <div>    
+  <a class="anchor" name="Code"></a>          
+  <h4><a href="#Code">Code</a></h4>          
+</div>
+
+            <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#777"># lib/atd_test/test_program/interface.rb</span>
+<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">ATDTest</span>
+  <span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">TestProgram</span>
+    <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">Interface</span>
+      include <span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">ProgramGenerators</span>
+
+      <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">func</span>(name, options={})
+        name = test_name(name, options)
+        <span style="color:#777"># Create the test</span>
+        <span style="color:#080;font-weight:bold">if</span> tester.j750?
+          ins = test_instances.functional(name)
+        <span style="color:#080;font-weight:bold">else</span>
+          ins = test_suites.add(name, options)
+          ins.test_method = test_methods.ac_tml.functional_test(options)
+        <span style="color:#080;font-weight:bold">end</span>
+        apply_conditions(ins, options)
+        <span style="color:#777"># Create the pattern set entry</span>
+        pname = pattern_name(name, options)
+        <span style="color:#080;font-weight:bold">if</span> tester.j750?
+          patset_name = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>name<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">_pset</span><span style="color:#710">"</span></span>
+          pat = patsets.add(patset_name, <span style="color:#606">pattern</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">patterns/ATD/</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>pname<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">.PAT</span><span style="color:#710">"</span></span>)
+          ins.pattern = patset_name
+        <span style="color:#080;font-weight:bold">else</span>
+          ins.pattern = pname
+        <span style="color:#080;font-weight:bold">end</span>
+
+        <span style="color:#777"># Insert the test into the flow</span>
+        test(ins, options)
+      <span style="color:#080;font-weight:bold">end</span>
+
+      <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">para</span>(name, options={})
+        name = test_name(name, options)
+        <span style="color:#777"># Create the test</span>
+        <span style="color:#080;font-weight:bold">if</span> tester.j750?
+          ins = test_instances.ppmu(name, options)
+        <span style="color:#080;font-weight:bold">else</span>
+          ins = test_suites.add(name, options)
+          ins.test_method = test_methods.dc_tml.general_pmu(options)
+        <span style="color:#080;font-weight:bold">end</span>
+        apply_conditions(ins, options)
+        <span style="color:#777"># Create the pattern set entry</span>
+        <span style="color:#080;font-weight:bold">if</span> tester.j750?
+          patset_name = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>name<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">_pset</span><span style="color:#710">"</span></span>
+          pat = patsets.add(patset_name, <span style="color:#606">pattern</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">patterns/ATD/</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>pattern_name(name, options)<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">.PAT</span><span style="color:#710">"</span></span>)
+          ins.pattern = patset_name
+        <span style="color:#080;font-weight:bold">else</span>
+        <span style="color:#080;font-weight:bold">end</span>
+
+        <span style="color:#777"># Insert the test into the flow</span>
+        test(ins, options)
+      <span style="color:#080;font-weight:bold">end</span>
+
+      <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">apply_conditions</span>(ins, options={})
+        <span style="color:#080;font-weight:bold">if</span> tester.j750?
+          ins.ac_category = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Spec</span><span style="color:#710">"</span></span>
+          ins.ac_selector = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Default</span><span style="color:#710">"</span></span>
+          ins.dc_category = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Spec</span><span style="color:#710">"</span></span>
+          <span style="color:#080;font-weight:bold">if</span> options[<span style="color:#A60">:vdd</span>]
+            <span style="color:#080;font-weight:bold">if</span> options[<span style="color:#A60">:vdd</span>] == <span style="color:#A60">:max</span>
+              ins.dc_selector = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Max</span><span style="color:#710">"</span></span>
+            <span style="color:#080;font-weight:bold">elsif</span> options[<span style="color:#A60">:vdd</span>] == <span style="color:#A60">:min</span>
+              ins.dc_selector = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Min</span><span style="color:#710">"</span></span>
+            <span style="color:#080;font-weight:bold">elsif</span> options[<span style="color:#A60">:vdd</span>] == <span style="color:#A60">:nom</span>
+              ins.dc_selector = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Default</span><span style="color:#710">"</span></span>
+            <span style="color:#080;font-weight:bold">else</span>
+              fail <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Unknown vdd selector: </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>options[<span style="color:#A60">:vdd</span>]<span style="font-weight:bold;color:#666">}</span></span><span style="color:#710">"</span></span>
+            <span style="color:#080;font-weight:bold">end</span>
+          <span style="color:#080;font-weight:bold">else</span>
+            ins.dc_selector = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Default</span><span style="color:#710">"</span></span>
+          <span style="color:#080;font-weight:bold">end</span>
+          ins.time_sets = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Tim</span><span style="color:#710">"</span></span>
+          ins.pin_levels = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Lvl</span><span style="color:#710">"</span></span>
+        <span style="color:#080;font-weight:bold">else</span>
+          ins.level_equation = <span style="color:#00D">14</span>
+          ins.level_spec = <span style="color:#00D">1</span>
+          ins.level_set = <span style="color:#00D">1</span>
+        <span style="color:#080;font-weight:bold">end</span>
+      <span style="color:#080;font-weight:bold">end</span>
+
+      <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">test_name</span>(name, options={})
+        <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">atd_</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>name<span style="font-weight:bold;color:#666">}</span></span><span style="color:#710">"</span></span>
+      <span style="color:#080;font-weight:bold">end</span>
+
+      <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">pattern_name</span>(name, options={})
+        <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>name<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">_pattern</span><span style="color:#710">"</span></span>
+      <span style="color:#080;font-weight:bold">end</span>
+    <span style="color:#080;font-weight:bold">end</span>
+  <span style="color:#080;font-weight:bold">end</span>
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+            </div>
+
+            <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#777"># program/sort1.rb</span>
+<span style="color:#036;font-weight:bold">Flow</span>.create <span style="color:#606">interface</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">ATDTest::TestProgram::Interface</span><span style="color:#710">"</span></span> <span style="color:#080;font-weight:bold">do</span>
+
+  <span style="color:#777"># This func will do something</span>
+  <span style="color:#777">#</span>
+  <span style="color:#777"># * Some bullets</span>
+  <span style="color:#777"># * About this test</span>
+  func <span style="color:#A60">:test_a</span>, <span style="color:#606">bin</span>: <span style="color:#00D">3</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">100</span>, <span style="color:#606">number</span>: <span style="color:#00D">1000</span>, <span style="color:#606">vdd</span>: <span style="color:#A60">:max</span>
+
+  func <span style="color:#A60">:test_b</span>, <span style="color:#606">bin</span>: <span style="color:#00D">3</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">101</span>, <span style="color:#606">number</span>: <span style="color:#00D">1010</span>, <span style="color:#606">id</span>: <span style="color:#A60">:test1</span>
+
+  func <span style="color:#A60">:test_c</span>, <span style="color:#606">if_failed</span>: <span style="color:#A60">:test1</span>
+
+  func <span style="color:#A60">:test_d</span>
+
+  if_job <span style="color:#A60">:p1</span> <span style="color:#080;font-weight:bold">do</span>
+    para <span style="color:#A60">:p1_test1</span>, <span style="color:#606">id</span>: <span style="color:#A60">:p11</span>, <span style="color:#606">lo_limit</span>: <span style="color:#00D">10</span>.mV, <span style="color:#606">hi_limit</span>: <span style="color:#00D">20</span>.mV
+    func <span style="color:#A60">:p1_test2</span>, <span style="color:#606">id</span>: <span style="color:#A60">:p12</span>
+    func <span style="color:#A60">:p1_test3</span>, <span style="color:#606">if_all_failed</span>: [<span style="color:#A60">:p11</span>, <span style="color:#A60">:p12</span>]
+    if_enable <span style="color:#A60">:bitmap</span> <span style="color:#080;font-weight:bold">do</span>
+      func <span style="color:#A60">:bitmap_test</span>
+    <span style="color:#080;font-weight:bold">end</span>
+  <span style="color:#080;font-weight:bold">end</span>
+
+  if_job <span style="color:#A60">:p2</span> <span style="color:#080;font-weight:bold">do</span>
+    func <span style="color:#A60">:p2_test1</span>, <span style="color:#606">id</span>: <span style="color:#A60">:p21</span>, <span style="color:#606">vdd</span>: <span style="color:#A60">:min</span>
+    func <span style="color:#A60">:p2_test2</span>, <span style="color:#606">id</span>: <span style="color:#A60">:p22</span>
+    func <span style="color:#A60">:p2_test3</span>, <span style="color:#606">if_any_passed</span>: [<span style="color:#A60">:p21</span>, <span style="color:#A60">:p22</span>]
+  <span style="color:#080;font-weight:bold">end</span>
+
+  group <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">200Mhz Tests</span><span style="color:#710">"</span></span>, <span style="color:#606">id</span>: <span style="color:#A60">:g200</span> <span style="color:#080;font-weight:bold">do</span>
+    func <span style="color:#A60">:test200_1</span>
+    func <span style="color:#A60">:test200_2</span>
+    func <span style="color:#A60">:test200_3</span>
+  <span style="color:#080;font-weight:bold">end</span>
+
+  group <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">100Mhz Tests</span><span style="color:#710">"</span></span>, <span style="color:#606">if_failed</span>: <span style="color:#A60">:g200</span>, <span style="color:#606">id</span>: <span style="color:#A60">:g100</span> <span style="color:#080;font-weight:bold">do</span>
+    func <span style="color:#A60">:test100_1</span>, <span style="color:#606">bin</span>: <span style="color:#00D">5</span>
+    func <span style="color:#A60">:test100_2</span>, <span style="color:#606">bin</span>: <span style="color:#00D">5</span>
+    func <span style="color:#A60">:test100_3</span>, <span style="color:#606">bin</span>: <span style="color:#00D">5</span>
+  <span style="color:#080;font-weight:bold">end</span>
+
+  if_job <span style="color:#A60">:p2</span> <span style="color:#080;font-weight:bold">do</span>
+    import <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">atd_tests</span><span style="color:#710">"</span></span>, <span style="color:#606">instances</span>: <span style="color:#00D">4</span>
+  <span style="color:#080;font-weight:bold">end</span>
+
+  pass <span style="color:#00D">2</span>, <span style="color:#606">if_ran</span>: <span style="color:#A60">:g100</span>
+
+  pass <span style="color:#00D">1</span>
+
+
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+            </div>
+
+            <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#777"># program/_atd_tests.rb</span>
+<span style="color:#036;font-weight:bold">Flow</span>.create <span style="color:#080;font-weight:bold">do</span> |options|
+
+  options[<span style="color:#A60">:instances</span>].times <span style="color:#080;font-weight:bold">do</span> |i|
+    func <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">atd_ramp_</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>i<span style="font-weight:bold;color:#666">}</span></span><span style="color:#710">"</span></span> 
+  <span style="color:#080;font-weight:bold">end</span>
+
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+            </div>
+
+          </div>
+<div role="tabpanel" class="tab-pane" id="comments">
+<div style="position: relative">
+  <hr>
+  <div>    
+  <a class="anchor" name="Comments"></a>          
+  <h4><a href="#Comments">Comments</a></h4>          
+</div>
+</div>
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = 'origen-sdk';
+    var disqus_title;
+    var disqus_url = 'http://' + window.location.hostname + window.location.pathname;
+
+    disqus_title = $("h1").text();
+    if (disqus_title.length == 0) {
+      disqus_title = $("h2").text();
+    }
+    if (disqus_title.length == 0) {
+      disqus_title = $("h3").text();
+    }
+    if (disqus_title.length == 0) {
+      disqus_title = $("title").text();
+    } else {
+      disqus_title = disqus_title + ' (' + $("title").text() + ')';
+    }
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+</div>
+</div>
+
+</div>
+
+    </article>
+  </div>
+</div>
+
+<script src="/origen/search.js"></script>
+
+
+      </div><!-- /.container -->
+    
+
+    <footer class="footer">
+      <div class="container">
+        <p class="pull-left text-muted">
+          Generated with the <a href="http://origen-sdk.org">Origen Semiconductor Developer's Kit</a>
+        </p>
+        <p class="pull-right text-muted">Origen is released under the terms of the <a href="http://choosealicense.com/licenses/lgpl-3.0/">LGPLv3</a></p>
+      </div>
+    </footer>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="http://origen-sdk.org/js/lunr.min.js"></script>
+    <script src="http://origen-sdk.org/js/highlight.js"></script>
+    <script src="http://origen-sdk.org/js/custom.js"></script>
+    
+      <script>
+        ((window.gitter = {}).chat = {}).options = {
+          room: 'Origen-SDK/users'
+        };
+      </script>
+      <script src="https://sidecar.gitter.im/dist/sidecar.v1.js" async defer></script>
+    
+  </body>
+</html>

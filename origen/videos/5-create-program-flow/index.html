@@ -9,18 +9,18 @@
     <meta name="content-language" content="en_US">
 
     
-    <title>Using the Compiler to Create a C Header</title>
-    <meta property="og:title" content="Using the Compiler to Create a C Header">
-    <meta name="twitter:title" content="Using the Compiler to Create a C Header">
-    <meta itemprop="name" content="Using the Compiler to Create a C Header">
+    <title>Create a Test Program Flow for Multiple ATEs</title>
+    <meta property="og:title" content="Create a Test Program Flow for Multiple ATEs">
+    <meta name="twitter:title" content="Create a Test Program Flow for Multiple ATEs">
+    <meta itemprop="name" content="Create a Test Program Flow for Multiple ATEs">
       
   
   
     <link rel="author" href="https://plus.google.com/u/1/b/106463981272125989995/106463981272125989">
   
   
-    <meta property="og:url" content="http://origen-sdk.org/origen/videos/4-create-header">
-    <meta name="twitter:url" content="http://origen-sdk.org/origen/videos/4-create-header">
+    <meta property="og:url" content="http://origen-sdk.org/origen/videos/5-create-program-flow">
+    <meta name="twitter:url" content="http://origen-sdk.org/origen/videos/5-create-program-flow">
   
   
     <meta property="og:image" content="http://origen-sdk.org/favicon-260x260.png">
@@ -144,8 +144,8 @@
 <li class=""><a href="/origen/videos/1-pattern-in-20-minutes/">1 - A Pattern in 20 Minutes</a></li>
 <li class=""><a href="/origen/videos/2-model-data-import/">2 - Model Data Import</a></li>
 <li class=""><a href="/origen/videos/3-the-compiler/">3 - The Compiler</a></li>
-<li class="active"><a href="/origen/videos/4-create-header/">4 - Creating a Header File</a></li>
-<li class=""><a href="/origen/videos/5-create-program-flow/">5 - Create Test Program Flow</a></li>
+<li class=""><a href="/origen/videos/4-create-header/">4 - Creating a Header File</a></li>
+<li class="active"><a href="/origen/videos/5-create-program-flow/">5 - Create Test Program Flow</a></li>
 <li class=""><a href="/origen/videos/6-create-program-tests/">6 - Create Test Program Tests</a></li>
            </ul>
       
@@ -160,14 +160,14 @@
 
       <h3 class="topic-title">Videos</h3>
 
-      <h2 class="topic-subtitle">Using the Compiler to Create a C Header</h2>
+      <h2 class="topic-subtitle">Create a Test Program Flow for Multiple ATEs</h2>
 
       <hr>
 
-      <p>Shows a real world example of using the Origen compiler to create a C header file view of a model.</p>
+      <p>How to use the Origen Testers flow API to create complex test flow logic that can re-target to any platform.</p>
 
       <div style="text-align: center; margin-bottom: 20px;">
-  <iframe width="640" height="360" src="https://www.youtube.com/embed/X49Nm_zNIV4?rel=0" frameborder="0" allowfullscreen=""></iframe>
+  <iframe width="640" height="360" src="https://www.youtube.com/embed/r7Oiccfy9x0?rel=0" frameborder="0" allowfullscreen=""></iframe>
 </div>
 
       <div>
@@ -188,8 +188,8 @@
 </div>
 
             <ul>
-              <li><a href="https://github.com/Origen-Demos/4-create-header">Full source code on Github</a></li>
-              <li><a href="/origen/guides/compiler/introduction">Compiler Guide</a></li>
+              <li><a href="https://github.com/Origen-Demos/5-test-program-flow">Full source code on Github</a></li>
+              <li><a href="/origen/guides/program/introduction">Test Program Generator Guide</a></li>
             </ul>
 
             <div>    
@@ -197,49 +197,71 @@
   <h4><a href="#Code">Code</a></h4>          
 </div>
 
-            <h5 id="templates">Templates</h5>
+            <div class="highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#777"># program/sort1.rb</span>
+<span style="color:#036;font-weight:bold">Flow</span>.create <span style="color:#080;font-weight:bold">do</span>
+
+  <span style="color:#777"># This test will do something</span>
+  <span style="color:#777">#</span>
+  <span style="color:#777"># * Some bullets</span>
+  <span style="color:#777"># * About this test</span>
+  test <span style="color:#A60">:test_a</span>, <span style="color:#606">bin</span>: <span style="color:#00D">3</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">100</span>, <span style="color:#606">number</span>: <span style="color:#00D">1000</span>
+
+  test <span style="color:#A60">:test_b</span>, <span style="color:#606">bin</span>: <span style="color:#00D">3</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">101</span>, <span style="color:#606">number</span>: <span style="color:#00D">1010</span>, <span style="color:#606">id</span>: <span style="color:#A60">:test1</span>
+
+  test <span style="color:#A60">:test_c</span>, <span style="color:#606">if_failed</span>: <span style="color:#A60">:test1</span>
+
+  if_job <span style="color:#A60">:p1</span> <span style="color:#080;font-weight:bold">do</span>
+    test <span style="color:#A60">:p1_test1</span>, <span style="color:#606">id</span>: <span style="color:#A60">:p11</span>
+    test <span style="color:#A60">:p1_test2</span>, <span style="color:#606">id</span>: <span style="color:#A60">:p12</span>
+    test <span style="color:#A60">:p1_test3</span>, <span style="color:#606">if_all_failed</span>: [<span style="color:#A60">:p11</span>, <span style="color:#A60">:p12</span>]
+    if_enable <span style="color:#A60">:bitmap</span> <span style="color:#080;font-weight:bold">do</span>
+      test <span style="color:#A60">:bitmap_test</span>
+    <span style="color:#080;font-weight:bold">end</span>
+  <span style="color:#080;font-weight:bold">end</span>
+
+  if_job <span style="color:#A60">:p2</span> <span style="color:#080;font-weight:bold">do</span>
+    test <span style="color:#A60">:p2_test1</span>, <span style="color:#606">id</span>: <span style="color:#A60">:p21</span>
+    test <span style="color:#A60">:p2_test2</span>, <span style="color:#606">id</span>: <span style="color:#A60">:p22</span>
+    test <span style="color:#A60">:p2_test3</span>, <span style="color:#606">if_any_passed</span>: [<span style="color:#A60">:p21</span>, <span style="color:#A60">:p22</span>]
+  <span style="color:#080;font-weight:bold">end</span>
+
+  group <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">200Mhz Tests</span><span style="color:#710">"</span></span>, <span style="color:#606">id</span>: <span style="color:#A60">:g200</span> <span style="color:#080;font-weight:bold">do</span>
+    test <span style="color:#A60">:test200_1</span>
+    test <span style="color:#A60">:test200_2</span>
+    test <span style="color:#A60">:test200_3</span>
+  <span style="color:#080;font-weight:bold">end</span>
+
+  group <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">100Mhz Tests</span><span style="color:#710">"</span></span>, <span style="color:#606">if_failed</span>: <span style="color:#A60">:g200</span>, <span style="color:#606">id</span>: <span style="color:#A60">:g100</span> <span style="color:#080;font-weight:bold">do</span>
+    test <span style="color:#A60">:test100_1</span>, <span style="color:#606">bin</span>: <span style="color:#00D">5</span>
+    test <span style="color:#A60">:test100_2</span>, <span style="color:#606">bin</span>: <span style="color:#00D">5</span>
+    test <span style="color:#A60">:test100_3</span>, <span style="color:#606">bin</span>: <span style="color:#00D">5</span>
+  <span style="color:#080;font-weight:bold">end</span>
+
+  if_job <span style="color:#A60">:p2</span> <span style="color:#080;font-weight:bold">do</span>
+    import <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">atd_tests</span><span style="color:#710">"</span></span>, <span style="color:#606">instances</span>: <span style="color:#00D">4</span>
+  <span style="color:#080;font-weight:bold">end</span>
+
+  pass <span style="color:#00D">2</span>, <span style="color:#606">if_ran</span>: <span style="color:#A60">:g100</span>
+
+  pass <span style="color:#00D">1</span>
+
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+            </div>
 
             <div class="highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre># templates/demo/atd.h.erb
+  <div class="code"><pre><span style="color:#777"># program/_atd_tests.rb</span>
+<span style="color:#036;font-weight:bold">Flow</span>.create <span style="color:#080;font-weight:bold">do</span> |options|
 
-/* ============================================================================
-   =============================== Module: ATD ================================
-   ============================================================================ */
+  options[<span style="color:#A60">:instances</span>].times <span style="color:#080;font-weight:bold">do</span> |i|
+    test <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">atd_ramp_</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>i<span style="font-weight:bold;color:#666">}</span></span><span style="color:#710">"</span></span> 
+  <span style="color:#080;font-weight:bold">end</span>
 
-% dut.atd0.regs.each do |name, reg|   
-typedef union ATD_<span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> name.to_s.upcase <span style="font-weight:bold;color:#666">%&gt;</span></span>_union_tag {      /* <span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> reg.description.first <span style="font-weight:bold;color:#666">%&gt;</span></span> */
-  vuint32_t R;
-  struct {
-%   reg.named_bits(include_spacers: true).each do |bit_name, bits|
-%     if bit_name
-    vuint32_t <span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>bit_name.to_s.upcase<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">:</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>bits.size<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">;</span><span style="color:#710">"</span></span>.ljust(<span style="color:#00D">30</span>) <span style="font-weight:bold;color:#666">%&gt;</span></span>  /* <span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> bits.description.first <span style="font-weight:bold;color:#666">%&gt;</span></span> */
-%     else    
-    vuint32_t <span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>bit_name.to_s.upcase<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">:</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>bits.size<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">;</span><span style="color:#710">"</span></span>.ljust(<span style="color:#00D">30</span>) <span style="font-weight:bold;color:#666">%&gt;</span></span>
-%     end    
-%   end    
-  } B;
-} ATD_<span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> name.to_s.upcase <span style="font-weight:bold;color:#666">%&gt;</span></span>_tag;
-
-% end
-
-struct ATD_tag {
-% dut.atd0.regs.each do |name, reg|   
-  <span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">ATD_</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>name.to_s.upcase<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">_tag </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>name.to_s.upcase<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">;</span><span style="color:#710">"</span></span>.ljust(<span style="color:#00D">30</span>) <span style="font-weight:bold;color:#666">%&gt;</span></span>  /* <span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> reg.description.first <span style="font-weight:bold;color:#666">%&gt;</span></span> */
-% end  
-};
-
-% dut.atds.each_with_index do |atd, i|
-#define ATD_<span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> i <span style="font-weight:bold;color:#666">%&gt;</span></span> (*(volatile struct ATD_tag *) <span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> atd.base_address.to_hex <span style="font-weight:bold;color:#666">%&gt;</span></span>UL)
-% end
-
-/* ATD */
-% dut.atds.each_with_index do |atd, i|
-%   dut.atd0.regs.each do |name, reg|   
-#define <span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">ATD_</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>i<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">_</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>name.to_s.upcase<span style="font-weight:bold;color:#666">}</span></span><span style="color:#710">"</span></span>.ljust(<span style="color:#00D">20</span>) + <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">ATD_</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>i<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">.</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>name.to_s.upcase<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">.R</span><span style="color:#710">"</span></span>.ljust(<span style="color:#00D">20</span>) <span style="font-weight:bold;color:#666">%&gt;</span></span>  /* <span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> reg.description.first <span style="font-weight:bold;color:#666">%&gt;</span></span> */
-%   end
-
-% end
+<span style="color:#080;font-weight:bold">end</span>
 </pre></div>
 </div>
             </div>
