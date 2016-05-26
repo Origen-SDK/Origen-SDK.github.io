@@ -404,7 +404,7 @@ dedicated method that is called upon initialization.</p>
 
       <p>Here is an example of how to define some JTAG interface pins in an SoC model:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MySoC</span>
   include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">TopLevel</span>
@@ -442,7 +442,7 @@ option.</li>
 
       <p>Pins are accessed via the <code>pin</code> method:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:tdi</span>)     <span style="color:#777"># =&gt; &lt;pin object&gt;</span>
 </pre></div>
@@ -451,7 +451,7 @@ option.</li>
 
       <p>Note that pins can be accessed locally from any object that includes the <code>Origen::Model</code> module:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:tdi</span>) == <span style="color:#d70">$dut</span>.memories.rambist.pin(<span style="color:#A60">:tdi</span>)   <span style="color:#777"># =&gt; true</span>
 </pre></div>
@@ -463,7 +463,7 @@ that sub-block.</p>
 
       <p>Pin aliases are added like this:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>has_pin?(<span style="color:#A60">:tdi</span>)               <span style="color:#777"># =&gt; true</span>
 has_pin?(<span style="color:#A60">:bisti</span>)             <span style="color:#777"># =&gt; false</span>
@@ -478,7 +478,7 @@ pin(<span style="color:#A60">:bisti</span>) == pin(<span style="color:#A60">:tdi
 
       <p>Or called directly on the pin:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>pin(<span style="color:#A60">:tdi</span>).add_alias(<span style="color:#A60">:bisti</span>)
 </pre></div>
@@ -501,7 +501,7 @@ give much concern as to whether it is dealing with one or the other.</p>
 
       <p>Pin groups are defined in a similar manner to single pins:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>add_pins <span style="color:#A60">:porta</span>, <span style="color:#606">size</span>: <span style="color:#00D">32</span>
 add_pins <span style="color:#A60">:portb</span>, <span style="color:#606">size</span>: <span style="color:#00D">16</span>, <span style="color:#606">endian</span>: <span style="color:#A60">:little</span>
@@ -524,7 +524,7 @@ order that data is applied in a test pattern.</li>
 
       <p>Pin groups can be looked up like regular pins, or via a dedicated method if it makes application code clearer:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>pins(<span style="color:#A60">:porta</span>)               <span style="color:#777"># =&gt; &lt;pin collection&gt;</span>
 pin_group(<span style="color:#A60">:porta</span>)          <span style="color:#777"># =&gt; &lt;pin collection&gt;</span>
@@ -534,7 +534,7 @@ pin_group(<span style="color:#A60">:porta</span>)          <span style="color:#7
 
       <p>A pin group is a regular Ruby array and can be iterated on and so on:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>pins(<span style="color:#A60">:porta</span>).size          <span style="color:#777"># =&gt; 32</span>
 
@@ -547,7 +547,7 @@ pins(<span style="color:#A60">:porta</span>).each <span style="color:#080;font-w
 
       <p>Within a pin group individual pins can be addressed via a local index:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>pins(<span style="color:#A60">:porta</span>)[<span style="color:#00D">0</span>] == pins(<span style="color:#A60">:porta0</span>)   <span style="color:#777"># =&gt; true</span>
 </pre></div>
@@ -556,7 +556,7 @@ pins(<span style="color:#A60">:porta</span>).each <span style="color:#080;font-w
 
       <p>Anonymous pin groups can be composed from a range of indexes at runtime:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>pins(<span style="color:#A60">:porta</span>).data                 <span style="color:#777"># =&gt; 0x0000_0000</span>
 pins(<span style="color:#A60">:porta</span>)[<span style="color:#00D">0</span>,<span style="color:#00D">1</span>,<span style="color:#00D">2</span>,<span style="color:#00D">3</span>].drive(<span style="color:#00D">0xF</span>)
@@ -569,7 +569,7 @@ pins(<span style="color:#A60">:porta</span>).data                 <span style="c
 
       <p>Pin groups can be composed from any arbitrary group of existing pins using the <code>add_pin_group</code> method:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#777"># The first argument is the ID for the new pin group, followed by the IDs of the pins it should contain</span>
 add_pin_group <span style="color:#A60">:jtag</span>, <span style="color:#A60">:tdi</span>, <span style="color:#A60">:tdo</span>, <span style="color:#A60">:tclk</span>, <span style="color:#A60">:tms</span>
@@ -582,7 +582,7 @@ pins(<span style="color:#A60">:jtag</span>).size   <span style="color:#777"># =&
       <p>Pin groups can be aliased in the same way as pins, for readability the method <code>add_pin_group_alias</code>
 can be used, although internally it is the same as <code>add_pin_alias</code>:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>add_pin_group_alias <span style="color:#A60">:porta</span>, <span style="color:#A60">:data</span>
 
@@ -594,7 +594,7 @@ pin_group(<span style="color:#A60">:data</span>).dont_care  <span style="color:#
       <p>It is possible to alias a single pin within a pin group, in that case a pin number argument
 must be supplied to <code>add_pin_alias</code>:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>add_pin_alias <span style="color:#A60">:moda</span>, <span style="color:#A60">:porta</span>, <span style="color:#606">pin</span>: <span style="color:#00D">4</span>
 </pre></div>
@@ -604,7 +604,7 @@ must be supplied to <code>add_pin_alias</code>:</p>
       <p>It is also possible to create a pin group from a subset of pins of a regular pin group, simply
 pass in a range or an array of pin indexes to <code>add_pin_group_alias</code>:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>add_pin_group_alias <span style="color:#A60">:data_byte_0</span>, <span style="color:#A60">:porta</span>, <span style="color:#606">pins</span>: [<span style="color:#00D">7</span>..<span style="color:#00D">0</span>]
 add_pin_group_alias <span style="color:#A60">:data_byte_1</span>, <span style="color:#A60">:porta</span>, <span style="color:#606">pins</span>: [<span style="color:#00D">8</span>,<span style="color:#00D">9</span>,<span style="color:#00D">10</span>,<span style="color:#00D">11</span>,<span style="color:#00D">12</span>,<span style="color:#00D">13</span>,<span style="color:#00D">14</span>,<span style="color:#00D">15</span>]
@@ -621,7 +621,7 @@ pins(<span style="color:#A60">:data_byte_0</span>).dont_care  <span style="color
 
       <p>The API supports modelling power and ground pins as follows:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>add_pin <span style="color:#A60">:pinx</span>
 
@@ -641,7 +641,7 @@ add_ground_pin_group <span style="color:#A60">:gnd</span>, <span style="color:#A
 
       <p>This will cause these pins to be stored in separate collections to make pattern and other content generation easier:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#777"># Based on the above example</span>
 pins.size           <span style="color:#777"># =&gt; 1</span>
@@ -653,7 +653,7 @@ ground_pins.size    <span style="color:#777"># =&gt; 3</span>
 
       <p>Power and ground pin lookup should be done via dedicated methods:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>power_pin(<span style="color:#A60">:vdd1</span>)
 ground_pins(<span style="color:#A60">:gnd</span>)
@@ -678,7 +678,7 @@ associated with the SoC, such as:</p>
         <li>Tester channels to control components on the DIB</li>
       </ul>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>add_virtual_pin(<span style="color:#A60">:virtual1</span>, <span style="color:#606">type</span>: <span style="color:#A60">:utility_pin</span>)
 add_virtual_pin(<span style="color:#A60">:virtual2</span>, <span style="color:#606">type</span>: <span style="color:#A60">:utility_pin</span>)
@@ -692,7 +692,7 @@ add_virtual_pin_group <span style="color:#A60">:relay</span>, <span style="color
 
       <p>This will cause these pins to be stored in separate collections to make content generation easier:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#777"># Based on the above example</span>
 virtual_pins.size           <span style="color:#777"># =&gt; 3</span>
@@ -702,7 +702,7 @@ virtual_pins.size           <span style="color:#777"># =&gt; 3</span>
 
       <p>Virtual pin lookup should be done via a dedicated method:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>virtual_pin(<span style="color:#A60">:virtual1</span>)
 
@@ -723,7 +723,7 @@ for full details of what methods are available.</p>
 
       <p>Here are a few examples of working with pins:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#777"># Make the tester drive a value on a pin</span>
 pin(<span style="color:#A60">:tdi</span>).drive_hi
@@ -767,7 +767,7 @@ pins(<span style="color:#A60">:porta</span>)[<span style="color:#00D">1</span>].
 
       <p>Almost all pin methods have a bang form, for example:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>pin(<span style="color:#A60">:tdi</span>).drive!(<span style="color:#00D">1</span>)
 </pre></div>
@@ -779,7 +779,7 @@ will then automatically fire off a tester cycle to generate a vector.</p>
 
       <p>In other words the above is the shorthand equivalent of:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>pin(<span style="color:#A60">:tdi</span>).drive(<span style="color:#00D">1</span>)
 <span style="color:#d70">$tester</span>.cycle
@@ -797,7 +797,7 @@ which can be used to gate their availability.</p>
 
       <p>Here is an example:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#777"># Initially define the available packages at the top level before adding any pins</span>
 
@@ -815,7 +815,7 @@ which can be used to gate their availability.</p>
 
       <p>Pins can then be defined by package:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>add_pin <span style="color:#A60">:pin1</span>, <span style="color:#606">packages</span>: <span style="color:#A60">:all</span>
 add_pin <span style="color:#A60">:pin2</span>                           <span style="color:#777"># No constraint is equivalent to :all</span>
@@ -843,7 +843,7 @@ has_pin?(<span style="color:#A60">:pin3</span>)      <span style="color:#777"># 
 
       <p>Pin groups can contain different sets of pins in different packages:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>add_pin(<span style="color:#A60">:pin1</span>)
 add_pin(<span style="color:#A60">:pin2</span>)
@@ -878,7 +878,7 @@ can be set to specific values per package.</p>
 
       <p>Here is an example of how to set the pin location by package:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#777"># At definition time</span>
 add_pin <span style="color:#A60">:pin1</span>, <span style="color:#606">packages</span>: {<span style="color:#606">pkg1</span>: {<span style="color:#606">location</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">A2</span><span style="color:#710">"</span></span>}, <span style="color:#606">pkg2</span>: {<span style="color:#606">location</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">A3</span><span style="color:#710">"</span></span>}}
@@ -901,7 +901,7 @@ pins(<span style="color:#A60">:pin2</span>).location       <span style="color:#7
 
       <p>A context can also be supplied when reading such attributes to override the current context:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>package = <span style="color:#A60">:pkg1</span>
 pins(<span style="color:#A60">:pin1</span>).location                   <span style="color:#777"># =&gt; "A2"</span>
@@ -912,7 +912,7 @@ pins(<span style="color:#A60">:pin1</span>).location(<span style="color:#606">pa
 
       <p>Origen will automatically create an alias for the given location (a lower cased symbol) that is scoped to the package.</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>package = <span style="color:#A60">:pkg1</span>
 has_pin?(<span style="color:#A60">:a2</span>)              <span style="color:#777"># =&gt; true</span>
@@ -940,7 +940,7 @@ can be set to specific values per context (mode and/or configuration).</p>
 
       <p>Here is an example of adding a function:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MySoC</span>
   include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">TopLevel</span>

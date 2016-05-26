@@ -421,7 +421,7 @@ set definition.</p>
 
       <p>To use the parameters API in an abstract class the following module can be included:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Parameters</span>
 </pre></div>
@@ -440,7 +440,7 @@ modules and any class which includes those will already have access to this API.
 context called <code>:default</code>, these are the values that will be enabled when
 a parameter context has not explicitly been set:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>define_params <span style="color:#A60">:default</span> <span style="color:#080;font-weight:bold">do</span> |params|
   params.tprog = <span style="color:#00D">20</span>.uS
@@ -453,7 +453,7 @@ a parameter context has not explicitly been set:</p>
       <p>Parameters can be organized into namespaces by simply writing them, no upfront definition
 is required and there is no limit to how deeply nested they can be:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>define_params <span style="color:#A60">:default</span> <span style="color:#080;font-weight:bold">do</span> |params|
   params.program.time = <span style="color:#00D">20</span>.uS
@@ -468,7 +468,7 @@ is required and there is no limit to how deeply nested they can be:</p>
 
       <p>Parameters are read back in application code via the <code>params</code> method:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>params.test.dc.vdd.min   <span style="color:#777"># =&gt; 1.5</span>
 </pre></div>
@@ -477,7 +477,7 @@ is required and there is no limit to how deeply nested they can be:</p>
 
       <p>Each namespace in the chain returns an object that can be used like a hash:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">print_erase_parameters</span>
   params.erase.each <span style="color:#080;font-weight:bold">do</span> |name, value|
@@ -493,7 +493,7 @@ print_erase_parameters   <span style="color:#777"># =&gt; time: 0.1 </span>
 
       <p>The current parameter context is set as follows:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>params.context        <span style="color:#777"># =&gt; :default</span>
 params = <span style="color:#A60">:probe</span>
@@ -514,7 +514,7 @@ params.context        <span style="color:#777"># =&gt; :probe</span>
       <p>The parameter context for a given object can be configured to automatically track that of another object by
 specifying a Ruby path to the object to be tracked as shown below:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#777"># A short hand is available to track the parameter context from the top level ($dut)</span>
 <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MyObject</span>
@@ -541,7 +541,7 @@ specifying a Ruby path to the object to be tracked as shown below:</p>
       <p>Then whenever the parameter context is set on the tracked object the same context name will be applied
 when referencing a parameter within the tracking object, for example:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#d70">$dut</span>.params.context           <span style="color:#777"># =&gt; :default</span>
 my_object.params.context      <span style="color:#777"># =&gt; :default</span>
@@ -563,7 +563,7 @@ definition code is being executed.
 In that case the parameter can be defined as a function and Origen will hold off evaluating
 it until the last possible moment when it is first referenced:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>define_params <span style="color:#A60">:default</span> <span style="color:#080;font-weight:bold">do</span>  |params|
   params.test.dc.vdd.min = -&gt; { <span style="color:#d70">$dut</span>.vdd * <span style="color:#60E">0.9</span> }
@@ -586,7 +586,7 @@ To make maintenance of such cases efficient the API allows parameter sets to be 
 hierarchy such that a given set can be defined with a parent and if it does not define
 a value for a given parameter then the value from the parent will be returned instead.</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>define_params <span style="color:#A60">:ate</span>, <span style="color:#606">inherit</span>: <span style="color:#A60">:default</span> <span style="color:#080;font-weight:bold">do</span> |params|
   params.erase.time = <span style="color:#00D">40</span>.mS
@@ -620,7 +620,7 @@ with_params <span style="color:#A60">:ft</span> <span style="color:#080;font-wei
 value from the parent, when defining a child context the parent can be accessed
 like this:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>define_params <span style="color:#A60">:ate</span>, <span style="color:#606">inherit</span>: <span style="color:#A60">:default</span> <span style="color:#080;font-weight:bold">do</span> |params, parent|
   params.test.dc.vdd.min = parent.test.dc.vdd.min * <span style="color:#60E">0.9</span>
@@ -645,7 +645,7 @@ params.test.dc.vdd.max    <span style="color:#777"># =&gt; 2.75</span>
       <p>When a parameter is referenced a static value is returned which thereafter has no
 relationship to the current parameter context, for example:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>terase = params.erase.time
 params.erase.time                <span style="color:#777"># =&gt; 100ms</span>
@@ -661,7 +661,7 @@ terase                           <span style="color:#777"># =&gt; 100ms</span>
 through the magic of Ruby a live updating parameter can be returned by referring
 to it via <code>params.live</code>:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>terase = params.live.erase.time
 terase                           <span style="color:#777"># =&gt; 100ms</span>
@@ -687,7 +687,7 @@ each one is modelled by parameter contexts defined within the read controller.</
 that Origen stores register data at bit level a register cannot simply be written to a live
 parameter, however a dedicated API is provided for this case:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>reg <span style="color:#A60">:erase</span>, <span style="color:#00D">0x0</span> <span style="color:#080;font-weight:bold">do</span>
   bits <span style="color:#00D">3</span>..<span style="color:#00D">0</span>, <span style="color:#A60">:pulses</span>

@@ -426,7 +426,7 @@ generation.</p>
       <p>Add these lines to your <code>application.rb</code> file to engage a pattern dispatcher
 (where MyApp is your application’s namespace):</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#777"># config/application.rb</span>
 <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">before_pattern_lookup</span>(requested_pattern)
@@ -438,7 +438,7 @@ generation.</p>
 
       <p>Then create an initial pattern dispatcher shell like this:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#777"># lib/my_app/pattern_dispatcher.rb</span>
 <span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">MyApp</span>
@@ -472,7 +472,7 @@ that it should be generated without a source.</p>
       <p>Let’s go with sourceless being the default, here is how to modify the <code>dispatch_or_return</code>
 method to do that:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">dispatch_or_return</span>(requested_pattern)
   <span style="color:#777"># If the pattern name contains 'custom' just return the name to have Origen lookup a source file for it</span>
@@ -505,7 +505,7 @@ generated within a regular pattern source file.</p>
 
       <p>Here our <code>generate</code> method will now produce an empty pattern:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">generate</span>(requested_pattern)
   <span style="color:#036;font-weight:bold">Pattern</span>.create(<span style="color:#606">name</span>: requested_pattern) <span style="color:#080;font-weight:bold">do</span>
@@ -528,7 +528,7 @@ file extension, and pre and post-fixes that may or may not be present. In other
 words Origen allows you to very flexible over what name you request, for example
 these are equivalent:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-text highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>origen g bistcom
 origen g output/p2/nvm_bistcom_debug.atp
@@ -542,7 +542,7 @@ have this flexibility).</p>
 
       <p>Here is an example method that you can use for this:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">generate</span>(requested_pattern)
   requested_pattern = clean_pattern_name(requested_pattern)
@@ -578,7 +578,7 @@ this already in place.</p>
 easy for a computer.
 For example your patterns may have the general format:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-text highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>&lt;parameter set&gt;_&lt;operation&gt;_&lt;identifier&gt;_&lt;block&gt;
 </pre></div>
@@ -587,7 +587,7 @@ For example your patterns may have the general format:</p>
 
       <p>Here are a couple of examples:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-text highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>prb_pgm_ckbd_b0   # Program a checkerboard to block 0, using probe parameters
 ft_pgm_ckbd_b0    # Program a checkerboard to block 0, using FT parameters
@@ -597,7 +597,7 @@ ft_pgm_ckbd_b0    # Program a checkerboard to block 0, using FT parameters
 
       <p>That’s fine, but what if these are allowed:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-text highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>pgm_ckbd_b0       # Program a checkerboard to block 0, using default parameters
 pgm_ckbd_20us_b0  # Program a checkerboard to block 0, using default parameters + 20us programming time
@@ -628,7 +628,7 @@ of ‘b’ followed by a number. This is exactly the kind of thing that we can d
       <p>So extending that convention to prefix each field with a short mnemonic describing what it
 refers to we end up with:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-text highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>paraprb_oppgm_patckbd_b0 # Program a checkerboard to block 0, using probe parameters
 paraft_oppgm_patckbd_b0  # Program a checkerboard to block 0, using FT parameters
@@ -667,7 +667,7 @@ Here are some examples
 (here assuming that the requested pattern
 has been assigned to an instance variable by upstream code):</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#777"># An example of a required field</span>
 <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">operation</span>
@@ -754,7 +754,7 @@ our parse methods return this.</p>
 way they can be used as strings, so actually we could abstract the regex portion of the
 code to a method like this:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">extract</span>(op_code)
   <span style="color:#080;font-weight:bold">if</span> <span style="color:#33B">@requested_pattern</span> =~ <span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#808">(^|_)</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>op_code<span style="font-weight:bold;color:#666">}</span></span><span style="color:#808">(</span><span style="color:#D20">\w</span><span style="color:#808">+?)(_|$)</span><span style="color:#404">/</span></span>
@@ -791,7 +791,7 @@ the parameter set option is passed into our startup method via <code>Pattern.cre
 
       <p>We can now do this by simply calling our <code>parameter_set</code> method:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">generate</span>(requested_pattern)
   requested_pattern = clean_pattern_name(requested_pattern)
@@ -816,7 +816,7 @@ done via an options hash.</p>
 
       <p>So for example a good API to handle our program checkerboard example might be:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#036;font-weight:bold">Pattern</span>.create(<span style="color:#606">params</span>: <span style="color:#A60">:ft</span>) <span style="color:#080;font-weight:bold">do</span>
   <span style="color:#d70">$dut</span>.nvm.pgm(<span style="color:#606">pattern</span>: <span style="color:#A60">:ckbd</span>, <span style="color:#606">tprog</span>: <span style="color:#00D">20</span>, <span style="color:#606">block</span>: <span style="color:#00D">0</span>)
@@ -827,7 +827,7 @@ done via an options hash.</p>
 
       <p>Which could then be synthesized via the following method:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">generate</span>(requested_pattern)
   requested_pattern = clean_pattern_name(requested_pattern)
@@ -843,7 +843,7 @@ done via an options hash.</p>
 
       <p>Even simpler would be:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#036;font-weight:bold">Pattern</span>.create(<span style="color:#606">params</span>: <span style="color:#A60">:ft</span>) <span style="color:#080;font-weight:bold">do</span>
   <span style="color:#d70">$dut</span>.nvm.execute(<span style="color:#606">operation</span>: <span style="color:#A60">:pgm</span>, <span style="color:#606">pattern</span>: <span style="color:#A60">:ckbd</span>, <span style="color:#606">tprog</span>: <span style="color:#00D">20</span>, <span style="color:#606">block</span>: block)
@@ -854,7 +854,7 @@ done via an options hash.</p>
 
       <p>And the equivalent synthesizer method:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">generate</span>(requested_pattern)
   requested_pattern = clean_pattern_name(requested_pattern)
@@ -872,7 +872,7 @@ done via an options hash.</p>
       <p>A clear pattern is starting to emerge now that for every supported option we have
 a matching method of the same name in our dispatcher, so we can optimize this a bit:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#036;font-weight:bold">OPTIONS</span> = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">%w(</span><span style="color:#D20">operation pattern tprog block</span><span style="color:#710">)</span></span>
 
@@ -904,7 +904,7 @@ models (where it probably makes more sense anyway).</p>
 add support for another field in the future just add it to the <code>OPTIONS</code>
 definition that maps the option name to the pattern name op code:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#777"># lib/my_app/pattern_dispatcher.rb</span>
 <span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">MyApp</span>

@@ -388,7 +388,7 @@ you may want to programmatically define or manipulate the target.</p>
       <p>A single target should always be loaded by using the following method, it
 can be called again to later switch to a different target:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.load_target(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">falcon_1</span><span style="color:#710">"</span></span>)
 </pre></div>
@@ -398,7 +398,7 @@ can be called again to later switch to a different target:</p>
       <p>To load the default target, or to reload the current target, call the same method
 with no argument:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.load_target
 </pre></div>
@@ -419,7 +419,7 @@ an instance of that class is available via <code>Origen.target</code>.</p>
 
       <p>For example to get the name of the current target:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.target.name   <span style="color:#777"># =&gt; "falcon_1"</span>
 </pre></div>
@@ -437,7 +437,7 @@ from within the target and used to customize it by the caller.</p>
       <p>For example here is a target where the device version is left for the caller
 to specify:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#777"># target/falcon.rb</span>
 <span style="color:#d70">$dut</span> = <span style="color:#036;font-weight:bold">MyApp</span>::<span style="color:#036;font-weight:bold">Falcon</span>.new(<span style="color:#606">version</span>: options[<span style="color:#A60">:version</span>])
@@ -447,7 +447,7 @@ to specify:</p>
 
       <p>This would be used like this:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.load_target(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">falcon</span><span style="color:#710">"</span></span>, <span style="color:#606">version</span>: <span style="color:#00D">1</span>)
 <span style="color:#d70">$dut</span>.version   <span style="color:#777"># =&gt; 1</span>
@@ -475,7 +475,7 @@ default target following the normal conventions.</p>
       <p>It is therefore ideally suited to creating a command where the user can
 supply one or more targets and could be used like this:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>opt_parser = <span style="color:#036;font-weight:bold">OptionParser</span>.new <span style="color:#080;font-weight:bold">do</span> |opts|
   opts.on(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">-t</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">--target NAME1,NAME2,NAME3</span><span style="color:#710">"</span></span>, <span style="color:#036;font-weight:bold">Array</span>,
@@ -494,7 +494,7 @@ opt_parser.parse! <span style="color:#069">ARGV</span>
 
       <p>The above would work with any of the following inputs:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-text highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre># Execute for the current default target
 origen my_command      
@@ -516,7 +516,7 @@ origen my_command -t falcon,eagle
       <p>If your application has defined a <a href="/origen/guides/targets/production">production target map</a>
 then some additional methods are available to loop on that:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.target.each_production <span style="color:#080;font-weight:bold">do</span> |maskset|
   <span style="color:#777"># Do something for each maskset line defined in the map</span>
@@ -542,7 +542,7 @@ will be an array containing all maskset numbers that use that target.</p>
 this can be useful depending on the purpose of your command, but should obviously
 be avoided in cases where the command is concerned with generating production IP.</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.target.each_production <span style="color:#606">force_debug</span>: <span style="color:#069">true</span> <span style="color:#080;font-weight:bold">do</span> |maskset|
   <span style="color:#777"># As above except Origen is running in debug mode regardless of the mode defined by the environment</span>

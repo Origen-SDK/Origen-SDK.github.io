@@ -392,7 +392,7 @@ This plugin will provide both the model and the controller as shown below:</p>
 
       <p>Here is a simple ATD model implementation which defines some register:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#777"># lib/atd_test_block/atd.rb</span>
 <span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">ATDTestBlock</span>
@@ -432,7 +432,7 @@ This plugin will provide both the model and the controller as shown below:</p>
 
       <p>Let’s create a controller to provide the user with the following API:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>result = <span style="color:#d70">$dut</span>.atd.convert(<span style="color:#00D">10</span>)   <span style="color:#777"># Perform a conversion on the voltage at ATD input channel 10 and return the result</span>
 
@@ -445,7 +445,7 @@ result.store!
       <p>A controller is implemented as follows, this is just a regular Ruby class that includes the
 <code>Origen::Controller</code> module:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#777"># lib/atd_test_block/atd_controller.rb</span>
 <span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">ATDTestBlock</span>
@@ -460,7 +460,7 @@ result.store!
       <p>Naming of controllers can be significant, here Origen will know that this this the controller for the
 <code>ATD</code> model since we have followed the naming convention:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-text highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>&lt;model name&gt;Controller
 </pre></div>
@@ -470,7 +470,7 @@ result.store!
       <p>If you cannot follow this convention (the main reason would be if the model lives in a different namespace), 
 then you can supply the class of the model like this:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#777"># lib/atd_test_block/atd_controller.rb</span>
 <span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">ATDTestBlock</span>
@@ -487,7 +487,7 @@ then you can supply the class of the model like this:</p>
       <p>The controller now gives us the place to create our pattern API, here is the <code>covert</code> method 
 implementation:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#777"># lib/atd_test_block/atd_controller.rb</span>
 <span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">ATDTestBlock</span>
@@ -525,7 +525,7 @@ down through the global namespace (<code>$dut.atd.ctrl</code>).</p>
       <p>Shadow controllers are never instantiated directly, instead Origen will automatically materialize
 them whenever a new instance of the model comes into being.</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>atd = <span style="color:#036;font-weight:bold">ATDTestBlock</span>::<span style="color:#036;font-weight:bold">ATD</span>.new    <span style="color:#777"># Instantiates the model, a controller will also be created automatically</span>
 </pre></div>
@@ -537,7 +537,7 @@ controller.</p>
 
       <p>So how do we invoke our controller API? We simply call the methods on the model:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>atd = <span style="color:#036;font-weight:bold">ATDTestBlock</span>::<span style="color:#036;font-weight:bold">ATD</span>.new
 
@@ -556,7 +556,7 @@ or the controller, they will respond the same.</p>
       <p>However if for some reason you really do need to deal directly with one or the other then you can
 use the following API:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>atd.model       <span style="color:#777"># =&gt; &lt;ATD instance&gt;</span>
 atd.controller  <span style="color:#777"># =&gt; &lt;ATDController instance&gt;</span>
@@ -575,7 +575,7 @@ patterns for a target device.</p>
       <p>The ATD test block’s integration guide should instruct the top-level test engineer to instantiate the
 ATD model within the top-level model like this:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#777"># lib/eagle.rb</span>
 <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">Eagle</span>
@@ -592,7 +592,7 @@ ATD model within the top-level model like this:</p>
       <p>The ATD API provided by the ATD test engineer is now available to the Eagle device’s test
 engineers:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#d70">$dut</span> = <span style="color:#036;font-weight:bold">Eagle</span>.new
 
@@ -609,7 +609,7 @@ engineers:</p>
       <p>If at some point the ATD test engineer gets access to an XML-based or similar definition of
 the ATD registers from the design team, then the model can be simplified like this:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#777"># lib/atd_test_block/atd.rb</span>
 <span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">ATDTestBlock</span>

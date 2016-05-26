@@ -385,7 +385,7 @@
 all Origen APIs for defining registers, pins, etc. and generally makes Origen aware of any instances of the
 model when you instantiate them.</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MyModel</span>
   include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
@@ -414,7 +414,7 @@ object for dispatch.</p>
 therefore it does not need to be specifically included in top-level model classes (although there is
 no harm from doing so).</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MySoCModel</span>
   include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">TopLevel</span>
@@ -432,7 +432,7 @@ no harm from doing so).</p>
 <code>Origen.top_level</code> or more simply <code>$dut</code>. All Origen developers can rely on this
 convention to access the current top-level object:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>soc = <span style="color:#036;font-weight:bold">MySoCModel</span>.new
 <span style="color:#036;font-weight:bold">Origen</span>.top_level == soc      <span style="color:#777"># =&gt; true</span>
@@ -470,7 +470,7 @@ applications - e.g. an application concerned with testing the SRAM could re-use 
 their own namespace which
 we will call <code>SOC</code>. Here is how to define the top level model:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#777"># lib/soc/eagle_m352.rb</span>
 <span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">SOC</span>
@@ -501,7 +501,7 @@ additional arguments in future that we may not have thought about when first def
       <p>Our first model is now defined and we can now go and talk to it for the first time, to do so start
 an interactive Origen session from your terminal:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>origen i
 </pre></div>
@@ -511,7 +511,7 @@ an interactive Origen session from your terminal:</p>
       <p>This command loads up an interactive Ruby terminal and automatically loads Origen and your application, so we can
 now experiment with our models:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#d70">$dut</span> = <span style="color:#036;font-weight:bold">SOC</span>::<span style="color:#036;font-weight:bold">EAGLE_M352</span>.new
 
@@ -531,7 +531,7 @@ now experiment with our models:</p>
       <p>Sub-blocks should be used to model IP blocks or indeed any sub-components within that IP, a generic sub-block
 can be declared very simply within the top-level’s initialize method:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#777"># lib/soc/eagle_m352.rb</span>
 <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options={})
@@ -546,7 +546,7 @@ this can then be decorated as required by the application (see example below). M
 everything internally such that the relationship between the child and the parent are known to Origen and it
 will automatically build an accessor to get the child module:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#d70">$dut</span> = <span style="color:#036;font-weight:bold">SOC</span>::<span style="color:#036;font-weight:bold">EAGLE_M352</span>.new
 
@@ -572,7 +572,7 @@ and all that is required is to get an Origen object representation of the same d
       <p>However in cases where more native richness is required you can supply a class for the object,
 let’s create a dedicated model for our NVM IP:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#777"># lib/nvm/nvm_m682.rb</span>
 <span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">NVM</span>
@@ -596,7 +596,7 @@ subsequent storage of the file in the <code>lib/nvm</code> directory rather than
 
       <p>We can now refer to this class in our sub-block definition and verify that the register we added is available:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#777"># lib/soc/eagle_m352.rb</span>
 <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options={})
@@ -621,7 +621,7 @@ can be used within sub-blocks themselves with no limit on depth.</p>
 
       <p>Here are the complete set of initial stub models for the Eagle and it’s NVM module:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#777"># lib/soc/eagle_m352.rb</span>
 <span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">SOC</span>
@@ -706,7 +706,7 @@ logic in the future.</li>
       <p>Even though we have not yet added any logic to our models they are starting to become useful,
 for example we can now ask the Eagle how many NVM memory blocks that it has:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#d70">$dut</span> = <span style="color:#036;font-weight:bold">SOC</span>::<span style="color:#036;font-weight:bold">EAGLE_M352</span>.new
 

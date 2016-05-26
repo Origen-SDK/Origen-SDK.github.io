@@ -402,7 +402,7 @@ efficient in terms of effort.</p>
 
       <p><img src="/origen/img/reg1.png" style="margin-left: 70px; width: 700px; height: 255px;"></p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#777"># file: lib/nvm/analog_t921.rb</span>
 <span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">NVM</span>
@@ -453,7 +453,7 @@ overridden on an as needed basis as shown above.</li>
       <p>Origen will automatically create accessor methods for the register and its bits, the above register
 would be accessed like this:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#d70">$dut</span>.nvm.analog.ctrl         <span style="color:#777"># =&gt; &lt;register object&gt;</span>
 <span style="color:#d70">$dut</span>.nvm.analog.ctrl.adch    <span style="color:#777"># =&gt; &lt;subset of bits&gt;</span>
@@ -465,7 +465,7 @@ would be accessed like this:</p>
 current state, this can be very useful when debugging or more generally as an interactive
 version of the block guide:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-text highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>&gt; origen i
 
@@ -488,7 +488,7 @@ version of the block guide:</p>
       <p>Origen supports some more verbose APIs that you may see used in some codebases or documentation,
 these are now considered legacy APIs but are equivalent to the above:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#d70">$dut</span>.nvm.analog.reg(<span style="color:#A60">:ctrl</span>)
 <span style="color:#d70">$dut</span>.nvm.analog.reg(<span style="color:#A60">:ctrl</span>).bits(<span style="color:#A60">:adch</span>)
@@ -500,7 +500,7 @@ these are now considered legacy APIs but are equivalent to the above:</p>
       <p>Origen supports Verilog style part selects to access an ad-hoc subset of bits, although unfortunately
 <code>[3:0]</code> is not valid Ruby and <code>[3..0]</code> is used instead.</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#d70">$dut</span>.nvm.analog.ctrl[<span style="color:#00D">1</span>]           <span style="color:#777"># =&gt; bit 1 of the register</span>
 <span style="color:#d70">$dut</span>.nvm.analog.ctrl.adch[<span style="color:#00D">1</span>]      <span style="color:#777"># =&gt; bit 1 of the adch bits</span>
@@ -521,7 +521,7 @@ IP block.</p>
       <p>Base addresses can be passed in within the sub block definition, <code>base_address</code> is an official
 option that Origen will recognize and automatically deal with.</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#777"># lib/nvm/nvm_m682.rb</span>
 sub_block <span style="color:#A60">:analog</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">ANALOG_T921</span><span style="color:#710">"</span></span>, <span style="color:#606">base_address</span>: <span style="color:#00D">0x4000_0000</span>
@@ -532,7 +532,7 @@ sub_block <span style="color:#A60">:analog</span>, <span style="color:#606">clas
       <p>Registers will automatically pick up the base address of their parent, the local address can
 be accessed via the <code>offset</code> method:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#d70">$dut</span>.nvm.analog.ctrl.address   <span style="color:#777"># =&gt; 0x4000_0024</span>
 <span style="color:#d70">$dut</span>.nvm.analog.ctrl.offset    <span style="color:#777"># =&gt; 0x24</span>
@@ -554,7 +554,7 @@ register is on, or any similar concept.</p>
       <p>Domains must first be declared in the object that owns them and then they can be passed to sub block
 definitions:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#606">domain</span>: <span style="color:#A60">:ips</span>
 <span style="color:#606">domain</span>: <span style="color:#A60">:ahb</span>, <span style="color:#606">endian</span>: <span style="color:#A60">:little</span>
@@ -568,7 +568,7 @@ sub_block <span style="color:#A60">:analog</span>, <span style="color:#606">clas
 
       <p>The child block and any of its registers will then be associated with the given domains:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#d70">$dut</span>.nvm.analog.domains            <span style="color:#777"># =&gt; {ips: &lt;object&gt;}</span>
 <span style="color:#d70">$dut</span>.nvm.analog.ctrl.domains       <span style="color:#777"># =&gt; {ips: &lt;object&gt;}</span>
@@ -591,7 +591,7 @@ supported attributes.</p>
       <p>Domain specific base addresses can be assigned to a sub-block by passing a hash to the <code>:base_address</code>
 option as shown in the example below:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">Top</span>
   include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">TopLevel</span>
@@ -646,7 +646,7 @@ hash then it will pick up a base address of 0.</p>
 
       <p>An alternative default can be set by adding a <code>:default</code> key to the hash:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>sub_block <span style="color:#A60">:subx2</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">SubX</span><span style="color:#710">"</span></span>, <span style="color:#606">base_address</span>: { <span style="color:#606">default</span>: <span style="color:#00D">0x1000_0000</span>, <span style="color:#606">ips</span>: <span style="color:#00D">0x2000_0000</span>, <span style="color:#606">ahb</span>: <span style="color:#00D">0x3000_0000</span> }
 </pre></div>
@@ -660,7 +660,7 @@ hash then it will pick up a base address of 0.</p>
 
       <p>Registers can be documented by Ruby comments like this:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#777"># ** MGATE Clock Divider Register **</span>
 <span style="color:#777"># The MCLKDIV register is used to divide down the frequency of the HBOSCCLK input. If the MCLKDIV</span>
@@ -681,7 +681,7 @@ reg <span style="color:#A60">:mclkdiv</span>, <span style="color:#00D">0x0003</s
 
       <p>The descriptions are then programmatically accessible via the following methods:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>mclkdiv.full_name                          <span style="color:#777"># =&gt; "MGATE Clock Divider Register"</span>
 mclkdiv.description(<span style="color:#606">include_name</span>: <span style="color:#069">false</span>)   <span style="color:#777"># =&gt; ["The MCLKDIV register is...", "register is set...", ...] </span>
@@ -705,7 +705,7 @@ documentation.</strong>  Thus, it is intended to be used
 only when the register is being declared programmatically by an importer and humans
 should stick to the above API for clarity:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>reg <span style="color:#A60">:mclkdiv</span>, <span style="color:#00D">0x0003</span>, <span style="color:#606">size</span>: <span style="color:#00D">16</span>, <span style="color:#606">description</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">** MGATE Clock Divider Register **</span><span style="color:#b0b">\n</span><span style="color:#D20">The MCLKDIV reg...</span><span style="color:#710">"</span></span> <span style="color:#080;font-weight:bold">do</span> |reg|
   reg.bit <span style="color:#00D">15</span>, <span style="color:#A60">:osch</span>, <span style="color:#606">reset</span>: <span style="color:#00D">1</span>, <span style="color:#606">description</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">** Oscillator (Hi) ** - Firmware FMU clk source selection...</span><span style="color:#710">"</span></span>
@@ -727,7 +727,7 @@ mode or not.</p>
 these for specific registers and bits.
 Here is an example:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">instantiate_registers</span>(options={})
 
@@ -775,7 +775,7 @@ from the class will take precedence.</p>
       <p>As with the above example the attribute values can be overridden when
 defining registers and bits.</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Registers</span>.default_reg_metadata <span style="color:#080;font-weight:bold">do</span> |reg|
   reg.attr_x        <span style="color:#777"># Adds the attribute with a default value of nil</span>
@@ -808,7 +808,7 @@ plugin and this should be consulted directly for the latest information on the A
 
       <p>However here is a brief example of how it can be used to import from a local XML file:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#777"># lib/nvm/nvm_m682.rb</span>
 <span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">NVM</span>
@@ -865,7 +865,7 @@ returned that contains only the subset of requested bits.</p>
 
       <p>Here are a few examples of working with the register that we recently added:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#d70">$dut</span> = <span style="color:#036;font-weight:bold">SOC</span>::<span style="color:#036;font-weight:bold">EAGLE_M352</span>.new(<span style="color:#606">version</span>: <span style="color:#00D">1</span>)
 

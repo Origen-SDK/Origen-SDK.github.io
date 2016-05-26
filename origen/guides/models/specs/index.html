@@ -435,7 +435,7 @@ attribute (sub_type) can further delineate a Spec but it is not required.  The b
 spec API can take two syntactical forms.  The first is a more traditional Ruby syntax
 and the second makes the API feel more like a custom DSL.</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>spec <span style="color:#A60">:soc_vdd</span>, <span style="color:#A60">:dc</span> <span style="color:#080;font-weight:bold">do</span> |spec|
   spec.symbol = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Vdd</span><span style="color:#710">"</span></span>
@@ -449,7 +449,7 @@ and the second makes the API feel more like a custom DSL.</p>
 </div>
       </div>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>spec <span style="color:#A60">:soc_vdd</span>, <span style="color:#A60">:dc</span> <span style="color:#080;font-weight:bold">do</span>
   symbol <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Vdd</span><span style="color:#710">"</span></span>
@@ -486,7 +486,7 @@ are not symetrical.</p>
       <p>During spec limit assignment the user just can either input a numeric value, a symbol or
 a string.</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>[<span style="color:#00D">1</span>] pry()&gt; <span style="color:#33B">@ip</span>.specs(<span style="color:#A60">:ip_setup_time</span>).min
 =&gt; <span style="color:#777">#&lt;struct Origen::Specs::Spec::Limit exp="250.ps + 25.ps", maturity=nil, value=2.7e-10&gt;</span>
@@ -508,7 +508,7 @@ the user intends for the Spec to be available to all modes of the defining objec
 user, of course, can specify a mode as shown below.  The Spec API will only return
 specs that match that specified mode instead of returning globally defined specs.</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>spec <span style="color:#A60">:soc_vdd</span>, <span style="color:#A60">:dc</span>, <span style="color:#A60">:mymode</span> <span style="color:#080;font-weight:bold">do</span>
   symbol <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Vdd</span><span style="color:#710">"</span></span>
@@ -539,7 +539,7 @@ ecosystem and other local specs to be contained inside the owning IP.</p>
       <p>If any of the options are nil it will not filter by that option when interrogating the
 spec database.  The API is:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>specs(<span style="color:#A60">:myspecname</span>, options)
 </pre></div>
@@ -550,14 +550,14 @@ spec database.  The API is:</p>
 can be a String, Number or a Regexp.  If an object defined three specs named :soc_vdd,
 :io_vdd, :pll_vdd the following call would occur.</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>specs(<span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#808">vdd</span><span style="color:#404">/</span></span>,<span style="color:#606">verbose</span>: <span style="color:#069">true</span>)
 </pre></div>
 </div>
       </div>
 
-      <div class="highlighter-coderay">
+      <div class="language-text highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>================================================================================================
 | IP: soc                                                                                      |
@@ -596,7 +596,7 @@ outside the model in which they are defined.  A spec with a global mode is acces
 everywhere but will be overwritten is defined both globally and locally.  Here is an
 example where a spec is defined within three modes.</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">SoC_With_Specs</span>
   include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">TopLevel</span>
@@ -633,7 +633,7 @@ example where a spec is defined within three modes.</p>
       <p>Notice below how both the limit expression and value get changed based on the mode
 selection of the owning IP.</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-text highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>[8] pry()&gt; @dut.mode
 =&gt; high_performance
@@ -655,7 +655,7 @@ selection of the owning IP.</p>
 also have a read-only attribute called ‘limit_type’ which is either :single_sided
 or :double_sided.  Here are some attribute access examples:</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-text highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>[7] pry()&gt; @ip.specs(:ip_setup_time).mode
 =&gt; :new_mode_with_altered_specs
@@ -681,7 +681,7 @@ or :double_sided.  Here are some attribute access examples:</p>
 that exist in the model itself or any child models.  This method is useful when trying to
 export the spec information of a model to other API.</p>
 
-      <div class="highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>[<span style="color:#00D">2</span>] pry(<span style="color:#777">#&lt;RSpec::ExampleGroups::OrigenSpecsModule&gt;)&gt; @dut.find_specs.size</span>
 =&gt; <span style="color:#00D">8</span>
