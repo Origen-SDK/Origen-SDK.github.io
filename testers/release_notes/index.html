@@ -96,10 +96,63 @@
 <div class="row">
   <div class="span12">
 
+    <p><a class="anchor release_tag" name="v0_7_2"></a></p>
+    <h1><a href="#v0_7_2">Tag: v0.7.2</a></h1>
+
+    <h5 id="branch-master">Branch: ‘master’</h5>
+
+    <h5 id="by-stephen-mcginty-on-09-jun-2016-0940am">by Stephen McGinty on 09-Jun-2016 09:40AM</h5>
+
+    <ul>
+      <li>Corrected formatting bug in (UltraFLEX) Levelset sheet creation (Aaron Burgmeier)</li>
+      <li>Added a hook to allow 3rd party plugins that provide a tester driver, to easily 
+make their program generator API available to their user’s interface:</li>
+    </ul>
+
+    <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#777"># Application interface</span>
+<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">MyApp</span>
+  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">Interface</span>
+    <span style="color:#777"># All interfaces should include this, adds the program generator APIs for all</span>
+    <span style="color:#777"># platforms supported by OrigenTesters, and now also any platforms provided</span>
+    <span style="color:#777"># by 3rd parties</span>
+    include <span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">ProgramGenerators</span>
+  <span style="color:#080;font-weight:bold">end</span>
+<span style="color:#080;font-weight:bold">end</span>
+
+<span style="color:#777"># 3rd Party Plugin, this is the class that will be instantiated in the target/environment</span>
+<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">MyTester</span>
+ <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">Tester</span>
+   <span style="color:#777"># By defining this constant OrigenTesters will load the API into the interface</span>
+   <span style="color:#777"># whenever an instance of this class is the current tester loaded by the target </span>
+   <span style="color:#036;font-weight:bold">TEST_PROGRAM_GENERATOR</span> = <span style="color:#036;font-weight:bold">MyTester</span>::<span style="color:#036;font-weight:bold">Generator</span>
+  <span style="color:#080;font-weight:bold">end</span>
+<span style="color:#080;font-weight:bold">end</span>
+
+<span style="color:#777"># 3rd Party Plugin, this implements the program generator API</span>
+<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">MyTester</span>
+  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">Generator</span>
+    extend <span style="color:#036;font-weight:bold">ActiveSupport</span>::<span style="color:#036;font-weight:bold">Concern</span>
+
+    included <span style="color:#080;font-weight:bold">do</span>
+      include <span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">Interface</span>  <span style="color:#777"># adds the interface helpers/Origen hook-up</span>
+    <span style="color:#080;font-weight:bold">end</span>
+
+    <span style="color:#777"># This method will now be available within the above application interface</span>
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">some_api_method</span>
+      <span style="color:#777"># Generator some test program item</span>
+    <span style="color:#080;font-weight:bold">end</span>
+  <span style="color:#080;font-weight:bold">end</span>
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+    </div>
+
     <p><a class="anchor release_tag" name="v0_7_1"></a></p>
     <h1><a href="#v0_7_1">Tag: v0.7.1</a></h1>
 
-    <h5 id="branch-master">Branch: ‘master’</h5>
+    <h5 id="branch-master-1">Branch: ‘master’</h5>
 
     <h5 id="by-priyavadan-kumar-on-27-may-2016-1344pm">by Priyavadan Kumar on 27-May-2016 13:44PM</h5>
 
@@ -109,14 +162,14 @@ not included.</p>
     <p><a class="anchor release_tag" name="v0_7_0"></a></p>
     <h1><a href="#v0_7_0">Tag: v0.7.0</a></h1>
 
-    <h5 id="branch-master-1">Branch: ‘master’</h5>
+    <h5 id="branch-master-2">Branch: ‘master’</h5>
 
     <h5 id="by-stephen-mcginty-on-23-may-2016-0322am">by Stephen McGinty on 23-May-2016 03:22AM</h5>
 
     <p>Fixed bug from additional capture cycles being inserted into period levelled vector
 on V93K, now works correctly like this:</p>
 
-    <div class="highlighter-coderay">
+    <div class="language-text highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>$tester.set_timeset("fast", 40)
 2.cycles                        #    fast   1 0 C 1 0
@@ -140,7 +193,7 @@ $tester.set_timeset("slow", 80)
     <p><a class="anchor release_tag" name="v0_7_0_pre0"></a></p>
     <h2><a href="#v0_7_0_pre0">Tag: v0.7.0.pre0</a></h2>
 
-    <h5 id="branch-master-2">Branch: ‘master’</h5>
+    <h5 id="branch-master-3">Branch: ‘master’</h5>
 
     <h5 id="by-chris-nappi-on-04-may-2016-1059am">by Chris Nappi on 04-May-2016 10:59AM</h5>
 
@@ -154,7 +207,7 @@ Added UFlex sheet generation support for Timeset Basic, Global Specs,…</p>
     <p><a class="anchor release_tag" name="v0_6_2"></a></p>
     <h1><a href="#v0_6_2">Tag: v0.6.2</a></h1>
 
-    <h5 id="branch-master-3">Branch: ‘master’</h5>
+    <h5 id="branch-master-4">Branch: ‘master’</h5>
 
     <h5 id="by-stephen-mcginty-on-08-apr-2016-0902am">by Stephen McGinty on 08-Apr-2016 09:02AM</h5>
 
@@ -163,7 +216,7 @@ Added UFlex sheet generation support for Timeset Basic, Global Specs,…</p>
     <p><a class="anchor release_tag" name="v0_6_1"></a></p>
     <h1><a href="#v0_6_1">Tag: v0.6.1</a></h1>
 
-    <h5 id="branch-master-4">Branch: ‘master’</h5>
+    <h5 id="branch-master-5">Branch: ‘master’</h5>
 
     <h5 id="by-stephen-mcginty-on-31-mar-2016-0736am">by Stephen McGinty on 31-Mar-2016 07:36AM</h5>
 
@@ -173,7 +226,7 @@ the current tester is an OrigenLink driver</p>
     <p><a class="anchor release_tag" name="v0_6_0"></a></p>
     <h1><a href="#v0_6_0">Tag: v0.6.0</a></h1>
 
-    <h5 id="branch-master-5">Branch: ‘master’</h5>
+    <h5 id="branch-master-6">Branch: ‘master’</h5>
 
     <h5 id="by-stephen-mcginty-on-23-mar-2016-1257pm">by Stephen McGinty on 23-Mar-2016 12:57PM</h5>
 
@@ -196,7 +249,7 @@ in
     <p><a class="anchor release_tag" name="v0_5_7"></a></p>
     <h1><a href="#v0_5_7">Tag: v0.5.7</a></h1>
 
-    <h5 id="branch-master-6">Branch: ‘master’</h5>
+    <h5 id="branch-master-7">Branch: ‘master’</h5>
 
     <h5 id="by-stephen-mcginty-on-08-mar-2016-0654am">by Stephen McGinty on 08-Mar-2016 06:54AM</h5>
 
@@ -209,7 +262,7 @@ in
       </li>
     </ul>
 
-    <div class="highlighter-coderay">
+    <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#777"># Importing UltraFLEX tester config</span>
 <span style="color:#d70">$tester</span>.import_tester_config(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">FT</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.root<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">/spec/atehardware/CurrentConfig_sample.txt</span><span style="color:#710">"</span></span>)
@@ -271,7 +324,7 @@ in
     <p><a class="anchor release_tag" name="v0_5_6"></a></p>
     <h1><a href="#v0_5_6">Tag: v0.5.6</a></h1>
 
-    <h5 id="branch-master-7">Branch: ‘master’</h5>
+    <h5 id="branch-master-8">Branch: ‘master’</h5>
 
     <h5 id="by-stephen-mcginty-on-03-feb-2016-0930am">by Stephen McGinty on 03-Feb-2016 09:30AM</h5>
 
@@ -292,7 +345,7 @@ get_instrument_slots are associated methods to quickly get slot/instrument infor
     <p><a class="anchor release_tag" name="v0_5_5"></a></p>
     <h1><a href="#v0_5_5">Tag: v0.5.5</a></h1>
 
-    <h5 id="branch-master-8">Branch: ‘master’</h5>
+    <h5 id="branch-master-9">Branch: ‘master’</h5>
 
     <h5 id="by-daniel-hadad-on-12-nov-2015-1756pm">by Daniel Hadad on 12-Nov-2015 17:56PM</h5>
 
@@ -309,7 +362,7 @@ Mainly for regression testing support.</p>
     <p><a class="anchor release_tag" name="v0_5_4"></a></p>
     <h1><a href="#v0_5_4">Tag: v0.5.4</a></h1>
 
-    <h5 id="branch-master-9">Branch: ‘master’</h5>
+    <h5 id="branch-master-10">Branch: ‘master’</h5>
 
     <h5 id="by-stephen-mcginty-on-30-sep-2015-0932am">by Stephen McGinty on 30-Sep-2015 09:32AM</h5>
 
@@ -319,13 +372,13 @@ be called on all instances.</p>
     <p><a class="anchor release_tag" name="v0_5_3"></a></p>
     <h1><a href="#v0_5_3">Tag: v0.5.3</a></h1>
 
-    <h5 id="branch-master-10">Branch: ‘master’</h5>
+    <h5 id="branch-master-11">Branch: ‘master’</h5>
 
     <h5 id="by-stephen-mcginty-on-29-sep-2015-1448pm">by Stephen McGinty on 29-Sep-2015 14:48PM</h5>
 
     <p>Added initial API to define custom test instance libraries for IG-XL based testers:</p>
 
-    <div class="highlighter-coderay">
+    <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#777"># app_interface.rb</span>
 
@@ -387,7 +440,7 @@ be called on all instances.</p>
     <p><a class="anchor release_tag" name="v0_5_2"></a></p>
     <h1><a href="#v0_5_2">Tag: v0.5.2</a></h1>
 
-    <h5 id="branch-master-11">Branch: ‘master’</h5>
+    <h5 id="branch-master-12">Branch: ‘master’</h5>
 
     <h5 id="by-stephen-mcginty-on-09-sep-2015-0507am">by Stephen McGinty on 09-Sep-2015 05:07AM</h5>
 
@@ -398,7 +451,7 @@ block.</p>
     <p><a class="anchor release_tag" name="v0_5_1"></a></p>
     <h1><a href="#v0_5_1">Tag: v0.5.1</a></h1>
 
-    <h5 id="branch-master-12">Branch: ‘master’</h5>
+    <h5 id="branch-master-13">Branch: ‘master’</h5>
 
     <h5 id="by-stephen-mcginty-on-02-sep-2015-1143am">by Stephen McGinty on 02-Sep-2015 11:43AM</h5>
 
@@ -426,7 +479,7 @@ self-testing these newly added features.</p>
     <p><a class="anchor release_tag" name="v0_5_0"></a></p>
     <h1><a href="#v0_5_0">Tag: v0.5.0</a></h1>
 
-    <h5 id="branch-master-13">Branch: ‘master’</h5>
+    <h5 id="branch-master-14">Branch: ‘master’</h5>
 
     <h5 id="by-stephen-mcginty-on-01-sep-2015-0923am">by Stephen McGinty on 01-Sep-2015 09:23AM</h5>
 
@@ -444,7 +497,7 @@ clr_fail if the loop exists successfully</li>
     <p><a class="anchor release_tag" name="v0_4_1"></a></p>
     <h1><a href="#v0_4_1">Tag: v0.4.1</a></h1>
 
-    <h5 id="branch-master-14">Branch: ‘master’</h5>
+    <h5 id="branch-master-15">Branch: ‘master’</h5>
 
     <h5 id="by-stephen-mcginty-on-31-aug-2015-0859am">by Stephen McGinty on 31-Aug-2015 08:59AM</h5>
 
@@ -453,7 +506,7 @@ clr_fail if the loop exists successfully</li>
     <p><a class="anchor release_tag" name="v0_4_0"></a></p>
     <h1><a href="#v0_4_0">Tag: v0.4.0</a></h1>
 
-    <h5 id="branch-master-15">Branch: ‘master’</h5>
+    <h5 id="branch-master-16">Branch: ‘master’</h5>
 
     <h5 id="by-stephen-mcginty-on-31-aug-2015-0506am">by Stephen McGinty on 31-Aug-2015 05:06AM</h5>
 
@@ -509,7 +562,7 @@ and it will make differences harder to view.</p>
 
     <p>Added Midband state to vectoring (for comparing only).</p>
 
-    <div class="highlighter-coderay">
+    <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>  <span style="color:#d70">$dut</span>.pins(<span style="color:#A60">:tdo</span>).assert_midband
   <span style="color:#036;font-weight:bold">RGen</span>.tester.cycle
@@ -542,7 +595,7 @@ that are generated by this plugin. Additional files could be added in future.</p
 from which they are comprised. The attributes of this file will be platform-dependent, here is
 an example for V93K:</p>
 
-    <div class="highlighter-coderay">
+    <div class="language-yaml highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#606">flows</span>:
   <span style="color:#606">probe1</span>:
@@ -578,7 +631,7 @@ an example for V93K:</p>
 
     <p>A template manifest file can be built by running:</p>
 
-    <div class="highlighter-coderay">
+    <div class="language-text highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>rgen testers:build my_manifest --new
 </pre></div>
@@ -598,7 +651,7 @@ directives.</li>
       <li>Added support for limits (V93K):</li>
     </ul>
 
-    <div class="highlighter-coderay">
+    <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>test_method = test_methods.j750_tml.general_dc
 test_method.lo_limit = <span style="color:#00D">100</span>.uA
@@ -613,7 +666,7 @@ via an optional methods hash. The finalize method added recently is still suppor
 should now be placed within the methods hash per the example below:</li>
     </ul>
 
-    <div class="highlighter-coderay">
+    <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">MyApp</span>
   <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">Interface</span>
@@ -726,7 +779,7 @@ within a multi-platform interface:</li>
       </li>
     </ul>
 
-    <div class="highlighter-coderay">
+    <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#080;font-weight:bold">if</span> tester.j750?
   i = test_instances.functional(name, options)
@@ -748,7 +801,7 @@ i.start_of_body_f_args = <span style="background-color:hsla(0,100%,50%,0.05)"><s
       <li>Added an API to allow applications to define custom V93K test methods:</li>
     </ul>
 
-    <div class="highlighter-coderay">
+    <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">MyApp</span>
   <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">Interface</span>
@@ -837,7 +890,7 @@ i.start_of_body_f_args = <span style="background-color:hsla(0,100%,50%,0.05)"><s
       <li>Fixed non-optimal compression in single mode:</li>
     </ul>
 
-    <div class="highlighter-coderay">
+    <div class="language-text highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>OLD:
 
@@ -857,7 +910,7 @@ repeat     60001     nvmbist     0 1 0 1 0 X X X
       <li>Fixed duplicate repeat issue at end of pattern in dual mode:</li>
     </ul>
 
-    <div class="highlighter-coderay">
+    <div class="language-text highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>OLD:
 
@@ -930,7 +983,7 @@ the creation of test programs for multiple platforms.</p>
     <p>The V93K generator now has a similar level of functionality to the supported Teradyne platforms,
 here is an example of how to use it:</p>
 
-    <div class="highlighter-coderay">
+    <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#777"># Generate a functional test</span>
 <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">functional</span>(name, options = {})
@@ -975,7 +1028,7 @@ their own interface (or they could share one) and it is impossible to know which
 To solve this, top-level flows (i.e. not required for sub-flows which will inherit the interface
 from their parent) should now define the class of the interface that they want to use:</p>
 
-    <div class="highlighter-coderay">
+    <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#036;font-weight:bold">Flow</span>.create <span style="color:#606">interface</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">C90TFSNVMTester::Interface</span><span style="color:#710">'</span></span> <span style="color:#080;font-weight:bold">do</span>
 
@@ -992,7 +1045,7 @@ possible to create a universal interface.
 Instead of including platform-specific generators, an app’s interface class can now include just
 a universal generator module:</p>
 
-    <div class="highlighter-coderay">
+    <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">C90TFSNVMTester</span>
   <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">Interface</span>
@@ -1007,7 +1060,7 @@ a universal generator module:</p>
 being used at runtime. The bottom line is that an interface to support the J750 would otherwise
 be identical to how it used to be:</p>
 
-    <div class="highlighter-coderay">
+    <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">C90TFSNVMTester</span>
   <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">Interface</span>
@@ -1033,7 +1086,7 @@ with the appropriate target.</p>
 interfaces and trying to juggle shared code between them. To add V93K support to the above interface
 you would do:</p>
 
-    <div class="highlighter-coderay">
+    <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">C90TFSNVMTester</span>
   <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">Interface</span>
@@ -1072,7 +1125,7 @@ setup which will work on all platforms (though it has not yet been tested on any
 
     <p>To use it create a very simple interface in your app:</p>
 
-    <div class="highlighter-coderay">
+    <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">C90TFSNVMTester</span>
   <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">Interface</span>
@@ -1085,7 +1138,7 @@ setup which will work on all platforms (though it has not yet been tested on any
 
     <p>In your flow you can now generate functional tests for any platform:</p>
 
-    <div class="highlighter-coderay">
+    <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#036;font-weight:bold">Flow</span>.create <span style="color:#606">interface</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">C90TFSNVMTester::Interface</span><span style="color:#710">'</span></span> <span style="color:#080;font-weight:bold">do</span>
   functional <span style="color:#A60">:erase</span>,   <span style="color:#606">sbin</span>: <span style="color:#00D">100</span>
@@ -1156,7 +1209,7 @@ of this change:</p>
 to create an interface just include the appropriate generator module:</li>
     </ul>
 
-    <div class="highlighter-coderay">
+    <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MyJ750Interface</span>
   include <span style="color:#036;font-weight:bold">Testers</span>::<span style="color:#036;font-weight:bold">J750</span>::<span style="color:#036;font-weight:bold">Generator</span>
@@ -1414,7 +1467,7 @@ instrument.</p>
 
     <p>Added in pattern compiler support for programmatic access.  This works as follows:</p>
 
-    <div class="highlighter-coderay">
+    <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">CompilerSpec</span>
   <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">CompilerDUT</span>
@@ -1670,7 +1723,7 @@ this feature.</li>
     <p>Updated linux pattern compiler to work on cmd line AND offline so compile jobs can be done
 and prepared on Windows or Linux.  Cmd line args changed slightly:</p>
 
-    <div class="highlighter-coderay">
+    <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>opt_parser = <span style="color:#036;font-weight:bold">OptionParser</span>.new <span style="color:#080;font-weight:bold">do</span> |opts|
   opts.banner = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">USAGE: rgen latpc [options] ; --pinmap is required.</span><span style="color:#710">'</span></span>
@@ -1696,7 +1749,7 @@ arg is a directory</span><span style="color:#710">"</span></span>) { |r| options
 
     <p>When using the compiler offline (inside RGen) the following steps are required:</p>
 
-    <div class="highlighter-coderay">
+    <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>bist_options = {
   <span style="color:#606">path</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">RGen</span>.root<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">/output/patterns/atp/fslbist</span><span style="color:#710">"</span></span>,
@@ -1720,7 +1773,7 @@ compiler.run <span style="color:#777"># Run the compiler using the jobs queue bu
 
     <p>Users can view the compiler job queue by doing the following:</p>
 
-    <div class="highlighter-coderay">
+    <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>compiler.inspec_jobs
 
@@ -1752,7 +1805,7 @@ compiler.run <span style="color:#777"># Run the compiler using the jobs queue bu
 
     <p>Users can view the current state of the compiler by doing the following:</p>
 
-    <div class="highlighter-coderay">
+    <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>compiler.inspect
 
@@ -1792,7 +1845,7 @@ compiler.run <span style="color:#777"># Run the compiler using the jobs queue bu
     <p>Users can save a compiler job queue by creating a pattern list which can then be run at a
 later time.</p>
 
-    <div class="highlighter-coderay">
+    <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>compiler.to_list(<span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">test</span><span style="color:#710">'</span></span>, <span style="color:#606">output_directory</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">~</span><span style="color:#710">'</span></span>, <span style="color:#606">force</span>: <span style="color:#069">true</span>, <span style="color:#606">expand</span>: <span style="color:#069">true</span>)
 
@@ -1899,7 +1952,7 @@ recusive).</p>
 
     <p>Command line args have changed slightly:</p>
 
-    <div class="highlighter-coderay">
+    <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>
   opts.on(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">-f</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">--file DIR|PATTERN|LIST</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Pattern directory, individual pattern, or
@@ -1978,7 +2031,7 @@ UltraFLEX small patterns to 64 vector minimum.</li>
 can do:</li>
     </ul>
 
-    <div class="highlighter-coderay">
+    <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>
 log <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">"Run testme only if passcode neither present in location A or location
