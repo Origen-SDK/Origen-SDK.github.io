@@ -6,7 +6,7 @@
 <title>
   Module: Origen::Parameters
   
-    &mdash; Origen Core 0.7.19
+    &mdash; Origen Core 0.7.20
   
 </title>
 
@@ -264,7 +264,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#params-instance_method" title="#params (instance method)">- (Object) <strong>params</strong> </a>
+      <a href="#params-instance_method" title="#params (instance method)">- (Object) <strong>params</strong>(context = nil) </a>
     
 
     
@@ -430,12 +430,12 @@
       <pre class="lines">
 
 
-92
 93
-94</pre>
+94
+95</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/parameters.rb', line 92</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/parameters.rb', line 93</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid__live_parameter_requested?'>_live_parameter_requested?</span>
   <span class='ivar'>@_live_parameter_requested</span>
@@ -473,7 +473,6 @@
       <pre class="lines">
 
 
-68
 69
 70
 71
@@ -484,10 +483,11 @@
 76
 77
 78
-79</pre>
+79
+80</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/parameters.rb', line 68</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/parameters.rb', line 69</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid__parameter_current'>_parameter_current</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_path'>path</span> <span class='op'>=</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='period'>.</span><span class='id identifier rubyid_parameters_context'>parameters_context</span>
@@ -534,12 +534,12 @@
       <pre class="lines">
 
 
-82
 83
-84</pre>
+84
+85</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/parameters.rb', line 82</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/parameters.rb', line 83</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid__parameter_sets'>_parameter_sets</span>
   <span class='ivar'>@_parameter_sets</span> <span class='op'>||=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
@@ -577,12 +577,12 @@
       <pre class="lines">
 
 
-87
 88
-89</pre>
+89
+90</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/parameters.rb', line 87</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/parameters.rb', line 88</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid__request_live_parameter'>_request_live_parameter</span>
   <span class='ivar'>@_live_parameter_requested</span> <span class='op'>=</span> <span class='kw'>true</span>
@@ -653,7 +653,7 @@
       <div class="method_details ">
   <h3 class="signature " id="params-instance_method">
   
-    - (<tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt>) <strong>params</strong> 
+    - (<tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt>) <strong>params</strong>(context = nil) 
   
 
   
@@ -672,14 +672,16 @@
 52
 53
 54
-55</pre>
+55
+56</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/origen/parameters.rb', line 52</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_params'>params</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_params'>params</span><span class='lparen'>(</span><span class='id identifier rubyid_context'>context</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
   <span class='ivar'>@_live_parameter_requested</span> <span class='op'>=</span> <span class='kw'>false</span>
-  <span class='id identifier rubyid__parameter_sets'>_parameter_sets</span><span class='lbracket'>[</span><span class='id identifier rubyid__parameter_current'>_parameter_current</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='const'>Missing</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='label'>owner:</span> <span class='kw'>self</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_context'>context</span> <span class='op'>||=</span> <span class='id identifier rubyid__parameter_current'>_parameter_current</span>
+  <span class='id identifier rubyid__parameter_sets'>_parameter_sets</span><span class='lbracket'>[</span><span class='id identifier rubyid_context'>context</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='const'>Missing</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='label'>owner:</span> <span class='kw'>self</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -705,16 +707,16 @@
       <pre class="lines">
 
 
-58
 59
 60
 61
 62
 63
-64</pre>
+64
+65</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/parameters.rb', line 58</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/parameters.rb', line 59</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_params='>params=</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
   <span class='comment'># Don&#39;t validate on setting this as this object could be used to set
@@ -769,9 +771,9 @@
 </div>
 
     <div id="footer">
-  Generated on Fri Jun 17 10:52:50 2016 by
+  Generated on Mon Jun 20 10:14:20 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.7.6 (ruby-2.1.5).
+  0.8.7.6 (ruby-2.3.0).
 </div>
 
   </body>
