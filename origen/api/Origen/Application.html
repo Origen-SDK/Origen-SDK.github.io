@@ -6,7 +6,7 @@
 <title>
   Class: Origen::Application
   
-    &mdash; Origen Core 0.7.24
+    &mdash; Origen Core 0.7.25
   
 </title>
 
@@ -2265,7 +2265,7 @@ used to refer to the application when it is used as a plugin</p>
     <span class='id identifier rubyid_app'>app</span> <span class='op'>=</span> <span class='id identifier rubyid_base'>base</span><span class='period'>.</span><span class='id identifier rubyid_instance'>instance</span>
     <span class='id identifier rubyid_app'>app</span><span class='period'>.</span><span class='id identifier rubyid_root'>root</span> <span class='op'>=</span> <span class='id identifier rubyid_root'>root</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span>
     <span class='kw'>if</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_plugins_loaded?'>plugins_loaded?</span> <span class='op'>&amp;&amp;</span> <span class='op'>!</span><span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_loading_top_level?'>loading_top_level?</span>
-      <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_log'>log</span><span class='period'>.</span><span class='id identifier rubyid_warning'>warning</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>The </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_app'>app</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'> plugin is using a non-standard loading mechanism, upgrade to a newer version to get rid of this error (please report a bug if that does not remove this warning)</span><span class='tstring_end'>&quot;</span></span>
+      <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_log'>log</span><span class='period'>.</span><span class='id identifier rubyid_warning'>warning</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>The </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_app'>app</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'> plugin is using a non-standard loading mechanism, upgrade to a newer version of it to get rid of this warning (please report a bug to its owner if this warning persists)</span><span class='tstring_end'>&quot;</span></span>
       <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_app'>app</span><span class='period'>.</span><span class='id identifier rubyid_plugins'>plugins</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_app'>app</span>
     <span class='kw'>else</span>
       <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_register_application'>register_application</span><span class='lparen'>(</span><span class='id identifier rubyid_app'>app</span><span class='rparen'>)</span>
@@ -3014,10 +3014,10 @@ application</p>
 <span class='kw'>def</span> <span class='id identifier rubyid_current?'>current?</span>
   <span class='comment'># If this is called before the plugins are loaded (i.e. by a plugin&#39;s application file), then
 </span>  <span class='comment'># it is definitely not the top-level app
-</span>  <span class='kw'>if</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_plugins_loaded?'>plugins_loaded?</span>
+</span>  <span class='kw'>if</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_application_loaded?'>application_loaded?</span>
     <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_app'>app</span> <span class='op'>==</span> <span class='kw'>self</span>
   <span class='kw'>else</span>
-    <span class='kw'>false</span>
+    <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_root'>root</span> <span class='op'>==</span> <span class='id identifier rubyid_root'>root</span>
   <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -3098,7 +3098,7 @@ application</p>
       <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 274</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_current_plugin?'>current_plugin?</span>
-  <span class='kw'>if</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_plugins_loaded?'>plugins_loaded?</span>
+  <span class='kw'>if</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_application_loaded?'>application_loaded?</span>
     <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_app'>app</span><span class='period'>.</span><span class='id identifier rubyid_plugins'>plugins</span><span class='period'>.</span><span class='id identifier rubyid_current'>current</span> <span class='op'>==</span> <span class='kw'>self</span>
   <span class='kw'>else</span>
     <span class='id identifier rubyid_puts'>puts</span> <span class='heredoc_beg'>&lt;&lt;-END</span>
@@ -5875,7 +5875,7 @@ to instantiate an Origen::Tester::Doc instance</p>
 </div>
 
       <div id="footer">
-  Generated on Mon Aug 22 09:37:36 2016 by
+  Generated on Mon Aug 22 10:58:28 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.5 (ruby-2.3.1).
 </div>
