@@ -6,7 +6,7 @@
 <title>
   Class: Origen::Application
   
-    &mdash; Origen Core 0.7.25
+    &mdash; Origen Core 0.7.26
   
 </title>
 
@@ -102,7 +102,7 @@
   <dl>
     <dt>Defined in:</dt>
     <dd>lib/origen/application.rb<span class="defines">,<br />
-  lib/origen/application/lsf.rb,<br /> lib/origen/application/target.rb,<br /> lib/origen/application/runner.rb,<br /> lib/origen/application/release.rb,<br /> lib/origen/application/plugins.rb,<br /> lib/origen/application/deployer.rb,<br /> lib/origen/application/statistics.rb,<br /> lib/origen/application/lsf_manager.rb,<br /> lib/origen/application/environment.rb,<br /> lib/origen/application/configuration.rb,<br /> lib/origen/application/version_tracker.rb,<br /> lib/origen/application/plugins_manager.rb,<br /> lib/origen/application/workspace_manager.rb,<br /> lib/origen/application/command_dispatcher.rb</span>
+  lib/origen/application/lsf.rb,<br /> lib/origen/application/runner.rb,<br /> lib/origen/application/target.rb,<br /> lib/origen/application/release.rb,<br /> lib/origen/application/plugins.rb,<br /> lib/origen/application/deployer.rb,<br /> lib/origen/application/statistics.rb,<br /> lib/origen/application/lsf_manager.rb,<br /> lib/origen/application/environment.rb,<br /> lib/origen/application/configuration.rb,<br /> lib/origen/application/plugins_manager.rb,<br /> lib/origen/application/version_tracker.rb,<br /> lib/origen/application/workspace_manager.rb,<br /> lib/origen/application/command_dispatcher.rb</span>
 </dd>
   </dl>
   
@@ -2157,12 +2157,12 @@ used to refer to the application when it is used as a plugin</p>
       <pre class="lines">
 
 
-512
-513
-514</pre>
+515
+516
+517</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 512</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 515</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_name'>name</span>
   <span class='ivar'>@name</span>
@@ -2200,12 +2200,12 @@ used to refer to the application when it is used as a plugin</p>
       <pre class="lines">
 
 
-180
-181
-182</pre>
+183
+184
+185</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 180</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 183</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_namespace'>namespace</span>
   <span class='ivar'>@namespace</span>
@@ -2252,7 +2252,10 @@ used to refer to the application when it is used as a plugin</p>
 43
 44
 45
-46</pre>
+46
+47
+48
+49</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 31</span>
@@ -2265,8 +2268,11 @@ used to refer to the application when it is used as a plugin</p>
     <span class='id identifier rubyid_app'>app</span> <span class='op'>=</span> <span class='id identifier rubyid_base'>base</span><span class='period'>.</span><span class='id identifier rubyid_instance'>instance</span>
     <span class='id identifier rubyid_app'>app</span><span class='period'>.</span><span class='id identifier rubyid_root'>root</span> <span class='op'>=</span> <span class='id identifier rubyid_root'>root</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span>
     <span class='kw'>if</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_plugins_loaded?'>plugins_loaded?</span> <span class='op'>&amp;&amp;</span> <span class='op'>!</span><span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_loading_top_level?'>loading_top_level?</span>
-      <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_log'>log</span><span class='period'>.</span><span class='id identifier rubyid_warning'>warning</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>The </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_app'>app</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'> plugin is using a non-standard loading mechanism, upgrade to a newer version of it to get rid of this warning (please report a bug to its owner if this warning persists)</span><span class='tstring_end'>&quot;</span></span>
-      <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_app'>app</span><span class='period'>.</span><span class='id identifier rubyid_plugins'>plugins</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_app'>app</span>
+      <span class='comment'># This situation of a plugin being loaded after the top-level app could occur if the app
+</span>      <span class='comment'># doesn&#39;t require the plugin until later, in that case there is nothing the plugin owner
+</span>      <span class='comment'># can do and we just need to accept that this can happen.
+</span>      <span class='comment'># Origen.log.warning &quot;The #{app.name} plugin is using a non-standard loading mechanism, upgrade to a newer version of it to get rid of this warning (please report a bug to its owner if this warning persists)&quot;
+</span>      <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_app'>app</span><span class='period'>.</span><span class='id identifier rubyid_plugins'>plugins</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_app'>app</span>
     <span class='kw'>else</span>
       <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_register_application'>register_application</span><span class='lparen'>(</span><span class='id identifier rubyid_app'>app</span><span class='rparen'>)</span>
     <span class='kw'>end</span>
@@ -2293,12 +2299,12 @@ used to refer to the application when it is used as a plugin</p>
       <pre class="lines">
 
 
-48
-49
-50</pre>
+51
+52
+53</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 48</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 51</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_instance'>instance</span>
   <span class='ivar'>@instance</span> <span class='op'>||=</span> <span class='id identifier rubyid_new'>new</span>
@@ -2345,12 +2351,12 @@ used to refer to the application when it is used as a plugin</p>
       <pre class="lines">
 
 
-52
-53
-54</pre>
+55
+56
+57</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 52</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 55</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
   <span class='kw'>super</span> <span class='op'>||</span> <span class='id identifier rubyid_instance'>instance</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
@@ -2381,12 +2387,12 @@ used to refer to the application when it is used as a plugin</p>
       <pre class="lines">
 
 
-622
-623
-624</pre>
+625
+626
+627</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 622</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 625</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_add_callback_listener'>add_callback_listener</span><span class='lparen'>(</span><span class='id identifier rubyid_obj'>obj</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_dynamic_resource'>dynamic_resource</span><span class='lparen'>(</span><span class='symbol'>:callback_listeners</span><span class='comma'>,</span> <span class='lbracket'>[</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='label'>adding:</span> <span class='kw'>true</span><span class='rparen'>)</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_obj'>obj</span>
@@ -2411,12 +2417,12 @@ used to refer to the application when it is used as a plugin</p>
       <pre class="lines">
 
 
-506
-507
-508</pre>
+509
+510
+511</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 506</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 509</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_add_config_attribute'>add_config_attribute</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
   <span class='const'>Application</span><span class='op'>::</span><span class='const'>Configuration</span><span class='period'>.</span><span class='id identifier rubyid_add_attribute'>add_attribute</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
@@ -2460,14 +2466,14 @@ them during application configuration.</p>
       <pre class="lines">
 
 
-854
-855
-856
 857
-858</pre>
+858
+859
+860
+861</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 854</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 857</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_add_lib_to_load_path!'>add_lib_to_load_path!</span> <span class='comment'>#:nodoc:
 </span>  <span class='lbracket'>[</span><span class='id identifier rubyid_root'>root</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>lib</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='comma'>,</span> <span class='id identifier rubyid_root'>root</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>vendor</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>lib</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_path'>path</span><span class='op'>|</span>
@@ -2494,14 +2500,14 @@ them during application configuration.</p>
       <pre class="lines">
 
 
-626
-627
-628
 629
-630</pre>
+630
+631
+632
+633</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 626</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 629</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_add_persistant_callback_listener'>add_persistant_callback_listener</span><span class='lparen'>(</span><span class='id identifier rubyid_obj'>obj</span><span class='rparen'>)</span>
   <span class='ivar'>@persistant_callback_listeners</span> <span class='op'>||=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
@@ -2528,18 +2534,18 @@ them during application configuration.</p>
       <pre class="lines">
 
 
-677
-678
-679
 680
 681
 682
 683
 684
-685</pre>
+685
+686
+687
+688</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 677</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 680</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_add_pin_to_pin_map'>add_pin_to_pin_map</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_pin'>pin</span><span class='rparen'>)</span>
   <span class='comment'># If being added during target load...
@@ -2570,18 +2576,18 @@ them during application configuration.</p>
       <pre class="lines">
 
 
-691
-692
-693
 694
 695
 696
 697
 698
-699</pre>
+699
+700
+701
+702</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 691</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 694</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_add_pingroup_to_pingroup_map'>add_pingroup_to_pingroup_map</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_pins'>pins</span><span class='rparen'>)</span>
   <span class='comment'># If being added during target load...
@@ -2612,17 +2618,17 @@ them during application configuration.</p>
       <pre class="lines">
 
 
-632
-633
-634
 635
 636
 637
 638
-639</pre>
+639
+640
+641
+642</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 632</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 635</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_add_toplevel_listener'>add_toplevel_listener</span><span class='lparen'>(</span><span class='id identifier rubyid_obj'>obj</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_top_level'>top_level</span>
@@ -2666,9 +2672,6 @@ returned, otherwise the name will be returned as a String</p>
       <pre class="lines">
 
 
-430
-431
-432
 433
 434
 435
@@ -2689,10 +2692,13 @@ returned, otherwise the name will be returned as a String</p>
 450
 451
 452
-453</pre>
+453
+454
+455
+456</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 430</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 433</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_author'>author</span><span class='lparen'>(</span><span class='id identifier rubyid_version'>version</span> <span class='op'>=</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_app'>app</span><span class='period'>.</span><span class='id identifier rubyid_version'>version</span><span class='period'>.</span><span class='id identifier rubyid_prefixed'>prefixed</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_version'>version</span> <span class='op'>=</span> <span class='const'>VersionString</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_version'>version</span><span class='rparen'>)</span>
@@ -2753,9 +2759,6 @@ returned, otherwise the name will be returned as a String</p>
       <pre class="lines">
 
 
-456
-457
-458
 459
 460
 461
@@ -2774,10 +2777,13 @@ returned, otherwise the name will be returned as a String</p>
 474
 475
 476
-477</pre>
+477
+478
+479
+480</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 456</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 459</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_branch'>branch</span><span class='lparen'>(</span><span class='id identifier rubyid_version'>version</span> <span class='op'>=</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_app'>app</span><span class='period'>.</span><span class='id identifier rubyid_version'>version</span><span class='period'>.</span><span class='id identifier rubyid_prefixed'>prefixed</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_version'>version</span> <span class='op'>=</span> <span class='const'>VersionString</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_version'>version</span><span class='rparen'>)</span>
@@ -2821,15 +2827,15 @@ returned, otherwise the name will be returned as a String</p>
       <pre class="lines">
 
 
-607
-608
-609
 610
 611
-612</pre>
+612
+613
+614
+615</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 607</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 610</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_callback_listeners'>callback_listeners</span>
   <span class='id identifier rubyid_current'>current</span> <span class='op'>=</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_app'>app</span><span class='period'>.</span><span class='id identifier rubyid_plugins'>plugins</span><span class='period'>.</span><span class='id identifier rubyid_current'>current</span>
@@ -2857,17 +2863,17 @@ returned, otherwise the name will be returned as a String</p>
       <pre class="lines">
 
 
-827
-828
-829
 830
 831
 832
 833
-834</pre>
+834
+835
+836
+837</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 827</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 830</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_clear_dynamic_resources'>clear_dynamic_resources</span><span class='lparen'>(</span><span class='id identifier rubyid_type'>type</span> <span class='op'>=</span> <span class='symbol'>:transient</span><span class='rparen'>)</span>
   <span class='ivar'>@top_level</span> <span class='op'>=</span> <span class='kw'>nil</span>
@@ -2897,12 +2903,12 @@ returned, otherwise the name will be returned as a String</p>
       <pre class="lines">
 
 
-502
-503
-504</pre>
+505
+506
+507</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 502</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 505</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_config'>config</span>
   <span class='ivar'>@config</span> <span class='op'>||=</span> <span class='const'>Configuration</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='kw'>self</span><span class='rparen'>)</span>
@@ -2927,18 +2933,18 @@ returned, otherwise the name will be returned as a String</p>
       <pre class="lines">
 
 
-492
-493
-494
 495
 496
 497
 498
 499
-500</pre>
+500
+501
+502
+503</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 492</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 495</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_contributors'>contributors</span>
   <span class='id identifier rubyid_c'>c</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
@@ -2998,18 +3004,18 @@ application</p>
       <pre class="lines">
 
 
-260
-261
-262
 263
 264
 265
 266
 267
-268</pre>
+268
+269
+270
+271</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 260</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 263</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_current?'>current?</span>
   <span class='comment'># If this is called before the plugins are loaded (i.e. by a plugin&#39;s application file), then
@@ -3064,9 +3070,6 @@ application</p>
       <pre class="lines">
 
 
-274
-275
-276
 277
 278
 279
@@ -3092,10 +3095,13 @@ application</p>
 299
 300
 301
-302</pre>
+302
+303
+304
+305</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 274</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 277</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_current_plugin?'>current_plugin?</span>
   <span class='kw'>if</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_application_loaded?'>application_loaded?</span>
@@ -3146,12 +3152,12 @@ end
       <pre class="lines">
 
 
-571
-572
-573</pre>
+574
+575
+576</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 571</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 574</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_db'>db</span>
   <span class='ivar'>@db</span> <span class='op'>||=</span> <span class='const'>Database</span><span class='op'>::</span><span class='const'>KeyValueStores</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='kw'>self</span><span class='rparen'>)</span>
@@ -3176,12 +3182,12 @@ end
       <pre class="lines">
 
 
-551
-552
-553</pre>
+554
+555
+556</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 551</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 554</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_deployer'>deployer</span>
   <span class='ivar'>@deployer</span> <span class='op'>||=</span> <span class='const'>Deployer</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
@@ -3206,8 +3212,7 @@ end
 <p>Enable for debugging to see what the currently tracked objects are def
 object_store</p>
 
-<pre class="code ruby"><code class="ruby"><span class='lbracket'>[</span><span class='ivar'>@load_event</span><span class='comma'>,</span> <span class='ivar'>@static_resources</span><span class='comma'>,</span> <span class='ivar'>@transient_resources</span><span class='rbracket'>]</span>
-</code></pre>
+<pre class="code ruby"><code class="ruby"><span class='lbracket'>[</span><span class='ivar'>@load_event</span><span class='comma'>,</span> <span class='ivar'>@static_resources</span><span class='comma'>,</span> <span class='ivar'>@transient_resources</span><span class='rbracket'>]</span></code></pre>
 
 <p>end</p>
 
@@ -3223,9 +3228,6 @@ object_store</p>
       <pre class="lines">
 
 
-800
-801
-802
 803
 804
 805
@@ -3248,10 +3250,13 @@ object_store</p>
 822
 823
 824
-825</pre>
+825
+826
+827
+828</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 800</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 803</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_dynamic_resource'>dynamic_resource</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_default'>default</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='ivar'>@static_resources</span> <span class='op'>||=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
@@ -3299,12 +3304,12 @@ object_store</p>
       <pre class="lines">
 
 
-539
-540
-541</pre>
+542
+543
+544</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 539</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 542</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_environment'>environment</span>
   <span class='ivar'>@environment</span> <span class='op'>||=</span> <span class='const'>Environment</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
@@ -3329,12 +3334,12 @@ object_store</p>
       <pre class="lines">
 
 
-516
-517
-518</pre>
+519
+520
+521</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 516</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 519</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_gem_name'>gem_name</span>
   <span class='lparen'>(</span><span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_app'>app</span><span class='period'>.</span><span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_gem_name'>gem_name</span> <span class='op'>||</span> <span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='period'>.</span><span class='id identifier rubyid_underscore'>underscore</span><span class='period'>.</span><span class='id identifier rubyid_symbolize'>symbolize</span>
@@ -3382,12 +3387,12 @@ import 3rd party dependencies</p>
       <pre class="lines">
 
 
-174
-175
-176</pre>
+177
+178
+179</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 174</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 177</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_imports_directory'>imports_directory</span>
   <span class='id identifier rubyid_workspace_manager'>workspace_manager</span><span class='period'>.</span><span class='id identifier rubyid_imports_directory'>imports_directory</span>
@@ -3412,12 +3417,12 @@ import 3rd party dependencies</p>
       <pre class="lines">
 
 
-147
-148
-149</pre>
+150
+151
+152</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 147</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 150</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_inspect'>inspect</span>
   <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>&lt;Origen app (</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'>):</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_object_id'>object_id</span><span class='embexpr_end'>}</span><span class='tstring_content'>&gt;</span><span class='tstring_end'>&quot;</span></span>
@@ -3442,12 +3447,12 @@ import 3rd party dependencies</p>
       <pre class="lines">
 
 
-614
-615
-616</pre>
+617
+618
+619</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 614</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 617</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_instantiated_callback_listeners'>instantiated_callback_listeners</span>
   <span class='id identifier rubyid_dynamic_resource'>dynamic_resource</span><span class='lparen'>(</span><span class='symbol'>:callback_listeners</span><span class='comma'>,</span> <span class='lbracket'>[</span><span class='rbracket'>]</span><span class='rparen'>)</span> <span class='op'>+</span> <span class='lparen'>(</span><span class='ivar'>@persistant_callback_listeners</span> <span class='op'>||</span> <span class='lbracket'>[</span><span class='rbracket'>]</span><span class='rparen'>)</span>
@@ -3472,9 +3477,6 @@ import 3rd party dependencies</p>
       <pre class="lines">
 
 
-312
-313
-314
 315
 316
 317
@@ -3501,10 +3503,13 @@ import 3rd party dependencies</p>
 338
 339
 340
-341</pre>
+341
+342
+343
+344</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 312</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 315</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_listeners_for'>listeners_for</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_callback'>callback</span> <span class='op'>=</span> <span class='id identifier rubyid_args'>args</span><span class='period'>.</span><span class='id identifier rubyid_shift'>shift</span>
@@ -3556,14 +3561,14 @@ import 3rd party dependencies</p>
       <pre class="lines">
 
 
-836
-837
-838
 839
-840</pre>
+840
+841
+842
+843</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 836</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 839</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_load_event'>load_event</span><span class='lparen'>(</span><span class='id identifier rubyid_type'>type</span><span class='rparen'>)</span>
   <span class='ivar'>@load_event</span> <span class='op'>=</span> <span class='id identifier rubyid_type'>type</span>
@@ -3590,9 +3595,6 @@ import 3rd party dependencies</p>
       <pre class="lines">
 
 
-725
-726
-727
 728
 729
 730
@@ -3631,10 +3633,13 @@ import 3rd party dependencies</p>
 763
 764
 765
-766</pre>
+766
+767
+768
+769</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 725</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 728</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_load_target!'>load_target!</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span>
@@ -3709,12 +3714,12 @@ import 3rd party dependencies</p>
       <pre class="lines">
 
 
-99
-100
-101</pre>
+102
+103
+104</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 99</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 102</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_load_tasks'>load_tasks</span>
   <span class='const'>RakeLoader</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='period'>.</span><span class='id identifier rubyid_load_tasks'>load_tasks</span>
@@ -3739,12 +3744,12 @@ import 3rd party dependencies</p>
       <pre class="lines">
 
 
-543
-544
-545</pre>
+546
+547
+548</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 543</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 546</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_lsf'>lsf</span>
   <span class='ivar'>@lsf</span> <span class='op'>||=</span> <span class='const'>LSF</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
@@ -3769,12 +3774,12 @@ import 3rd party dependencies</p>
       <pre class="lines">
 
 
-555
-556
-557</pre>
+558
+559
+560</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 555</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 558</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_lsf_manager'>lsf_manager</span>
   <span class='ivar'>@lsf_manager</span> <span class='op'>||=</span> <span class='const'>LSFManager</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
@@ -3799,12 +3804,12 @@ import 3rd party dependencies</p>
       <pre class="lines">
 
 
-567
-568
-569</pre>
+570
+571
+572</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 567</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 570</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_mailer'>mailer</span>
   <span class='ivar'>@mailer</span> <span class='op'>||=</span> <span class='const'>Utility</span><span class='op'>::</span><span class='const'>Mailer</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
@@ -3840,12 +3845,12 @@ import 3rd party dependencies</p>
       <pre class="lines">
 
 
-185
-186
-187</pre>
+188
+189
+190</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 185</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 188</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_maillist_dev'>maillist_dev</span>
   <span class='id identifier rubyid_maillist_parse'>maillist_parse</span><span class='lparen'>(</span><span class='id identifier rubyid_maillist_dev_file'>maillist_dev_file</span><span class='rparen'>)</span>
@@ -3881,12 +3886,12 @@ import 3rd party dependencies</p>
       <pre class="lines">
 
 
-195
-196
-197</pre>
+198
+199
+200</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 195</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 198</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_maillist_dev_file'>maillist_dev_file</span>
   <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_app'>app</span><span class='period'>.</span><span class='id identifier rubyid_root'>root</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span> <span class='op'>+</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>/config/maillist_dev.txt</span><span class='tstring_end'>&#39;</span></span>
@@ -3922,9 +3927,6 @@ import 3rd party dependencies</p>
       <pre class="lines">
 
 
-205
-206
-207
 208
 209
 210
@@ -3943,10 +3945,13 @@ import 3rd party dependencies</p>
 223
 224
 225
-226</pre>
+226
+227
+228
+229</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 205</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 208</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_maillist_parse'>maillist_parse</span><span class='lparen'>(</span><span class='id identifier rubyid_file'>file</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_maillist'>maillist</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
@@ -4001,12 +4006,12 @@ import 3rd party dependencies</p>
       <pre class="lines">
 
 
-190
-191
-192</pre>
+193
+194
+195</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 190</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 193</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_maillist_prod'>maillist_prod</span>
   <span class='id identifier rubyid_maillist_parse'>maillist_parse</span><span class='lparen'>(</span><span class='id identifier rubyid_maillist_prod_file'>maillist_prod_file</span><span class='rparen'>)</span>
@@ -4043,12 +4048,12 @@ needed)</p>
       <pre class="lines">
 
 
-200
-201
-202</pre>
+203
+204
+205</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 200</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 203</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_maillist_prod_file'>maillist_prod_file</span>
   <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_app'>app</span><span class='period'>.</span><span class='id identifier rubyid_root'>root</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span> <span class='op'>+</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>/config/maillist_prod.txt</span><span class='tstring_end'>&#39;</span></span>
@@ -4085,12 +4090,12 @@ have been loaded</p>
       <pre class="lines">
 
 
-138
-139
-140</pre>
+141
+142
+143</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 138</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 141</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_on_loaded'>on_loaded</span>
   <span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_log_deprecations'>log_deprecations</span>
@@ -4140,12 +4145,12 @@ core</p>
       <pre class="lines">
 
 
-143
-144
-145</pre>
+146
+147
+148</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 143</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 146</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_origen_core?'>origen_core?</span>
   <span class='id identifier rubyid_name'>name</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='period'>.</span><span class='id identifier rubyid_symbolize'>symbolize</span> <span class='op'>==</span> <span class='symbol'>:origen_core</span>
@@ -4170,12 +4175,12 @@ core</p>
       <pre class="lines">
 
 
-603
-604
-605</pre>
+606
+607
+608</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 603</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 606</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_pattern_iterators'>pattern_iterators</span>
   <span class='ivar'>@pattern_iterators</span> <span class='op'>||=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
@@ -4200,12 +4205,12 @@ core</p>
       <pre class="lines">
 
 
-673
-674
-675</pre>
+676
+677
+678</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 673</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 676</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_pin_map'>pin_map</span>
   <span class='id identifier rubyid_dynamic_resource'>dynamic_resource</span><span class='lparen'>(</span><span class='symbol'>:pin_map</span><span class='comma'>,</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
@@ -4230,16 +4235,16 @@ core</p>
       <pre class="lines">
 
 
-717
-718
-719
 720
 721
 722
-723</pre>
+723
+724
+725
+726</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 717</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 720</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_pin_names'>pin_names</span>
   <span class='kw'>if</span> <span class='ivar'>@load_event</span>
@@ -4268,16 +4273,16 @@ core</p>
       <pre class="lines">
 
 
-709
-710
-711
 712
 713
 714
-715</pre>
+715
+716
+717
+718</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 709</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 712</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_pin_pattern_exclude'>pin_pattern_exclude</span>
   <span class='kw'>if</span> <span class='ivar'>@load_event</span>
@@ -4306,16 +4311,16 @@ core</p>
       <pre class="lines">
 
 
-701
-702
-703
 704
 705
 706
-707</pre>
+707
+708
+709
+710</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 701</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 704</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_pin_pattern_order'>pin_pattern_order</span>
   <span class='kw'>if</span> <span class='ivar'>@load_event</span>
@@ -4344,12 +4349,12 @@ core</p>
       <pre class="lines">
 
 
-687
-688
-689</pre>
+690
+691
+692</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 687</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 690</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_pingroup_map'>pingroup_map</span>
   <span class='id identifier rubyid_dynamic_resource'>dynamic_resource</span><span class='lparen'>(</span><span class='symbol'>:pingroup_map</span><span class='comma'>,</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
@@ -4374,16 +4379,16 @@ core</p>
       <pre class="lines">
 
 
-520
-521
-522
 523
 524
 525
-526</pre>
+526
+527
+528
+529</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 520</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 523</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_plugins'>plugins</span>
   <span class='kw'>if</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_app_loaded?'>app_loaded?</span>
@@ -4416,13 +4421,13 @@ core</p>
       <pre class="lines">
 
 
-528
-529
-530
-531</pre>
+531
+532
+533
+534</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 528</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 531</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_plugins_manager'>plugins_manager</span>
   <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_deprecated'>deprecated</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Origen.app.plugins_manager and Origen.app.current_plugin are deprecated, use Origen.app.plugins instead</span><span class='tstring_end'>&#39;</span></span>
@@ -4448,9 +4453,6 @@ core</p>
       <pre class="lines">
 
 
-480
-481
-482
 483
 484
 485
@@ -4458,10 +4460,13 @@ core</p>
 487
 488
 489
-490</pre>
+490
+491
+492
+493</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 480</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 483</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_previous_versions'>previous_versions</span>
   <span class='id identifier rubyid_versions'>versions</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
@@ -4494,13 +4499,13 @@ core</p>
       <pre class="lines">
 
 
-593
-594
-595
-596</pre>
+596
+597
+598
+599</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 593</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 596</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_release'>release</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
   <span class='ivar'>@release</span> <span class='op'>||=</span> <span class='const'>Release</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
@@ -4537,13 +4542,13 @@ core</p>
       <pre class="lines">
 
 
-397
-398
-399
-400</pre>
+400
+401
+402
+403</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 397</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 400</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_release_date'>release_date</span><span class='lparen'>(</span><span class='id identifier rubyid_version'>version</span> <span class='op'>=</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_app'>app</span><span class='period'>.</span><span class='id identifier rubyid_version'>version</span><span class='period'>.</span><span class='id identifier rubyid_prefixed'>prefixed</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_time'>time</span> <span class='op'>=</span> <span class='id identifier rubyid_release_time'>release_time</span><span class='lparen'>(</span><span class='id identifier rubyid_version'>version</span><span class='rparen'>)</span>
@@ -4580,9 +4585,6 @@ core</p>
       <pre class="lines">
 
 
-360
-361
-362
 363
 364
 365
@@ -4614,10 +4616,13 @@ core</p>
 391
 392
 393
-394</pre>
+394
+395
+396
+397</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 360</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 363</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_release_note'>release_note</span><span class='lparen'>(</span><span class='id identifier rubyid_version'>version</span> <span class='op'>=</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_app'>app</span><span class='period'>.</span><span class='id identifier rubyid_version'>version</span><span class='period'>.</span><span class='id identifier rubyid_prefixed'>prefixed</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_version'>version</span> <span class='op'>=</span> <span class='const'>VersionString</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_version'>version</span><span class='rparen'>)</span>
@@ -4685,9 +4690,6 @@ core</p>
       <pre class="lines">
 
 
-403
-404
-405
 406
 407
 408
@@ -4706,10 +4708,13 @@ core</p>
 421
 422
 423
-424</pre>
+424
+425
+426
+427</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 403</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 406</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_release_time'>release_time</span><span class='lparen'>(</span><span class='id identifier rubyid_version'>version</span> <span class='op'>=</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_app'>app</span><span class='period'>.</span><span class='id identifier rubyid_version'>version</span><span class='period'>.</span><span class='id identifier rubyid_prefixed'>prefixed</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_version'>version</span> <span class='op'>=</span> <span class='const'>VersionString</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_version'>version</span><span class='rparen'>)</span>
@@ -4766,18 +4771,18 @@ load_target! the last time it was called will be re-applied when
       <pre class="lines">
 
 
-781
-782
-783
 784
 785
 786
 787
 788
-789</pre>
+789
+790
+791
+792</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 781</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 784</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_reload_target!'>reload_target!</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_old_options'>old_options</span> <span class='op'>=</span> <span class='ivar'>@target_load_options</span> <span class='op'>||</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
@@ -4808,12 +4813,12 @@ load_target! the last time it was called will be re-applied when
       <pre class="lines">
 
 
-155
-156
-157</pre>
+158
+159
+160</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 155</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 158</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_require_environment!'>require_environment!</span>
   <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_deprecate'>deprecate</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Calling app.require_environment! is no longer required, the app environment is now automtically loaded when Origen.app is called</span><span class='tstring_end'>&#39;</span></span>
@@ -4857,9 +4862,6 @@ control system, then this method will return nil.</p>
       <pre class="lines">
 
 
-108
-109
-110
 111
 112
 113
@@ -4883,10 +4885,13 @@ control system, then this method will return nil.</p>
 131
 132
 133
-134</pre>
+134
+135
+136
+137</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 108</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 111</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_revision_controller'>revision_controller</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_current?'>current?</span>
@@ -4949,12 +4954,12 @@ application is installed within the imports directory</p>
       <pre class="lines">
 
 
-163
-164
-165</pre>
+166
+167
+168</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 163</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 166</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_root'>root</span>
   <span class='ivar'>@root</span>
@@ -4979,12 +4984,12 @@ application is installed within the imports directory</p>
       <pre class="lines">
 
 
-151
-152
-153</pre>
+154
+155
+156</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 151</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 154</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_root='>root=</span><span class='lparen'>(</span><span class='id identifier rubyid_val'>val</span><span class='rparen'>)</span>
   <span class='ivar'>@root</span> <span class='op'>=</span> <span class='const'>Pathname</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_val'>val</span><span class='rparen'>)</span>
@@ -5009,12 +5014,12 @@ application is installed within the imports directory</p>
       <pre class="lines">
 
 
-547
-548
-549</pre>
+550
+551
+552</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 547</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 550</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_runner'>runner</span>
   <span class='ivar'>@runner</span> <span class='op'>||=</span> <span class='const'>Runner</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
@@ -5051,16 +5056,16 @@ nil if none is found</p>
       <pre class="lines">
 
 
-250
-251
-252
 253
 254
 255
-256</pre>
+256
+257
+258
+259</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 250</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 253</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_server_data'>server_data</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_name'>name</span> <span class='op'>==</span> <span class='symbol'>:origen</span>
@@ -5089,9 +5094,6 @@ nil if none is found</p>
       <pre class="lines">
 
 
-575
-576
-577
 578
 579
 580
@@ -5101,10 +5103,13 @@ nil if none is found</p>
 584
 585
 586
-587</pre>
+587
+588
+589
+590</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 575</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 578</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_session'>session</span><span class='lparen'>(</span><span class='id identifier rubyid_reload'>reload</span> <span class='op'>=</span> <span class='kw'>false</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_current?'>current?</span>
@@ -5139,12 +5144,12 @@ nil if none is found</p>
       <pre class="lines">
 
 
-791
-792
-793</pre>
+794
+795
+796</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 791</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 794</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_set_dynamic_resource'>set_dynamic_resource</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_value'>value</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_dynamic_resource'>dynamic_resource</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_value'>value</span><span class='comma'>,</span> <span class='label'>set:</span> <span class='kw'>true</span><span class='rparen'>)</span>
@@ -5173,12 +5178,12 @@ nil if none is found</p>
       <pre class="lines">
 
 
-598
-599
-600</pre>
+601
+602
+603</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 598</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 601</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_statistics'>statistics</span>
   <span class='id identifier rubyid_runner'>runner</span><span class='period'>.</span><span class='id identifier rubyid_statistics'>statistics</span>
@@ -5215,16 +5220,16 @@ notifications for the given application on the website</p>
       <pre class="lines">
 
 
-240
-241
-242
 243
 244
 245
-246</pre>
+246
+247
+248
+249</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 240</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 243</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_subscribers_dev'>subscribers_dev</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_server_data'>server_data</span>
@@ -5265,16 +5270,16 @@ notifications for the given application on the website</p>
       <pre class="lines">
 
 
-230
-231
-232
 233
 234
 235
-236</pre>
+236
+237
+238
+239</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 230</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 233</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_subscribers_prod'>subscribers_prod</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_server_data'>server_data</span>
@@ -5303,12 +5308,12 @@ notifications for the given application on the website</p>
       <pre class="lines">
 
 
-535
-536
-537</pre>
+538
+539
+540</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 535</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 538</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_target'>target</span>
   <span class='ivar'>@target</span> <span class='op'>||=</span> <span class='const'>Target</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
@@ -5355,12 +5360,12 @@ notifications for the given application on the website</p>
       <pre class="lines">
 
 
-842
-843
-844</pre>
+845
+846
+847</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 842</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 845</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_target_instantiated?'>target_instantiated?</span>
   <span class='ivar'>@target_instantiated</span>
@@ -5385,12 +5390,12 @@ notifications for the given application on the website</p>
       <pre class="lines">
 
 
-661
-662
-663</pre>
+664
+665
+666</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 661</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 664</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_tester'>tester</span>
   <span class='id identifier rubyid_dynamic_resource'>dynamic_resource</span><span class='lparen'>(</span><span class='symbol'>:tester</span><span class='comma'>,</span> <span class='lbracket'>[</span><span class='rbracket'>]</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_first'>first</span>
@@ -5415,16 +5420,16 @@ notifications for the given application on the website</p>
       <pre class="lines">
 
 
-665
-666
-667
 668
 669
 670
-671</pre>
+671
+672
+673
+674</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 665</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 668</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_tester='>tester=</span><span class='lparen'>(</span><span class='id identifier rubyid_obj'>obj</span><span class='rparen'>)</span>
   <span class='comment'># if tester &amp;&amp; obj
@@ -5464,15 +5469,15 @@ notifications for the given application on the website</p>
       <pre class="lines">
 
 
-305
-306
-307
 308
 309
-310</pre>
+310
+311
+312
+313</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 305</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 308</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_top_level'>top_level</span>
   <span class='ivar'>@top_level</span> <span class='op'>||=</span> <span class='kw'>begin</span>
@@ -5500,12 +5505,12 @@ notifications for the given application on the website</p>
       <pre class="lines">
 
 
-618
-619
-620</pre>
+621
+622
+623</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 618</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 621</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_toplevel_listeners'>toplevel_listeners</span>
   <span class='id identifier rubyid_dynamic_resource'>dynamic_resource</span><span class='lparen'>(</span><span class='symbol'>:toplevel_listeners</span><span class='comma'>,</span> <span class='lbracket'>[</span><span class='rbracket'>]</span><span class='rparen'>)</span>
@@ -5545,16 +5550,16 @@ notifications for the given application on the website</p>
       <pre class="lines">
 
 
-770
-771
-772
 773
 774
 775
-776</pre>
+776
+777
+778
+779</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 770</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 773</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_unload_target!'>unload_target!</span>
   <span class='id identifier rubyid_listeners_for'>listeners_for</span><span class='lparen'>(</span><span class='symbol'>:before_load_target</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span><span class='lparen'>(</span><span class='op'>&amp;</span><span class='symbol'>:before_load_target</span><span class='rparen'>)</span>
@@ -5583,9 +5588,6 @@ notifications for the given application on the website</p>
       <pre class="lines">
 
 
-343
-344
-345
 346
 347
 348
@@ -5597,10 +5599,13 @@ notifications for the given application on the website</p>
 354
 355
 356
-357</pre>
+357
+358
+359
+360</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 343</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 346</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_version'>version</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='ivar'>@version</span> <span class='op'>=</span> <span class='kw'>nil</span> <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:refresh</span><span class='rbracket'>]</span>
@@ -5637,12 +5642,12 @@ notifications for the given application on the website</p>
       <pre class="lines">
 
 
-559
-560
-561</pre>
+562
+563
+564</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 559</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 562</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_version_tracker'>version_tracker</span>
   <span class='ivar'>@version_tracker</span> <span class='op'>||=</span> <span class='const'>VersionTracker</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
@@ -5667,12 +5672,12 @@ notifications for the given application on the website</p>
       <pre class="lines">
 
 
-589
-590
-591</pre>
+592
+593
+594</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 589</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 592</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_versions'>versions</span>
   <span class='id identifier rubyid_version_tracker'>version_tracker</span><span class='period'>.</span><span class='id identifier rubyid_versions'>versions</span>
@@ -5709,18 +5714,18 @@ to instantiate an Origen::Tester::Doc instance</p>
       <pre class="lines">
 
 
-643
-644
-645
 646
 647
 648
 649
 650
-651</pre>
+651
+652
+653
+654</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 643</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 646</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_with_doc_tester'>with_doc_tester</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='ivar'>@with_doc_tester</span> <span class='op'>=</span> <span class='kw'>true</span>
@@ -5773,12 +5778,12 @@ to instantiate an Origen::Tester::Doc instance</p>
       <pre class="lines">
 
 
-653
-654
-655</pre>
+656
+657
+658</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 653</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 656</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_with_doc_tester?'>with_doc_tester?</span>
   <span class='ivar'>@with_doc_tester</span>
@@ -5825,12 +5830,12 @@ to instantiate an Origen::Tester::Doc instance</p>
       <pre class="lines">
 
 
-657
-658
-659</pre>
+660
+661
+662</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 657</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 660</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_with_html_doc_tester?'>with_html_doc_tester?</span>
   <span class='ivar'>@with_html_doc_tester</span>
@@ -5855,12 +5860,12 @@ to instantiate an Origen::Tester::Doc instance</p>
       <pre class="lines">
 
 
-563
-564
-565</pre>
+566
+567
+568</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 563</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 566</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_workspace_manager'>workspace_manager</span>
   <span class='ivar'>@workspace_manager</span> <span class='op'>||=</span> <span class='const'>WorkspaceManager</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
@@ -5875,9 +5880,9 @@ to instantiate an Origen::Tester::Doc instance</p>
 </div>
 
       <div id="footer">
-  Generated on Mon Aug 22 10:58:28 2016 by
+  Generated on Wed Aug 24 05:01:56 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.5 (ruby-2.3.1).
+  0.9.5 (ruby-2.1.5).
 </div>
 
     </div>
