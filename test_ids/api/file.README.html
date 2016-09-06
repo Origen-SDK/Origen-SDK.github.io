@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>
+  File: README
+  
+    &mdash; test_ids 0.2.0
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  pathId = "README";
+  relpath = '';
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div class="nav_wrap">
+      <iframe id="nav" src="file_list.html"></iframe>
+      <div id="resizer"></div>
+    </div>
+
+    <div id="main" tabindex="-1">
+      <div id="header">
+        <div id="menu">
+  
+    <a href="_index.html">Index</a> &raquo; 
+    <span class="title">File: README</span>
+  
+</div>
+
+        <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="class_list.html">
+
+        <svg width="24" height="24">
+          <rect x="0" y="4" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="12" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="20" width="24" height="4" rx="1" ry="1"></rect>
+        </svg>
+    </a>
+  
+</div>
+        <div class="clear"></div>
+      </div>
+
+      <iframe id="search_frame" src="file_list.html"></iframe>
+
+      <div id="content"><div id='filecontents'><h1 id="testids">test_ids</h1>
+
+<p>An Origen plugin to automatically assign and maintain test program bin and test numbers.</p>
+
+<p>This plugin integrates with the OrigenTesters  and allows you to assign a range of numbers, or a function, to generate bin,
+softbin, and test numbers whenever you generate a test program with Origen.
+Unlike similar algorithms that may be implemented within an application, test_ids will maintain a record of the numbers assigned
+to each test so that they will stick even if the test flow order changes.</p>
+
+<h2 id="integration">Integration</h2>
+
+<p>Simply add the gem to your application via the Gemfile. If your application is a plugin, then add it to your .gemspec and
+require it somewhere (at the top of your test program interface would be a good place):</p>
+
+<div class="language-ruby highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre class="code ruby"><code class="ruby">&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n1&quot; name=&quot;n1&quot;&gt;1&lt;/a&gt;&lt;/span&gt;require &lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&quot;&gt;&lt;span style=&quot;color:#710&quot;&gt;&#39;&lt;/span&gt;&lt;span style=&quot;color:#D20&quot;&gt;test_ids&lt;/span&gt;&lt;span style=&quot;color:#710&quot;&gt;&#39;&lt;/span&gt;&lt;/span&gt;
+</code></pre></div>
+</div>
+</div>
+
+<p>All that is required is then to configure the plugin in your interface’s initialize method:</p>
+
+<div class="language-ruby highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre class="code ruby"><code class="ruby">&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n1&quot; name=&quot;n1&quot;&gt;1&lt;/a&gt;&lt;/span&gt;&lt;span style=&quot;color:#777&quot;&gt;# my_interface.rb&lt;/span&gt;
+&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n2&quot; name=&quot;n2&quot;&gt;2&lt;/a&gt;&lt;/span&gt;&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;module&lt;/span&gt; &lt;span style=&quot;color:#B06;font-weight:bold&quot;&gt;MyApp&lt;/span&gt;
+&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n3&quot; name=&quot;n3&quot;&gt;3&lt;/a&gt;&lt;/span&gt;  &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;class&lt;/span&gt; &lt;span style=&quot;color:#B06;font-weight:bold&quot;&gt;Interface&lt;/span&gt;
+&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n4&quot; name=&quot;n4&quot;&gt;4&lt;/a&gt;&lt;/span&gt;    include &lt;span style=&quot;color:#036;font-weight:bold&quot;&gt;OrigenTesters&lt;/span&gt;::&lt;span style=&quot;color:#036;font-weight:bold&quot;&gt;ProgramGenerators&lt;/span&gt;
+&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n5&quot; name=&quot;n5&quot;&gt;5&lt;/a&gt;&lt;/span&gt;    
+&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n6&quot; name=&quot;n6&quot;&gt;6&lt;/a&gt;&lt;/span&gt;    &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;def&lt;/span&gt; &lt;span style=&quot;color:#06B;font-weight:bold&quot;&gt;initialize&lt;/span&gt;(options = {})
+&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n7&quot; name=&quot;n7&quot;&gt;7&lt;/a&gt;&lt;/span&gt;      &lt;span style=&quot;color:#036;font-weight:bold&quot;&gt;TestIds&lt;/span&gt;.configure &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;do&lt;/span&gt; |config|
+&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n8&quot; name=&quot;n8&quot;&gt;8&lt;/a&gt;&lt;/span&gt;        config.bins.include &lt;&lt; (&lt;span style=&quot;color:#00D&quot;&gt;100&lt;/span&gt;..&lt;span style=&quot;color:#00D&quot;&gt;500&lt;/span&gt;)
+&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n9&quot; name=&quot;n9&quot;&gt;9&lt;/a&gt;&lt;/span&gt;        config.softbins = &lt;span style=&quot;color:#A60&quot;&gt;:bbb000&lt;/span&gt;
+&lt;span class=&quot;line-numbers&quot;&gt;&lt;strong&gt;&lt;a href=&quot;#n10&quot; name=&quot;n10&quot;&gt;10&lt;/a&gt;&lt;/strong&gt;&lt;/span&gt;        config.testnumbers &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;do&lt;/span&gt; |bin, softbin|
+&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n11&quot; name=&quot;n11&quot;&gt;11&lt;/a&gt;&lt;/span&gt;          (softbin * &lt;span style=&quot;color:#00D&quot;&gt;10&lt;/span&gt;) + bin 
+&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n12&quot; name=&quot;n12&quot;&gt;12&lt;/a&gt;&lt;/span&gt;        &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n13&quot; name=&quot;n13&quot;&gt;13&lt;/a&gt;&lt;/span&gt;      &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n14&quot; name=&quot;n14&quot;&gt;14&lt;/a&gt;&lt;/span&gt;    &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;end&lt;/span&gt;
+</code></pre></div>
+</div>
+</div>
+
+<h2 id="configuration">Configuration</h2>
+
+<p>The various ID types are generated in the following order which places some constraints on the configuration options
+available to each one:</p>
+
+<ul>
+  <li><strong>bin</strong> - These are generated first, and therefore can only be configured to be generated from a range</li>
+  <li><strong>softbin</strong> - These come next, and they can be generated from a range or from either a template or a function which
+references the bin number</li>
+  <li><strong>number</strong> - The test number comes last, and they can be generated from a range or from either a template or a function which
+references the bin number and/or softbin number</li>
+</ul>
+
+<h3 id="assigning-a-range">Assigning a Range</h3>
+
+<p>All ID types can be given an independent range of numbers to pick from like this (where TYPE is bins, softbins or numbers):</p>
+
+<div class="language-ruby highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre class="code ruby"><code class="ruby">&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n1&quot; name=&quot;n1&quot;&gt;1&lt;/a&gt;&lt;/span&gt;config.TYPE.include &lt;&lt; &lt;span style=&quot;color:#00D&quot;&gt;3&lt;/span&gt;           &lt;span style=&quot;color:#777&quot;&gt;# Number 3 only&lt;/span&gt;
+&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n2&quot; name=&quot;n2&quot;&gt;2&lt;/a&gt;&lt;/span&gt;config.TYPE.include &lt;&lt; (&lt;span style=&quot;color:#00D&quot;&gt;100&lt;/span&gt;..&lt;span style=&quot;color:#00D&quot;&gt;200&lt;/span&gt;)  &lt;span style=&quot;color:#777&quot;&gt;# Also includes numbers from 100 to 200&lt;/span&gt;
+</code></pre></div>
+</div>
+</div>
+
+<p>This can be called multiple times for the same ID type if your allocation is comprised of a non-contiguous range.</p>
+
+<p>Certain numbers within the include allocation can be excluded like this:</p>
+
+<div class="language-ruby highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre class="code ruby"><code class="ruby">&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n1&quot; name=&quot;n1&quot;&gt;1&lt;/a&gt;&lt;/span&gt;config.TYPE.exclude &lt;&lt; &lt;span style=&quot;color:#00D&quot;&gt;150&lt;/span&gt;         &lt;span style=&quot;color:#777&quot;&gt;# This is already assigned to something else&lt;/span&gt;
+&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n2&quot; name=&quot;n2&quot;&gt;2&lt;/a&gt;&lt;/span&gt;config.TYPE.exculde &lt;&lt; (&lt;span style=&quot;color:#00D&quot;&gt;190&lt;/span&gt;..&lt;span style=&quot;color:#00D&quot;&gt;195&lt;/span&gt;)  &lt;span style=&quot;color:#777&quot;&gt;# A range is also acceptable&lt;/span&gt;
+</code></pre></div>
+</div>
+</div>
+
+<h3 id="assigning-a-template">Assigning a Template</h3>
+
+<p>Softbin and test numbers can also be generated from a template. Note that if you supply a template for a given ID type
+then you cannot also supply a range.</p>
+
+<p>The template describes the form that the given number should have, using the following key:</p>
+
+<ul>
+  <li><strong>b</strong> - A bin number digit</li>
+  <li><strong>s</strong> - A softbin number digit</li>
+  <li><strong>x</strong> - A uniqueness counter</li>
+  <li><strong>0-9</strong> - A static digit</li>
+</ul>
+
+<p>For example, to make the softbins equal to the bin number * 100, you can simply do:</p>
+
+<div class="language-ruby highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre class="code ruby"><code class="ruby">&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n1&quot; name=&quot;n1&quot;&gt;1&lt;/a&gt;&lt;/span&gt;config.softbins = &lt;span style=&quot;color:#A60&quot;&gt;:bbb00&lt;/span&gt;
+</code></pre></div>
+</div>
+</div>
+
+<p>For bins 1, 2, 3 this would generate softbins 100, 200, 300.</p>
+
+<p>Suppose that you have many tests assigned to the same bin number and you would like the softbins to be unique. In that case
+you can make some of the digits a unique counter instead:</p>
+
+<div class="language-ruby highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre class="code ruby"><code class="ruby">&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n1&quot; name=&quot;n1&quot;&gt;1&lt;/a&gt;&lt;/span&gt;config.softbins = &lt;span style=&quot;color:#A60&quot;&gt;:bbbxx&lt;/span&gt;
+</code></pre></div>
+</div>
+</div>
+
+<p>If all of your tests were bin 3 for example, then this would assign softbins 300 to 399.</p>
+
+<h3 id="assigning-a-function">Assigning a Function</h3>
+
+<p>If your softbins or test numbers are a function which cannot be expressed using the above template rules, then you can always
+fall back to a custom function.</p>
+
+<div class="language-ruby highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre class="code ruby"><code class="ruby">&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n1&quot; name=&quot;n1&quot;&gt;1&lt;/a&gt;&lt;/span&gt;&lt;span style=&quot;color:#777&quot;&gt;# The softbin function has access to the bin number&lt;/span&gt;
+&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n2&quot; name=&quot;n2&quot;&gt;2&lt;/a&gt;&lt;/span&gt;config.softbins &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;do&lt;/span&gt; |bin|
+&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n3&quot; name=&quot;n3&quot;&gt;3&lt;/a&gt;&lt;/span&gt;  bin * &lt;span style=&quot;color:#00D&quot;&gt;3&lt;/span&gt;
+&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n4&quot; name=&quot;n4&quot;&gt;4&lt;/a&gt;&lt;/span&gt;&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n5&quot; name=&quot;n5&quot;&gt;5&lt;/a&gt;&lt;/span&gt;
+&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n6&quot; name=&quot;n6&quot;&gt;6&lt;/a&gt;&lt;/span&gt;&lt;span style=&quot;color:#777&quot;&gt;# And the test number function has access to the softbin too&lt;/span&gt;
+&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n7&quot; name=&quot;n7&quot;&gt;7&lt;/a&gt;&lt;/span&gt;config.numbers &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;do&lt;/span&gt; |bin, softbin|
+&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n8&quot; name=&quot;n8&quot;&gt;8&lt;/a&gt;&lt;/span&gt;  (softbin * &lt;span style=&quot;color:#00D&quot;&gt;10&lt;/span&gt;) + bin 
+&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n9&quot; name=&quot;n9&quot;&gt;9&lt;/a&gt;&lt;/span&gt;&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;line-numbers&quot;&gt;&lt;strong&gt;&lt;a href=&quot;#n10&quot; name=&quot;n10&quot;&gt;10&lt;/a&gt;&lt;/strong&gt;&lt;/span&gt;
+&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n11&quot; name=&quot;n11&quot;&gt;11&lt;/a&gt;&lt;/span&gt;&lt;span style=&quot;color:#777&quot;&gt;## Manual Allocation&lt;/span&gt;
+&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n12&quot; name=&quot;n12&quot;&gt;12&lt;/a&gt;&lt;/span&gt;
+&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n13&quot; name=&quot;n13&quot;&gt;13&lt;/a&gt;&lt;/span&gt;&lt;span style=&quot;color:#036;font-weight:bold&quot;&gt;Any&lt;/span&gt; test can be manually assigned to either of these &lt;span style=&quot;color:#036;font-weight:bold&quot;&gt;ID&lt;/span&gt; types &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;and&lt;/span&gt; that will take &lt;span style=&quot;color:#606&quot;&gt;precedence&lt;/span&gt;:
+&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n14&quot; name=&quot;n14&quot;&gt;14&lt;/a&gt;&lt;/span&gt;
+&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n15&quot; name=&quot;n15&quot;&gt;15&lt;/a&gt;&lt;/span&gt;~~~ruby
+&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n16&quot; name=&quot;n16&quot;&gt;16&lt;/a&gt;&lt;/span&gt;func &lt;span style=&quot;color:#A60&quot;&gt;:my_functional_test&lt;/span&gt;, &lt;span style=&quot;color:#606&quot;&gt;bin&lt;/span&gt;: &lt;span style=&quot;color:#00D&quot;&gt;3&lt;/span&gt;, &lt;span style=&quot;color:#606&quot;&gt;softbin&lt;/span&gt;: &lt;span style=&quot;color:#00D&quot;&gt;100&lt;/span&gt;, &lt;span style=&quot;color:#606&quot;&gt;number&lt;/span&gt;: &lt;span style=&quot;color:#00D&quot;&gt;200100&lt;/span&gt;
+</code></pre></div>
+</div>
+</div>
+
+<p>The given numbers will be then be reserved and excluded from automatic assignment if they are output from the automatic assignment
+process.</p>
+
+<p>In the case where the number had already been automatically given out to a test earlier in the flow, it will be
+reclaimed the next time the program generator is run.</p>
+
+<h2 id="multiple-instances-of-the-same-test">Multiple Instances of the Same Test</h2>
+
+<p>The assigned numbers are stored in a database by test name, such that any references to the same test name will always
+be assigned the same numbers.</p>
+
+<div class="language-ruby highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre class="code ruby"><code class="ruby">&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n1&quot; name=&quot;n1&quot;&gt;1&lt;/a&gt;&lt;/span&gt;func &lt;span style=&quot;color:#A60&quot;&gt;:my_functional_test&lt;/span&gt;
+&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n2&quot; name=&quot;n2&quot;&gt;2&lt;/a&gt;&lt;/span&gt;func &lt;span style=&quot;color:#A60&quot;&gt;:my_functional_test&lt;/span&gt;  &lt;span style=&quot;color:#777&quot;&gt;# Would be assigned the same numbers as above&lt;/span&gt;
+</code></pre></div>
+</div>
+</div>
+
+<p>If a different set of numbers is desired on the 2nd occurence, then ideally this should be reflected by assigning a
+different test name.</p>
+
+<p>If that is not possible then an index option can be used to differentiate them:</p>
+
+<div class="language-ruby highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre class="code ruby"><code class="ruby">&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n1&quot; name=&quot;n1&quot;&gt;1&lt;/a&gt;&lt;/span&gt;func &lt;span style=&quot;color:#A60&quot;&gt;:my_functional_test&lt;/span&gt;
+&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n2&quot; name=&quot;n2&quot;&gt;2&lt;/a&gt;&lt;/span&gt;func &lt;span style=&quot;color:#A60&quot;&gt;:my_functional_test&lt;/span&gt;, &lt;span style=&quot;color:#606&quot;&gt;index&lt;/span&gt;: &lt;span style=&quot;color:#00D&quot;&gt;1&lt;/span&gt;  &lt;span style=&quot;color:#777&quot;&gt;# Will be treated like a different test and assigned a different number&lt;/span&gt;
+</code></pre></div>
+</div>
+</div>
+
+<h2 id="storage">Storage</h2>
+
+<p>The main benefit of this plugin is to get consitent number assignements accross different invocations of the program
+generator, and for that to work it is necessary for the database to be stored somewhere.
+The database is a single file that is written in JSON format to make it human readable in case there is ever a need to
+manually modify it for some reason.</p>
+
+<p>The recommended configuration is to use a dedicated Git repository to store this file. This means that it will be
+shared by different users of your application and they will all see a consistent common view of the number
+allocations.</p>
+
+<p>To enable Git storage create a new empty repository somewhere. This repository should be dedicated for use by this
+plugin and not used for anything else.
+<strong>It must be writable by all users of your application.</strong></p>
+
+<p>Once you have the repository configure test_ids to use it like this:</p>
+
+<div class="language-ruby highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre class="code ruby"><code class="ruby">&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n1&quot; name=&quot;n1&quot;&gt;1&lt;/a&gt;&lt;/span&gt;config.repo =  &lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&quot;&gt;&lt;span style=&quot;color:#710&quot;&gt;&quot;&lt;/span&gt;&lt;span style=&quot;color:#D20&quot;&gt;ssh://git@github.com:myaccount/my_test_ids.git&lt;/span&gt;&lt;span style=&quot;color:#710&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;
+</code></pre></div>
+</div>
+</div>
+
+<p>The repository will then be kept up to date on every program generator invocation which should add &lt; 1 second to
+the execution time.
+A locking system will be automatically managed for you to prevent concurrent updates from multiple users.</p>
+
+<h3 id="file-based-storage">File Based Storage</h3>
+
+<p>If for some reason you don’t want to go with the above approach, the use of a file within your application
+is also supported.</p>
+
+<div class="language-ruby highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre class="code ruby"><code class="ruby">&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n1&quot; name=&quot;n1&quot;&gt;1&lt;/a&gt;&lt;/span&gt;config.repo =  &lt;span style=&quot;background-color:hsla(0,100%,50%,0.05)&quot;&gt;&lt;span style=&quot;color:#710&quot;&gt;&quot;&lt;/span&gt;&lt;span style=&quot;background-color:hsla(0,0%,0%,0.07);color:black&quot;&gt;&lt;span style=&quot;font-weight:bold;color:#666&quot;&gt;#{&lt;/span&gt;&lt;span style=&quot;color:#036;font-weight:bold&quot;&gt;Origen&lt;/span&gt;.root&lt;span style=&quot;font-weight:bold;color:#666&quot;&gt;}&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;color:#D20&quot;&gt;/tmp/store.json&lt;/span&gt;&lt;span style=&quot;color:#710&quot;&gt;&quot;&lt;/span&gt;&lt;/span&gt;
+</code></pre></div>
+</div>
+</div>
+
+<p>You would be resonsible then for checking this in and ensuring consistency between users.</p>
+
+<p>If you use this approach you should make sure that your application’s release process generates all versions of
+your test program so that all possible tests are assigned bins. Basically you don’t want your users to be
+generating new assignments when they invoke your application.</p>
+
+<h2 id="notes-on-duplicates">Notes on Duplicates</h2>
+
+<p>The time is recorded everytime a reference is made to an ID number when generating a test program, this means
+that we can identify the IDs which have not been used for the longest time - for example because they were
+assigned to a test which has since been removed from the flow.</p>
+
+<p>If the allocated range is exhausted then duplicates will start to be assigned starting from the oldest
+referenced ID first. This should ensure that true duplicates never happen as long as your assign an
+adequate range for the size of your test flow.</p>
+
+<h2 id="what-is-not-supported">What is Not Supported</h2>
+
+<p>Currently if you change the configuration then all bets are off and the behavior is currently undefined.
+In future this plugin may support a clean up operation to assist with such changes where any IDs which are no longer
+valid under the new configuration get re-generated.</p>
+</div></div>
+
+      <div id="footer">
+  Generated on Tue Sep  6 11:37:54 2016 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.9.5 (ruby-2.1.5).
+</div>
+
+    </div>
+  </body>
+</html>
