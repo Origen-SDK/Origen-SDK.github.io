@@ -95,7 +95,7 @@
 <div class="row">
   <div class="span12">
 
-    <h1>TestIds <span style="font-size: 14px">(0.2.1)</span>
+    <h1>TestIds <span style="font-size: 14px">(0.3.0)</span>
 </h1>
 
     <p>An Origen plugin to automatically assign and maintain test program bin and test numbers.</p>
@@ -130,10 +130,12 @@ require it somewhere (at the top of your test program interface would be a good 
     include <span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">ProgramGenerators</span>
     
     <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options = {})
+      <span style="color:#036;font-weight:bold">TestIds</span>.repo =  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">ssh://git@github.com:myaccount/my_test_ids.git</span><span style="color:#710">"</span></span>
+      
       <span style="color:#036;font-weight:bold">TestIds</span>.configure <span style="color:#080;font-weight:bold">do</span> |config|
         config.bins.include &lt;&lt; (<span style="color:#00D">100</span>..<span style="color:#00D">500</span>)
         config.softbins = <span style="color:#A60">:bbb000</span>
-        config.testnumbers <span style="color:#080;font-weight:bold">do</span> |bin, softbin|
+        config.numbers <span style="color:#080;font-weight:bold">do</span> |bin, softbin|
           (softbin * <span style="color:#00D">10</span>) + bin 
         <span style="color:#080;font-weight:bold">end</span>
       <span style="color:#080;font-weight:bold">end</span>
@@ -313,47 +315,88 @@ generator, and for that to work it is necessary for the database to be stored so
 The database is a single file that is written in JSON format to make it human readable in case there is ever a need to
 manually modify it.</p>
 
-    <p>The recommended configuration is to use a dedicated Git repository to store this file. This means that it will be
-shared by different users of your application and they will all see a consistent common view of the number
+    <p>A dedicated Git repository is used to store this file, this means that it will be
+shared by different users of your application and they will all see a consistent view of the number
 allocations.</p>
 
     <p>To enable Git storage create a new empty repository somewhere. This repository should be dedicated for use by this
 plugin and not used for anything else.
 <strong>It must be writable by all users of your application.</strong></p>
 
-    <p>Once you have the repository configure test_ids to use it like this:</p>
+    <p>Once you have the repository, configure test_ids to use it like this:</p>
 
     <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre>config.repo =  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">ssh://git@github.com:myaccount/my_test_ids.git</span><span style="color:#710">"</span></span>
+  <div class="code"><pre><span style="color:#777"># This must be done before configuring</span>
+<span style="color:#036;font-weight:bold">TestIds</span>.repo =  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">ssh://git@github.com:myaccount/my_test_ids.git</span><span style="color:#710">"</span></span>
+
+<span style="color:#036;font-weight:bold">TestIds</span>.configure <span style="color:#080;font-weight:bold">do</span> |config|
+  <span style="color:#777">#...</span>
 </pre></div>
 </div>
     </div>
 
-    <p>The repository will then be kept up to date on every program generator invocation which should add &lt; 1 second to
-the execution time.
+    <p>The repository will then be kept up to date on every program generator invocation.
 A locking system will be automatically managed for you to prevent concurrent updates from multiple users.</p>
 
-    <div>    
-  <a class="anchor" name="File_Based_Storage"></a>          
-  <h3><a href="#File_Based_Storage">File Based Storage</a></h3>          
-</div>
-
-    <p>If for some reason you don’t want to go with the above approach, the use of a file within your application
-is also supported.</p>
+    <p>Sometimes during development you may want to temporarily inhibit storage in the repo, just comment out or
+branch around the repo definition to achieve that:</p>
 
     <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre>config.repo =  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.root<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">/tmp/store.json</span><span style="color:#710">"</span></span>
+  <div class="code"><pre><span style="color:#777"># Only update the database when running in production mode</span>
+<span style="color:#080;font-weight:bold">if</span> <span style="color:#036;font-weight:bold">Origen</span>.mode.production?
+  <span style="color:#036;font-weight:bold">TestIds</span>.repo =  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">ssh://git@github.com:myaccount/my_test_ids.git</span><span style="color:#710">"</span></span>
+<span style="color:#080;font-weight:bold">end</span>
 </pre></div>
 </div>
     </div>
 
-    <p>You are then resonsible for checking this in and ensuring consistency between users.</p>
+    <div>    
+  <a class="anchor" name="Multiple_Configurations"></a>          
+  <h3><a href="#Multiple_Configurations">Multiple Configurations</a></h3>          
+</div>
 
-    <p>If you use this approach you should make sure that your application’s release process generates all versions of
-your test program so that all possible tests are assigned bins. Basically you don’t want your users to be
-generating new assignments when they invoke your application in production.</p>
+    <p>It may be the case that you want a different configuration for wafer test vs. final test for example. Multiple
+independent configurations can be created by supplying an identifier, like this:</p>
+
+    <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options = {})
+  <span style="color:#036;font-weight:bold">TestIds</span>.repo =  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">ssh://git@github.com:myaccount/my_test_ids.git</span><span style="color:#710">"</span></span>
+  
+  <span style="color:#080;font-weight:bold">if</span> options[<span style="color:#A60">:environment</span>] == <span style="color:#A60">:probe</span>
+    <span style="color:#036;font-weight:bold">TestIds</span>.configure <span style="color:#A60">:wafer_test</span> <span style="color:#080;font-weight:bold">do</span> |config|
+      config.bins.include &lt;&lt; (<span style="color:#00D">100</span>..<span style="color:#00D">500</span>)
+      config.softbins = <span style="color:#A60">:bbb000</span>
+      config.numbers <span style="color:#080;font-weight:bold">do</span> |bin, softbin|
+        (softbin * <span style="color:#00D">10</span>) + bin 
+      <span style="color:#080;font-weight:bold">end</span>
+    <span style="color:#080;font-weight:bold">end</span>
+  <span style="color:#080;font-weight:bold">else</span>
+    <span style="color:#036;font-weight:bold">TestIds</span>.configure <span style="color:#A60">:final_test</span> <span style="color:#080;font-weight:bold">do</span> |config|
+      config.bins.include &lt;&lt; (<span style="color:#00D">1000</span>..<span style="color:#00D">2000</span>)
+      config.softbins = <span style="color:#A60">:bbb000</span>
+      config.numbers <span style="color:#080;font-weight:bold">do</span> |bin, softbin|
+        (softbin * <span style="color:#00D">10</span>) + bin 
+      <span style="color:#080;font-weight:bold">end</span>
+    <span style="color:#080;font-weight:bold">end</span>
+  <span style="color:#080;font-weight:bold">end</span>
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+    </div>
+
+    <p>In the above example the environment option would be passed in from the top-level flow, like this:</p>
+
+    <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#036;font-weight:bold">Flow</span>.create <span style="color:#606">environment</span>: <span style="color:#A60">:probe</span> <span style="color:#080;font-weight:bold">do</span>
+  <span style="color:#777"># ...</span>
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+    </div>
 
     <div>    
   <a class="anchor" name="Notes_on_Duplicates"></a>          

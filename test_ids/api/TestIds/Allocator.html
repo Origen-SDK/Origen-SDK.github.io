@@ -6,7 +6,7 @@
 <title>
   Class: TestIds::Allocator
   
-    &mdash; test_ids 0.2.1
+    &mdash; test_ids 0.3.0
   
 </title>
 
@@ -89,11 +89,6 @@
   
   
   
-  <dl>
-      <dt>Includes:</dt>
-      <dd>Origen::Callbacks</dd>
-  </dl>
-  
   
 
   
@@ -106,7 +101,22 @@
   
 </div>
 
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>The allocator is responsible for assigning new numbers and keeping a record
+of existing assignments.</p>
 
+<p>There is one allocator instance per configuration, and each has its own
+database file.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
 
 
 
@@ -199,7 +209,7 @@ instance is modified accordingly.</p>
   
     <span class="summary_desc"><div class='inline'>
 <p>Returns a path to the file that will be used to store the allocated
-bins/numbers.</p>
+bins/numbers, returns nil if remote storage not enabled.</p>
 </div></span>
   
 </li>
@@ -208,7 +218,7 @@ bins/numbers.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#git-instance_method" title="#git (instance method)">#<strong>git</strong>  &#x21d2; Object </a>
+      <a href="#id-instance_method" title="#id (instance method)">#<strong>id</strong>  &#x21d2; Object </a>
     
 
     
@@ -230,7 +240,7 @@ bins/numbers.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#initialize-instance_method" title="#initialize (instance method)">#<strong>initialize</strong>  &#x21d2; Allocator </a>
+      <a href="#initialize-instance_method" title="#initialize (instance method)">#<strong>initialize</strong>(configuration)  &#x21d2; Allocator </a>
     
 
     
@@ -249,50 +259,6 @@ bins/numbers.</p>
     <span class="summary_desc"><div class='inline'>
 <p>A new instance of Allocator.</p>
 </div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#on_origen_shutdown-instance_method" title="#on_origen_shutdown (instance method)">#<strong>on_origen_shutdown</strong>  &#x21d2; Object </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#prepare-instance_method" title="#prepare (instance method)">#<strong>prepare</strong>  &#x21d2; Object </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
   
 </li>
 
@@ -346,14 +312,13 @@ bins/numbers.</p>
     </ul>
   
 
-
-  <div id="constructor_details" class="method_details_list">
+<div id="constructor_details" class="method_details_list">
   <h2>Constructor Details</h2>
   
     <div class="method_details first">
   <h3 class="signature first" id="initialize-instance_method">
   
-    #<strong>initialize</strong>  &#x21d2; <tt><span class='object_link'><a href="" title="TestIds::Allocator (class)">Allocator</a></span></tt> 
+    #<strong>initialize</strong>(configuration)  &#x21d2; <tt><span class='object_link'><a href="" title="TestIds::Allocator (class)">Allocator</a></span></tt> 
   
 
   
@@ -376,23 +341,15 @@ bins/numbers.</p>
       <pre class="lines">
 
 
-6
-7
-8
-9
 10
 11
 12</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/test_ids/allocator.rb', line 6</span>
+      <pre class="code"><span class="info file"># File 'lib/test_ids/allocator.rb', line 10</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span>
-  <span class='cvar'>@@allocators</span> <span class='op'>||=</span> <span class='int'>0</span>
-  <span class='cvar'>@@allocators</span> <span class='op'>+=</span> <span class='int'>1</span>
-  <span class='kw'>if</span> <span class='cvar'>@@allocators</span> <span class='op'>&gt;</span> <span class='int'>1</span> <span class='op'>&amp;&amp;</span> <span class='op'>!</span><span class='const'>TestIds</span><span class='period'>.</span><span class='id identifier rubyid_send'>send</span><span class='lparen'>(</span><span class='symbol'>:testing?</span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_fail'>fail</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>TestIds::Allocators is a singleton, there can be only one</span><span class='tstring_end'>&#39;</span></span>
-  <span class='kw'>end</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_configuration'>configuration</span><span class='rparen'>)</span>
+  <span class='ivar'>@config</span> <span class='op'>=</span> <span class='id identifier rubyid_configuration'>configuration</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -432,12 +389,12 @@ bins/numbers.</p>
       <pre class="lines">
 
 
-4
-5
-6</pre>
+8
+9
+10</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/test_ids/allocator.rb', line 4</span>
+      <pre class="code"><span class="info file"># File 'lib/test_ids/allocator.rb', line 8</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_config'>config</span>
   <span class='ivar'>@config</span>
@@ -530,14 +487,12 @@ instance is modified accordingly</p>
 62
 63
 64
-65
-66</pre>
+65</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/test_ids/allocator.rb', line 16</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_allocate'>allocate</span><span class='lparen'>(</span><span class='id identifier rubyid_instance'>instance</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
-  <span class='ivar'>@changes_made</span> <span class='op'>=</span> <span class='kw'>true</span>
   <span class='id identifier rubyid_clean'>clean</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
   <span class='ivar'>@callbacks</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
   <span class='id identifier rubyid_name'>name</span> <span class='op'>=</span> <span class='id identifier rubyid_extract_test_name'>extract_test_name</span><span class='lparen'>(</span><span class='id identifier rubyid_instance'>instance</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
@@ -605,7 +560,7 @@ instance is modified accordingly</p>
   <div class="discussion">
     
 <p>Returns a path to the file that will be used to store the allocated
-bins/numbers. If config.repo has not been set it returns nil.</p>
+bins/numbers, returns nil if remote storage not enabled</p>
 
 
   </div>
@@ -619,35 +574,15 @@ bins/numbers. If config.repo has not been set it returns nil.</p>
       <pre class="lines">
 
 
-110
-111
-112
-113
-114
-115
-116
-117
-118
-119
-120
-121
-122</pre>
+96
+97
+98</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/test_ids/allocator.rb', line 110</span>
+      <pre class="code"><span class="info file"># File 'lib/test_ids/allocator.rb', line 96</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_file'>file</span>
-  <span class='kw'>if</span> <span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_repo'>repo</span>
-    <span class='ivar'>@file</span> <span class='op'>||=</span> <span class='kw'>begin</span>
-      <span class='kw'>if</span> <span class='id identifier rubyid_git?'>git?</span>
-        <span class='id identifier rubyid_dir'>dir</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_app'>app</span><span class='period'>.</span><span class='id identifier rubyid_imports_directory'>imports_directory</span><span class='embexpr_end'>}</span><span class='tstring_content'>/test_ids/</span><span class='embexpr_beg'>#{</span><span class='const'>Pathname</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_repo'>repo</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_basename'>basename</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
-        <span class='const'>FileUtils</span><span class='period'>.</span><span class='id identifier rubyid_mkdir_p'>mkdir_p</span><span class='lparen'>(</span><span class='id identifier rubyid_dir'>dir</span><span class='rparen'>)</span>
-        <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_dir'>dir</span><span class='embexpr_end'>}</span><span class='tstring_content'>/store.json</span><span class='tstring_end'>&quot;</span></span>
-      <span class='kw'>else</span>
-        <span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_repo'>repo</span>
-      <span class='kw'>end</span>
-    <span class='kw'>end</span>
-  <span class='kw'>end</span>
+  <span class='const'>TestIds</span><span class='period'>.</span><span class='id identifier rubyid_database_file'>database_file</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -655,9 +590,9 @@ bins/numbers. If config.repo has not been set it returns nil.</p>
 </div>
     
       <div class="method_details ">
-  <h3 class="signature " id="git-instance_method">
+  <h3 class="signature " id="id-instance_method">
   
-    #<strong>git</strong>  &#x21d2; <tt>Object</tt> 
+    #<strong>id</strong>  &#x21d2; <tt>Object</tt> 
   
 
   
@@ -669,91 +604,15 @@ bins/numbers. If config.repo has not been set it returns nil.</p>
       <pre class="lines">
 
 
-124
-125
-126</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'lib/test_ids/allocator.rb', line 124</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_git'>git</span>
-  <span class='ivar'>@git</span> <span class='op'>||=</span> <span class='const'>Git</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='label'>local:</span> <span class='const'>Pathname</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_file'>file</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_dirname'>dirname</span><span class='comma'>,</span> <span class='label'>remote:</span> <span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_repo'>repo</span><span class='comma'>,</span> <span class='label'>no_pull:</span> <span class='id identifier rubyid_publish?'>publish?</span><span class='rparen'>)</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <h3 class="signature " id="on_origen_shutdown-instance_method">
-  
-    #<strong>on_origen_shutdown</strong>  &#x21d2; <tt>Object</tt> 
-  
-
-  
-
-  
-</h3><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-99
 100
 101
-102
-103
-104
-105
-106</pre>
+102</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/test_ids/allocator.rb', line 99</span>
+      <pre class="code"><span class="info file"># File 'lib/test_ids/allocator.rb', line 100</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_on_origen_shutdown'>on_origen_shutdown</span>
-  <span class='kw'>unless</span> <span class='const'>TestIds</span><span class='period'>.</span><span class='id identifier rubyid_send'>send</span><span class='lparen'>(</span><span class='symbol'>:testing?</span><span class='rparen'>)</span>
-    <span class='kw'>if</span> <span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_repo'>repo</span> <span class='op'>&amp;&amp;</span> <span class='ivar'>@changes_made</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_on_completion'>on_completion</span> <span class='op'>!=</span> <span class='symbol'>:discard</span>
-      <span class='id identifier rubyid_save'>save</span>
-      <span class='id identifier rubyid_git'>git</span><span class='period'>.</span><span class='id identifier rubyid_publish'>publish</span> <span class='kw'>if</span> <span class='id identifier rubyid_publish?'>publish?</span>
-    <span class='kw'>end</span>
-  <span class='kw'>end</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <h3 class="signature " id="prepare-instance_method">
-  
-    #<strong>prepare</strong>  &#x21d2; <tt>Object</tt> 
-  
-
-  
-
-  
-</h3><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-128
-129
-130
-131
-132
-133</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'lib/test_ids/allocator.rb', line 128</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_prepare'>prepare</span>
-  <span class='kw'>if</span> <span class='id identifier rubyid_git?'>git?</span>
-    <span class='id identifier rubyid_git'>git</span> <span class='comment'># Pulls the latest repo
-</span>    <span class='id identifier rubyid_git'>git</span><span class='period'>.</span><span class='id identifier rubyid_get_lock'>get_lock</span> <span class='kw'>if</span> <span class='id identifier rubyid_publish?'>publish?</span>
-  <span class='kw'>end</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_id'>id</span>
+  <span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_id'>id</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -786,16 +645,16 @@ bins/numbers. If config.repo has not been set it returns nil.</p>
       <pre class="lines">
 
 
+86
+87
+88
+89
+90
 91
-92
-93
-94
-95
-96
-97</pre>
+92</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/test_ids/allocator.rb', line 91</span>
+      <pre class="code"><span class="info file"># File 'lib/test_ids/allocator.rb', line 86</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_save'>save</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_file'>file</span>
@@ -824,6 +683,11 @@ bins/numbers. If config.repo has not been set it returns nil.</p>
       <pre class="lines">
 
 
+67
+68
+69
+70
+71
 72
 73
 74
@@ -835,15 +699,10 @@ bins/numbers. If config.repo has not been set it returns nil.</p>
 80
 81
 82
-83
-84
-85
-86
-87
-88</pre>
+83</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/test_ids/allocator.rb', line 72</span>
+      <pre class="code"><span class="info file"># File 'lib/test_ids/allocator.rb', line 67</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_store'>store</span>
   <span class='ivar'>@store</span> <span class='op'>||=</span> <span class='kw'>begin</span>
@@ -872,9 +731,9 @@ bins/numbers. If config.repo has not been set it returns nil.</p>
 </div>
 
       <div id="footer">
-  Generated on Tue Sep  6 19:35:25 2016 by
+  Generated on Tue Sep 20 12:16:34 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.5 (ruby-2.3.1).
+  0.9.5 (ruby-2.1.5).
 </div>
 
     </div>
