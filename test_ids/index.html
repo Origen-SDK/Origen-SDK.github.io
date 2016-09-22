@@ -95,7 +95,7 @@
 <div class="row">
   <div class="span12">
 
-    <h1>TestIds <span style="font-size: 14px">(0.3.0)</span>
+    <h1>TestIds <span style="font-size: 14px">(0.3.1)</span>
 </h1>
 
     <p>An Origen plugin to automatically assign and maintain test program bin and test numbers.</p>
@@ -185,7 +185,7 @@ config.TYPE.include &lt;&lt; (<span style="color:#00D">100</span>..<span style="
     <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>config.TYPE.exclude &lt;&lt; <span style="color:#00D">150</span>         <span style="color:#777"># This is already assigned to something else</span>
-config.TYPE.exculde &lt;&lt; (<span style="color:#00D">190</span>..<span style="color:#00D">195</span>)  <span style="color:#777"># A range is also acceptable</span>
+config.TYPE.exclude &lt;&lt; (<span style="color:#00D">190</span>..<span style="color:#00D">195</span>)  <span style="color:#777"># A range is also acceptable</span>
 </pre></div>
 </div>
     </div>
@@ -339,15 +339,23 @@ plugin and not used for anything else.
     <p>The repository will then be kept up to date on every program generator invocation.
 A locking system will be automatically managed for you to prevent concurrent updates from multiple users.</p>
 
-    <p>Sometimes during development you may want to temporarily inhibit storage in the repo, just comment out or
-branch around the repo definition to achieve that:</p>
+    <p>Sometimes during development you may want to temporarily inhibit publishing to the repo,
+that can be achieved like this:</p>
 
     <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Only update the database when running in production mode</span>
-<span style="color:#080;font-weight:bold">if</span> <span style="color:#036;font-weight:bold">Origen</span>.mode.production?
-  <span style="color:#036;font-weight:bold">TestIds</span>.repo =  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">ssh://git@github.com:myaccount/my_test_ids.git</span><span style="color:#710">"</span></span>
-<span style="color:#080;font-weight:bold">end</span>
+  <div class="code"><pre><span style="color:#036;font-weight:bold">TestIds</span>.repo =  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">ssh://git@github.com:myaccount/my_test_ids.git</span><span style="color:#710">"</span></span>
+<span style="color:#036;font-weight:bold">TestIds</span>.publish = <span style="color:#069">false</span>
+</pre></div>
+</div>
+    </div>
+
+    <p>A common configuration may be to only publish in production:</p>
+
+    <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#036;font-weight:bold">TestIds</span>.repo =  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">ssh://git@github.com:myaccount/my_test_ids.git</span><span style="color:#710">"</span></span>
+<span style="color:#036;font-weight:bold">TestIds</span>.publish = <span style="color:#036;font-weight:bold">Origen</span>.mode.production?
 </pre></div>
 </div>
     </div>

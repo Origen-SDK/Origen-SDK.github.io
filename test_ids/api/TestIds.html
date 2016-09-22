@@ -6,7 +6,7 @@
 <title>
   Module: TestIds
   
-    &mdash; test_ids 0.3.0
+    &mdash; test_ids 0.3.1
   
 </title>
 
@@ -296,7 +296,7 @@ git storage has not been enabled.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#on_completion-class_method" title="on_completion (class method)">.<strong>on_completion</strong>  &#x21d2; Object </a>
+      <a href="#publish%3D-class_method" title="publish= (class method)">.<strong>publish=</strong>(val)  &#x21d2; Object </a>
     
 
     
@@ -310,10 +310,7 @@ git storage has not been enabled.</p>
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Returns what should be done with the database for the given configuration
-at the end, :save (the default) or :discard.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'></div></span>
   
 </li>
 
@@ -321,7 +318,7 @@ at the end, :save (the default) or :discard.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#on_completion%3D-class_method" title="on_completion= (class method)">.<strong>on_completion=</strong>(val)  &#x21d2; Object </a>
+      <a href="#publish%3F-class_method" title="publish? (class method)">.<strong>publish?</strong>  &#x21d2; Boolean </a>
     
 
     
@@ -637,7 +634,7 @@ git storage has not been enabled</p>
       <pre class="code"><span class="info file"># File 'lib/test_ids.rb', line 68</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_database_file'>database_file</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='rparen'>)</span>
-  <span class='kw'>if</span> <span class='id identifier rubyid_repo'>repo</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_on_completion'>on_completion</span> <span class='op'>==</span> <span class='symbol'>:save</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_repo'>repo</span>
     <span class='kw'>if</span> <span class='id identifier rubyid_id'>id</span> <span class='op'>==</span> <span class='symbol'>:not_specified</span>
       <span class='id identifier rubyid_f'>f</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>store.json</span><span class='tstring_end'>&#39;</span></span>
     <span class='kw'>else</span>
@@ -751,7 +748,7 @@ git storage has not been enabled</p>
   <span class='ivar'>@git_initialized</span> <span class='op'>||=</span> <span class='kw'>begin</span>
     <span class='kw'>if</span> <span class='id identifier rubyid_repo'>repo</span>
       <span class='ivar'>@git</span> <span class='op'>=</span> <span class='const'>Git</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='label'>local:</span> <span class='id identifier rubyid_git_database_dir'>git_database_dir</span><span class='comma'>,</span> <span class='label'>remote:</span> <span class='id identifier rubyid_repo'>repo</span><span class='rparen'>)</span>
-      <span class='id identifier rubyid_git'>git</span><span class='period'>.</span><span class='id identifier rubyid_get_lock'>get_lock</span> <span class='kw'>if</span> <span class='id identifier rubyid_on_completion'>on_completion</span> <span class='op'>==</span> <span class='symbol'>:save</span>
+      <span class='id identifier rubyid_git'>git</span><span class='period'>.</span><span class='id identifier rubyid_get_lock'>get_lock</span> <span class='kw'>if</span> <span class='id identifier rubyid_publish?'>publish?</span>
     <span class='kw'>end</span>
     <span class='kw'>true</span>
   <span class='kw'>end</span>
@@ -762,54 +759,9 @@ git storage has not been enabled</p>
 </div>
     
       <div class="method_details ">
-  <h3 class="signature " id="on_completion-class_method">
+  <h3 class="signature " id="publish=-class_method">
   
-    .<strong>on_completion</strong>  &#x21d2; <tt>Object</tt> 
-  
-
-  
-
-  
-</h3><div class="docstring">
-  <div class="discussion">
-    
-<p>Returns what should be done with the database for the given configuration
-at the end, :save (the default) or :discard.</p>
-
-<p>If a repo has not been specified, then this attribute has no effect and the
-data will always be discarded.</p>
-
-
-  </div>
-</div>
-<div class="tags">
-  
-
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-111
-112
-113</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'lib/test_ids.rb', line 111</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_on_completion'>on_completion</span>
-  <span class='ivar'>@on_completion</span> <span class='op'>||</span> <span class='symbol'>:save</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <h3 class="signature " id="on_completion=-class_method">
-  
-    .<strong>on_completion=</strong>(val)  &#x21d2; <tt>Object</tt> 
+    .<strong>publish=</strong>(val)  &#x21d2; <tt>Object</tt> 
   
 
   
@@ -821,6 +773,11 @@ data will always be discarded.</p>
       <pre class="lines">
 
 
+110
+111
+112
+113
+114
 115
 116
 117
@@ -828,28 +785,75 @@ data will always be discarded.</p>
 119
 120
 121
-122
-123
-124
-125
-126
-127</pre>
+122</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/test_ids.rb', line 115</span>
+      <pre class="code"><span class="info file"># File 'lib/test_ids.rb', line 110</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_on_completion='>on_completion=</span><span class='lparen'>(</span><span class='id identifier rubyid_val'>val</span><span class='rparen'>)</span>
-  <span class='kw'>return</span> <span class='kw'>if</span> <span class='ivar'>@on_completion</span> <span class='op'>&amp;&amp;</span> <span class='ivar'>@on_completion</span> <span class='op'>==</span> <span class='id identifier rubyid_val'>val</span>
-  <span class='kw'>if</span> <span class='ivar'>@on_completion</span> <span class='op'>&amp;&amp;</span> <span class='ivar'>@on_completion</span> <span class='op'>!=</span> <span class='id identifier rubyid_val'>val</span>
-    <span class='id identifier rubyid_fail'>fail</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>You can only use a single setting for on_completion per program generation run</span><span class='tstring_end'>&#39;</span></span>
+<span class='kw'>def</span> <span class='id identifier rubyid_publish='>publish=</span><span class='lparen'>(</span><span class='id identifier rubyid_val'>val</span><span class='rparen'>)</span>
+  <span class='kw'>return</span> <span class='kw'>if</span> <span class='ivar'>@publish</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_publish?'>publish?</span> <span class='op'>==</span> <span class='id identifier rubyid_val'>val</span>
+  <span class='kw'>if</span> <span class='ivar'>@publish</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_publish?'>publish?</span> <span class='op'>!=</span> <span class='id identifier rubyid_val'>val</span>
+    <span class='id identifier rubyid_fail'>fail</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>You can only use a single setting for publish per program generation run</span><span class='tstring_end'>&#39;</span></span>
   <span class='kw'>end</span>
   <span class='kw'>if</span> <span class='ivar'>@configuration</span>
-    <span class='id identifier rubyid_fail'>fail</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>TestIds.on_completion must be set before creating the first configuration</span><span class='tstring_end'>&#39;</span></span>
+    <span class='id identifier rubyid_fail'>fail</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>TestIds.publish must be set before creating the first configuration</span><span class='tstring_end'>&#39;</span></span>
   <span class='kw'>end</span>
-  <span class='kw'>unless</span> <span class='qwords_beg'>%w(</span><span class='tstring_content'>save</span><span class='words_sep'> </span><span class='tstring_content'>discard</span><span class='words_sep'>)</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='id identifier rubyid_val'>val</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_fail'>fail</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>on_completion must be set to either :save or :discard</span><span class='tstring_end'>&#39;</span></span>
+  <span class='kw'>unless</span> <span class='lbracket'>[</span><span class='kw'>true</span><span class='comma'>,</span> <span class='kw'>false</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='id identifier rubyid_val'>val</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_fail'>fail</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>TestIds.publish must be set to either true or false</span><span class='tstring_end'>&#39;</span></span>
   <span class='kw'>end</span>
-  <span class='ivar'>@on_completion</span> <span class='op'>=</span> <span class='id identifier rubyid_val'>val</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span>
+  <span class='ivar'>@publish</span> <span class='op'>=</span> <span class='id identifier rubyid_val'>val</span> <span class='op'>?</span> <span class='symbol'>:save</span> <span class='op'>:</span> <span class='symbol'>:dont_save</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="publish?-class_method">
+  
+    .<strong>publish?</strong>  &#x21d2; <tt>Boolean</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+106
+107
+108</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/test_ids.rb', line 106</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_publish?'>publish?</span>
+  <span class='ivar'>@publish</span> <span class='op'>?</span> <span class='ivar'>@publish</span> <span class='op'>==</span> <span class='symbol'>:save</span> <span class='op'>:</span> <span class='kw'>true</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -935,7 +939,7 @@ data will always be discarded.</p>
 </div>
 
       <div id="footer">
-  Generated on Tue Sep 20 12:16:34 2016 by
+  Generated on Thu Sep 22 05:37:48 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.5 (ruby-2.1.5).
 </div>
