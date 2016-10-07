@@ -6,7 +6,7 @@
 <title>
   Module: Origen::Utility
   
-    &mdash; Origen Core 0.7.35
+    &mdash; Origen Core 0.7.36
   
 </title>
 
@@ -255,7 +255,14 @@ bits</p>
 87
 88
 89
-90</pre>
+90
+91
+92
+93
+94
+95
+96
+97</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/origen/utility.rb', line 34</span>
@@ -283,6 +290,10 @@ bits</p>
 </span>    <span class='comment'># that are not all of the same type are expanded, e.g. -010s-3S6
 </span>    <span class='id identifier rubyid_outstr'>outstr</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span>
     <span class='id identifier rubyid_regex'>regex</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>^</span><span class='tstring_end'>&#39;</span></span>
+    <span class='id identifier rubyid_r'>r</span> <span class='op'>=</span> <span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span> <span class='op'>%</span> <span class='int'>4</span>
+    <span class='kw'>unless</span> <span class='id identifier rubyid_r'>r</span> <span class='op'>==</span> <span class='int'>0</span>
+      <span class='id identifier rubyid_regex'>regex</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>(</span><span class='tstring_end'>&#39;</span></span> <span class='op'>+</span> <span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>.</span><span class='tstring_end'>&#39;</span></span> <span class='op'>*</span> <span class='id identifier rubyid_r'>r</span><span class='rparen'>)</span> <span class='op'>+</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>)</span><span class='tstring_end'>&#39;</span></span>
+    <span class='kw'>end</span>
     <span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span> <span class='op'>/</span> <span class='int'>4</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_times'>times</span> <span class='lbrace'>{</span> <span class='id identifier rubyid_regex'>regex</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>(....)</span><span class='tstring_end'>&#39;</span></span> <span class='rbrace'>}</span>
     <span class='id identifier rubyid_regex'>regex</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>$</span><span class='tstring_end'>&#39;</span></span>
     <span class='const'>Regexp</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_regex'>regex</span><span class='rparen'>)</span> <span class='op'>=~</span> <span class='id identifier rubyid_regval'>regval</span>
@@ -291,12 +302,15 @@ bits</p>
     <span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span> <span class='op'>/</span> <span class='int'>4</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_times'>times</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_n'>n</span><span class='op'>|</span>                   <span class='comment'># now grouped by nibble
 </span>      <span class='id identifier rubyid_nibbles'>nibbles</span> <span class='op'>&lt;&lt;</span> <span class='const'>Regexp</span><span class='period'>.</span><span class='id identifier rubyid_last_match'>last_match</span><span class='lbracket'>[</span><span class='id identifier rubyid_n'>n</span> <span class='op'>+</span> <span class='int'>1</span><span class='rbracket'>]</span>
     <span class='kw'>end</span>
+    <span class='kw'>unless</span> <span class='id identifier rubyid_r'>r</span> <span class='op'>==</span> <span class='int'>0</span>
+      <span class='id identifier rubyid_nibbles'>nibbles</span> <span class='op'>&lt;&lt;</span> <span class='const'>Regexp</span><span class='period'>.</span><span class='id identifier rubyid_last_match'>last_match</span><span class='lbracket'>[</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span> <span class='op'>/</span> <span class='int'>4</span><span class='rparen'>)</span> <span class='op'>+</span> <span class='int'>1</span><span class='rbracket'>]</span>
+    <span class='kw'>end</span>
 
     <span class='id identifier rubyid_nibbles'>nibbles</span><span class='period'>.</span><span class='id identifier rubyid_each_with_index'>each_with_index</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_nibble'>nibble</span><span class='comma'>,</span> <span class='id identifier rubyid_i'>i</span><span class='op'>|</span>
       <span class='comment'># If contains any special chars...
 </span>      <span class='kw'>if</span> <span class='id identifier rubyid_nibble'>nibble</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>[XSV]</span><span class='regexp_end'>/</span></span>
         <span class='comment'># If all the same...
-</span>        <span class='kw'>if</span> <span class='id identifier rubyid_nibble'>nibble</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='id identifier rubyid_nibble'>nibble</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_nibble'>nibble</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='id identifier rubyid_nibble'>nibble</span><span class='lbracket'>[</span><span class='int'>2</span><span class='rbracket'>]</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_nibble'>nibble</span><span class='lbracket'>[</span><span class='int'>2</span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='id identifier rubyid_nibble'>nibble</span><span class='lbracket'>[</span><span class='int'>3</span><span class='rbracket'>]</span>
+</span>        <span class='kw'>if</span> <span class='id identifier rubyid_nibble'>nibble</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_all?'>all?</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_c'>c</span><span class='op'>|</span> <span class='id identifier rubyid_c'>c</span> <span class='op'>==</span> <span class='id identifier rubyid_nibble'>nibble</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span> <span class='rbrace'>}</span>
           <span class='id identifier rubyid_outstr'>outstr</span> <span class='op'>+=</span> <span class='id identifier rubyid_nibble'>nibble</span><span class='lbracket'>[</span><span class='int'>0</span><span class='comma'>,</span> <span class='int'>1</span><span class='rbracket'>]</span> <span class='comment'># .to_s
 </span>        <span class='comment'># Otherwise present this nibble in &#39;binary&#39; format
 </span>        <span class='kw'>else</span>
@@ -327,7 +341,7 @@ bits</p>
 </div>
 
       <div id="footer">
-  Generated on Fri Oct  7 04:11:00 2016 by
+  Generated on Fri Oct  7 05:03:12 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.5 (ruby-2.1.5).
 </div>
