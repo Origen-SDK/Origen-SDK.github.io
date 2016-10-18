@@ -6,7 +6,7 @@
 <title>
   Class: OrigenJTAG::Driver
   
-    &mdash; Origen JTAG 0.12.1
+    &mdash; Origen JTAG 0.13.0.pre0
   
 </title>
 
@@ -121,7 +121,8 @@ alias is fine):</p>
 <pre class="code ruby"><code class="ruby"><span class='symbol'>:tclk</span>
 <span class='symbol'>:tdi</span>
 <span class='symbol'>:tdo</span>
-<span class='symbol'>:tms</span></code></pre>
+<span class='symbol'>:tms</span>
+</code></pre>
 
 
   </div>
@@ -906,27 +907,27 @@ written out prior to shifting data.</p>
       <pre class="lines">
 
 
-333
-334
-335
-336
-337
-338
-339
-340
-341
-342
-343
-344
-345
-346
-347
-348
-349
-350</pre>
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 333</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 363</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_read_dr'>read_dr</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_tester'>tester</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:read_dr</span><span class='rparen'>)</span>
@@ -1064,24 +1065,24 @@ written out prior to shifting data.</p>
       <pre class="lines">
 
 
-406
-407
-408
-409
-410
-411
-412
-413
-414
-415
-416
-417
-418
-419
-420</pre>
+436
+437
+438
+439
+440
+441
+442
+443
+444
+445
+446
+447
+448
+449
+450</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 406</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 436</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_read_ir'>read_ir</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_tester'>tester</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:read_ir</span><span class='rparen'>)</span>
@@ -1360,7 +1361,37 @@ of a shift operation.</p>
 191
 192
 193
-194</pre>
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 100</span>
@@ -1369,9 +1400,16 @@ of a shift operation.</p>
   <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span>
     <span class='label'>read:</span>              <span class='kw'>false</span><span class='comma'>,</span>
     <span class='label'>cycle_last:</span>        <span class='kw'>false</span><span class='comma'>,</span>
-    <span class='label'>includes_last_bit:</span> <span class='kw'>true</span>
-  <span class='rbrace'>}</span><span class='period'>.</span><span class='id identifier rubyid_merge'>merge</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
+    <span class='label'>includes_last_bit:</span> <span class='kw'>true</span><span class='comma'>,</span>
+    <span class='label'>no_subr:</span>           <span class='kw'>false</span>      <span class='comment'># do not use subroutine for any overlay
+</span>  <span class='rbrace'>}</span><span class='period'>.</span><span class='id identifier rubyid_merge'>merge</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_size'>size</span> <span class='op'>=</span> <span class='id identifier rubyid_extract_size'>extract_size</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:no_subr</span><span class='rbracket'>]</span> <span class='op'>&amp;&amp;</span> <span class='op'>!</span><span class='gvar'>$tester</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>label</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+    <span class='comment'># tester does not support direct labels, so can&#39;t do
+</span>    <span class='id identifier rubyid_cc'>cc</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>This tester does not support use of labels, cannot do no_subr option as requested</span><span class='tstring_end'>&#39;</span></span>
+    <span class='id identifier rubyid_cc'>cc</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>  going with subroutine overlay instead</span><span class='tstring_end'>&#39;</span></span>
+    <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:no_subr</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='kw'>false</span>
+  <span class='kw'>end</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_key?'>key?</span><span class='lparen'>(</span><span class='symbol'>:arm_debug_comment</span><span class='rparen'>)</span>
     <span class='id identifier rubyid_cc'>cc</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:arm_debug_comment</span><span class='rbracket'>]</span>
   <span class='kw'>end</span>
@@ -1382,8 +1420,10 @@ of a shift operation.</p>
   <span class='id identifier rubyid_contains_bits'>contains_bits</span> <span class='op'>=</span> <span class='lparen'>(</span><span class='id identifier rubyid_contains_bits?'>contains_bits?</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='rparen'>)</span> <span class='op'>||</span> <span class='id identifier rubyid_is_a_bit?'>is_a_bit?</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='rparen'>)</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_owner'>owner</span><span class='period'>.</span><span class='id identifier rubyid_pin'>pin</span><span class='lparen'>(</span><span class='symbol'>:tdi</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_drive'>drive</span><span class='lparen'>(</span><span class='int'>0</span><span class='rparen'>)</span> <span class='comment'># Drive state when reading out
 </span>  <span class='id identifier rubyid_owner'>owner</span><span class='period'>.</span><span class='id identifier rubyid_pin'>pin</span><span class='lparen'>(</span><span class='symbol'>:tms</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_drive'>drive</span><span class='lparen'>(</span><span class='int'>0</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_last_overlay_label'>last_overlay_label</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span>
   <span class='id identifier rubyid_size'>size</span><span class='period'>.</span><span class='id identifier rubyid_times'>times</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_i'>i</span><span class='op'>|</span>
     <span class='id identifier rubyid_call_subroutine'>call_subroutine</span> <span class='op'>=</span> <span class='kw'>false</span>
+    <span class='id identifier rubyid_direct_overlay'>direct_overlay</span> <span class='op'>=</span> <span class='kw'>false</span>
     <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:read</span><span class='rbracket'>]</span>
       <span class='comment'># If it&#39;s a register support bit-wise reads
 </span>      <span class='kw'>if</span> <span class='id identifier rubyid_contains_bits'>contains_bits</span>
@@ -1395,7 +1435,16 @@ of a shift operation.</p>
             <span class='kw'>if</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_mode'>mode</span><span class='period'>.</span><span class='id identifier rubyid_simulation?'>simulation?</span>
               <span class='id identifier rubyid_owner'>owner</span><span class='period'>.</span><span class='id identifier rubyid_pin'>pin</span><span class='lparen'>(</span><span class='symbol'>:tdo</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_dont_care'>dont_care</span>
             <span class='kw'>else</span>
-              <span class='id identifier rubyid_call_subroutine'>call_subroutine</span> <span class='op'>=</span> <span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_overlay_str'>overlay_str</span>
+              <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:no_subr</span><span class='rbracket'>]</span>
+                <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_tester'>tester</span><span class='period'>.</span><span class='id identifier rubyid_dont_compress'>dont_compress</span> <span class='op'>=</span> <span class='kw'>true</span>
+                <span class='kw'>if</span> <span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_overlay_str'>overlay_str</span> <span class='op'>!=</span> <span class='id identifier rubyid_last_overlay_label'>last_overlay_label</span>
+                  <span class='gvar'>$tester</span><span class='period'>.</span><span class='id identifier rubyid_label'>label</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_overlay_str'>overlay_str</span><span class='rparen'>)</span>
+                  <span class='id identifier rubyid_last_overlay_label'>last_overlay_label</span> <span class='op'>=</span> <span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_overlay_str'>overlay_str</span>
+                <span class='kw'>end</span>
+                <span class='id identifier rubyid_owner'>owner</span><span class='period'>.</span><span class='id identifier rubyid_pin'>pin</span><span class='lparen'>(</span><span class='symbol'>:tdo</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_assert'>assert</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span> <span class='op'>?</span> <span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span> <span class='op'>:</span> <span class='int'>0</span><span class='rparen'>)</span>
+              <span class='kw'>else</span>
+                <span class='id identifier rubyid_call_subroutine'>call_subroutine</span> <span class='op'>=</span> <span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_overlay_str'>overlay_str</span>
+              <span class='kw'>end</span>
             <span class='kw'>end</span>
           <span class='kw'>elsif</span> <span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_is_to_be_read?'>is_to_be_read?</span>
             <span class='id identifier rubyid_owner'>owner</span><span class='period'>.</span><span class='id identifier rubyid_pin'>pin</span><span class='lparen'>(</span><span class='symbol'>:tdo</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_assert'>assert</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span> <span class='op'>?</span> <span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span> <span class='op'>:</span> <span class='int'>0</span><span class='rparen'>)</span>
@@ -1416,6 +1465,7 @@ of a shift operation.</p>
         <span class='kw'>end</span>
       <span class='comment'># Otherwise read the whole thing
 </span>      <span class='kw'>else</span>
+        <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_tester'>tester</span><span class='period'>.</span><span class='id identifier rubyid_dont_compress'>dont_compress</span> <span class='op'>=</span> <span class='kw'>false</span>
         <span class='id identifier rubyid_owner'>owner</span><span class='period'>.</span><span class='id identifier rubyid_pin'>pin</span><span class='lparen'>(</span><span class='symbol'>:tdo</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_assert'>assert</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span> <span class='op'>?</span> <span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span> <span class='op'>:</span> <span class='int'>0</span><span class='rparen'>)</span>
       <span class='kw'>end</span>
     <span class='kw'>else</span>
@@ -1423,7 +1473,16 @@ of a shift operation.</p>
         <span class='kw'>if</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_mode'>mode</span><span class='period'>.</span><span class='id identifier rubyid_simulation?'>simulation?</span>
           <span class='id identifier rubyid_owner'>owner</span><span class='period'>.</span><span class='id identifier rubyid_pin'>pin</span><span class='lparen'>(</span><span class='symbol'>:tdi</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_drive'>drive</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span> <span class='op'>?</span> <span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span> <span class='op'>:</span> <span class='int'>0</span><span class='rparen'>)</span>
         <span class='kw'>else</span>
-          <span class='id identifier rubyid_call_subroutine'>call_subroutine</span> <span class='op'>=</span> <span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_overlay_str'>overlay_str</span>
+          <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:no_subr</span><span class='rbracket'>]</span>
+            <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_tester'>tester</span><span class='period'>.</span><span class='id identifier rubyid_dont_compress'>dont_compress</span> <span class='op'>=</span> <span class='kw'>true</span>
+            <span class='kw'>if</span> <span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_overlay_str'>overlay_str</span> <span class='op'>!=</span> <span class='id identifier rubyid_last_overlay_label'>last_overlay_label</span>
+              <span class='gvar'>$tester</span><span class='period'>.</span><span class='id identifier rubyid_label'>label</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_overlay_str'>overlay_str</span><span class='rparen'>)</span>
+              <span class='id identifier rubyid_last_overlay_label'>last_overlay_label</span> <span class='op'>=</span> <span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_overlay_str'>overlay_str</span>
+            <span class='kw'>end</span>
+            <span class='id identifier rubyid_owner'>owner</span><span class='period'>.</span><span class='id identifier rubyid_pin'>pin</span><span class='lparen'>(</span><span class='symbol'>:tdi</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_drive'>drive</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span> <span class='op'>?</span> <span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span> <span class='op'>:</span> <span class='int'>0</span><span class='rparen'>)</span>
+          <span class='kw'>else</span>
+            <span class='id identifier rubyid_call_subroutine'>call_subroutine</span> <span class='op'>=</span> <span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_overlay_str'>overlay_str</span>
+          <span class='kw'>end</span>
         <span class='kw'>end</span>
       <span class='kw'>elsif</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_key?'>key?</span><span class='lparen'>(</span><span class='symbol'>:arm_debug_overlay</span><span class='rparen'>)</span>
         <span class='kw'>if</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_mode'>mode</span><span class='period'>.</span><span class='id identifier rubyid_simulation?'>simulation?</span>
@@ -1459,6 +1518,8 @@ of a shift operation.</p>
   <span class='comment'># Clear read and similar flags to reflect that the request has just
 </span>  <span class='comment'># been fulfilled
 </span>  <span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='period'>.</span><span class='id identifier rubyid_clear_flags'>clear_flags</span> <span class='kw'>if</span> <span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:clear_flags</span><span class='rparen'>)</span>
+  <span class='comment'># put back compression if turned on above
+</span>  <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_tester'>tester</span><span class='period'>.</span><span class='id identifier rubyid_dont_compress'>dont_compress</span> <span class='op'>=</span> <span class='kw'>false</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1493,36 +1554,6 @@ similar</p>
       <pre class="lines">
 
 
-200
-201
-202
-203
-204
-205
-206
-207
-208
-209
-210
-211
-212
-213
-214
-215
-216
-217
-218
-219
-220
-221
-222
-223
-224
-225
-226
-227
-228
-229
 230
 231
 232
@@ -1560,10 +1591,40 @@ similar</p>
 264
 265
 266
-267</pre>
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 200</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 230</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_tclk_cycle'>tclk_cycle</span>
   <span class='kw'>case</span> <span class='ivar'>@tclk_format</span>
@@ -1685,20 +1746,20 @@ TCLK</p>
       <pre class="lines">
 
 
-273
-274
-275
-276
-277
-278
-279
-280
-281
-282
-283</pre>
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 273</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 303</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='id identifier rubyid_val'>val</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='ivar'>@deferred_compare</span>
@@ -1825,25 +1886,25 @@ written out prior to shifting data.</p>
       <pre class="lines">
 
 
-299
-300
-301
-302
-303
-304
-305
-306
-307
-308
-309
-310
-311
-312
-313
-314</pre>
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 299</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 329</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_write_dr'>write_dr</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_tester'>tester</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:write_dr</span><span class='rparen'>)</span>
@@ -1994,25 +2055,25 @@ write occurs.</p>
       <pre class="lines">
 
 
-372
-373
-374
-375
-376
-377
-378
-379
-380
-381
-382
-383
-384
-385
-386
-387</pre>
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 372</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 402</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_write_ir'>write_ir</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_tester'>tester</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:write_ir</span><span class='rparen'>)</span>
@@ -2040,9 +2101,9 @@ write occurs.</p>
 </div>
 
       <div id="footer">
-  Generated on Fri Oct  7 04:19:09 2016 by
+  Generated on Tue Oct 18 13:43:21 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.5 (ruby-2.1.5).
+  0.9.5 (ruby-2.3.0).
 </div>
 
     </div>
