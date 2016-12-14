@@ -6,7 +6,7 @@
 <title>
   Class: TestIds::Git
   
-    &mdash; test_ids 0.3.2
+    &mdash; test_ids 0.4.0
   
 </title>
 
@@ -699,7 +699,8 @@ other users.</p>
 95
 96
 97
-98</pre>
+98
+99</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/test_ids/git.rb', line 87</span>
@@ -707,7 +708,8 @@ other users.</p>
 <span class='kw'>def</span> <span class='id identifier rubyid_available_to_lock?'>available_to_lock?</span>
   <span class='id identifier rubyid_result'>result</span> <span class='op'>=</span> <span class='kw'>false</span>
   <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_profile'>profile</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Checking for lock</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>do</span>
-    <span class='id identifier rubyid_repo'>repo</span><span class='period'>.</span><span class='id identifier rubyid_pull'>pull</span>
+    <span class='id identifier rubyid_repo'>repo</span><span class='period'>.</span><span class='id identifier rubyid_fetch'>fetch</span>
+    <span class='id identifier rubyid_repo'>repo</span><span class='period'>.</span><span class='id identifier rubyid_reset_hard'>reset_hard</span>
     <span class='kw'>if</span> <span class='id identifier rubyid_lock_content'>lock_content</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_lock_user'>lock_user</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_lock_user'>lock_user</span> <span class='op'>!=</span> <span class='const'>User</span><span class='period'>.</span><span class='id identifier rubyid_current'>current</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span>
       <span class='id identifier rubyid_result'>result</span> <span class='op'>=</span> <span class='const'>Time</span><span class='period'>.</span><span class='id identifier rubyid_now'>now</span><span class='period'>.</span><span class='id identifier rubyid_to_f'>to_f</span> <span class='op'>&gt;</span> <span class='id identifier rubyid_lock_expires'>lock_expires</span>
     <span class='kw'>else</span>
@@ -830,13 +832,13 @@ other users.</p>
       <pre class="lines">
 
 
-112
 113
 114
-115</pre>
+115
+116</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/test_ids/git.rb', line 112</span>
+      <pre class="code"><span class="info file"># File 'lib/test_ids/git.rb', line 113</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_lock_content'>lock_content</span>
   <span class='id identifier rubyid_f'>f</span> <span class='op'>=</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='id identifier rubyid_local'>local</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>lock.json</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
@@ -862,12 +864,12 @@ other users.</p>
       <pre class="lines">
 
 
-104
 105
-106</pre>
+106
+107</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/test_ids/git.rb', line 104</span>
+      <pre class="code"><span class="info file"># File 'lib/test_ids/git.rb', line 105</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_lock_expires'>lock_expires</span>
   <span class='id identifier rubyid_lock_content'>lock_content</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>expires</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
@@ -892,12 +894,12 @@ other users.</p>
       <pre class="lines">
 
 
-100
 101
-102</pre>
+102
+103</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/test_ids/git.rb', line 100</span>
+      <pre class="code"><span class="info file"># File 'lib/test_ids/git.rb', line 101</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_lock_minutes_remaining'>lock_minutes_remaining</span>
   <span class='lparen'>(</span><span class='lparen'>(</span><span class='id identifier rubyid_lock_expires'>lock_expires</span> <span class='op'>-</span> <span class='const'>Time</span><span class='period'>.</span><span class='id identifier rubyid_now'>now</span><span class='period'>.</span><span class='id identifier rubyid_to_f'>to_f</span><span class='rparen'>)</span> <span class='op'>/</span> <span class='int'>60</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_ceil'>ceil</span>
@@ -922,12 +924,12 @@ other users.</p>
       <pre class="lines">
 
 
-108
 109
-110</pre>
+110
+111</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/test_ids/git.rb', line 108</span>
+      <pre class="code"><span class="info file"># File 'lib/test_ids/git.rb', line 109</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_lock_user'>lock_user</span>
   <span class='id identifier rubyid_lock_content'>lock_content</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>user</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
@@ -952,12 +954,12 @@ other users.</p>
       <pre class="lines">
 
 
-117
 118
-119</pre>
+119
+120</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/test_ids/git.rb', line 117</span>
+      <pre class="code"><span class="info file"># File 'lib/test_ids/git.rb', line 118</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_minutes'>minutes</span><span class='lparen'>(</span><span class='id identifier rubyid_number'>number</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_number'>number</span> <span class='op'>*</span> <span class='int'>60</span>
@@ -999,7 +1001,7 @@ other users.</p>
     <span class='id identifier rubyid_release_lock'>release_lock</span>
     <span class='id identifier rubyid_repo'>repo</span><span class='period'>.</span><span class='id identifier rubyid_add'>add</span>  <span class='comment'># Checkin everything
 </span>    <span class='id identifier rubyid_repo'>repo</span><span class='period'>.</span><span class='id identifier rubyid_commit'>commit</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Publishing latest store</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_repo'>repo</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>origin</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_repo'>repo</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>origin</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>master</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>force:</span> <span class='kw'>true</span><span class='rparen'>)</span>
   <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -1095,7 +1097,7 @@ other users.</p>
 </div>
 
       <div id="footer">
-  Generated on Thu Nov  3 01:55:15 2016 by
+  Generated on Wed Dec 14 05:12:37 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.5 (ruby-2.1.5).
 </div>
