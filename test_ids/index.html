@@ -95,7 +95,7 @@
 <div class="row">
   <div class="span12">
 
-    <h1>TestIds <span style="font-size: 14px">(0.4.1)</span>
+    <h1>TestIds <span style="font-size: 14px">(0.5.0)</span>
 </h1>
 
     <p>An Origen plugin to automatically assign and maintain test program bin and test numbers.</p>
@@ -140,6 +140,30 @@ require it somewhere (at the top of your test program interface would be a good 
         <span style="color:#080;font-weight:bold">end</span>
       <span style="color:#080;font-weight:bold">end</span>
     <span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+    </div>
+
+    <p>Then anytime that you call <code>flow.test(my_test_instance, options)</code> within your application’s interface, assignments for <code>:bin</code>, <code>:softbin</code> and <code>:number</code> will automatically be injected into the options before it hits OrigenTesters.
+If an entry for any of the keys is already present in the options, then that will be given priority and TestIds will not attempt to assign a value for that attribute.</p>
+
+    <p>If you want to prevent TestIds from generating a given attribute and really pass <code>nil</code> for that attribute to OrigenTesters, then assign it to the value <code>:none</code>:</p>
+
+    <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>flow.test my_test, <span style="color:#606">bin</span>: <span style="color:#A60">:none</span>   <span style="color:#777"># Assign no bin but allow TestIds to generate a softbin and test number</span>
+</pre></div>
+</div>
+    </div>
+
+    <p>A method is also provided to directly assign/retrieve the numbers for a given test from TestIds, this should be supplied with the same arguments that you would normally pass to <code>flow.test</code>:</p>
+
+    <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#036;font-weight:bold">TestIds</span>.allocate(my_test, options)   <span style="color:#777"># =&gt; { bin: 5, softbin: 1250, number: 10250010 }</span>
+
+<span style="color:#777"># The above returns the same numbers that would be injected into the options when calling:</span>
+flow.test my_test, options
 </pre></div>
 </div>
     </div>
