@@ -379,228 +379,152 @@
 
       <p>Origen can be installed on Linux or Windows, this guide refers to the Windows installation.</p>
 
-      <p>The lack of a package manager in windows makes it harder to install various packages from the command line.</p>
-
-      <p>We recommend using <a href="http://chocolatey.org">chocolatey</a>; an open source windows package manager.</p>
-
-      <p>You can imagine chocolatey to be somewhat like apt-get or other package managers on Linux, but built with Windows in mind.</p>
-
-      <p>This guide will use <strong>chocolatey</strong> as the package manager to:</p>
-
-      <ul>
-        <li><a href="#Install_Ruby">Install Ruby</a></li>
-        <li>
-<a href="#Install_Ruby-Dependencies">Install Ruby-Dependencies</a>
-          <ul>
-            <li><a href="#Install_Ruby-Development-Kit">Install Ruby-Development-Kit</a></li>
-            <li><a href="#Install_RubyGems">Install RubyGems</a></li>
-            <li><a href="#Install_RubyGems-SSL-workaround">Install RubyGems-SSL-workaround</a></li>
-          </ul>
-        </li>
-        <li><a href="#Install_Utilities">Install Utilities</a></li>
-      </ul>
-
-      <h5 id="note"><strong>Note:</strong></h5>
-
-      <h6 id="origen-installation-has-been-tested-on-windows-7-only-at-this-time-but-we-dont-think-the-installation-process-will-be-any-different">Origen installation has been tested on Windows 7 only at this time, but we don’t think the installation process will be any different.</h6>
-
-      <h6 id="an-active-internet-connection-is-required-before-proceeding"><em>An active internet connection is required before proceeding.</em></h6>
-
-      <p>If running on Linux is of interest then please see this guide instead:
+      <p>If you want to run on Linux then please see this guide instead:
 <a href="/origen/guides/starting/installing">How to Install Origen on Linux</a></p>
 
-      <div>    
-  <a class="anchor" name="Background"></a>          
-  <h4><a href="#Background">Background</a></h4>          
+      <div class="alert alert-info" role="alert"> <strong>Last updated on 15th February 2017</strong>
+  <br>The vast majority of Origen use in production is on Linux, and over time this Windows guide can
+  become out of date and no one realizes.
+  If you do experience any issues when following this guide, then please do let us
+  know <a href="/origen/guides/starting/installwin/#Comments">via the comments below</a> and we will update it as required.
 </div>
-
-      <p>Origen is distributed as a Ruby gem, which is the Ruby language’s package manager.</p>
-
-      <p>Installation of Origen consists of the following steps:</p>
-
-      <ul>
-        <li><a href="#Install_Ruby">Install Ruby</a></li>
-        <li><a href="#Install_Ruby-Dependencies">Install Ruby-Dependencies</a></li>
-        <li><a href="#Install_Origen">Install Origen</a></li>
-      </ul>
 
       <div>    
-  <a class="anchor" name="Install_Chocolatey"></a>          
-  <h3><a href="#Install_Chocolatey">Install Chocolatey</a></h3>          
+  <a class="anchor" name="1._Install_a_Better_Console"></a>          
+  <h3><a href="#1._Install_a_Better_Console">1. Install a Better Console</a></h3>          
 </div>
 
-      <p>All commands mentioned below need to be typed in the command prompt running as an administrator</p>
+      <p>Download Console <a href="https://sourceforge.net/projects/console/files/latest/download?source=typ_redirect">by following this link</a>.</p>
+
+      <p>Move the .zip file to <code>C:/Program Files</code>, then right click it and select <code>Extract All...</code>.</p>
+
+      <p>Open the unzipped folder and right click on <code>Console.exe</code> and select <code>Send to &gt; Desktop (create shortcut)</code>.</p>
+
+      <p>Open the console from your desktop and execute the following command, we recommend that you create all of
+your Origen application workspaces in <code>C:\origen</code>:</p>
 
       <div class="language-text highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre>Start → run → cmd runas /user:Administrator
+  <div class="code"><pre>mkdir C:\origen
 </pre></div>
 </div>
       </div>
 
-      <ul>
-        <li>if the above command does not work, please follow the solution <a href="http://www.howtogeek.com/howto/windows-vista/run-a-command-as-administrator-from-the-windows-vista-run-box/">here</a>
-</li>
-      </ul>
+      <p>Select <code>Edit &gt; Settings</code> from the console menu and enable the checkbox at the bottom
+of the settings called <code>Save settings to user directory</code>.</p>
 
-      <h5 id="chocolatey">1. Chocolatey</h5>
-
-      <p>To install the package manager (chocolatey), please type the text below in the command prompt (running as administrator)</p>
+      <p>Execute the following command to get a sensible set settings to start off with:</p>
 
       <div class="language-text highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre>@powershell -NoProfile -ExecutionPolicy Bypass -Command "iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))" &amp;&amp; SET PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin
+  <div class="code"><pre>@powershell New-Item -ItemType directory -Force -Path %appdata%\Console; (new-object System.Net.WebClient).DownloadFile('http://origen-sdk.org/files/console.xml','%appdata%\Console\console.xml')
 </pre></div>
 </div>
       </div>
+
+      <div class="alert alert-info" role="alert"> <strong>Opening the Console</strong>
+  <br>
+  The rest of this guide requires you to open the console with administrator privileges and then execute
+  the given commands, do this by right-clicking on the desktop shortcut you just created and selecting
+  <code>Run as administrator</code>.
+  <br>
+  Some of the operations will require that you open a new console session in order for the previous operation
+  to take effect. If any errors are encountered please start a new console session and try again before
+  reporting it.
+</div>
 
       <div>    
-  <a class="anchor" name="Install_Ruby"></a>          
-  <h3><a href="#Install_Ruby">Install Ruby</a></h3>          
+  <a class="anchor" name="2._Install_Pre-Requisites"></a>          
+  <h3><a href="#2._Install_Pre-Requisites">2. Install Pre-Requisites</a></h3>          
 </div>
 
-      <p>With the package manager installed, Installing Ruby is a breeze. Just type the following in the command prompt window (running as administrator)</p>
+      <p>To install the package manager (chocolatey), please copy the text below into the console (running as administrator)</p>
 
       <div class="language-text highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre>cinst ruby -y --force
+  <div class="code"><pre>@powershell -NoProfile -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" &amp;&amp; SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
 </pre></div>
 </div>
       </div>
 
-      <p>This should install Ruby v2.1.6 (latest supported by the package manager as of writing this guide)</p>
+      <div class="alert alert-danger" role="alert">Now re-open the console (Run as administrator)</div>
 
-      <p>If the package manager upgrades to the latest version (v2.2.3), it will install that latest version instead.</p>
+      <p>Install some required packages by running these commands from the console:</p>
 
-      <p>Please check the ruby version and make a note of it. We will need it later for the RubyGems workaround.</p>
-
-      <div class="language-text highlighter-coderay">
+      <div class="language-tetxt highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre>ruby -v
+  <div class="code"><pre>choco install git -y --force
+choco install unxutils -y --force
+choco install consoleZ -y --force
 </pre></div>
 </div>
       </div>
 
-      <ul>
-        <li>You <em>might</em> need to close the command prompt and open a new one after installing Ruby for ruby -v to work.</li>
-      </ul>
-
-      <p>Once the installer finishes, please close the current window and open a new one (as administrator)</p>
+      <div class="alert alert-danger" role="alert">Now re-open the console (Run as administrator)</div>
 
       <div>    
-  <a class="anchor" name="Install_Ruby-Dependencies"></a>          
-  <h3><a href="#Install_Ruby-Dependencies">Install Ruby-Dependencies</a></h3>          
+  <a class="anchor" name="3._Install_Ruby"></a>          
+  <h3><a href="#3._Install_Ruby">3. Install Ruby</a></h3>          
 </div>
-
-      <ul>
-        <li>
-          <div>    
-  <a class="anchor" name="Install_Ruby-Development-Kit"></a>          
-  <h4><a href="#Install_Ruby-Development-Kit">Install Ruby-Development-Kit</a></h4>          
-</div>
-        </li>
-      </ul>
-
-      <p>In the new window, type the following</p>
 
       <div class="language-text highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre>cinst ruby2.devkit -y --force
+  <div class="code"><pre>choco install ruby -y --version=2.2.4 --force
+choco install ruby2.devkit -y --force
 </pre></div>
 </div>
       </div>
 
-      <ul>
-        <li>
-          <div>    
-  <a class="anchor" name="Install_RubyGems"></a>          
-  <h4><a href="#Install_RubyGems">Install RubyGems</a></h4>          
-</div>
-        </li>
-      </ul>
+      <div class="alert alert-danger" role="alert">Now re-open the console (Run as administrator)</div>
 
-      <p>In the same window, now type</p>
+      <p>Execute the following command from the console:</p>
 
       <div class="language-text highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre>cinst rubygems -y --force
+  <div class="code"><pre>@powershell (new-object System.Net.WebClient).DownloadFile('https://rubygems.org/downloads/rubygems-update-2.6.7.gem’,'C:\rubygems-update-2.6.7.gem') &amp;&amp; gem install --local C:\rubygems-update-2.6.7.gem &amp;&amp; update_rubygems --no-ri --no-rdoc &amp;&amp; gem uninstall rubygems-update -x
 </pre></div>
 </div>
       </div>
 
-      <ul>
-        <li>
-          <div>    
-  <a class="anchor" name="Install_RubyGems-SSL-workaround"></a>          
-  <h4><a href="#Install_RubyGems-SSL-workaround">Install RubyGems-SSL-workaround</a></h4>          
-</div>
-        </li>
-      </ul>
-
-      <p>The latest version of Rubygems (that we installed above) is currently broken on Windows.
-However, there is a workaround that has been developed and it involves a series of steps.
-The workaround also depends on which version of Ruby has been installed.</p>
-
-      <p>The following commands will perform all the steps required for the workaround.</p>
-
-      <p>If Ruby version installed is v2.1.X</p>
+      <p>Open <code>C:\tools\DevKit2\config.yml</code> in your favorite editor and write this at the
+bottom:</p>
 
       <div class="language-text highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre>@powershell (new-object System.Net.WebClient).DownloadFile('https://github.com/rubygems/rubygems/releases/download/v2.0.15/rubygems-update-2.0.15.gem','C:\rubygems-update-2.0.15.gem') &amp;&amp; gem install --local C:\rubygems-update-2.0.15.gem &amp;&amp; update_rubygems --no-ri --no-rdoc &amp;&amp; gem uninstall rubygems-update -x
+  <div class="code"><pre>- C:/tools/ruby22
 </pre></div>
 </div>
       </div>
 
-      <p>If Ruby version installed is v2.2.X</p>
+      <p>Save it, and then execute the following commands from the console:</p>
 
       <div class="language-text highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre>@powershell (new-object System.Net.WebClient).DownloadFile('https://github.com/rubygems/rubygems/releases/download/v2.2.3/rubygems-update-2.2.3.gem’,'C:\rubygems-update-2.2.3.gem') &amp;&amp; gem install --local C:\rubygems-update-2.2.3.gem &amp;&amp; update_rubygems --no-ri --no-rdoc &amp;&amp; gem uninstall rubygems-update -x
+  <div class="code"><pre>cd C:\tools\DevKit2\
+ruby dk.rb install
 </pre></div>
 </div>
       </div>
 
-      <p>Once the command finishes, please check the gem version installed by typing</p>
+      <p>Ensure that you see the following output when running the above command, if not review
+what you have added to <code>C:\tools\DevKit2\config.yml</code>:</p>
 
       <div class="language-text highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre>gem --version
+  <div class="code"><pre>[INFO] Installing 'C:/tools/ruby22/lib/ruby/site_ruby/2.2.0/rubygems/default
+[INFO] Installing 'C:/tools/ruby22/lib/ruby/site_ruby/devkit.rb'
 </pre></div>
 </div>
       </div>
 
-      <p>The Gem version should be <strong>v2.0.15</strong> for Ruby v2.1.X or v2.2.3 for Ruby v2.2.X</p>
-
-      <p>Before attempting to install the Origen gem, please confirm that the DevKit has been installed successfully and that it has successfully detected the ruby installation.</p>
-
-      <p>Please follow the steps below:</p>
-
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre> - open C:\Tools\DevKit\config.yml in your favorite editor and type the path to your ruby installation directory 
-   (see image below for example). 
-</pre></div>
-</div>
-      </div>
-      <p>config.yml: <img src="https://a.disquscdn.com/uploads/mediaembed/images/2542/9947/original.jpg" alt="config.yml"></p>
-
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre> - Open a command prompt window and type the following:
-     - cd C:\Tools\DevKit\
-     - ruby dk.rb install
-</pre></div>
-</div>
-      </div>
-      <p>commands: <img src="https://a.disquscdn.com/uploads/mediaembed/images/2542/9948/original.jpg" alt="type these commands"></p>
+      <div class="alert alert-danger" role="alert">Now re-open the console (Run as administrator)</div>
 
       <div>    
-  <a class="anchor" name="Install_Origen"></a>          
-  <h3><a href="#Install_Origen">Install Origen</a></h3>          
+  <a class="anchor" name="4._Install_Origen"></a>          
+  <h3><a href="#4._Install_Origen">4. Install Origen</a></h3>          
 </div>
 
-      <p>Origen is available as a packaged gem and can be easily installed by typing:</p>
+      <p>Finally, run this command to install Origen:</p>
 
       <div class="language-text highlighter-coderay">
 <div class="CodeRay">
@@ -609,9 +533,10 @@ The workaround also depends on which version of Ruby has been installed.</p>
 </div>
       </div>
 
-      <h6 id="this-can-take-several-minutes-to-finish-without-updating-the-screen-so-please-be-patient">*this can take several minutes to finish without updating the screen, so please be patient</h6>
+      <p>This can take several minutes to finish without updating the screen, so please be patient.</p>
 
-      <p>You can then verify Origen availability by running origen -v at which point you should see something like this:</p>
+      <p>You can then verify Origen availability by running <code>origen -v</code>
+at which point you should see something like this:</p>
 
       <div class="language-text highlighter-coderay">
 <div class="CodeRay">
@@ -628,43 +553,6 @@ to be frozen for the foreseeable future.</p>
 
       <p>See the section on <a href="/origen/guides/starting/gems">Understanding Gems</a> for details on
 why that is.</p>
-
-      <div>    
-  <a class="anchor" name="Install_Utilities"></a>          
-  <h3><a href="#Install_Utilities">Install Utilities</a></h3>          
-</div>
-
-      <p>It is also recommend to install a recent version (2.x) of Git</p>
-
-      <p>We can do that easily now by typing</p>
-
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>cinst git -y
-</pre></div>
-</div>
-      </div>
-
-      <p>This will install Git v2.5.2 (latest version available as of writing this guide)</p>
-
-      <p><strong>Optional:</strong></p>
-
-      <p>We recommend that you also install the following utilities for a more UNIX like experience on windows.</p>
-
-      <ul>
-        <li>UnxUtils (cinst unxutils -y)</li>
-        <li>ConsoleZ (cinst consoleZ -y)</li>
-        <li>Console2 (download from http://sourceforge.net/projects/console/)</li>
-      </ul>
-
-      <div>    
-  <a class="anchor" name="Video"></a>          
-  <h3><a href="#Video">Video</a></h3>          
-</div>
-
-      <p>For your convenience, you can also watch the installation process in the video below.</p>
-
-      <iframe width="853" height="480" src="https://www.youtube.com/embed/Gt2EvRpZmfY" frameborder="0" allowfullscreen=""></iframe>
 
       <div style="position: relative">
   <hr>
