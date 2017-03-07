@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['x',['x',['../classOrigen_1_1Site.html#a8ce86c313b1501ea8e85b540bf933ce5',1,'Origen::Site::x()'],['../classOrigen_1_1Site.html#abf2f1bff58abbb625b70df162adccebe',1,'Origen::Site::x(int)']]]
+  ['wafer',['wafer',['../classOrigen_1_1Site.html#a0e39ae82728748d89c729152d61d9972',1,'Origen::Site::wafer()'],['../classOrigen_1_1Site.html#a2654dbe2757fdbe6ee9f3f5922731a5b',1,'Origen::Site::wafer(int)']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['y',['y',['../classOrigen_1_1Site.html#a5b809b82649ee99bc699998959631d69',1,'Origen::Site::y()'],['../classOrigen_1_1Site.html#aaf259e7fb589299cb4ed06492c033ef5',1,'Origen::Site::y(int)']]]
+  ['x',['x',['../classOrigen_1_1Site.html#a371517f3cccaeb74436a06b89521b7e6',1,'Origen::Site::x()'],['../classOrigen_1_1Site.html#abf2f1bff58abbb625b70df162adccebe',1,'Origen::Site::x(int)']]]
 ];

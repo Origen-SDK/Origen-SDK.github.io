@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['dcmeasurement',['DCMeasurement',['../classOrigen_1_1TestMethod_1_1DCMeasurement.html',1,'Origen::TestMethod']]],
-  ['dcmeasurement',['DCMeasurement',['../classDCMeasurement.html',1,'']]]
+  ['base',['Base',['../classOrigen_1_1TestMethod_1_1Base.html',1,'Origen::TestMethod']]]
 ];
