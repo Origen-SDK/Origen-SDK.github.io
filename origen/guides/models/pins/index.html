@@ -415,7 +415,7 @@ dedicated method that is called upon initialization.</p>
   <span style="color:#080;font-weight:bold">end</span>
 
   <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">instantiate_pins</span>(options={})
-    add_pin <span style="color:#A60">:tclk</span>, <span style="color:#606">reset</span>: <span style="color:#A60">:drive_hi</span>
+    add_pin <span style="color:#A60">:tclk</span>, <span style="color:#606">reset</span>: <span style="color:#A60">:drive_hi</span>, <span style="color:#606">meta</span>: { <span style="color:#606">max_freq</span>: <span style="color:#00D">15</span>.Mhz }
     add_pin <span style="color:#A60">:tdi</span>, <span style="color:#606">direction</span>: <span style="color:#A60">:input</span>
     add_pin <span style="color:#A60">:tdo</span>, <span style="color:#606">direction</span>: <span style="color:#A60">:output</span>
     add_pin <span style="color:#A60">:tms</span>
@@ -439,6 +439,7 @@ is to follow the advice of handling all pin definitions at the top level.</li>
 the <code>:reset</code> option.</li>
         <li>Pins are I/Os by default, however they can be defined as input or output only by using the <code>:direction</code>
 option.</li>
+        <li>Application-specific meta data can be attached to the given pin via the <code>:meta</code> option</li>
       </ul>
 
       <p>Pins are accessed via the <code>pin</code> method:</p>
@@ -662,6 +663,20 @@ ground_pins(<span style="color:#A60">:gnd</span>)
 ground_pin_groups.each <span style="color:#080;font-weight:bold">do</span> |id, group|
   <span style="color:#777"># Do this for each ground pin group</span>
 <span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>Power pins have some dedicated attributes that can be defined, in additional to the generic meta-data hash supported
+by all pins:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>add_power_pin <span style="color:#A60">:vddio</span>, <span style="color:#606">voltage</span>: <span style="color:#00D">3</span>, <span style="color:#606">current_limit</span>: <span style="color:#00D">50</span>.mA, <span style="color:#606">meta</span>: { <span style="color:#606">min_voltage</span>: <span style="color:#60E">1.5</span> }
+
+power_pin(<span style="color:#A60">:vddio</span>).voltage             <span style="color:#777"># =&gt; 3</span>
+power_pin(<span style="color:#A60">:vddio</span>).current_limit       <span style="color:#777"># =&gt; 50E-03</span>
+power_pin(<span style="color:#A60">:vddio</span>).meta[<span style="color:#A60">:min_voltage</span>]  <span style="color:#777"># =&gt; 1.5</span>
 </pre></div>
 </div>
       </div>
@@ -939,6 +954,11 @@ one function the pin may be an input, but when used as another function it is an
       <p>The attributes listed in the constant <code>FUNCTION_SCOPED_ATTRIBUTES</code> in the <a href="/origen/api/Origen/Pins/Pin.html">Pin API</a>
 can be set to specific values per context (mode and/or configuration).</p>
 
+      <p>If any of these function-scoped attributes are a hash then the function-specific value will be merged with any
+default value that has been defined on the pin. This allows the function to override default values and inherit
+default values for attributes that it doesn’t care about.
+Look at the meta data in the example below to see this in action.</p>
+
       <p>Here is an example of adding a function:</p>
 
       <div class="language-ruby highlighter-coderay">
@@ -948,11 +968,11 @@ can be set to specific values per context (mode and/or configuration).</p>
 
   <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>
     add_pin <span style="color:#A60">:pin1</span>
-    add_pin <span style="color:#A60">:pin2</span>
+    add_pin <span style="color:#A60">:pin2</span>, <span style="color:#606">meta</span>: { <span style="color:#606">vol</span>: <span style="color:#60E">0.4</span>, <span style="color:#606">voh</span>: <span style="color:#60E">0.6</span> }   <span style="color:#777"># Example of default meta data</span>
 
     <span style="color:#777"># Define some pin functions</span>
     pin(<span style="color:#A60">:pin1</span>).add_function <span style="color:#A60">:nvm_fail</span>, <span style="color:#606">direction</span>: <span style="color:#A60">:output</span>
-    pin(<span style="color:#A60">:pin2</span>).add_function <span style="color:#A60">:nvm_done</span>, <span style="color:#606">direction</span>: <span style="color:#A60">:output</span>
+    pin(<span style="color:#A60">:pin2</span>).add_function <span style="color:#A60">:nvm_done</span>, <span style="color:#606">direction</span>: <span style="color:#A60">:output</span>, <span style="color:#606">meta</span>: { <span style="color:#606">voh</span>: <span style="color:#60E">0.7</span> }  <span style="color:#777"># Override some of the meta data</span>
     pin(<span style="color:#A60">:pin1</span>).add_function <span style="color:#A60">:tdi</span>, <span style="color:#606">direction</span>: <span style="color:#A60">:input</span>
     pin(<span style="color:#A60">:pin2</span>).add_function <span style="color:#A60">:tdo</span>, <span style="color:#606">direction</span>: <span style="color:#A60">:output</span>
 
@@ -977,6 +997,103 @@ can be set to specific values per context (mode and/or configuration).</p>
 <span style="color:#d70">$dut</span>.pins(<span style="color:#A60">:jtag</span>)[<span style="color:#00D">1</span>].direction    <span style="color:#777"># =&gt; :input</span>
 <span style="color:#d70">$dut</span>.pins(<span style="color:#A60">:nvm</span>)[<span style="color:#00D">0</span>].direction     <span style="color:#777"># =&gt; :output</span>
 <span style="color:#d70">$dut</span>.pins(<span style="color:#A60">:nvm</span>)[<span style="color:#00D">1</span>].direction     <span style="color:#777"># =&gt; :output</span>
+
+<span style="color:#777"># The pin's meta data can be overridden by function</span>
+<span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:tdo</span>).meta         <span style="color:#777"># =&gt; { vol: 0.4, voh: 0.6 }</span>
+<span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:nvm_done</span>).meta    <span style="color:#777"># =&gt; { vol: 0.4, voh: 0.7 }</span>
+</pre></div>
+</div>
+      </div>
+
+      <div>    
+  <a class="anchor" name="Pin_Clock_Functionality"></a>          
+  <h4><a href="#Pin_Clock_Functionality">Pin Clock Functionality</a></h4>          
+</div>
+
+      <p>The API supports creating a free-running clock on any existing pin, where the timing parameters
+of the clock can be specified and vector generation (in relation to the current tester timeset)
+will be automatically handled.  See the Pin Clock API below.</p>
+
+      <h5 id="enableclockoptions">enable_clock(options)</h5>
+
+      <p>Enable the clock functionality on a given pin.  Does not start the clock, only sets up
+its internally tracked parameters.  Clock can be specified in cycles, time, or frequency</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:pin1</span>).enable_clock(<span style="color:#606">period_in_ns</span>: <span style="color:#00D">200</span>)       <span style="color:#777"># create free-running clock with 200ns period</span>
+<span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:pin2</span>).enable_clock(<span style="color:#606">frequency_in_khz</span>: <span style="color:#00D">32</span>)    <span style="color:#777"># create 32Khz free-running clock</span>
+</pre></div>
+</div>
+      </div>
+
+      <h5 id="startclockoptions--">start_clock(options = {})</h5>
+
+      <p>Start an existing clock or create and start a free-running clock on a given pin</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:pin2</span>).start_clock                           <span style="color:#777"># start up existing clock pin2</span>
+<span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:pin3</span>).start_clock(<span style="color:#606">period_in_us</span>: <span style="color:#00D">2</span>)          <span style="color:#777"># create and start clock with 2us period</span>
+</pre></div>
+</div>
+      </div>
+
+      <h5 id="stopclock-pauseclock">stop_clock, pause_clock</h5>
+
+      <p>Stop the clock running on a given pin</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:pin1</span>).stop_clock                            <span style="color:#777"># stop clock on pin1</span>
+<span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:pin2</span>).pause_clock                           <span style="color:#777"># stop clock on pin2</span>
+<span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:pin3</span>).pause_clock                           <span style="color:#777"># stop clock on pin3</span>
+</pre></div>
+</div>
+      </div>
+
+      <h5 id="resumeclockoptions--">resume_clock(options = {})</h5>
+
+      <p>Restart an existing clock.  Can be restarted with existing parameters or restarted with a new clock setup</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:pin2</span>).resume_clock                         <span style="color:#777"># resume clocking on pin2 with existing clock setup</span>
+<span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:pin3</span>).resume_clock(<span style="color:#606">period_in_ns</span>: <span style="color:#00D">100</span>)      <span style="color:#777"># resume clocking on pin3 with new clock parameters</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>Some addtional examples:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>
+<span style="color:#777"># Create timeset with 2-ns period</span>
+<span style="color:#d70">$tester</span>.set_timeset(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">ts_50Mhz</span><span style="color:#710">'</span></span>, <span style="color:#00D">20</span>)      <span style="color:#777"># timeset period is 20ns</span>
+
+<span style="color:#777"># In this example, we enable (without immediately starting) a clock pin with</span>
+<span style="color:#777">#   100ns period and then pause, resume, and stop later in the pattern.</span>
+<span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:pin1</span>).enable_clock(<span style="color:#606">period_in_ns</span>: <span style="color:#00D">100</span>)
+<span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:pin1</span>).start_clock
+...
+<span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:pin1</span>).pause_clock
+...
+<span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:pin1</span>).resume_clock
+...
+<span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:pin1</span>).stop_clock
+...
+
+<span style="color:#777"># In this example, we start free-running clock with 200ns period, then later stop</span>
+<span style="color:#777">#   and restart with a different (100ns period) setup.</span>
+<span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:pin2</span>).start_clock(<span style="color:#606">period_in_ns</span>: <span style="color:#00D">200</span>)
+...
+<span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:pin2</span>).stop_clock
+...
+<span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:pin2</span>).start_clock(<span style="color:#606">period_in_ns</span>: <span style="color:#00D">100</span>)
+...
+<span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:pin2</span>).stop_clock
+...
 </pre></div>
 </div>
       </div>
