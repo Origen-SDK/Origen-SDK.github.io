@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>
+  Module: OrigenLink::ServerCom
+  
+    &mdash; origen_link 0.3.0
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  pathId = "OrigenLink::ServerCom";
+  relpath = '../';
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div class="nav_wrap">
+      <iframe id="nav" src="../class_list.html?1"></iframe>
+      <div id="resizer"></div>
+    </div>
+
+    <div id="main" tabindex="-1">
+      <div id="header">
+        <div id="menu">
+  
+    <a href="../_index.html">Index (S)</a> &raquo;
+    <span class='title'><span class='object_link'><a href="../OrigenLink.html" title="OrigenLink (module)">OrigenLink</a></span></span>
+     &raquo; 
+    <span class="title">ServerCom</span>
+  
+</div>
+
+        <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="../class_list.html">
+
+        <svg width="24" height="24">
+          <rect x="0" y="4" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="12" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="20" width="24" height="4" rx="1" ry="1"></rect>
+        </svg>
+    </a>
+  
+</div>
+        <div class="clear"></div>
+      </div>
+
+      <div id="content"><h1>Module: OrigenLink::ServerCom
+  
+  
+  
+</h1>
+<div class="box_info">
+  
+
+  
+  
+  
+  
+  
+
+  
+  <dl>
+    <dt>Included in:</dt>
+    <dd><span class='object_link'><a href="VectorBased.html" title="OrigenLink::VectorBased (class)">VectorBased</a></span></dd>
+  </dl>
+  
+
+  
+  <dl>
+    <dt>Defined in:</dt>
+    <dd>lib/origen_link/server_com.rb</dd>
+  </dl>
+  
+</div>
+
+
+
+
+
+
+
+
+  
+    <h2>
+      Instance Method Summary
+      <small><a href="#" class="summary_toggle">collapse</a></small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#send_batch-instance_method" title="#send_batch (instance method)">#<strong>send_batch</strong>(vector_batch)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Send the stored batch of vectors to the server.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#send_cmd-instance_method" title="#send_cmd (instance method)">#<strong>send_cmd</strong>(cmdstr, argstr)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>send a single command to the server.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#setup_cmd_response_logger-instance_method" title="#setup_cmd_response_logger (instance method)">#<strong>setup_cmd_response_logger</strong>(command, response)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Handle a server response (inform of Failures).</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="send_batch-instance_method">
+  
+    #<strong>send_batch</strong>(vector_batch)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Send the stored batch of vectors to the server</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_link/server_com.rb', line 78</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_send_batch'>send_batch</span><span class='lparen'>(</span><span class='id identifier rubyid_vector_batch'>vector_batch</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_vector_batch_str'>vector_batch_str</span> <span class='op'>=</span> <span class='ivar'>@user_name</span> <span class='op'>+</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\n</span><span class='tstring_end'>&quot;</span></span> <span class='op'>+</span> <span class='id identifier rubyid_vector_batch'>vector_batch</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\n</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='op'>+</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\n\n</span><span class='tstring_end'>&quot;</span></span>
+  <span class='id identifier rubyid_user_status'>user_status</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span>
+  <span class='id identifier rubyid_success'>success</span> <span class='op'>=</span> <span class='kw'>false</span>
+
+  <span class='kw'>until</span> <span class='id identifier rubyid_success'>success</span>
+    <span class='id identifier rubyid_t1'>t1</span> <span class='op'>=</span> <span class='int'>0</span>
+    <span class='id identifier rubyid_t2'>t2</span> <span class='op'>=</span> <span class='int'>0</span>
+    <span class='id identifier rubyid_t3'>t3</span> <span class='op'>=</span> <span class='int'>0</span>
+    <span class='id identifier rubyid_t4'>t4</span> <span class='op'>=</span> <span class='int'>0</span>
+    <span class='id identifier rubyid_t5'>t5</span> <span class='op'>=</span> <span class='int'>0</span>
+    <span class='id identifier rubyid_response'>response</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
+    <span class='id identifier rubyid_t1'>t1</span> <span class='op'>=</span> <span class='const'>Time</span><span class='period'>.</span><span class='id identifier rubyid_now'>now</span>
+    <span class='const'>TCPSocket</span><span class='period'>.</span><span class='id identifier rubyid_open'>open</span><span class='lparen'>(</span><span class='ivar'>@address</span><span class='comma'>,</span> <span class='ivar'>@port</span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_link'>link</span><span class='op'>|</span>
+      <span class='id identifier rubyid_t2'>t2</span> <span class='op'>=</span> <span class='const'>Time</span><span class='period'>.</span><span class='id identifier rubyid_now'>now</span>
+      <span class='id identifier rubyid_link'>link</span><span class='period'>.</span><span class='id identifier rubyid_write'>write</span><span class='lparen'>(</span><span class='id identifier rubyid_vector_batch_str'>vector_batch_str</span><span class='rparen'>)</span>
+      <span class='id identifier rubyid_t3'>t3</span> <span class='op'>=</span>  <span class='const'>Time</span><span class='period'>.</span><span class='id identifier rubyid_now'>now</span>
+      <span class='kw'>while</span> <span class='id identifier rubyid_line'>line</span> <span class='op'>=</span> <span class='id identifier rubyid_link'>link</span><span class='period'>.</span><span class='id identifier rubyid_gets'>gets</span>
+        <span class='id identifier rubyid_response'>response</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_line'>line</span><span class='period'>.</span><span class='id identifier rubyid_chomp'>chomp</span>
+      <span class='kw'>end</span>
+      <span class='id identifier rubyid_t4'>t4</span> <span class='op'>=</span> <span class='const'>Time</span><span class='period'>.</span><span class='id identifier rubyid_now'>now</span>
+    <span class='kw'>end</span>
+    <span class='id identifier rubyid_t5'>t5</span> <span class='op'>=</span> <span class='const'>Time</span><span class='period'>.</span><span class='id identifier rubyid_now'>now</span>
+
+    <span class='id identifier rubyid_user_status'>user_status</span> <span class='op'>=</span> <span class='id identifier rubyid_response'>response</span><span class='period'>.</span><span class='id identifier rubyid_delete_at'>delete_at</span><span class='lparen'>(</span><span class='int'>0</span><span class='rparen'>)</span>
+    <span class='kw'>if</span> <span class='ivar'>@initial_comm_sent</span> <span class='op'>&amp;&amp;</span> <span class='lparen'>(</span><span class='lparen'>(</span><span class='id identifier rubyid_user_status'>user_status</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>user_change</span><span class='regexp_end'>/</span></span><span class='rparen'>)</span> <span class='op'>||</span> <span class='lparen'>(</span><span class='id identifier rubyid_response'>response</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>Busy:</span><span class='regexp_end'>/</span></span><span class='rparen'>)</span><span class='rparen'>)</span>
+      <span class='comment'># there has been a collision
+</span>      <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_log'>log</span><span class='period'>.</span><span class='id identifier rubyid_error'>error</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>A collision (another user interrupted your link session) has occured</span><span class='tstring_end'>&#39;</span></span>
+      <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_log'>log</span><span class='period'>.</span><span class='id identifier rubyid_error'>error</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>When using debug mode ensure that you don&#39;t exceed the 20 minute communication time out</span><span class='tstring_end'>&quot;</span></span>
+      <span class='id identifier rubyid_exit'>exit</span>
+    <span class='kw'>end</span>
+
+    <span class='kw'>if</span> <span class='id identifier rubyid_response'>response</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>Busy:</span><span class='regexp_end'>/</span></span>
+      <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_log'>log</span><span class='period'>.</span><span class='id identifier rubyid_error'>error</span> <span class='id identifier rubyid_response'>response</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span> <span class='op'>+</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> retry in 1 second</span><span class='tstring_end'>&#39;</span></span>
+      <span class='id identifier rubyid_sleep'>sleep</span><span class='lparen'>(</span><span class='int'>1</span><span class='rparen'>)</span>
+    <span class='kw'>else</span>
+      <span class='id identifier rubyid_success'>success</span> <span class='op'>=</span> <span class='kw'>true</span>
+      <span class='ivar'>@initial_comm_sent</span> <span class='op'>=</span> <span class='kw'>true</span>
+    <span class='kw'>end</span>
+
+  <span class='kw'>end</span>
+
+  <span class='ivar'>@total_comm_time</span> <span class='op'>+=</span> <span class='lparen'>(</span><span class='id identifier rubyid_t5'>t5</span> <span class='op'>-</span> <span class='id identifier rubyid_t1'>t1</span><span class='rparen'>)</span>
+  <span class='ivar'>@total_connect_time</span> <span class='op'>+=</span> <span class='lparen'>(</span><span class='id identifier rubyid_t2'>t2</span> <span class='op'>-</span> <span class='id identifier rubyid_t1'>t1</span><span class='rparen'>)</span>
+  <span class='ivar'>@total_xmit_time</span> <span class='op'>+=</span> <span class='lparen'>(</span><span class='id identifier rubyid_t3'>t3</span> <span class='op'>-</span> <span class='id identifier rubyid_t2'>t2</span><span class='rparen'>)</span>
+  <span class='ivar'>@total_recv_time</span> <span class='op'>+=</span> <span class='lparen'>(</span><span class='id identifier rubyid_t4'>t4</span> <span class='op'>-</span> <span class='id identifier rubyid_t3'>t3</span><span class='rparen'>)</span>
+  <span class='ivar'>@max_receive_time</span> <span class='op'>=</span> <span class='lparen'>(</span><span class='id identifier rubyid_t4'>t4</span> <span class='op'>-</span> <span class='id identifier rubyid_t3'>t3</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='ivar'>@max_receive_time</span> <span class='op'>&lt;</span> <span class='lparen'>(</span><span class='id identifier rubyid_t4'>t4</span> <span class='op'>-</span> <span class='id identifier rubyid_t3'>t3</span><span class='rparen'>)</span>
+  <span class='ivar'>@total_packets</span> <span class='op'>+=</span> <span class='int'>1</span>
+  <span class='ivar'>@pattern_link_messages</span><span class='period'>.</span><span class='id identifier rubyid_concat'>concat</span><span class='lparen'>(</span><span class='id identifier rubyid_vector_batch'>vector_batch</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_response'>response</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="send_cmd-instance_method">
+  
+    #<strong>send_cmd</strong>(cmdstr, argstr)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>send a single command to the server</p>
+
+<p>send_cmd(cmdstr, argstr)</p>
+
+<pre class="code ruby"><code class="ruby">cmdstr is a valid command.  &lt;category&gt;_&lt;command&gt;
+  Ex: &#39;pin_assign&#39;
+argstr is a valid comma separated, no white space argument string.
+  Ex: &#39;tclk,26,tms,19,tdi,16,tdo,23&#39;
+
+returns: response from server
+
+This method connects to the socket being served by the debugger, sends
+the command and arguments separated by a semicolon (Ex: &#39;pin_cycle:110H&#39;),
+then waits for a response.  The response is returned to the caller.
+
+In addition, this method also keeps track of time elapsed transfering data
+and waiting for a response.</code></pre>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_link/server_com.rb', line 19</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_send_cmd'>send_cmd</span><span class='lparen'>(</span><span class='id identifier rubyid_cmdstr'>cmdstr</span><span class='comma'>,</span> <span class='id identifier rubyid_argstr'>argstr</span><span class='rparen'>)</span>
+  <span class='comment'># objects have to be created outside of the block
+</span>  <span class='comment'># to be accessible outside of the block
+</span>  <span class='id identifier rubyid_t1'>t1</span> <span class='op'>=</span> <span class='int'>0</span>
+  <span class='id identifier rubyid_t2'>t2</span> <span class='op'>=</span> <span class='int'>0</span>
+  <span class='id identifier rubyid_t3'>t3</span> <span class='op'>=</span> <span class='int'>0</span>
+  <span class='id identifier rubyid_t4'>t4</span> <span class='op'>=</span> <span class='int'>0</span>
+  <span class='id identifier rubyid_t5'>t5</span> <span class='op'>=</span> <span class='int'>0</span>
+  <span class='id identifier rubyid_response'>response</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span>
+  <span class='id identifier rubyid_user_status'>user_status</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span>
+  <span class='id identifier rubyid_success'>success</span> <span class='op'>=</span> <span class='kw'>false</span>
+
+  <span class='kw'>until</span> <span class='id identifier rubyid_success'>success</span>
+    <span class='id identifier rubyid_t1'>t1</span> <span class='op'>=</span> <span class='const'>Time</span><span class='period'>.</span><span class='id identifier rubyid_now'>now</span>
+
+    <span class='comment'># open a connection to the server, send the command and wait for a response
+</span>    <span class='const'>TCPSocket</span><span class='period'>.</span><span class='id identifier rubyid_open'>open</span><span class='lparen'>(</span><span class='ivar'>@address</span><span class='comma'>,</span> <span class='ivar'>@port</span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_link'>link</span><span class='op'>|</span>
+      <span class='id identifier rubyid_t2'>t2</span> <span class='op'>=</span> <span class='const'>Time</span><span class='period'>.</span><span class='id identifier rubyid_now'>now</span>
+      <span class='id identifier rubyid_link'>link</span><span class='period'>.</span><span class='id identifier rubyid_write'>write</span><span class='lparen'>(</span><span class='ivar'>@user_name</span> <span class='op'>+</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\n</span><span class='tstring_end'>&quot;</span></span> <span class='op'>+</span> <span class='id identifier rubyid_cmdstr'>cmdstr</span> <span class='op'>+</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>:</span><span class='tstring_end'>&#39;</span></span> <span class='op'>+</span> <span class='id identifier rubyid_argstr'>argstr</span> <span class='op'>+</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\n\n</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+      <span class='id identifier rubyid_t3'>t3</span> <span class='op'>=</span> <span class='const'>Time</span><span class='period'>.</span><span class='id identifier rubyid_now'>now</span>
+      <span class='id identifier rubyid_user_status'>user_status</span> <span class='op'>=</span> <span class='id identifier rubyid_link'>link</span><span class='period'>.</span><span class='id identifier rubyid_gets'>gets</span>
+      <span class='id identifier rubyid_response'>response</span> <span class='op'>=</span> <span class='id identifier rubyid_link'>link</span><span class='period'>.</span><span class='id identifier rubyid_gets'>gets</span>
+      <span class='id identifier rubyid_t4'>t4</span> <span class='op'>=</span> <span class='const'>Time</span><span class='period'>.</span><span class='id identifier rubyid_now'>now</span>
+    <span class='kw'>end</span>
+
+    <span class='id identifier rubyid_t5'>t5</span> <span class='op'>=</span> <span class='const'>Time</span><span class='period'>.</span><span class='id identifier rubyid_now'>now</span>
+
+    <span class='kw'>if</span> <span class='ivar'>@initial_comm_sent</span> <span class='op'>&amp;&amp;</span> <span class='lparen'>(</span><span class='lparen'>(</span><span class='id identifier rubyid_user_status'>user_status</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>user_change</span><span class='regexp_end'>/</span></span><span class='rparen'>)</span> <span class='op'>||</span> <span class='lparen'>(</span><span class='id identifier rubyid_response'>response</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>Busy:</span><span class='regexp_end'>/</span></span><span class='rparen'>)</span><span class='rparen'>)</span>
+      <span class='comment'># there has been a collision
+</span>      <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_log'>log</span><span class='period'>.</span><span class='id identifier rubyid_error'>error</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>A collision (another user interrupted your link session) has occured</span><span class='tstring_end'>&#39;</span></span>
+      <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_log'>log</span><span class='period'>.</span><span class='id identifier rubyid_error'>error</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>When using debug mode ensure that you don&#39;t exceed the 20 minute communication time out</span><span class='tstring_end'>&quot;</span></span>
+      <span class='id identifier rubyid_exit'>exit</span>
+    <span class='kw'>end</span>
+
+    <span class='kw'>if</span> <span class='id identifier rubyid_response'>response</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>Busy:</span><span class='regexp_end'>/</span></span>
+      <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_log'>log</span><span class='period'>.</span><span class='id identifier rubyid_error'>error</span> <span class='id identifier rubyid_response'>response</span> <span class='op'>+</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> retry in 1 second</span><span class='tstring_end'>&#39;</span></span>
+      <span class='id identifier rubyid_sleep'>sleep</span><span class='lparen'>(</span><span class='int'>1</span><span class='rparen'>)</span>
+    <span class='kw'>else</span>
+      <span class='id identifier rubyid_success'>success</span> <span class='op'>=</span> <span class='kw'>true</span>
+      <span class='ivar'>@initial_comm_sent</span> <span class='op'>=</span> <span class='kw'>true</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+
+  <span class='ivar'>@total_comm_time</span> <span class='op'>+=</span> <span class='lparen'>(</span><span class='id identifier rubyid_t5'>t5</span> <span class='op'>-</span> <span class='id identifier rubyid_t1'>t1</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='ivar'>@max_packet_time</span> <span class='op'>&lt;</span> <span class='lparen'>(</span><span class='id identifier rubyid_t5'>t5</span> <span class='op'>-</span> <span class='id identifier rubyid_t1'>t1</span><span class='rparen'>)</span>
+    <span class='ivar'>@max_packet_time</span> <span class='op'>=</span> <span class='lparen'>(</span><span class='id identifier rubyid_t5'>t5</span> <span class='op'>-</span> <span class='id identifier rubyid_t1'>t1</span><span class='rparen'>)</span>
+    <span class='ivar'>@longest_packet</span> <span class='op'>=</span> <span class='id identifier rubyid_cmdstr'>cmdstr</span> <span class='op'>+</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>:</span><span class='tstring_end'>&#39;</span></span> <span class='op'>+</span> <span class='id identifier rubyid_argstr'>argstr</span>
+  <span class='kw'>end</span>
+  <span class='ivar'>@total_connect_time</span> <span class='op'>+=</span> <span class='lparen'>(</span><span class='id identifier rubyid_t2'>t2</span> <span class='op'>-</span> <span class='id identifier rubyid_t1'>t1</span><span class='rparen'>)</span>
+  <span class='ivar'>@total_xmit_time</span> <span class='op'>+=</span> <span class='lparen'>(</span><span class='id identifier rubyid_t3'>t3</span> <span class='op'>-</span> <span class='id identifier rubyid_t2'>t2</span><span class='rparen'>)</span>
+  <span class='ivar'>@total_recv_time</span> <span class='op'>+=</span> <span class='lparen'>(</span><span class='id identifier rubyid_t4'>t4</span> <span class='op'>-</span> <span class='id identifier rubyid_t3'>t3</span><span class='rparen'>)</span>
+  <span class='ivar'>@max_receive_time</span> <span class='op'>=</span> <span class='lparen'>(</span><span class='id identifier rubyid_t4'>t4</span> <span class='op'>-</span> <span class='id identifier rubyid_t3'>t3</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='ivar'>@max_receive_time</span> <span class='op'>&lt;</span> <span class='lparen'>(</span><span class='id identifier rubyid_t4'>t4</span> <span class='op'>-</span> <span class='id identifier rubyid_t3'>t3</span><span class='rparen'>)</span>
+  <span class='ivar'>@total_packets</span> <span class='op'>+=</span> <span class='int'>1</span>
+  <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_log'>log</span><span class='period'>.</span><span class='id identifier rubyid_error'>error</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>nil response from server (likely died) for command(</span><span class='tstring_end'>&#39;</span></span> <span class='op'>+</span> <span class='id identifier rubyid_cmdstr'>cmdstr</span> <span class='op'>+</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>:</span><span class='tstring_end'>&#39;</span></span> <span class='op'>+</span> <span class='id identifier rubyid_argstr'>argstr</span> <span class='op'>+</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>)</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_response'>response</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+  <span class='ivar'>@pattern_link_messages</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_cmdstr'>cmdstr</span><span class='embexpr_end'>}</span><span class='tstring_content'>:</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_argstr'>argstr</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+  <span class='id identifier rubyid_response'>response</span>    <span class='comment'># ensure the response is passed along
+</span><span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="setup_cmd_response_logger-instance_method">
+  
+    #<strong>setup_cmd_response_logger</strong>(command, response)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Handle a server response (inform of Failures)</p>
+
+<pre class="code ruby"><code class="ruby">There are several setup commands that initialize the debugger device with
+information about how to interact with the dut.  All of the setup commands
+return pass or fail.  This method exists so that the code doesn&#39;t have to
+be duplicated by every setup method.</code></pre>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_link/server_com.rb', line 136</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_setup_cmd_response_logger'>setup_cmd_response_logger</span><span class='lparen'>(</span><span class='id identifier rubyid_command'>command</span><span class='comma'>,</span> <span class='id identifier rubyid_response'>response</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='op'>!</span><span class='id identifier rubyid_response'>response</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+    <span class='comment'># if the server died (which hopefully it never will) response is nil
+</span>    <span class='kw'>case</span> <span class='id identifier rubyid_response'>response</span><span class='period'>.</span><span class='id identifier rubyid_chr'>chr</span>
+    <span class='kw'>when</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>P</span><span class='tstring_end'>&#39;</span></span>
+      <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_log'>log</span><span class='period'>.</span><span class='id identifier rubyid_debug'>debug</span> <span class='id identifier rubyid_command'>command</span> <span class='op'>+</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> setup was successful</span><span class='tstring_end'>&#39;</span></span>
+    <span class='kw'>when</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>F</span><span class='tstring_end'>&#39;</span></span>
+      <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_log'>log</span><span class='period'>.</span><span class='id identifier rubyid_error'>error</span> <span class='id identifier rubyid_command'>command</span> <span class='op'>+</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> setup FAILED with the following message:</span><span class='tstring_end'>&#39;</span></span>
+      <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_log'>log</span><span class='period'>.</span><span class='id identifier rubyid_error'>error</span> <span class='id identifier rubyid_response'>response</span><span class='period'>.</span><span class='id identifier rubyid_chomp'>chomp</span>
+    <span class='kw'>else</span>
+      <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_log'>log</span><span class='period'>.</span><span class='id identifier rubyid_error'>error</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Non standard response from </span><span class='tstring_end'>&#39;</span></span> <span class='op'>+</span> <span class='id identifier rubyid_command'>command</span> <span class='op'>+</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> setup: </span><span class='tstring_end'>&#39;</span></span> <span class='op'>+</span> <span class='id identifier rubyid_response'>response</span>
+    <span class='kw'>end</span>
+  <span class='kw'>else</span>
+    <span class='comment'># response was nil.  The server died
+</span>    <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_log'>log</span><span class='period'>.</span><span class='id identifier rubyid_error'>error</span> <span class='id identifier rubyid_command'>command</span> <span class='op'>+</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> caused a nil response.  The server likely died.</span><span class='tstring_end'>&#39;</span></span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+
+      <div id="footer">
+  Generated on Thu Apr  6 14:00:19 2017 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.9.8 (ruby-2.1.5).
+</div>
+
+    </div>
+  </body>
+</html>
