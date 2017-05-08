@@ -6,7 +6,7 @@
 <title>
   File: README
   
-    &mdash; test_ids 0.6.1
+    &mdash; test_ids 0.7.0
   
 </title>
 
@@ -167,6 +167,26 @@ references the bin number and/or softbin number</li>
 </div>
 </div>
 
+<p>When numbers are being assigned from a range, they will be selected based on an increment of 1 by default. However,
+in cases where you want multiple numbers to be reserved by each test you can change the default like this:</p>
+
+<div class="language-ruby highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre class="code ruby"><code class="ruby">&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n1&quot; name=&quot;n1&quot;&gt;1&lt;/a&gt;&lt;/span&gt;config.TYPE.size = &lt;span style=&quot;color:#00D&quot;&gt;5&lt;/span&gt;   &lt;span style=&quot;color:#777&quot;&gt;# Reserve 5 numbers for each test by default&lt;/span&gt;
+</code></pre></div>
+</div>
+</div>
+
+<p>Then for a given range of 100 to 200 say, it would be assigned as 100, 105, 110, etc.</p>
+
+<p>It is possible to override the size for an individual test by passing one or more of the options shown in
+the example below:</p>
+
+<div class="language-ruby highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre class="code ruby"><code class="ruby">&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n1&quot; name=&quot;n1&quot;&gt;1&lt;/a&gt;&lt;/span&gt;flow.test my_test, &lt;span style=&quot;color:#606&quot;&gt;bin_size&lt;/span&gt;: &lt;span style=&quot;color:#00D&quot;&gt;2&lt;/span&gt;, &lt;span style=&quot;color:#606&quot;&gt;softbin_size&lt;/span&gt;: &lt;span style=&quot;color:#00D&quot;&gt;10&lt;/span&gt;, &lt;span style=&quot;color:#606&quot;&gt;number_size&lt;/span&gt;: &lt;span style=&quot;color:#00D&quot;&gt;100&lt;/span&gt;
+</code></pre></div>
+</div>
+</div>
+
 <h3 id="assigning-a-template">Assigning a Template</h3>
 
 <p>Softbin and test numbers can also be generated from a template. Note that if you supply a template for a given ID type
@@ -271,9 +291,29 @@ the same for the purposes of assigning numbers:</p>
 </div>
 </div>
 
+<p>Sometimes you may even want duplicate tests to be treated the same as far as the bin number goes, but you
+would like them to have unique test numbers (for example).</p>
+
+<p>That can be achieved by setting the <code>:bin</code>, <code>:softbin</code> or <code>:number</code> options
+to a Symbol or String value as shown below:</p>
+
+<div class="language-ruby highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre class="code ruby"><code class="ruby">&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n1&quot; name=&quot;n1&quot;&gt;1&lt;/a&gt;&lt;/span&gt;&lt;span style=&quot;color:#777&quot;&gt;# These will have the same bin and softbin number, but unique test numbers&lt;/span&gt;
+&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n2&quot; name=&quot;n2&quot;&gt;2&lt;/a&gt;&lt;/span&gt;func &lt;span style=&quot;color:#A60&quot;&gt;:my_func_33mhz&lt;/span&gt;, &lt;span style=&quot;color:#606&quot;&gt;test_id&lt;/span&gt;: &lt;span style=&quot;color:#A60&quot;&gt;:my_func&lt;/span&gt;, &lt;span style=&quot;color:#606&quot;&gt;number&lt;/span&gt;: &lt;span style=&quot;color:#A60&quot;&gt;:my_func_33mhz&lt;/span&gt;
+&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n3&quot; name=&quot;n3&quot;&gt;3&lt;/a&gt;&lt;/span&gt;func &lt;span style=&quot;color:#A60&quot;&gt;:my_func_25mhz&lt;/span&gt;, &lt;span style=&quot;color:#606&quot;&gt;test_id&lt;/span&gt;: &lt;span style=&quot;color:#A60&quot;&gt;:my_func&lt;/span&gt;, &lt;span style=&quot;color:#606&quot;&gt;number&lt;/span&gt;: &lt;span style=&quot;color:#A60&quot;&gt;:my_func_25mhz&lt;/span&gt;
+&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n4&quot; name=&quot;n4&quot;&gt;4&lt;/a&gt;&lt;/span&gt;func &lt;span style=&quot;color:#A60&quot;&gt;:my_func_16mhz&lt;/span&gt;, &lt;span style=&quot;color:#606&quot;&gt;test_id&lt;/span&gt;: &lt;span style=&quot;color:#A60&quot;&gt;:my_func&lt;/span&gt;, &lt;span style=&quot;color:#606&quot;&gt;number&lt;/span&gt;: &lt;span style=&quot;color:#A60&quot;&gt;:my_func_16mhz&lt;/span&gt;
+&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n5&quot; name=&quot;n5&quot;&gt;5&lt;/a&gt;&lt;/span&gt;
+&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n6&quot; name=&quot;n6&quot;&gt;6&lt;/a&gt;&lt;/span&gt;&lt;span style=&quot;color:#777&quot;&gt;# This time, unique softbin and test numbers, but the same bin&lt;/span&gt;
+&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n7&quot; name=&quot;n7&quot;&gt;7&lt;/a&gt;&lt;/span&gt;func &lt;span style=&quot;color:#A60&quot;&gt;:my_func_33mhz&lt;/span&gt;, &lt;span style=&quot;color:#606&quot;&gt;bin&lt;/span&gt;: &lt;span style=&quot;color:#A60&quot;&gt;:my_func&lt;/span&gt;
+&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n8&quot; name=&quot;n8&quot;&gt;8&lt;/a&gt;&lt;/span&gt;func &lt;span style=&quot;color:#A60&quot;&gt;:my_func_25mhz&lt;/span&gt;, &lt;span style=&quot;color:#606&quot;&gt;bin&lt;/span&gt;: &lt;span style=&quot;color:#A60&quot;&gt;:my_func&lt;/span&gt;
+&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n9&quot; name=&quot;n9&quot;&gt;9&lt;/a&gt;&lt;/span&gt;func &lt;span style=&quot;color:#A60&quot;&gt;:my_func_16mhz&lt;/span&gt;, &lt;span style=&quot;color:#606&quot;&gt;bin&lt;/span&gt;: &lt;span style=&quot;color:#A60&quot;&gt;:my_func&lt;/span&gt;
+</code></pre></div>
+</div>
+</div>
+
 <h2 id="storage">Storage</h2>
 
-<p>The main benefit of this plugin is to get consistent number assignments accross different invocations of the program
+<p>The main benefit of this plugin is to get consistent number assignments across different invocations of the program
 generator, and for that to work it is necessary for the database to be stored somewhere.
 The database is a single file that is written in JSON format to make it human readable in case there is ever a need to
 manually modify it.</p>
@@ -363,13 +403,13 @@ independent configurations can be created by supplying an identifier, like this:
 
 <h2 id="notes-on-duplicates">Notes on Duplicates</h2>
 
-<p>The time is recorded everytime a reference is made to an ID number when generating a test program, this means
+<p>The time is recorded each time a reference is made to an ID number when generating a test program, this means
 that we can identify the IDs which have not been used for the longest time - for example because they were
 assigned to a test which has since been removed from the flow.</p>
 
 <p>If the allocated range is exhausted then duplicates will start to be assigned starting from the oldest
-referenced ID first. This should ensure that true duplicates never happen as long as your assign an
-adequate range for the size of your test flow.</p>
+referenced ID first. This should ensure that true duplicates never happen as long as you assign an
+adequate range to cover the size of your test flow.</p>
 
 <h2 id="what-is-not-supported">What is Not Supported</h2>
 
@@ -379,9 +419,9 @@ valid under the new configuration get re-generated.</p>
 </div></div>
 
       <div id="footer">
-  Generated on Thu Mar 16 06:22:59 2017 by
+  Generated on Mon May  8 16:00:42 2017 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.5 (ruby-2.1.5).
+  0.9.5 (ruby-2.3.3).
 </div>
 
     </div>

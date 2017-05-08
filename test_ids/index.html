@@ -95,7 +95,7 @@
 <div class="row">
   <div class="span12">
 
-    <h1>TestIds <span style="font-size: 14px">(0.6.1)</span>
+    <h1>TestIds <span style="font-size: 14px">(0.7.0)</span>
 </h1>
 
     <p>An Origen plugin to automatically assign and maintain test program bin and test numbers.</p>
@@ -219,6 +219,28 @@ config.TYPE.include &lt;&lt; (<span style="color:#00D">100</span>..<span style="
 <div class="CodeRay">
   <div class="code"><pre>config.TYPE.exclude &lt;&lt; <span style="color:#00D">150</span>         <span style="color:#777"># This is already assigned to something else</span>
 config.TYPE.exclude &lt;&lt; (<span style="color:#00D">190</span>..<span style="color:#00D">195</span>)  <span style="color:#777"># A range is also acceptable</span>
+</pre></div>
+</div>
+    </div>
+
+    <p>When numbers are being assigned from a range, they will be selected based on an increment of 1 by default. However,
+in cases where you want multiple numbers to be reserved by each test you can change the default like this:</p>
+
+    <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>config.TYPE.size = <span style="color:#00D">5</span>   <span style="color:#777"># Reserve 5 numbers for each test by default</span>
+</pre></div>
+</div>
+    </div>
+
+    <p>Then for a given range of 100 to 200 say, it would be assigned as 100, 105, 110, etc.</p>
+
+    <p>It is possible to override the size for an individual test by passing one or more of the options shown in
+the example below:</p>
+
+    <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>flow.test my_test, <span style="color:#606">bin_size</span>: <span style="color:#00D">2</span>, <span style="color:#606">softbin_size</span>: <span style="color:#00D">10</span>, <span style="color:#606">number_size</span>: <span style="color:#00D">100</span>
 </pre></div>
 </div>
     </div>
@@ -350,12 +372,33 @@ func <span style="color:#A60">:my_func_16mhz</span>, <span style="color:#606">te
 </div>
     </div>
 
+    <p>Sometimes you may even want duplicate tests to be treated the same as far as the bin number goes, but you
+would like them to have unique test numbers (for example).</p>
+
+    <p>That can be achieved by setting the <code>:bin</code>, <code>:softbin</code> or <code>:number</code> options
+to a Symbol or String value as shown below:</p>
+
+    <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#777"># These will have the same bin and softbin number, but unique test numbers</span>
+func <span style="color:#A60">:my_func_33mhz</span>, <span style="color:#606">test_id</span>: <span style="color:#A60">:my_func</span>, <span style="color:#606">number</span>: <span style="color:#A60">:my_func_33mhz</span>
+func <span style="color:#A60">:my_func_25mhz</span>, <span style="color:#606">test_id</span>: <span style="color:#A60">:my_func</span>, <span style="color:#606">number</span>: <span style="color:#A60">:my_func_25mhz</span>
+func <span style="color:#A60">:my_func_16mhz</span>, <span style="color:#606">test_id</span>: <span style="color:#A60">:my_func</span>, <span style="color:#606">number</span>: <span style="color:#A60">:my_func_16mhz</span>
+
+<span style="color:#777"># This time, unique softbin and test numbers, but the same bin</span>
+func <span style="color:#A60">:my_func_33mhz</span>, <span style="color:#606">bin</span>: <span style="color:#A60">:my_func</span>
+func <span style="color:#A60">:my_func_25mhz</span>, <span style="color:#606">bin</span>: <span style="color:#A60">:my_func</span>
+func <span style="color:#A60">:my_func_16mhz</span>, <span style="color:#606">bin</span>: <span style="color:#A60">:my_func</span>
+</pre></div>
+</div>
+    </div>
+
     <div>    
   <a class="anchor" name="Storage"></a>          
   <h2><a href="#Storage">Storage</a></h2>          
 </div>
 
-    <p>The main benefit of this plugin is to get consistent number assignments accross different invocations of the program
+    <p>The main benefit of this plugin is to get consistent number assignments across different invocations of the program
 generator, and for that to work it is necessary for the database to be stored somewhere.
 The database is a single file that is written in JSON format to make it human readable in case there is ever a need to
 manually modify it.</p>
@@ -456,13 +499,13 @@ independent configurations can be created by supplying an identifier, like this:
   <h2><a href="#Notes_on_Duplicates">Notes on Duplicates</a></h2>          
 </div>
 
-    <p>The time is recorded everytime a reference is made to an ID number when generating a test program, this means
+    <p>The time is recorded each time a reference is made to an ID number when generating a test program, this means
 that we can identify the IDs which have not been used for the longest time - for example because they were
 assigned to a test which has since been removed from the flow.</p>
 
     <p>If the allocated range is exhausted then duplicates will start to be assigned starting from the oldest
-referenced ID first. This should ensure that true duplicates never happen as long as your assign an
-adequate range for the size of your test flow.</p>
+referenced ID first. This should ensure that true duplicates never happen as long as you assign an
+adequate range to cover the size of your test flow.</p>
 
     <div>    
   <a class="anchor" name="What_is_Not_Supported"></a>          
