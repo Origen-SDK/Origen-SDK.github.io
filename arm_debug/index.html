@@ -106,7 +106,7 @@
 <div class="row">
   <div class="span12">
 
-    <h1>OrigenARMDebug <span style="font-size: 14px">(0.10.1)</span>
+    <h1>OrigenARMDebug <span style="font-size: 14px">(1.0.0.pre1)</span>
 </h1>
 
     <div>    
@@ -114,7 +114,7 @@
   <h3><a href="#Purpose">Purpose</a></h3>          
 </div>
 
-    <p>This library provides register and memory read/write and debug control capability via the ARM debug protocol.</p>
+    <p>This library provides register and memory read/write and debug control capability via the ARM Debug Interface v5 Spec.</p>
 
     <div>    
   <a class="anchor" name="How_To_Import"></a>          
@@ -123,18 +123,18 @@
 
     <p>In your Gemfile add:</p>
 
-    <div class="highlighter-coderay">
+    <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre>gem <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">origen_arm_debug</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">&gt;= 0.10.1</span><span style="color:#710">"</span></span>
+  <div class="code"><pre>gem <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">origen_arm_debug</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">&gt;= 1.0.0.pre1</span><span style="color:#710">"</span></span>
 </pre></div>
 </div>
     </div>
 
     <p>or if your application is a plugin add this to your <code>.gemspec</code></p>
 
-    <div class="highlighter-coderay">
+    <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre>spec.add_development_dependency <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">origen_arm_debug</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">&gt;= 0.10.1</span><span style="color:#710">"</span></span>
+  <div class="code"><pre>spec.add_development_dependency <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">origen_arm_debug</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">&gt;= 1.0.0.pre1</span><span style="color:#710">"</span></span>
 </pre></div>
 </div>
     </div>
@@ -164,7 +164,7 @@ interface your device has, one of the following can be used:</p>
       <li><a href="http://origen-sdk.org/swd">Single Wire Debug</a></li>
     </ul>
 
-    <div class="highlighter-coderay">
+    <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">DUT</span>
   include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">TopLevel</span>
@@ -179,22 +179,38 @@ interface your device has, one of the following can be used:</p>
       reg.bits <span style="color:#00D">7</span>..<span style="color:#00D">0</span>,  <span style="color:#A60">:lower_byte</span>
     <span style="color:#080;font-weight:bold">end</span>
     
-    sub_block <span style="color:#A60">:arm_debug</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">OrigenARMDebug::Driver</span><span style="color:#710">"</span></span>, <span style="color:#606">aps</span>: { <span style="color:#606">mem_ap</span>: <span style="color:#00D">0x00000000</span>, <span style="color:#606">mdmap</span>: <span style="color:#00D">0x01000000</span> }                           
+    sub_block <span style="color:#A60">:arm_debug</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">OrigenARMDebug::DAP</span><span style="color:#710">"</span></span>, <span style="color:#606">mem_aps</span>: { <span style="color:#606">mem_ap</span>: <span style="color:#00D">0x00000000</span>, <span style="color:#606">mem2_ap</span>: <span style="color:#00D">0x01000000</span> }                           
   <span style="color:#080;font-weight:bold">end</span>
 
   <span style="color:#777"># Hook the ARMDebug module into the register API, any register read</span>
   <span style="color:#777"># requests will use the ARM Debug protocol by default</span>
   <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">read_register</span>(reg, options={})
-    arm_debug.read_register(reg, options)
+    arm_debug.mem_ap.read_register(reg, options)
   <span style="color:#080;font-weight:bold">end</span>
 
   <span style="color:#777"># As above for write requests</span>
   <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">write_register</span>(reg, options={})
-    arm_debug.write_register(reg, options)
+    arm_debug.mem_apwrite_register(reg, options)
   <span style="color:#080;font-weight:bold">end</span>
 <span style="color:#080;font-weight:bold">end</span>
 
 <span style="color:#036;font-weight:bold">DUT</span>.new.myreg.write!(<span style="color:#00D">0x55AA</span>)  <span style="color:#777"># =&gt; Will generate the required vectors using the ARM debug protocol</span>
+</pre></div>
+</div>
+    </div>
+
+    <p>You can also access the lower-level API using conventional Origen register transactions:</p>
+
+    <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>arm_debug.sw_dp.idcode.read!(<span style="color:#00D">0x2BA01477</span>)
+arm_debug.sw_dp.ctrlstat.write!(<span style="color:#00D">0x5000_0000</span>)  <span style="color:#777"># Power-up</span>
+arm_debug.sw_dp.ctrlstat.read!(<span style="color:#00D">0xF0000000</span>)    <span style="color:#777"># Verify</span>
+arm_debug.ahb_ap.idr.read!(<span style="color:#00D">0x24770011</span>)
+arm_debug.sw_dp.select.write!(<span style="color:#00D">0</span>)              <span style="color:#777"># Select AHB-AP, bank 0       </span>
+
+<span style="color:#777"># Set the SIZE field of CSW to 0x2 (32-bit transfers) + AddrInc=1</span>
+arm_debug.ahb_ap.csw.write!(<span style="color:#00D">0x23000052</span>)
 </pre></div>
 </div>
     </div>
