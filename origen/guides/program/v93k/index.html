@@ -377,16 +377,43 @@
 
       <hr>
 
-      <div class="alert alert-danger" role="alert">
-  <strong>Sorry, Documentation Fail</strong>
+      <p>Be sure to read and understand the guide to
+<a href="/origen/guides/program/interface">Creating an Interface</a> before
+reading this section.
+This guide will describe the API to generate V93K/SmarTest test program 
+components from within an interface file.</p>
+
+      <p>To re-cap this is the shell required to implement an interface:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#777"># lib/vreg/interface.rb</span>
+<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">Vreg</span>
+  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">Interface</span>
+    include <span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">ProgramGenerators</span>
+
+    <span style="color:#777"># An example method that can be called from your test flow to generate a functional test</span>
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">func</span>(name, options={})
+      <span style="color:#777"># If your interface supports multiple platforms, add conditional logic like this, if you</span>
+      <span style="color:#777"># only ever want to support one platform then you don't need this</span>
+      <span style="color:#080;font-weight:bold">if</span> tester.j750?
+        <span style="color:#777"># Functional test implementation for J750</span>
+      <span style="color:#080;font-weight:bold">elsif</span> tester.v93k?
+        <span style="color:#777"># Functional test implementation for V93K</span>
+      <span style="color:#080;font-weight:bold">end</span>
+    <span style="color:#080;font-weight:bold">end</span>
+
+  <span style="color:#080;font-weight:bold">end</span>
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
 </div>
+      </div>
 
-      <p>Unfortunately this guide has not been written yet, but it is an area that is on our road map.</p>
+      <p>The <code>OrigenTesters::ProgramGenerators</code> will provide the interface
+with access to all of the platform generator APIs for the platforms that it supports.</p>
 
-      <p>Please comment below to let us know that you were looking for it, this will help us to prioritize which
-sections to write next.</p>
-
-      <p>If you need help on this item in the meantime, please ask a question in the <a href="https://disqus.com/home/channel/origensdk/">Origen forum</a>.</p>
+      <p>If your interface supports multiple platforms then add conditional logic to separate
+them as shown above.</p>
 
       <div style="position: relative">
   <hr>

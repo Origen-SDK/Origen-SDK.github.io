@@ -512,6 +512,73 @@ these are now considered legacy APIs but are equivalent to the above:</p>
       </div>
 
       <div>    
+  <a class="anchor" name="Bit_Order_and_Serial_Processing"></a>          
+  <h4><a href="#Bit_Order_and_Serial_Processing">Bit Order and Serial Processing</a></h4>          
+</div>
+
+      <p>By default, a register is defined with its LSB in bit position 0, this can be changed to the MSB at position 0 by setting the
+<code>bit_order</code> attribute as shown below:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>reg <span style="color:#A60">:ctrl</span>, <span style="color:#00D">0x0024</span>, <span style="color:#606">size</span>: <span style="color:#00D">16</span>, <span style="color:#606">bit_order</span>: <span style="color:#A60">:msb0</span> <span style="color:#080;font-weight:bold">do</span> |reg|
+  <span style="color:#777"># Bit definitions would be exactly the same as the above example</span>
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>A register with the MSB in bit position 0 will appear reversed in the console view, compare the following to the earlier example:</p>
+
+      <div class="language-text highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>&gt; origen i
+
+&gt;&gt; $dut.nvm.analog.ctrl
+=&gt;
+0x24 - :ctrl
+  ================================================================================================================
+  |      0      |      1      |      2      |      3      |      4      |      5      |      6      |      7      |
+  |                             :adch[4:0]                              |    :coco    |    :aien    |    :diff    |
+  |                                0x1F                                 |    0(RO)    |      0      |      0      |
+  ----------------------------------------------------------------------------------------------------------------
+  |      8      |      9      |     10      |     11      |     12      |     13      |     14      |     15      |
+  |             |             |             |             |             |             |             |             |
+  |             |             |             |             |             |             |             |             |
+  ----------------------------------------------------------------------------------------------------------------
+</pre></div>
+</div>
+      </div>
+
+      <p>When serially processing a register (in a pattern driver for example), some of the APIs will change order depending on the
+<code>bit_order</code> value.
+Here is a summary of the APIs that are available for serially processing a register and how they behave in respect to this
+attribute:</p>
+
+      <ul>
+        <li>shift_out / shift_out_with_index - A logical rather than a physical shift, this will process the bits LSB first and will behave the 
+same regardless of the register’s bit order.</li>
+        <li>reverse_shift_out / reverse_shift_out_with_index - As above, but MSB first.</li>
+        <li>shift_out_left / shift_out_left_with_index - Think of this as a physical shift, it will process the top-left bit of the
+register first and which bit that is will depend on the bit order.</li>
+        <li>shift_out_right / shift_out_right_with_index - As above, but with the bottom-right bit going first.</li>
+      </ul>
+
+      <p>All of these APIs behave like this:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>myreg.shift_out_left_with_index <span style="color:#080;font-weight:bold">do</span> |bit, i|
+  <span style="color:#777"># This block will execute for each bit in the register</span>
+  <span style="color:#777"># *bit* is an bit object (instance of Origen::Reg::Bit)</span>
+  <span style="color:#777"># *i* is the iteration index, 0, 1, 2, etc. Note that this is only available for the _with_index versions.</span>
+  bist_shift(bit)
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+      </div>
+
+      <div>    
   <a class="anchor" name="Base_Addresses"></a>          
   <h4><a href="#Base_Addresses">Base Addresses</a></h4>          
 </div>
