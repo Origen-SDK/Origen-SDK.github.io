@@ -378,12 +378,49 @@
 
       <hr>
 
-      <p>This page will be used to document any V93K-only APIs related to pattern generation,
+      <p>All of the
+<a href="/origen/guides/pattern/common">Common Pattern API</a> can be used to target the V93K.</p>
+
+      <p>This page is used to document any additional V93K-specific APIs related to pattern generation,
 however the goal is to have as few of these as possible so that Origen pattern source code can re-target
 automatically to any supported platform.</p>
 
-      <p>There are no significant APIs in this category currently, therefore refer to the
-<a href="/origen/guides/pattern/common">Common Pattern API</a> which can fully target the V93K.</p>
+      <div>    
+  <a class="anchor" name="Driving_Custom_Waveforms"></a>          
+  <h4><a href="#Driving_Custom_Waveforms">Driving Custom Waveforms</a></h4>          
+</div>
+
+      <p>The V93K has a very powerful waveform generator and it is common to use many more pin state codes than
+other platforms in order to select particular waveforms.</p>
+
+      <p>Say for example that we have various waveforms defined to drive a clock pin, where a ‘1’ on the pin
+will drive a single pulse and a code of ‘P’ will select a different waveform which will create 4 pulses
+per cycle.</p>
+
+      <p>The ‘P’ code (or any other letter) can be driven very easily as shown below:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>                        <span style="color:#777">#      Example vectors</span>
+pin(<span style="color:#A60">:clk</span>).drive!(<span style="color:#00D">1</span>)     <span style="color:#777">#     1 X XXXX 10100001</span>
+<span style="color:#00D">1</span>.cycle                 <span style="color:#777">#     1 X XXXX 10100001</span>
+pin(<span style="color:#A60">:clk</span>).drive!(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">P</span><span style="color:#710">'</span></span>)   <span style="color:#777">#     P X XXXX 10100001</span>
+<span style="color:#00D">1</span>.cycle                 <span style="color:#777">#     P X XXXX 10100001</span>
+pin(<span style="color:#A60">:clk</span>).drive!(<span style="color:#00D">1</span>)     <span style="color:#777">#     1 X XXXX 10100001</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>The above vectors would produce the following waveform per the earlier description of ‘P’:</p>
+
+      <div class="language-text highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>            _______         _______   _   _   _   _   _   _   _   _         _______
+clk _______|       |_______|       |_| |_| |_| |_| |_| |_| |_| |_| |_______|       |
+
+</pre></div>
+</div>
+      </div>
 
       <div style="position: relative">
   <hr>
