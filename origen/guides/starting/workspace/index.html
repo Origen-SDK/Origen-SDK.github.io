@@ -19,8 +19,8 @@
     <link rel="author" href="https://plus.google.com/u/1/b/106463981272125989995/106463981272125989">
   
   
-    <meta property="og:url" content="http://origen-sdk.org/origen/guides/runtime/target">
-    <meta name="twitter:url" content="http://origen-sdk.org/origen/guides/runtime/target">
+    <meta property="og:url" content="http://origen-sdk.org/origen/guides/starting/workspace">
+    <meta name="twitter:url" content="http://origen-sdk.org/origen/guides/starting/workspace">
   
   
     <meta property="og:image" content="http://origen-sdk.org/favicon-260x260.png">
@@ -147,7 +147,7 @@
                 Getting Started with Origen
               </a>
             </div>
-            <div id="sidebar-collapse-0" class="panel-collapse collapse ">
+            <div id="sidebar-collapse-0" class="panel-collapse collapse in">
               <div class="panel-body">
                 <ul class="nav nav-list">
 <li class=""><a href="/origen/guides/starting/introduction">Introduction</a></li>
@@ -158,7 +158,7 @@
 <li class=""><a href="/origen/guides/starting/gems">Understanding Gems</a></li>
 <li class=""><a href="/origen/guides/starting/app">Creating a New App</a></li>
 <li class=""><a href="/origen/guides/starting/commit">The Initial Commit</a></li>
-<li class=""><a href="/origen/guides/starting/workspace">Workspace Management</a></li>
+<li class="active"><a href="/origen/guides/starting/workspace">Workspace Management</a></li>
                 </ul>
               </div>
             </div>
@@ -169,13 +169,13 @@
                 Runtime Environment
               </a>
             </div>
-            <div id="sidebar-collapse-1" class="panel-collapse collapse in">
+            <div id="sidebar-collapse-1" class="panel-collapse collapse ">
               <div class="panel-body">
                 <ul class="nav nav-list">
 <li class=""><a href="/origen/guides/runtime/introduction">Introduction</a></li>
 <li class=""><a href="/origen/guides/runtime/mode">Mode</a></li>
 <li class=""><a href="/origen/guides/runtime/environment">Environment</a></li>
-<li class="active"><a href="/origen/guides/runtime/target">Target</a></li>
+<li class=""><a href="/origen/guides/runtime/target">Target</a></li>
 <li class=""><a href="/origen/guides/runtime/production">Production Targets</a></li>
 <li class=""><a href="/origen/guides/runtime/global">Global Setup</a></li>
 <li class=""><a href="/origen/guides/runtime/loadorder">Load Order</a></li>
@@ -372,137 +372,120 @@
   <div class="col-md-9 nav-page-container">
     <article class="search-results">
 
-      <h3 class="topic-title">Runtime Environment</h3>
+      <h3 class="topic-title">Getting Started with Origen</h3>
 
-      <h2 class="topic-subtitle">Target</h2>
+      <h2 class="topic-subtitle">Workspace and Dependency Management</h2>
 
       <hr>
 
-      <p>All targets are defined by files that reside in the <code>target</code> directory.
-Targets are regular Ruby files and they should be simply named:</p>
+      <p>This guide provides advice on how to create new application workspaces and how to
+safely update your application’s dependencies.</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>&lt;identifier&gt;.rb
-</pre></div>
-</div>
-      </div>
-
-      <p>Normally the target is used to select the target device and they are simply named after
-the device that they instantiate, e.g.</p>
-
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>target
-|-- eagle.rb
-|-- falcon.rb
-|-- vulture.rb
-`-- osprey.rb
-</pre></div>
-</div>
-      </div>
+      <p>This advice is particularly critical when running in a corporate Linux environment where
+the Linux distribution is older and/or you don’t have permission to write to the
+system Ruby installation.</p>
 
       <div>    
-  <a class="anchor" name="Creating_a_Target"></a>          
-  <h4><a href="#Creating_a_Target">Creating a Target</a></h4>          
+  <a class="anchor" name="Fix_My_Workspace"></a>          
+  <h4><a href="#Fix_My_Workspace">Fix My Workspace</a></h4>          
 </div>
 
-      <p>To create a new target, simply create the file containing whatever Ruby code you need.
-They are usually very concise and normally only instantiate the
-target device model, here are some examples:</p>
+      <p>The most important takeaway from this guide is to add the <code>origen_updater</code> plugin to your
+application, this provides a command which should fix your workspace if you ever end up
+in a situation where the <code>origen</code> or <code>bundle</code> commands are no longer working.</p>
+
+      <p>Add it to your application’s Gemfile like this:</p>
 
       <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># target/eagle.rb</span>
-<span style="color:#036;font-weight:bold">MyApp</span>::<span style="color:#036;font-weight:bold">Eagle</span>.new
+  <div class="code"><pre><span style="color:#777"># Gemfile</span>
+source <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">https://rubygems.org</span><span style="color:#710">'</span></span>
 
-<span style="color:#777"># target/falcon.rb</span>
-<span style="color:#036;font-weight:bold">MyApp</span>::<span style="color:#036;font-weight:bold">Falcon</span>.new
+gem <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">origen_updater</span><span style="color:#710">'</span></span>
 </pre></div>
 </div>
       </div>
 
-      <p>A common variation on this theme is to have different targets for different versions of
-the device that are available, or perhaps to configure the model differently for different
-types of test:</p>
+      <p>Note that if your application is a plugin you should always add this to your Gemfile too,
+i.e. don’t put it in the .gemspec.</p>
 
-      <div class="language-ruby highlighter-coderay">
+      <p>After adding it for the first time run:</p>
+
+      <div class="language-text highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># target/eagle_1.rb</span>
-<span style="color:#036;font-weight:bold">MyApp</span>::<span style="color:#036;font-weight:bold">Eagle</span>.new(<span style="color:#606">version</span>: <span style="color:#00D">1</span>)
+  <div class="code"><pre>origen -v
+</pre></div>
+</div>
+      </div>
 
-<span style="color:#777"># target/eagle_2.rb</span>
-<span style="color:#036;font-weight:bold">MyApp</span>::<span style="color:#036;font-weight:bold">Eagle</span>.new(<span style="color:#606">version</span>: <span style="color:#00D">2</span>)
+      <p>This will invoke the plugin and it will create a new executable in your
+application - <code>bin/fix_my_workspace</code>.</p>
 
-<span style="color:#777"># target/falcon_func.rb</span>
-<span style="color:#036;font-weight:bold">MyApp</span>::<span style="color:#036;font-weight:bold">Falcon</span>.new(<span style="color:#606">configuration</span>: <span style="color:#A60">:func</span>)
+      <p><strong>This file should be committed to your revision control system to ensure that it is
+always available to you in the future</strong>. It’s contents may be changed automatically from time-to-time if you upgrade
+to a new version of the origen_updater plugin, in which case the changes should be committed
+to revision control too.</p>
 
-<span style="color:#777"># target/falcon_bist.rb</span>
-<span style="color:#036;font-weight:bold">MyApp</span>::<span style="color:#036;font-weight:bold">Falcon</span>.new(<span style="color:#606">configuration</span>: <span style="color:#A60">:bist</span>)
+      <p>To fix your workspace at any time simply run:</p>
+
+      <div class="language-text highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>./bin/fix_my_workspace
 </pre></div>
 </div>
       </div>
 
       <div>    
-  <a class="anchor" name="Setting_a_Default_Target"></a>          
-  <h4><a href="#Setting_a_Default_Target">Setting a Default Target</a></h4>          
+  <a class="anchor" name="Creating_a_New_Workspace"></a>          
+  <h4><a href="#Creating_a_New_Workspace">Creating a New Workspace</a></h4>          
 </div>
 
-      <p>A default target can be defined that will be used withing a new workspace unless the user
-specifies otherwise. This is not required and should only be added if it makes sense within the
-context of the application - i.e. you may choose not to have a default to avoid the situation where the user
-builds something without really understanding what configuration they are targeting.</p>
+      <p>Creating a new workspace means setting up an existing application within a new directory
+for the first time.</p>
 
-      <p>A default is specified by creating a target file called <code>target/default.rb</code>,
-typically this is a symbolic link to another target file:</p>
+      <p>The most important thing to remember in this case is to <strong>always run <code>origen -v</code>
+as the first step after importing the application files from your revision control system.</strong></p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>ln -s target/falcon_bist.rb target/default.rb
-</pre></div>
-</div>
-      </div>
+      <p>Doing this ensures that Origen provides some basic configuration of <a href="/origen/guides/starting/gems">Bundler</a>
+which will ensure that it runs well within a restricted corporate environment.</p>
+
+      <p>After doing this for the first time, you can then safely run the <code>bundle</code> command
+directly if you want to.</p>
+
+      <p>If you forget to do this and run <code>bundle</code> first, then you can recover by running
+the <code>fix_my_workspace</code> command as described above.</p>
 
       <div>    
-  <a class="anchor" name="Getting_and_Setting_the_Target"></a>          
-  <h4><a href="#Getting_and_Setting_the_Target">Getting and Setting the Target</a></h4>          
+  <a class="anchor" name="Updating_Dependencies"></a>          
+  <h4><a href="#Updating_Dependencies">Updating Dependencies</a></h4>          
 </div>
 
-      <p>The current target for a given application workspace can be queried by running the
-<code>origen target</code> command, or <code>origen t</code> for short, this will show
-you the content of the current target file:</p>
+      <p>Updating dependencies means changing the version of a given gem/plugin within your Gemfile
+or .gemspec.</p>
+
+      <p>In some cases (depending on what gems you already have installed locally), you can simply make
+the edit and then continue running the <code>origen</code> command without any problems.</p>
+
+      <p>If you don’t already have the gem version installed locally, you will get a <a href="/origen/guides/starting/gems">Bundler</a>
+error which may or may not clearly describe the problem.</p>
+
+      <p>The easiest way to resolve things at this point is to simply run the <code>fix_my_workspace</code>
+command as described above.</p>
+
+      <p>Alternatively, following this sequence will create a working environment with the new dependency
+in most cases:</p>
 
       <div class="language-text highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre>&gt; origen t
+  <div class="code"><pre>&gt; bundle
 
-Current target: falcon_bist.rb
-**********************************************************************
-  MyApp::Falcon.new(configuration: :bist)
-**********************************************************************
-</pre></div>
-</div>
-      </div>
+// If that doesn't work try this, where gem_name is the name of the gem you just updated in
+// your Gemfile/.gemspec
+&gt; bundle update &lt;gem_name&gt;
 
-      <p>The target can be changed by running the same command and supplying the desired target:</p>
-
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>&gt; origen t target/falcon_func.rb
-
-&gt; origen t falcon_bist
-</pre></div>
-</div>
-      </div>
-
-      <p>As shown above, a full path or any snippet which is enough to uniquely identify one of the available
-target files is sufficient.</p>
-
-      <p>Additionally all Origen commands allow an override to be supplied at runtime:</p>
-
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>&gt; origen g my_pattern -t eagle_2
+// If that doesn't work try this, this will completely re-build your gem bundle, which will pull in the
+// latest versions of all gems which satisfy the rules defined in your Gemfile
+&gt; bundle update
 </pre></div>
 </div>
       </div>
