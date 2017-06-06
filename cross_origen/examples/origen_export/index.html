@@ -75,8 +75,7 @@
   <body>
     
       <div class="container">
-        <nav class="navbar navbar-inverse navbar-fixed-top">
-  <div class="container">
+        <nav class="navbar navbar-inverse navbar-fixed-top"><div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
         <span class="sr-only">Toggle navigation</span>
@@ -88,23 +87,19 @@
     </div>
     <div id="navbar" class="collapse navbar-collapse">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="/cross_origen/examples">Examples</a></li>
+<li class="active"><a href="/cross_origen/examples">Examples</a></li>
         <li class=""><a href="/cross_origen/api/">API</a></li>
         <li class=""><a href="/cross_origen/coverage">Coverage</a></li>
         <li class=""><a href="/cross_origen/release_notes">Release Notes</a></li>
         <li><a href="https://github.com/Origen-SDK/cross_origen">Github</a></li>
       </ul>
 <a href="http://origen-sdk.org" class=" pull-right">
-  <img src="http://origen-sdk.org/img/origen-device.png" style="height:30px; margin-top: 10px;">
-  <img src="http://origen-sdk.org/img/origen-text.png" style="height:15px; margin-top: 10px; margin-left: 5px;">
-</a>
+  <img src="http://origen-sdk.org/img/origen-device.png" style="height:30px; margin-top: 10px;"><img src="http://origen-sdk.org/img/origen-text.png" style="height:15px; margin-top: 10px; margin-left: 5px;"></a>
 
     </div>
 <!--/.nav-collapse -->
   </div>
-</nav>
-
-<div class="row">
+</nav><div class="row">
   <div class="span12">
 
     <h2 id="origen-export">Origen Export</h2>
@@ -125,9 +120,15 @@ Ruby files to be written.</p>
   <h3><a href="#Implementation">Implementation</a></h3>          
 </div>
 
-    <p>Here is an example of how to create the static Ruby files.</p>
+    <p>There are two methods for instantiating device models:</p>
 
-    <div class="highlighter-coderay">
+    <ol>
+<li>As a named Origen TopLevel class with a method #instantiate_sub_blocks to model the device</li>
+      <li>As a generic SubBlocks module to model the device</li>
+    </ol>
+<p>Option #1 is the default behavior and is handled in this manner:</p>
+
+    <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#d70">$dut</span>.to_origen(<span style="color:#606">path</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.root<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">/output/exported</span><span style="color:#710">"</span></span>)
 </pre></div>
@@ -142,10 +143,9 @@ Ruby files to be written.</p>
     <p>At the output path the following files are created:</p>
 
     <ul>
-      <li>top_level.rb: The top-level object, this is the one that should be instantiated</li>
+<li>top_level.rb: The top-level object, this is the one that should be instantiated</li>
     </ul>
-
-    <div class="highlighter-coderay">
+<div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#777"># This file is created by Origen, CrossOrigen::OrigenFormat#export, and is read-only</span>
 require_relative <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">sub_blocks</span><span style="color:#710">'</span></span>
@@ -166,10 +166,9 @@ require_relative <span style="background-color:hsla(0,100%,50%,0.05)"><span styl
     </div>
 
     <ul>
-      <li>sub_blocks.rb: include file for the sub_block class files</li>
+<li>sub_blocks.rb: include file for the sub_block class files</li>
     </ul>
-
-    <div class="highlighter-coderay">
+<div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#777"># This file is created by Origen, CrossOrigen::OrigenFormat#export, and is read-only</span>
 require_relative <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">import/atx.rb</span><span style="color:#710">'</span></span>
@@ -179,10 +178,9 @@ require_relative <span style="color:#777"># ...</span>
     </div>
 
     <ul>
-      <li>import/&lt;sub_block&gt;.rb: models the individual sub_block object</li>
+<li>import/&lt;sub_block&gt;.rb: models the individual sub_block object</li>
     </ul>
-
-    <div class="highlighter-coderay">
+<div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#777"># -*- encoding : utf-8 -*-</span>
 <span style="color:#777"># This file is created by Origen, CrossOrigen::OrigenFormat#export, and is read-only.</span>
@@ -224,9 +222,65 @@ require_relative <span style="color:#777"># ...</span>
 </div>
     </div>
 
+    <p>Why option #2?  Some Origen applications may serve multiple products and want the ability to swap the current
+TopLevel model using target instantitation.</p>
+
+    <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>origen i -t my_product
+</pre></div>
+</div>
+    </div>
+
+    <p>Here is a generic example of how an application may use option #2 in
+combination with the CrossOrigen import feature.  By passing the ‘instantiate_level: :sub_block’ to the #to_origen
+method, the device model is changed to a SubBlocks module implementation.  Notice that the #to_origen method is called
+inside the #on_load_target callback.  This is necessary as the #to_origen method accesses Origen.app.output_directory,
+which is not available until the target is instantiated.</p>
+
+    <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>
+<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">MyOrigenApp</span>
+  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">Product</span>
+    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">TopLevel</span>
+    include <span style="color:#036;font-weight:bold">CrossOrigen</span>
+    
+    attr_accessor <span style="color:#A60">:curr_prod</span>, <span style="color:#A60">:curr_prod_xml</span>, <span style="color:#A60">:top_origen_path</span>
+        
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options = {})
+      options = {
+        <span style="color:#606">curr_product</span>: <span style="color:#069">nil</span>
+      }.update(options)
+      <span style="color:#33B">@curr_prod</span> = options [<span style="color:#A60">:curr_product</span>]
+      <span style="color:#33B">@curr_prod_xml</span> = <span style="color:#036;font-weight:bold">Pathname</span>.new(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.root<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">/vendor/mycompany/products/</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>curr_prod<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">/product_ipxact.xml</span><span style="color:#710">"</span></span>)
+      <span style="color:#33B">@top_origen_path</span> = <span style="color:#036;font-weight:bold">Pathname</span>.new(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.root<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">/vendor/mycompany/products/</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>curr_prod<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">/top_level.rb</span><span style="color:#710">"</span></span>)
+      <span style="color:#777"># Import or instantiate registers</span>
+      <span style="color:#080;font-weight:bold">if</span> <span style="color:#33B">@top_origen_path</span>.exist?
+        <span style="color:#036;font-weight:bold">Origen</span>.log.info(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Instantiating registers from Origen source for product </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>curr_prod<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">...</span><span style="color:#710">"</span></span>)
+        require <span style="color:#33B">@top_origen_path</span>.to_s.chomp(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">.rb</span><span style="color:#710">"</span></span>)
+        extend <span style="color:#036;font-weight:bold">SubBlocks</span>
+        instantiate_sub_blocks()
+      <span style="color:#080;font-weight:bold">else</span>
+        <span style="color:#036;font-weight:bold">Origen</span>.log.info(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Importing IP-XACT registers for </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>curr_prod<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">...</span><span style="color:#710">"</span></span>)
+        cr_import(<span style="color:#606">path</span>: <span style="color:#33B">@curr_prod_xml</span>)
+      <span style="color:#080;font-weight:bold">end</span>
+    <span style="color:#080;font-weight:bold">end</span>
+    
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">on_load_target</span>
+      to_origen(<span style="color:#606">path</span>: <span style="color:#33B">@top_origen_path</span>, <span style="color:#606">instantiate_level</span>: <span style="color:#A60">:sub_block</span>)
+    <span style="color:#080;font-weight:bold">end</span>
+    
+  <span style="color:#080;font-weight:bold">end</span>
+<span style="color:#080;font-weight:bold">end</span>  
+
+</pre></div>
+</div>
+    </div>
+
     <div style="position: relative">
   <hr>
-  <div>    
+<div>    
   <a class="anchor" name="Comments"></a>          
   <h4><a href="#Comments">Comments</a></h4>          
 </div>
@@ -257,15 +311,11 @@ require_relative <span style="color:#777"># ...</span>
         dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
     })();
-</script>
-
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
 </noscript>
 
   </div>
 </div>
-
-
       </div><!-- /.container -->
     
 
