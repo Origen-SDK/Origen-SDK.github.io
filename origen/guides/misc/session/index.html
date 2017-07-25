@@ -435,11 +435,16 @@ definition must still be around when Origen tries to resurrect it from the sessi
 cannot store an object, delete the class definition for that object, and then materialize it
 from the session later. Similarly binary data cannot be stored to the session.</p>
 
-      <p>For now no API is provided to delete things from the session, although you can set values to nil:</p>
+      <p>There are a few helper methods for managing the session store.</p>
 
       <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.app.session.main[<span style="color:#A60">:exec_count</span>] = <span style="color:#069">nil</span>
+  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.app.session.main[<span style="color:#A60">:exec_count</span>] = <span style="color:#00D">10</span>       
+<span style="color:#036;font-weight:bold">Origen</span>.app.session.main[<span style="color:#A60">:owner</span>] = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Stephen</span><span style="color:#710">'</span></span>     
+<span style="color:#036;font-weight:bold">Origen</span>.app.session.main.has_key?(<span style="color:#A60">:exec_count</span>)   <span style="color:#777"># =&gt; true</span>
+<span style="color:#036;font-weight:bold">Origen</span>.app.session.main.keys.sort               <span style="color:#777"># =&gt; [:exec_count, :owner]</span>
+<span style="color:#036;font-weight:bold">Origen</span>.app.session.main.delete_key(<span style="color:#A60">:exec_count</span>) <span style="color:#777"># =&gt; 10</span>
+<span style="color:#036;font-weight:bold">Origen</span>.app.session.main.keys.sort               <span style="color:#777"># =&gt; [:owner]</span>
 </pre></div>
 </div>
       </div>
