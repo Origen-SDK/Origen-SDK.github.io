@@ -6,7 +6,7 @@
 <title>
   Class: Hash
   
-    &mdash; Origen Core 0.20.3
+    &mdash; Origen Core 0.21.0
   
 </title>
 
@@ -257,6 +257,28 @@ hash.</p>
     <span class="summary_desc"><div class='inline'>
 <p>Returns the longest key as measured by String#length.</p>
 </div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#recursive_find_by_key-instance_method" title="#recursive_find_by_key (instance method)">#<strong>recursive_find_by_key</strong>(key)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
   
 </li>
 
@@ -570,6 +592,86 @@ hash</p>
 </div>
     
       <div class="method_details ">
+  <h3 class="signature " id="recursive_find_by_key-instance_method">
+  
+    #<strong>recursive_find_by_key</strong>(key)  &#x21d2; <tt><span class='object_link'><a href="Object.html" title="Object (class)">Object</a></span></tt> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/core_ext/hash.rb', line 53</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_recursive_find_by_key'>recursive_find_by_key</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_search_results'>search_results</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span> <span class='comment'># Used to store results when key is a Regexp
+</span>  <span class='comment'># Create a stack of hashes to search through for the needle which
+</span>  <span class='comment'># is initially this hash
+</span>  <span class='id identifier rubyid_stack'>stack</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='kw'>self</span><span class='rbracket'>]</span>
+  <span class='comment'># So long as there are more haystacks to search...
+</span>  <span class='kw'>while</span> <span class='lparen'>(</span><span class='id identifier rubyid_to_search'>to_search</span> <span class='op'>=</span> <span class='id identifier rubyid_stack'>stack</span><span class='period'>.</span><span class='id identifier rubyid_pop'>pop</span><span class='rparen'>)</span>
+    <span class='comment'># ...keep searching for this particular key...
+</span>    <span class='id identifier rubyid_to_search'>to_search</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_k'>k</span><span class='comma'>,</span> <span class='id identifier rubyid_v'>v</span><span class='op'>|</span>
+      <span class='comment'># If this value can be recursively searched...
+</span>      <span class='kw'>if</span> <span class='id identifier rubyid_v'>v</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:recursive_find_by_key</span><span class='rparen'>)</span>
+        <span class='comment'># ...push that on to the list of places to search.
+</span>        <span class='id identifier rubyid_stack'>stack</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_v'>v</span>
+      <span class='kw'>elsif</span> <span class='id identifier rubyid_key'>key</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'><span class='object_link'><a href="Regexp.html" title="Regexp (class)">Regexp</a></span></span>
+        <span class='id identifier rubyid_search_results'>search_results</span><span class='lbracket'>[</span><span class='id identifier rubyid_k'>k</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_v'>v</span> <span class='kw'>if</span> <span class='id identifier rubyid_key'>key</span><span class='period'>.</span><span class='id identifier rubyid_match'>match</span><span class='lparen'>(</span><span class='id identifier rubyid_k'>k</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='rparen'>)</span>
+      <span class='kw'>else</span>
+        <span class='kw'>return</span> <span class='id identifier rubyid_v'>v</span> <span class='kw'>if</span> <span class='lparen'>(</span><span class='id identifier rubyid_k'>k</span> <span class='op'>==</span> <span class='id identifier rubyid_key'>key</span><span class='rparen'>)</span>
+      <span class='kw'>end</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_search_results'>search_results</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
+    <span class='kw'>return</span> <span class='kw'>nil</span>
+  <span class='kw'>elsif</span> <span class='id identifier rubyid_search_results'>search_results</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span> <span class='op'>==</span> <span class='int'>1</span>
+    <span class='kw'>return</span> <span class='id identifier rubyid_search_results'>search_results</span><span class='period'>.</span><span class='id identifier rubyid_values'>values</span><span class='period'>.</span><span class='id identifier rubyid_first'>first</span>
+  <span class='kw'>else</span>
+    <span class='kw'>return</span> <span class='id identifier rubyid_search_results'>search_results</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
   <h3 class="signature " id="update_common-instance_method">
   
     #<strong>update_common</strong>(hash)  &#x21d2; <tt><span class='object_link'><a href="Object.html" title="Object (class)">Object</a></span></tt> 
@@ -619,7 +721,7 @@ hash</p>
 </div>
 
       <div id="footer">
-  Generated on Wed Aug  2 11:39:47 2017 by
+  Generated on Mon Aug 14 08:41:14 2017 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.9 (ruby-2.1.5).
 </div>
