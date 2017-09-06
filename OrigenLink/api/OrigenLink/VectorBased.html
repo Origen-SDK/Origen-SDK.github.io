@@ -6,7 +6,7 @@
 <title>
   Class: OrigenLink::VectorBased
   
-    &mdash; origen_link 0.3.0
+    &mdash; origen_link 0.4.0
   
 </title>
 
@@ -113,8 +113,7 @@
 generates is intercepted and sent to a debug device (typically will be a Udoo
 Neo - www.udoo.org).  The debug device can be any device that is able to serve
 a TCP socket, recieve and interpret the command set used by this class and send
-the expected responses.
-</code></pre>
+the expected responses.</code></pre>
 
 
   </div>
@@ -634,7 +633,7 @@ push_vector is called.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#flush_vector-instance_method" title="#flush_vector (instance method)">#<strong>flush_vector</strong>(programmed_data = &#39;&#39;, tset = &#39;&#39;)  &#x21d2; Object </a>
+      <a href="#flush_vector-instance_method" title="#flush_vector (instance method)">#<strong>flush_vector</strong>(programmed_data = &#39;&#39;, tset = &#39;&#39;, local_repeat = 1)  &#x21d2; Object </a>
     
 
     
@@ -905,6 +904,31 @@ true = pass   false = fail.</p>
 </li>
 
       
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#wait-instance_method" title="#wait (instance method)">#<strong>wait</strong>(options = {})  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>wait a fixed amount of time   This method will run the Sleep method to wait
+rather than generating cycles.</p>
+</div></span>
+  
+</li>
+
+      
     </ul>
   
 
@@ -1065,8 +1089,8 @@ true = pass   false = fail.</p>
 </span>  <span class='id identifier rubyid_response'>response</span><span class='period'>.</span><span class='id identifier rubyid_chomp!'>chomp!</span>
   <span class='id identifier rubyid_server_version'>server_version</span> <span class='op'>=</span> <span class='id identifier rubyid_response'>response</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>:</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span>
   <span class='id identifier rubyid_server_version'>server_version</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>?.?.? - 0.2.0 or earlier</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_response'>response</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>Error</span><span class='regexp_end'>/</span></span>
-  <span class='id identifier rubyid_app_version'>app_version</span> <span class='op'>=</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_app'>app</span><span class='lparen'>(</span><span class='symbol'>:origen_link</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_version'>version</span>
-  <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_log'>log</span><span class='period'>.</span><span class='id identifier rubyid_info'>info</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Plug-in link version: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_app_version'>app_version</span><span class='embexpr_end'>}</span><span class='tstring_content'>, Server link version: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_server_version'>server_version</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_app_version'>app_version</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="../OrigenLink.html" title="OrigenLink (module)">OrigenLink</a></span></span><span class='op'>::</span><span class='const'>VERSION</span> <span class='comment'># Origen.app(:origen_link).version
+</span>  <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_log'>log</span><span class='period'>.</span><span class='id identifier rubyid_info'>info</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Plug-in link version: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_app_version'>app_version</span><span class='embexpr_end'>}</span><span class='tstring_content'>, Server link version: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_server_version'>server_version</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
   <span class='kw'>unless</span> <span class='id identifier rubyid_app_version'>app_version</span> <span class='op'>==</span> <span class='id identifier rubyid_server_version'>server_version</span>
     <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_log'>log</span><span class='period'>.</span><span class='id identifier rubyid_warn'>warn</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Server version and plug-in link versions do not match</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
   <span class='kw'>end</span>
@@ -1764,7 +1788,6 @@ pattern execution along with execution time information.</code></pre>
       <pre class="lines">
 
 
-404
 405
 406
 407
@@ -1798,10 +1821,11 @@ pattern execution along with execution time information.</code></pre>
 435
 436
 437
-438</pre>
+438
+439</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_link/vector_based.rb', line 404</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_link/vector_based.rb', line 405</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_finalize_pattern'>finalize_pattern</span><span class='lparen'>(</span><span class='id identifier rubyid_output_file'>output_file</span><span class='rparen'>)</span>
   <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_log'>log</span><span class='period'>.</span><span class='id identifier rubyid_debug'>debug</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Pattern generation completed. Sending all stored vector data</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
@@ -1914,7 +1938,7 @@ expects only pin data for pins in the pinmap.</code></pre>
       <div class="method_details ">
   <h3 class="signature " id="flush_vector-instance_method">
   
-    #<strong>flush_vector</strong>(programmed_data = &#39;&#39;, tset = &#39;&#39;)  &#x21d2; <tt>Object</tt> 
+    #<strong>flush_vector</strong>(programmed_data = &#39;&#39;, tset = &#39;&#39;, local_repeat = 1)  &#x21d2; <tt>Object</tt> 
   
 
   
@@ -1940,7 +1964,6 @@ of repeat compression (a vector isn&#39;t sent until different vector data is en
       <pre class="lines">
 
 
-228
 229
 230
 231
@@ -1979,12 +2002,13 @@ of repeat compression (a vector isn&#39;t sent until different vector data is en
 264
 265
 266
-267</pre>
+267
+268</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_link/vector_based.rb', line 228</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_link/vector_based.rb', line 229</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_flush_vector'>flush_vector</span><span class='lparen'>(</span><span class='id identifier rubyid_programmed_data'>programmed_data</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_tset'>tset</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_flush_vector'>flush_vector</span><span class='lparen'>(</span><span class='id identifier rubyid_programmed_data'>programmed_data</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_tset'>tset</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_local_repeat'>local_repeat</span> <span class='op'>=</span> <span class='int'>1</span><span class='rparen'>)</span>
   <span class='comment'># prevent server crash when vector_flush is used during debug
 </span>  <span class='kw'>unless</span> <span class='ivar'>@previous_vectordata</span> <span class='op'>==</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span>
     <span class='kw'>if</span> <span class='ivar'>@vector_repeatcount</span> <span class='op'>&gt;</span> <span class='int'>1</span>
@@ -2020,7 +2044,7 @@ of repeat compression (a vector isn&#39;t sent until different vector data is en
 </span>    <span class='ivar'>@store_pins</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
   <span class='kw'>end</span>
 
-  <span class='ivar'>@vector_repeatcount</span> <span class='op'>=</span> <span class='int'>1</span>
+  <span class='ivar'>@vector_repeatcount</span> <span class='op'>=</span> <span class='id identifier rubyid_local_repeat'>local_repeat</span>
   <span class='ivar'>@previous_vectordata</span> <span class='op'>=</span> <span class='id identifier rubyid_programmed_data'>programmed_data</span>
   <span class='ivar'>@previous_tset</span> <span class='op'>=</span> <span class='id identifier rubyid_tset'>tset</span>
 <span class='kw'>end</span></pre>
@@ -2058,7 +2082,6 @@ It is called automatically when pattern generation starts.</code></pre>
       <pre class="lines">
 
 
-378
 379
 380
 381
@@ -2079,10 +2102,11 @@ It is called automatically when pattern generation starts.</code></pre>
 396
 397
 398
-399</pre>
+399
+400</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_link/vector_based.rb', line 378</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_link/vector_based.rb', line 379</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize_pattern'>initialize_pattern</span>
   <span class='ivar'>@fail_count</span> <span class='op'>=</span> <span class='int'>0</span>
@@ -2235,7 +2259,6 @@ keep track of fail count and captured data</code></pre>
       <pre class="lines">
 
 
-285
 286
 287
 288
@@ -2269,10 +2292,11 @@ keep track of fail count and captured data</code></pre>
 316
 317
 318
-319</pre>
+319
+320</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_link/vector_based.rb', line 285</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_link/vector_based.rb', line 286</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_process_response'>process_response</span><span class='lparen'>(</span><span class='id identifier rubyid_response'>response</span><span class='comma'>,</span> <span class='id identifier rubyid_output_file'>output_file</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_response'>response</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'>Array</span><span class='rparen'>)</span>
@@ -2343,7 +2367,6 @@ batched responses versus a single response string.</code></pre>
       <pre class="lines">
 
 
-324
 325
 326
 327
@@ -2392,10 +2415,11 @@ batched responses versus a single response string.</code></pre>
 370
 371
 372
-373</pre>
+373
+374</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_link/vector_based.rb', line 324</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_link/vector_based.rb', line 325</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_process_vector_response'>process_vector_response</span><span class='lparen'>(</span><span class='id identifier rubyid_vector_response'>vector_response</span><span class='comma'>,</span> <span class='id identifier rubyid_output_obj'>output_obj</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_msg'>msg</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span>
@@ -2592,7 +2616,8 @@ when vector batching is used</code></pre>
 220
 221
 222
-223</pre>
+223
+224</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/origen_link/vector_based.rb', line 177</span>
@@ -2625,16 +2650,17 @@ when vector batching is used</code></pre>
     <span class='id identifier rubyid_exit'>exit</span> <span class='int'>1</span>
   <span class='kw'>end</span>
   <span class='id identifier rubyid_tset'>tset</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:timeset</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span>
+  <span class='id identifier rubyid_local_repeat'>local_repeat</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:repeat</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='op'>?</span> <span class='int'>1</span> <span class='op'>:</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:repeat</span><span class='rbracket'>]</span>
   <span class='kw'>if</span> <span class='ivar'>@vector_count</span> <span class='op'>&gt;</span> <span class='int'>0</span>
     <span class='comment'># compressing repeats as we go
 </span>    <span class='kw'>if</span> <span class='lparen'>(</span><span class='id identifier rubyid_programmed_data'>programmed_data</span> <span class='op'>==</span> <span class='ivar'>@previous_vectordata</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='lparen'>(</span><span class='ivar'>@previous_tset</span> <span class='op'>==</span> <span class='id identifier rubyid_tset'>tset</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='ivar'>@store_pins</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
-      <span class='ivar'>@vector_repeatcount</span> <span class='op'>+=</span> <span class='int'>1</span>
+      <span class='ivar'>@vector_repeatcount</span> <span class='op'>+=</span> <span class='id identifier rubyid_local_repeat'>local_repeat</span>
     <span class='kw'>else</span>
       <span class='comment'># all repeats of the previous vector have been counted
 </span>      <span class='comment'># time to flush.  Don&#39;t panic though!  @previous_vectordata
 </span>      <span class='comment'># is what gets flushed.  programmed_data is passed as an
 </span>      <span class='comment'># arg to be set as the new @previous_vectordata
-</span>      <span class='id identifier rubyid_flush_vector'>flush_vector</span><span class='lparen'>(</span><span class='id identifier rubyid_programmed_data'>programmed_data</span><span class='comma'>,</span> <span class='id identifier rubyid_tset'>tset</span><span class='rparen'>)</span>
+</span>      <span class='id identifier rubyid_flush_vector'>flush_vector</span><span class='lparen'>(</span><span class='id identifier rubyid_programmed_data'>programmed_data</span><span class='comma'>,</span> <span class='id identifier rubyid_tset'>tset</span><span class='comma'>,</span> <span class='id identifier rubyid_local_repeat'>local_repeat</span><span class='rparen'>)</span>
     <span class='kw'>end</span>
   <span class='kw'>else</span>
     <span class='comment'># if this is the first vector of the pattern, insure variables are initialized
@@ -2678,7 +2704,6 @@ vectors are sent to the DUT for execution and the responses are processed</code>
       <pre class="lines">
 
 
-272
 273
 274
 275
@@ -2686,10 +2711,11 @@ vectors are sent to the DUT for execution and the responses are processed</code>
 277
 278
 279
-280</pre>
+280
+281</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_link/vector_based.rb', line 272</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_link/vector_based.rb', line 273</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_synchronize'>synchronize</span><span class='lparen'>(</span><span class='id identifier rubyid_output_file'>output_file</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
   <span class='id identifier rubyid_flush_vector'>flush_vector</span>
@@ -2735,12 +2761,12 @@ No longer a use for this.  Use tester.link?</code></pre>
       <pre class="lines">
 
 
-444
 445
-446</pre>
+446
+447</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_link/vector_based.rb', line 444</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_link/vector_based.rb', line 445</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_to_s'>to_s</span>
   <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>OrigenLink::VectorBased</span><span class='tstring_end'>&#39;</span></span>
@@ -2790,7 +2816,6 @@ false = fail</code></pre>
       <pre class="lines">
 
 
-457
 458
 459
 460
@@ -2805,10 +2830,11 @@ false = fail</code></pre>
 469
 470
 471
-472</pre>
+472
+473</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_link/vector_based.rb', line 457</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_link/vector_based.rb', line 458</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_transaction'>transaction</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_block_given?'>block_given?</span>
@@ -2831,14 +2857,127 @@ false = fail</code></pre>
 </table>
 </div>
     
+      <div class="method_details ">
+  <h3 class="signature " id="wait-instance_method">
+  
+    #<strong>wait</strong>(options = {})  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>wait a fixed amount of time</p>
+
+<pre class="code ruby"><code class="ruby">This method will run the Sleep method to wait rather than generating cycles.
+Cycle execution time is not predictable with OrigenLink.
+
+If you want cycles to be generated by this method include apply_cycles: true
+in the options hash
+
+This method currently doesn&#39;t handle match blocks.</code></pre>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+483
+484
+485
+486
+487
+488
+489
+490
+491
+492
+493
+494
+495
+496
+497
+498
+499
+500
+501
+502
+503
+504
+505
+506
+507
+508
+509
+510
+511
+512
+513
+514
+515
+516
+517</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_link/vector_based.rb', line 483</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_wait'>wait</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span>
+    <span class='label'>cycles:</span>         <span class='int'>0</span><span class='comma'>,</span>
+    <span class='label'>time_in_cycles:</span> <span class='int'>0</span><span class='comma'>,</span>
+    <span class='label'>time_in_us:</span>     <span class='int'>0</span><span class='comma'>,</span>
+    <span class='label'>time_in_ns:</span>     <span class='int'>0</span><span class='comma'>,</span>
+    <span class='label'>time_in_ms:</span>     <span class='int'>0</span><span class='comma'>,</span>
+    <span class='label'>time_in_s:</span>      <span class='int'>0</span><span class='comma'>,</span>
+    <span class='label'>match:</span>          <span class='kw'>false</span><span class='comma'>,</span>   <span class='comment'># Set to true to invoke a match loop where the supplied delay
+</span>    <span class='label'>apply_cycles:</span>	  <span class='kw'>false</span>
+    <span class='comment'># will become the timeout duration
+</span>  <span class='rbrace'>}</span><span class='period'>.</span><span class='id identifier rubyid_merge'>merge</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
+
+  <span class='id identifier rubyid_fail'>fail</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>wait(match: true) is not yet implemented on Link</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:match</span><span class='rbracket'>]</span>
+
+  <span class='id identifier rubyid_time_delay'>time_delay</span> <span class='op'>=</span> <span class='int'>0</span>
+  <span class='id identifier rubyid_time_delay'>time_delay</span> <span class='op'>+=</span> <span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:time_in_s</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_time_delay'>time_delay</span> <span class='op'>+=</span> <span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:time_in_ms</span><span class='rbracket'>]</span><span class='rparen'>)</span> <span class='op'>*</span> <span class='float'>0.001</span>
+  <span class='id identifier rubyid_time_delay'>time_delay</span> <span class='op'>+=</span> <span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:time_in_us</span><span class='rbracket'>]</span><span class='rparen'>)</span> <span class='op'>*</span> <span class='float'>0.000001</span>
+  <span class='id identifier rubyid_time_delay'>time_delay</span> <span class='op'>+=</span> <span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:time_in_ns</span><span class='rbracket'>]</span><span class='rparen'>)</span> <span class='op'>*</span> <span class='float'>0.000000001</span>
+  <span class='id identifier rubyid_time_delay'>time_delay</span> <span class='op'>+=</span> <span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:cycles</span><span class='rbracket'>]</span> <span class='op'>+</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:time_in_cycles</span><span class='rbracket'>]</span><span class='rparen'>)</span> <span class='op'>*</span> <span class='id identifier rubyid_current_period_in_ns'>current_period_in_ns</span> <span class='op'>*</span> <span class='float'>0.000000001</span>
+
+  <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:apply_cycles</span><span class='rbracket'>]</span>
+    <span class='id identifier rubyid_cycles'>cycles</span> <span class='op'>=</span> <span class='id identifier rubyid_time_delay'>time_delay</span> <span class='op'>/</span> <span class='float'>0.00003</span>		<span class='comment'># cycle execution time is unpredictable, but ~= 30us
+</span>    <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:cycles</span><span class='rbracket'>]</span> <span class='op'>&gt;</span> <span class='int'>0</span> <span class='op'>||</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:time_in_cycles</span><span class='rbracket'>]</span> <span class='op'>&gt;</span> <span class='int'>0</span>
+      <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:repeat</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:cycles</span><span class='rbracket'>]</span> <span class='op'>+</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:time_in_cycles</span><span class='rbracket'>]</span>
+    <span class='kw'>else</span>
+      <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:repeat</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='lparen'>(</span><span class='id identifier rubyid_cycles'>cycles</span> <span class='op'>&gt;</span> <span class='int'>0</span><span class='rparen'>)</span> <span class='op'>?</span> <span class='id identifier rubyid_cycles'>cycles</span> <span class='op'>:</span> <span class='int'>1</span>
+    <span class='kw'>end</span>
+    <span class='id identifier rubyid_cycle'>cycle</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
+  <span class='kw'>else</span>
+    <span class='id identifier rubyid_synchronize'>synchronize</span>			<span class='comment'># ensure all generated cycles are executed before delay is run
+</span>    <span class='id identifier rubyid_sleep'>sleep</span> <span class='id identifier rubyid_time_delay'>time_delay</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
   </div>
 
 </div>
 
       <div id="footer">
-  Generated on Thu Apr  6 14:00:20 2017 by
+  Generated on Wed Sep  6 09:37:20 2017 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.8 (ruby-2.1.5).
+  0.9.8 (ruby-2.2.4).
 </div>
 
     </div>
