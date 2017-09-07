@@ -6,7 +6,7 @@ if (window.origen_search_id) {
   search_json = "search.json";
 }
 
-$.getJSON("/" + "/" + search_json, function(json) {
+$.getJSON("/testers/" + "/" + search_json, function(json) {
   window.index = lunr(function() {
     this.field("title", {boost: 10});
     this.field("subtitle", {boost: 5});
@@ -45,10 +45,10 @@ function search(go) {
     var results = window.index.search(term);
 
     if(results && results.length === 1) {
-      window.location = "/" + results[0].ref + "?highlight=" + escape(term);
+      window.location = "/testers/" + results[0].ref + "?highlight=" + escape(term);
     } else if(results && results.length > 1) {
       if (go) {
-        window.location = "/" + results[0].ref + "?highlight=" + escape(term);
+        window.location = "/testers/" + results[0].ref + "?highlight=" + escape(term);
       } else {
         displayResults(results, term);
       }
@@ -83,7 +83,7 @@ function displayResults(results, term) {
       }
     }
  
-    container.append("<p><a href=\"/" + result.ref + "?highlight=" + escape(term) + "\">" + text + "</a></p>");
+    container.append("<p><a href=\"/testers/" + result.ref + "?highlight=" + escape(term) + "\">" + text + "</a></p>");
   });
 }
 
