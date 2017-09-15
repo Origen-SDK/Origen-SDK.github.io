@@ -412,6 +412,11 @@ before handing control back to Origen to complete the command processing as norm
 <code>@application_options</code> variable and the new option will appear in the help
 as if it was a built-in part of the command.</p>
 
+      <p>Additionally, you can provide a block to Origen that will be executed if the option is given. The block should
+be passed as the last element of the array that is pushed to the <code>@application_options</code> variable and
+can be specified using a lambda sytax <code>lambda { |options| options[:some_option] = true }</code> or 
+alternately <code>-&gt;(options) { options[:some_option] = true }</code>.</p>
+
       <div>    
   <a class="anchor" name="Example"></a>          
   <h4><a href="#Example">Example</a></h4>          
@@ -442,7 +447,13 @@ attr_accessor <span style="color:#A60">:no_md5</span>
 <span style="color:#777"># to exit here to allow the standard Origen command to run afterwards</span>
 <span style="color:#080;font-weight:bold">when</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">generate</span><span style="color:#710">"</span></span>
   <span style="color:#777"># Option definitions must be pushed into the @application_options array, don't re-assign it!</span>
-  <span style="color:#33B">@application_options</span> &lt;&lt; [<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">--no_md5</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Don't apply the MD5 checksum to pattern names</span><span style="color:#710">"</span></span>],
+  <span style="color:#33B">@application_options</span> &lt;&lt; [<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">--no_md5</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Don't apply the MD5 checksum to pattern names</span><span style="color:#710">"</span></span>]
+
+  <span style="color:#777"># To specify a block to be executed by Origen's option parser (when the option is used), include </span>
+  <span style="color:#777"># a block as the last element</span>
+  <span style="color:#33B">@application_options</span> &lt;&lt; [<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">--compile</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Compile the pattern</span><span style="color:#710">"</span></span>, -&gt;(options) { options[<span style="color:#A60">:myapp_compile</span>] = <span style="color:#069">true</span> }]
+  <span style="color:#33B">@application_options</span> &lt;&lt; [<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">--compiler NAME</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Compiler to use</span><span style="color:#710">"</span></span>, -&gt;(options, compiler) { options[<span style="color:#A60">:myapp_compiler</span>] = compiler }]
+
   <span style="color:#777"># Note that it is important not to delete the argument from ARGV, this is necessary to make Origen</span>
   <span style="color:#777"># fully aware of it, so that it can be passed on to any additional jobs invoked from this process</span>
   <span style="color:#036;font-weight:bold">Origen</span>.app.no_md5 = <span style="color:#069">true</span> <span style="color:#080;font-weight:bold">if</span> <span style="color:#069">ARGV</span>.include?(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">--no_md5</span><span style="color:#710">"</span></span>)
