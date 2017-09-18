@@ -160,6 +160,7 @@
 <li class=""><a href="/origen/guides/starting/invoking">Invoking Considerations</a></li>
 <li class=""><a href="/origen/guides/starting/commit">The Initial Commit</a></li>
 <li class=""><a href="/origen/guides/starting/workspace">Workspace Management</a></li>
+<li class=""><a href="/origen/guides/starting/architecture">Application Architecture</a></li>
                 </ul>
               </div>
             </div>
@@ -628,6 +629,106 @@ wherever that may be generated, should be captured:</p>
 <span style="color:#777"># This is the vector that will be captured, in real life this could be done after returning</span>
 <span style="color:#777"># to a caller</span>
 <span style="color:#d70">$tester</span>.cycle  
+</pre></div>
+</div>
+      </div>
+
+      <h5 id="capturestyle">capture_style</h5>
+
+      <p>Testers support different ways of capturing vector data.  For all tester types the default
+capture style is hram (history ram).  For UltraFlex digcap is additionally supported.  Change
+from the default like this:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#777"># change capture style</span>
+<span style="color:#777"># if the digcap isn't support for the current tester, default behavior (hram) is used</span>
+tester.capture_style = <span style="color:#A60">:digcap</span>
+
+<span style="color:#777"># change back to hram capture style</span>
+tester.capture_style = <span style="color:#A60">:hram</span>
+
+<span style="color:#777"># temporarily change the capture style for this cycle</span>
+tester.store_next_cycle pin(<span style="color:#A60">:d0</span>), <span style="color:#606">capture_style</span>: <span style="color:#A60">:digcap</span>
+</pre></div>
+</div>
+      </div>
+
+      <h5 id="configure-capture-memory">configure capture memory</h5>
+
+      <p>Origen will create any instrument definitions required when capture memory is used.  However,
+it may be desirable to alter the configuration settings.  Here is an example of how to do this:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#777"># configure TDO as a 16-bit instrument (default size is the number of pins - 1 in this case)</span>
+tester.capture_memory <span style="color:#A60">:digcap</span> <span style="color:#080;font-weight:bold">do</span> |mem|
+  mem.pin <span style="color:#A60">:tdo</span>, <span style="color:#606">size</span>: <span style="color:#00D">16</span>
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+      </div>
+
+      <div>    
+  <a class="anchor" name="Data_Source"></a>          
+  <h4><a href="#Data_Source">Data Source</a></h4>          
+</div>
+
+      <h5 id="overlay">overlay</h5>
+      <p>Testers support different ways of modifying vector data during run time.  This practice is referred to
+here as “overlay”.  Overlay is requested through an optional argument to cycle:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#777"># setup overlay parameters</span>
+overlay_options = {}
+<span style="color:#777"># Required - what pin(s) are being overlayed?</span>
+overlay_options[<span style="color:#A60">:pins</span>] = dut.pin(<span style="color:#A60">:tdi</span>)
+<span style="color:#777"># Required - what is the overlay string? This will become a label or subroutine name</span>
+overlay_options[<span style="color:#A60">:overlay_str</span>] = ovl_reg[i].overlay_str
+
+tester.cycle <span style="color:#606">overlay</span>: overlay_options
+
+<span style="color:#777"># Generate another overlay cycle, holding the same data as the previous cycle</span>
+overlay_options[<span style="color:#A60">:change_data</span>] = <span style="color:#069">false</span>
+tester.cycle <span style="color:#606">overlay</span>: overlay_options
+
+<span style="color:#777"># Now a new piece of data needs to be sent</span>
+overlay_options[<span style="color:#A60">:change_data</span>] = <span style="color:#069">true</span>
+tester.cycle <span style="color:#606">overlay</span>: overlay_options
+</pre></div>
+</div>
+      </div>
+
+      <h5 id="overlaystyle">overlay_style</h5>
+
+      <p>The default overlay style is subroutine (vectors that will be modified are replaced
+by a call to a subroutine).  Change from the default like this:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#777"># if requested sytle is not available for the current tester it will default to :subroutine</span>
+tester.overlay_style = <span style="color:#A60">:digsrc</span>
+tester.overlay_style = <span style="color:#A60">:subroutine</span>
+tester.overlay_style = <span style="color:#A60">:label</span>
+
+<span style="color:#777"># change the overlay style for this cycle only by adding :overlay_style to the overlay_options</span>
+overlay_options[<span style="color:#A60">:overlay_style</span>] = <span style="color:#A60">:label</span>
+tester.cycle <span style="color:#606">overlay</span>: overlay_options
+</pre></div>
+</div>
+      </div>
+
+      <h5 id="configure-source-memory">configure source memory</h5>
+
+      <p>Origen will create any necessary instruments statements.  Add configuration information to source memory
+like this:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>tester.source_memory <span style="color:#080;font-weight:bold">do</span> |mem|
+  mem.pin <span style="color:#A60">:tdi</span>, <span style="color:#606">size</span>: <span style="color:#00D">32</span>, <span style="color:#606">format</span>: <span style="color:#A60">:binary</span>, <span style="color:#606">data_type</span>: <span style="color:#A60">:long</span>
+<span style="color:#080;font-weight:bold">end</span>
 </pre></div>
 </div>
       </div>
