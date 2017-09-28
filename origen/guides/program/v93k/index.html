@@ -863,6 +863,77 @@ and then include it in all of the applications that wish to use the library.</p>
 can refer to how the <code>origen_std_lib</code> interface integration works 
 <a href="https://github.com/Origen-SDK/origen_std_lib/blob/master/plugin/lib/origen_std_lib.rb">here</a>.</p>
 
+      <div>    
+  <a class="anchor" name="Test_Name_Uniqueness"></a>          
+  <h3><a href="#Test_Name_Uniqueness">Test Name Uniqueness</a></h3>          
+</div>
+
+      <p>Test (suite) naming collisions can occur when importing multiple independent test flow modules into a
+V93K master flow file.</p>
+
+      <p>To prevent that from ever occurring, Origen will generate and append a unique signature to the end of
+all test names by default, for example:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>t = test_suites.add(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">my_test_name</span><span style="color:#710">"</span></span>, options)
+
+t.name   <span style="color:#777"># =&gt; "my_test_name_E32ABE8"</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>Applications can override this default behavior by setting the corresponding test interface attribute,
+<code>unique_test_names</code>, to one of the following values:</p>
+
+      <ul>
+        <li>
+<code>:signature</code> - this is the default which will generate a unique signature as shown in the above example</li>
+        <li>
+<code>nil</code> - no value will be appended to the test names at all</li>
+        <li>
+<code>:flowname</code> - the name of the current top-level flow will be appended to all test names</li>
+        <li>Setting this attribute to any other value will append that value directly to all test names</li>
+      </ul>
+
+      <p>This attribute can be set in the <a href="/origen/guides/runtime/environment">environment file</a> when instantiating
+the tester:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">V93K</span>.new <span style="color:#606">unique_test_names</span>: <span style="color:#069">nil</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>This provides a single place to control the behavior within a <a href="/origen/guides/starting/architecture/#Monolithic_Application_Architecture">monolithic application architecture</a>.</p>
+
+      <p>However, under a <a href="/origen/guides/starting/architecture/#Distributed_Application_Architecture">distributed application architecture</a>
+a given test flow module may be generated under a target/environment that is controlled by a 3rd party.</p>
+
+      <p>In that case, it is recommended to either set it at the flow-level, which will override any setting set at the
+environment-level:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#777"># program/wt1_start.rb</span>
+<span style="color:#036;font-weight:bold">Flow</span>.create <span style="color:#606">interface</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">MyApp::Interface</span><span style="color:#710">'</span></span>, <span style="color:#606">unique_test_names</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">wt1</span><span style="color:#710">'</span></span> <span style="color:#080;font-weight:bold">do</span>
+
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>Or, it can be set directly within your interface logic which will take the highest precedence:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#777"># lib/my_app/interface.rb</span>
+<span style="color:#069">self</span>.unique_test_names = <span style="color:#A60">:flowname</span>
+</pre></div>
+</div>
+      </div>
+
       <div style="position: relative">
   <hr>
   <div>    
