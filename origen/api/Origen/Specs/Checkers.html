@@ -6,7 +6,7 @@
 <title>
   Module: Origen::Specs::Checkers
   
-    &mdash; Origen Core 0.26.0
+    &mdash; Origen Core 0.27.0
   
 </title>
 
@@ -254,19 +254,93 @@
 106
 107
 108
-109</pre>
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/origen/specs/checkers.rb', line 74</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_evaluate_limit'>evaluate_limit</span><span class='lparen'>(</span><span class='id identifier rubyid_limit'>limit</span><span class='rparen'>)</span>
-  <span class='kw'>return</span> <span class='id identifier rubyid_limit'>limit</span> <span class='kw'>if</span> <span class='lbracket'>[</span><span class='const'><span class='object_link'><a href="../../Fixnum.html" title="Fixnum (class)">Fixnum</a></span></span><span class='comma'>,</span> <span class='const'>Float</span><span class='comma'>,</span> <span class='const'><span class='object_link'><a href="../../Numeric.html" title="Numeric (class)">Numeric</a></span></span><span class='comma'>,</span> <span class='const'>Symbol</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span> <span class='id identifier rubyid_limit'>limit</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span>
+  <span class='kw'>return</span> <span class='id identifier rubyid_limit'>limit</span> <span class='kw'>if</span> <span class='lbracket'>[</span><span class='const'><span class='object_link'><a href="../../Fixnum.html" title="Fixnum (class)">Fixnum</a></span></span><span class='comma'>,</span> <span class='const'>Float</span><span class='comma'>,</span> <span class='const'><span class='object_link'><a href="../../Numeric.html" title="Numeric (class)">Numeric</a></span></span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span> <span class='id identifier rubyid_limit'>limit</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span>
   <span class='kw'>return</span> <span class='kw'>nil</span> <span class='kw'>if</span> <span class='id identifier rubyid_limit'>limit</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
   <span class='id identifier rubyid_limit'>limit</span> <span class='op'>=</span> <span class='id identifier rubyid_limit'>limit</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span> <span class='kw'>if</span> <span class='lbracket'>[</span><span class='const'>Nokogiri</span><span class='op'>::</span><span class='const'>XML</span><span class='op'>::</span><span class='const'>NodeSet</span><span class='comma'>,</span> <span class='const'>Nokogiri</span><span class='op'>::</span><span class='const'>XML</span><span class='op'>::</span><span class='const'>Text</span><span class='comma'>,</span> <span class='const'>Nokogiri</span><span class='op'>::</span><span class='const'>XML</span><span class='op'>::</span><span class='const'>Element</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span> <span class='id identifier rubyid_limit'>limit</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span>
-  <span class='id identifier rubyid_limit'>limit</span><span class='period'>.</span><span class='id identifier rubyid_gsub!'>gsub!</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\n</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> </span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_limit'>limit</span><span class='period'>.</span><span class='id identifier rubyid_scrub!'>scrub!</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_limit'>limit</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>Symbol</span>
+    <span class='id identifier rubyid_limit'>limit</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>:</span><span class='tstring_end'>&#39;</span></span> <span class='op'>+</span> <span class='id identifier rubyid_limit'>limit</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span>
+  <span class='kw'>else</span>
+    <span class='id identifier rubyid_limit'>limit</span><span class='period'>.</span><span class='id identifier rubyid_gsub!'>gsub!</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\n</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> </span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_limit'>limit</span><span class='period'>.</span><span class='id identifier rubyid_scrub!'>scrub!</span>
+  <span class='kw'>end</span>
   <span class='id identifier rubyid_result'>result</span> <span class='op'>=</span> <span class='kw'>false</span>
-  <span class='kw'>if</span> <span class='op'>!</span><span class='op'>!</span><span class='lparen'>(</span><span class='id identifier rubyid_limit'>limit</span><span class='period'>.</span><span class='id identifier rubyid_match'>match</span><span class='lparen'>(</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>^\d+\.\d+$</span><span class='regexp_end'>/</span></span><span class='rparen'>)</span><span class='rparen'>)</span> <span class='op'>||</span> <span class='op'>!</span><span class='op'>!</span><span class='lparen'>(</span><span class='id identifier rubyid_limit'>limit</span><span class='period'>.</span><span class='id identifier rubyid_match'>match</span><span class='lparen'>(</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>^-\d+\.\d+$</span><span class='regexp_end'>/</span></span><span class='rparen'>)</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_limit'>limit</span><span class='period'>.</span><span class='id identifier rubyid_match'>match</span><span class='lparen'>(</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>\:\S+</span><span class='regexp_end'>/</span></span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_limit_items'>limit_items</span> <span class='op'>=</span> <span class='id identifier rubyid_limit'>limit</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>\:|\s+</span><span class='regexp_end'>/</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_reject'>reject</span><span class='lparen'>(</span><span class='op'>&amp;</span><span class='symbol'>:empty?</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_references'>references</span> <span class='op'>=</span> <span class='id identifier rubyid_limit'>limit</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>\:|\s+</span><span class='regexp_end'>/</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_var'>var</span><span class='op'>|</span> <span class='id identifier rubyid_var'>var</span><span class='period'>.</span><span class='id identifier rubyid_match'>match</span><span class='lparen'>(</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>^[a-zA-Z]\S+$</span><span class='regexp_end'>/</span></span><span class='rparen'>)</span> <span class='rbrace'>}</span>
+    <span class='id identifier rubyid_new_limit_items'>new_limit_items</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_tap'>tap</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_limit_ary'>limit_ary</span><span class='op'>|</span>
+      <span class='id identifier rubyid_limit_items'>limit_items</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_item'>item</span><span class='op'>|</span>
+        <span class='kw'>if</span> <span class='id identifier rubyid_references'>references</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span> <span class='id identifier rubyid_item'>item</span>
+          <span class='comment'># See if the limit is referencing a power domain, this should be extended to clocks
+</span>          <span class='comment'># TODO: Expand limit references to check Origen::Clocks
+</span>          <span class='kw'>if</span> <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_top_level'><span class='object_link'><a href="../../Origen.html#top_level-class_method" title="Origen.top_level (method)">top_level</a></span></span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span> <span class='symbol'>:power_domains</span>
+            <span class='kw'>if</span> <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_top_level'><span class='object_link'><a href="../../Origen.html#top_level-class_method" title="Origen.top_level (method)">top_level</a></span></span><span class='period'>.</span><span class='id identifier rubyid_power_domains'>power_domains</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span> <span class='id identifier rubyid_item'>item</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span>
+              <span class='id identifier rubyid_limit_ary'>limit_ary</span> <span class='op'>&lt;&lt;</span> <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_top_level'><span class='object_link'><a href="../../Origen.html#top_level-class_method" title="Origen.top_level (method)">top_level</a></span></span><span class='period'>.</span><span class='id identifier rubyid_power_domains'>power_domains</span><span class='lparen'>(</span><span class='id identifier rubyid_item'>item</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_nominal_voltage'>nominal_voltage</span>
+              <span class='kw'>next</span>
+            <span class='kw'>end</span>
+          <span class='kw'>end</span>
+          <span class='kw'>if</span> <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_top_level'><span class='object_link'><a href="../../Origen.html#top_level-class_method" title="Origen.top_level (method)">top_level</a></span></span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span> <span class='symbol'>:clocks</span>
+            <span class='kw'>if</span> <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_top_level'><span class='object_link'><a href="../../Origen.html#top_level-class_method" title="Origen.top_level (method)">top_level</a></span></span><span class='period'>.</span><span class='id identifier rubyid_clocks'>clocks</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span> <span class='id identifier rubyid_item'>item</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span>
+              <span class='id identifier rubyid_limit_ary'>limit_ary</span> <span class='op'>&lt;&lt;</span> <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_top_level'><span class='object_link'><a href="../../Origen.html#top_level-class_method" title="Origen.top_level (method)">top_level</a></span></span><span class='period'>.</span><span class='id identifier rubyid_clocks'>clocks</span><span class='lparen'>(</span><span class='id identifier rubyid_item'>item</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_freq_target'>freq_target</span>
+              <span class='kw'>next</span>
+            <span class='kw'>end</span>
+          <span class='kw'>end</span>
+          <span class='id identifier rubyid_limit_ary'>limit_ary</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_item'>item</span>
+        <span class='kw'>else</span>
+          <span class='id identifier rubyid_limit_ary'>limit_ary</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_item'>item</span>
+        <span class='kw'>end</span>
+      <span class='kw'>end</span>
+    <span class='kw'>end</span>
+    <span class='id identifier rubyid_new_limit'>new_limit</span> <span class='op'>=</span> <span class='id identifier rubyid_new_limit_items'>new_limit_items</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> </span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_new_limit_references'>new_limit_references</span> <span class='op'>=</span> <span class='id identifier rubyid_new_limit'>new_limit</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>\:|\s+</span><span class='regexp_end'>/</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_var'>var</span><span class='op'>|</span> <span class='id identifier rubyid_var'>var</span><span class='period'>.</span><span class='id identifier rubyid_match'>match</span><span class='lparen'>(</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>^[a-zA-Z]\S+$</span><span class='regexp_end'>/</span></span><span class='rparen'>)</span> <span class='rbrace'>}</span>
+    <span class='kw'>if</span> <span class='id identifier rubyid_new_limit_references'>new_limit_references</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
+      <span class='id identifier rubyid_result'>result</span> <span class='op'>=</span> <span class='id identifier rubyid_eval'>eval</span><span class='lparen'>(</span><span class='id identifier rubyid_new_limit'>new_limit</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_round'>round</span><span class='lparen'>(</span><span class='int'>4</span><span class='rparen'>)</span>
+    <span class='kw'>else</span>
+      <span class='kw'>return</span> <span class='id identifier rubyid_limit'>limit</span>
+    <span class='kw'>end</span>
+  <span class='kw'>elsif</span> <span class='op'>!</span><span class='op'>!</span><span class='lparen'>(</span><span class='id identifier rubyid_limit'>limit</span><span class='period'>.</span><span class='id identifier rubyid_match'>match</span><span class='lparen'>(</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>^\d+\.\d+$</span><span class='regexp_end'>/</span></span><span class='rparen'>)</span><span class='rparen'>)</span> <span class='op'>||</span> <span class='op'>!</span><span class='op'>!</span><span class='lparen'>(</span><span class='id identifier rubyid_limit'>limit</span><span class='period'>.</span><span class='id identifier rubyid_match'>match</span><span class='lparen'>(</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>^-\d+\.\d+$</span><span class='regexp_end'>/</span></span><span class='rparen'>)</span><span class='rparen'>)</span>
     <span class='id identifier rubyid_result'>result</span> <span class='op'>=</span> <span class='const'>Float</span><span class='lparen'>(</span><span class='id identifier rubyid_limit'>limit</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_round'>round</span><span class='lparen'>(</span><span class='int'>4</span><span class='rparen'>)</span> <span class='kw'>rescue</span> <span class='kw'>false</span> <span class='comment'># Use the same four digits of accuracy as the Spec model
 </span>  <span class='kw'>elsif</span> <span class='op'>!</span><span class='op'>!</span><span class='lparen'>(</span><span class='id identifier rubyid_limit'>limit</span><span class='period'>.</span><span class='id identifier rubyid_match'>match</span><span class='lparen'>(</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>\d+\.\d+\s+\d+\.\d+</span><span class='regexp_end'>/</span></span><span class='rparen'>)</span><span class='rparen'>)</span> <span class='comment'># workaround for multiple specs authoring bug
 </span>    <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_log'><span class='object_link'><a href="../../Origen.html#log-class_method" title="Origen.log (method)">log</a></span></span><span class='period'>.</span><span class='id identifier rubyid_debug'>debug</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Found two numbers without an operator in the limit string &#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_limit'>limit</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39;, choosing the first...</span><span class='tstring_end'>&quot;</span></span>
@@ -535,7 +609,7 @@ value for a spec use target as it will not be checked against pass/fail</p>
 </div>
 
       <div id="footer">
-  Generated on Mon Oct 23 11:13:23 2017 by
+  Generated on Thu Oct 26 09:41:00 2017 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.9 (ruby-2.3.3).
 </div>
