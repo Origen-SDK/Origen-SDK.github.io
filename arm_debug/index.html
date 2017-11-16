@@ -101,7 +101,7 @@
 </nav><div class="row">
   <div class="span12">
 
-    <h1>OrigenARMDebug <span style="font-size: 14px">(1.0.1)</span>
+    <h1>OrigenARMDebug <span style="font-size: 14px">(1.0.2)</span>
 </h1>
 
     <div>    
@@ -120,7 +120,7 @@
 
     <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre>gem <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">origen_arm_debug</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">&gt;= 1.0.1</span><span style="color:#710">"</span></span>
+  <div class="code"><pre>gem <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">origen_arm_debug</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">&gt;= 1.0.2</span><span style="color:#710">"</span></span>
 </pre></div>
 </div>
     </div>
@@ -129,7 +129,7 @@
 
     <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre>spec.add_development_dependency <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">origen_arm_debug</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">&gt;= 1.0.1</span><span style="color:#710">"</span></span>
+  <div class="code"><pre>spec.add_development_dependency <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">origen_arm_debug</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">&gt;= 1.0.2</span><span style="color:#710">"</span></span>
 </pre></div>
 </div>
     </div>
@@ -145,11 +145,6 @@ if your app is a plugin.</p>
     <p>Include the <code>OrigenARMDebug</code> module in your DUT class, then hook it up
 to the Origen register API via
 <code>read_register</code> and <code>write_register</code> methods.</p>
-
-    <p>The <code>OrigenARMDebug</code> module also provides additional methods to use the ARM Debug protocol including:
-accessing device memory, accessing core and floating point registers (cortex M cores only),
-entering/exiting debug mode (cortex M cores only), setting the PC (cortex M cores only)
-and stepping through code (cortex M cores only).</p>
 
     <p>You must also include a compatible physical driver depending on what debug
 interface your device has, one of the following can be used:</p>
@@ -173,7 +168,10 @@ interface your device has, one of the following can be used:</p>
       reg.bits <span style="color:#00D">7</span>..<span style="color:#00D">0</span>,  <span style="color:#A60">:lower_byte</span>
     <span style="color:#080;font-weight:bold">end</span>
     
-    sub_block <span style="color:#A60">:arm_debug</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">OrigenARMDebug::DAP</span><span style="color:#710">"</span></span>, <span style="color:#606">mem_aps</span>: { <span style="color:#606">mem_ap</span>: <span style="color:#00D">0x00000000</span>, <span style="color:#606">mem2_ap</span>: <span style="color:#00D">0x01000000</span> }                           
+    <span style="color:#777"># Simple example using default wait-states and latency:</span>
+    <span style="color:#777">#   mem_ap:  APSEL = 0x00 (base_address[31:24])</span>
+    <span style="color:#777">#   mem2_ap: APSEL = 0x01 (base_address[31:24])</span>
+    sub_block <span style="color:#A60">:arm_debug</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">OrigenARMDebug::DAP</span><span style="color:#710">'</span></span>, <span style="color:#606">mem_aps</span>: { <span style="color:#606">mem_ap</span>: <span style="color:#00D">0x00000000</span>, <span style="color:#606">mem2_ap</span>: <span style="color:#00D">0x01000000</span> }                           
   <span style="color:#080;font-weight:bold">end</span>
 
   <span style="color:#777"># Hook the ARMDebug module into the register API, any register read</span>
@@ -193,7 +191,7 @@ interface your device has, one of the following can be used:</p>
 </div>
     </div>
 
-    <p>You can also access the lower-level API using conventional Origen register transactions:</p>
+    <p>You can access the lower-level API using conventional Origen register transactions:</p>
 
     <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
@@ -205,6 +203,101 @@ arm_debug.sw_dp.select.write!(<span style="color:#00D">0</span>)              <s
 
 <span style="color:#777"># Set the SIZE field of CSW to 0x2 (32-bit transfers) + AddrInc=1</span>
 arm_debug.ahb_ap.csw.write!(<span style="color:#00D">0x23000052</span>)
+</pre></div>
+</div>
+    </div>
+
+    <p>You can also adjust the intermediate wait-states and latency parameters:</p>
+
+    <ul>
+<li><a href="http://origen-sdk.org/arm_debug/api/OrigenARMDebug/AP.html#apreg_access_wait-instance_method">AP.apreg_access_wait</a></li>
+      <li><a href="http://origen-sdk.org/arm_debug/api/OrigenARMDebug/MemAP.html#apmem_access_wait-instance_method">MemAP.apmem_access_wait</a></li>
+      <li><a href="http://origen-sdk.org/arm_debug/api/OrigenARMDebug/MemAP.html#latency-instance_method">MemAP.latency</a></li>
+    </ul>
+<div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#777"># Assuming ahb_ap has been previously defined</span>
+dut.arm_debug.ahb_ap.apmem_access_wait = <span style="color:#00D">16</span>
+dut.arm_debug.ahb_ap.apreg_access_wait = <span style="color:#00D">12</span>
+dut.arm_debug.ahb_ap.latency = <span style="color:#00D">8</span>
+</pre></div>
+</div>
+    </div>
+
+    <div>    
+  <a class="anchor" name="Company_Customization"></a>          
+  <h3><a href="#Company_Customization">Company Customization</a></h3>          
+</div>
+
+    <p>It may be the case that your application needs additional, customized Access Ports (AP) which are allowed but
+not defined by the standard ARM Debug Interface.  The following example shows how you can use the generic AP
+class as a starting point and add extra registers as defined by your specific implementation.</p>
+
+    <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>require <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">origen_arm_debug</span><span style="color:#710">'</span></span>
+<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">ARMDebugCOMPANY</span>
+  <span style="color:#777"># New AP class inherited from generic AP class provided by origen_arm_debug</span>
+  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">CustomAP</span> &lt; <span style="color:#036;font-weight:bold">OrigenARMDebug</span>::<span style="color:#036;font-weight:bold">AP</span>
+    <span style="color:#777"># Initialize AP parameters and registers</span>
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options = {})
+      <span style="color:#080;font-weight:bold">super</span>
+
+      instantiate_registers(options)
+
+      <span style="color:#777"># Standard AP-register latency for most devices.  Can be overriden by</span>
+      <span style="color:#777">#   top-level if necessary</span>
+      <span style="color:#33B">@apreg_access_wait</span> = <span style="color:#00D">8</span>
+    <span style="color:#080;font-weight:bold">end</span>
+
+    <span style="color:#777"># Add example registers associated with CustomAP.</span>
+    <span style="color:#777"># </span>
+    <span style="color:#777"># Custom registers can also be added by ARMDebug owner with add_reg or</span>
+    <span style="color:#777">#   overloading entire instantiate_registers methd</span>
+    <span style="color:#777">#</span>
+    <span style="color:#777">#   Ex:  arm_debug.company_ap.add_reg(:custom_reg_3, 0x08)</span>
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">instantiate_registers</span>(options = {})
+      add_reg <span style="color:#A60">:custom_reg_1</span>, <span style="color:#00D">0x00</span>
+      add_reg <span style="color:#A60">:custom_reg_2</span>, <span style="color:#00D">0x04</span>
+    <span style="color:#080;font-weight:bold">end</span>
+  <span style="color:#080;font-weight:bold">end</span>
+<span style="color:#080;font-weight:bold">end</span>
+
+
+<span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">DUT</span>
+  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">TopLevel</span>
+  include <span style="color:#036;font-weight:bold">ARMDebugCOMPANY</span>
+
+  <span style="color:#777"># Also include the required physical driver, JTAG in this example</span>
+  include <span style="color:#036;font-weight:bold">OrigenJTAG</span>
+
+  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>
+    reg <span style="color:#A60">:myreg</span>, <span style="color:#00D">0x0012</span>, <span style="color:#606">size</span>: <span style="color:#00D">16</span> <span style="color:#080;font-weight:bold">do</span> |reg|
+      reg.bits <span style="color:#00D">15</span>..<span style="color:#00D">8</span>, <span style="color:#A60">:upper_byte</span>
+      reg.bits <span style="color:#00D">7</span>..<span style="color:#00D">0</span>,  <span style="color:#A60">:lower_byte</span>
+    <span style="color:#080;font-weight:bold">end</span>
+    
+    <span style="color:#777"># Some standard AP parameters values</span>
+    std_memap_config = { <span style="color:#606">latency</span>: <span style="color:#00D">16</span>, <span style="color:#606">apreg_access_wait</span>: <span style="color:#00D">8</span>, <span style="color:#606">apmem_access_wait</span>: <span style="color:#00D">8</span>, <span style="color:#606">csw_reset</span>: <span style="color:#00D">0x23000040</span> }  
+
+    <span style="color:#777"># 2 MemAPs using standard parameters (above)</span>
+    mem_aps = {
+      <span style="color:#606">mem_ap_0</span>: { <span style="color:#606">base_address</span>: <span style="color:#00D">0x00000000</span> }.merge(std_memap_config),    <span style="color:#777"># AP Select = 0x00</span>
+      <span style="color:#606">mem_ap_1</span>: { <span style="color:#606">base_address</span>: <span style="color:#00D">0x01000000</span> }.merge(std_memap_config),    <span style="color:#777"># AP Select = 0x01</span>
+    }
+
+    <span style="color:#777"># Add Company-Customized AP class @ APSEL = 0x04</span>
+    custom_ap = {
+      <span style="color:#606">company_ap</span>:  { <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">ARMDebugCOMPANY::CustomAP</span><span style="color:#710">'</span></span>, <span style="color:#606">base_address</span>: <span style="color:#00D">0x04000000</span>, <span style="color:#606">apreg_access_wait</span>: <span style="color:#00D">8</span> }
+    }
+
+    sub_block <span style="color:#A60">:arm_debug</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">OrigenARMDebug::DAP</span><span style="color:#710">'</span></span>,
+                          <span style="color:#606">base_address</span>: <span style="color:#00D">0</span>,
+                          <span style="color:#606">mem_aps</span>: mem_aps,
+                          <span style="color:#606">aps</span>: custom_ap
+  <span style="color:#080;font-weight:bold">end</span>
+<span style="color:#080;font-weight:bold">end</span>
+<span style="color:#036;font-weight:bold">DUT</span>.new.arm_debug.company_ap.custom_reg_1.write!(<span style="color:#00D">0x55AA</span>)
 </pre></div>
 </div>
     </div>
@@ -317,7 +410,7 @@ any changes!</p>
         <p class="pull-left text-muted">
           Generated with the <a href="http://origen-sdk.org">Origen Semiconductor Developer's Kit</a>
         </p>
-        <p class="pull-right text-muted">Origen is released under the terms of the <a href="http://choosealicense.com/licenses/lgpl-3.0/">LGPLv3</a></p>
+        <p class="pull-right text-muted">Origen is released under the terms of the <a href="https://choosealicense.com/licenses/mit/">MIT license</a></p>
       </div>
     </footer>
     <!-- Bootstrap core JavaScript
