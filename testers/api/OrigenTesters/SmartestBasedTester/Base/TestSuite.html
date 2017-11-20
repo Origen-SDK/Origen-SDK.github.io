@@ -6,7 +6,7 @@
 <title>
   Class: OrigenTesters::SmartestBasedTester::Base::TestSuite
   
-    &mdash; Origen Testers 0.13.1
+    &mdash; Origen Testers 0.14.0
   
 </title>
 
@@ -479,15 +479,45 @@ error when called.</p>
 98
 99
 100
-101</pre>
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/origen_testers/smartest_based_tester/base/test_suite.rb', line 88</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_attrs'>attrs</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='ivar'>@name</span> <span class='op'>=</span> <span class='id identifier rubyid_name'>name</span>
-  <span class='kw'>if</span> <span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_flow'>flow</span><span class='period'>.</span><span class='id identifier rubyid_sig'>sig</span>
-    <span class='ivar'>@name</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'>_</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_flow'>flow</span><span class='period'>.</span><span class='id identifier rubyid_sig'>sig</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_unique_test_names'>unique_test_names</span> <span class='op'>==</span> <span class='symbol'>:signature</span>
+    <span class='kw'>if</span> <span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_flow'>flow</span><span class='period'>.</span><span class='id identifier rubyid_sig'>sig</span>
+      <span class='ivar'>@name</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'>_</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_flow'>flow</span><span class='period'>.</span><span class='id identifier rubyid_sig'>sig</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+    <span class='kw'>end</span>
+  <span class='kw'>elsif</span> <span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_unique_test_names'>unique_test_names</span> <span class='op'>==</span> <span class='symbol'>:flowname</span> <span class='op'>||</span> <span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_unique_test_names'>unique_test_names</span> <span class='op'>==</span> <span class='symbol'>:flow_name</span>
+    <span class='ivar'>@name</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'>_</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_flow'>flow</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='period'>.</span><span class='id identifier rubyid_symbolize'>symbolize</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+  <span class='kw'>elsif</span> <span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_unique_test_names'>unique_test_names</span> <span class='op'>==</span> <span class='symbol'>:preflowname</span> <span class='op'>||</span> <span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_unique_test_names'>unique_test_names</span> <span class='op'>==</span> <span class='symbol'>:pre_flow_name</span>
+    <span class='ivar'>@name</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_flow'>flow</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='period'>.</span><span class='id identifier rubyid_symbolize'>symbolize</span><span class='embexpr_end'>}</span><span class='tstring_content'>_</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+  <span class='kw'>elsif</span> <span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_unique_test_names'>unique_test_names</span>
+    <span class='id identifier rubyid_utn_string'>utn_string</span> <span class='op'>=</span> <span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_unique_test_names'>unique_test_names</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span>
+    <span class='kw'>if</span> <span class='id identifier rubyid_utn_string'>utn_string</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>^prepend_</span><span class='regexp_end'>/</span></span>
+      <span class='id identifier rubyid_utn_string'>utn_string</span> <span class='op'>=</span> <span class='id identifier rubyid_utn_string'>utn_string</span><span class='period'>.</span><span class='id identifier rubyid_gsub'>gsub</span><span class='lparen'>(</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>^prepend_</span><span class='regexp_end'>/</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+      <span class='ivar'>@name</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_utn_string'>utn_string</span><span class='embexpr_end'>}</span><span class='tstring_content'>_</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+    <span class='kw'>else</span>
+      <span class='id identifier rubyid_utn_string'>utn_string</span> <span class='op'>=</span> <span class='id identifier rubyid_utn_string'>utn_string</span><span class='period'>.</span><span class='id identifier rubyid_gsub'>gsub</span><span class='lparen'>(</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>^append_</span><span class='regexp_end'>/</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+      <span class='ivar'>@name</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'>_</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_utn_string'>utn_string</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+    <span class='kw'>end</span>
   <span class='kw'>end</span>
   <span class='comment'># Set the defaults
 </span>  <span class='const'><span class='object_link'><a href="#DEFAULTS-constant" title="OrigenTesters::SmartestBasedTester::Base::TestSuite::DEFAULTS (constant)">DEFAULTS</a></span></span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_k'>k</span><span class='comma'>,</span> <span class='id identifier rubyid_v'>v</span><span class='op'>|</span>
@@ -526,16 +556,16 @@ error when called.</p>
       <pre class="lines">
 
 
-139
-140
-141
-142
-143
-144
-145</pre>
+154
+155
+156
+157
+158
+159
+160</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/smartest_based_tester/base/test_suite.rb', line 139</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/smartest_based_tester/base/test_suite.rb', line 154</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_method_missing'>method_missing</span><span class='lparen'>(</span><span class='id identifier rubyid_method'>method</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_test_method'>test_method</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_test_method'>test_method</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='id identifier rubyid_method'>method</span><span class='rparen'>)</span>
@@ -619,12 +649,12 @@ error when called.</p>
       <pre class="lines">
 
 
-108
-109
-110</pre>
+123
+124
+125</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/smartest_based_tester/base/test_suite.rb', line 108</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/smartest_based_tester/base/test_suite.rb', line 123</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_inspect'>inspect</span>
   <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>&lt;TestSuite: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'>&gt;</span><span class='tstring_end'>&quot;</span></span>
@@ -649,12 +679,12 @@ error when called.</p>
       <pre class="lines">
 
 
-151
-152
-153</pre>
+166
+167
+168</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/smartest_based_tester/base/test_suite.rb', line 151</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/smartest_based_tester/base/test_suite.rb', line 166</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_interface'>interface</span>
   <span class='const'><span class='object_link'><a href="../../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_interface'>interface</span>
@@ -679,50 +709,50 @@ error when called.</p>
       <pre class="lines">
 
 
-117
-118
-119
-120
-121
-122
-123
-124
-125
-126
-127
-128
-129
-130
-131
 132
 133
 134
 135
 136
-137</pre>
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/smartest_based_tester/base/test_suite.rb', line 117</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/smartest_based_tester/base/test_suite.rb', line 132</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_lines'>lines</span>
   <span class='id identifier rubyid_l'>l</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
-  <span class='id identifier rubyid_l'>l</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>  override = 1;</span><span class='tstring_end'>&#39;</span></span>
-  <span class='id identifier rubyid_l'>l</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'> override_tim_equ_set = </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_wrap_if_string'>wrap_if_string</span><span class='lparen'>(</span><span class='id identifier rubyid_timing_equation'>timing_equation</span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'>;</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_timing_equation'>timing_equation</span>
-  <span class='id identifier rubyid_l'>l</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'> override_lev_equ_set = </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_wrap_if_string'>wrap_if_string</span><span class='lparen'>(</span><span class='id identifier rubyid_level_equation'>level_equation</span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'>;</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_level_equation'>level_equation</span>
-  <span class='id identifier rubyid_l'>l</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'> override_tim_spec_set = </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_wrap_if_string'>wrap_if_string</span><span class='lparen'>(</span><span class='id identifier rubyid_timing_spec'>timing_spec</span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'>;</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_timing_spec'>timing_spec</span>
-  <span class='id identifier rubyid_l'>l</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'> override_lev_spec_set = </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_wrap_if_string'>wrap_if_string</span><span class='lparen'>(</span><span class='id identifier rubyid_level_spec'>level_spec</span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'>;</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_level_spec'>level_spec</span>
-  <span class='id identifier rubyid_l'>l</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'> override_anaset = </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_wrap_if_string'>wrap_if_string</span><span class='lparen'>(</span><span class='id identifier rubyid_analog_set'>analog_set</span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'>;</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_analog_set'>analog_set</span>
-  <span class='id identifier rubyid_l'>l</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'> override_timset = </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_wrap_if_string'>wrap_if_string</span><span class='lparen'>(</span><span class='id identifier rubyid_timing_set'>timing_set</span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'>;</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_timing_set'>timing_set</span>
-  <span class='id identifier rubyid_l'>l</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'> override_levset = </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_wrap_if_string'>wrap_if_string</span><span class='lparen'>(</span><span class='id identifier rubyid_level_set'>level_set</span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'>;</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_level_set'>level_set</span>
-  <span class='id identifier rubyid_l'>l</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'> override_seqlbl = </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_wrap_if_string'>wrap_if_string</span><span class='lparen'>(</span><span class='id identifier rubyid_pattern'>pattern</span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'>;</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_pattern'>pattern</span>
-  <span class='id identifier rubyid_l'>l</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'> override_test_number = </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_test_number'>test_number</span><span class='embexpr_end'>}</span><span class='tstring_content'>;</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_test_number'>test_number</span>
-  <span class='id identifier rubyid_l'>l</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'> override_testf = </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_test_method'>test_method</span><span class='period'>.</span><span class='id identifier rubyid_id'>id</span><span class='embexpr_end'>}</span><span class='tstring_content'>;</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_test_method'>test_method</span>
-  <span class='id identifier rubyid_l'>l</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>  test_level = </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_test_level'>test_level</span><span class='embexpr_end'>}</span><span class='tstring_content'>;</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_test_level'>test_level</span>
+  <span class='id identifier rubyid_l'>l</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>  comment = \&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_comment'>comment</span><span class='embexpr_end'>}</span><span class='tstring_content'>\&quot;;</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_comment'>comment</span>
   <span class='id identifier rubyid_l'>l</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>  ffc_on_fail = </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_wrap_if_string'>wrap_if_string</span><span class='lparen'>(</span><span class='id identifier rubyid_log_first'>log_first</span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'>;</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_log_first'>log_first</span>
-  <span class='id identifier rubyid_l'>l</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'> comment = \&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_comment'>comment</span><span class='embexpr_end'>}</span><span class='tstring_content'>\&quot;;</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_comment'>comment</span>
-  <span class='id identifier rubyid_l'>l</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>local_flags  = </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_flags'>flags</span><span class='embexpr_end'>}</span><span class='tstring_content'>;</span><span class='tstring_end'>&quot;</span></span>
-  <span class='id identifier rubyid_l'>l</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> site_match = 2;</span><span class='tstring_end'>&#39;</span></span>
-  <span class='id identifier rubyid_l'>l</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> site_control = &quot;parallel:&quot;;</span><span class='tstring_end'>&#39;</span></span>
+  <span class='id identifier rubyid_l'>l</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>  local_flags = </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_flags'>flags</span><span class='embexpr_end'>}</span><span class='tstring_content'>;</span><span class='tstring_end'>&quot;</span></span>
+  <span class='id identifier rubyid_l'>l</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>  override = 1;</span><span class='tstring_end'>&#39;</span></span>
+  <span class='id identifier rubyid_l'>l</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>  override_anaset = </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_wrap_if_string'>wrap_if_string</span><span class='lparen'>(</span><span class='id identifier rubyid_analog_set'>analog_set</span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'>;</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_analog_set'>analog_set</span>
+  <span class='id identifier rubyid_l'>l</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>  override_lev_equ_set = </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_wrap_if_string'>wrap_if_string</span><span class='lparen'>(</span><span class='id identifier rubyid_level_equation'>level_equation</span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'>;</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_level_equation'>level_equation</span>
+  <span class='id identifier rubyid_l'>l</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>  override_lev_spec_set = </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_wrap_if_string'>wrap_if_string</span><span class='lparen'>(</span><span class='id identifier rubyid_level_spec'>level_spec</span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'>;</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_level_spec'>level_spec</span>
+  <span class='id identifier rubyid_l'>l</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>  override_levset = </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_wrap_if_string'>wrap_if_string</span><span class='lparen'>(</span><span class='id identifier rubyid_level_set'>level_set</span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'>;</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_level_set'>level_set</span>
+  <span class='id identifier rubyid_l'>l</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>  override_seqlbl = </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_wrap_if_string'>wrap_if_string</span><span class='lparen'>(</span><span class='id identifier rubyid_pattern'>pattern</span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'>;</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_pattern'>pattern</span>
+  <span class='id identifier rubyid_l'>l</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>  override_test_number = </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_test_number'>test_number</span><span class='embexpr_end'>}</span><span class='tstring_content'>;</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_test_number'>test_number</span>
+  <span class='id identifier rubyid_l'>l</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>  override_testf = </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_test_method'>test_method</span><span class='period'>.</span><span class='id identifier rubyid_id'>id</span><span class='embexpr_end'>}</span><span class='tstring_content'>;</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_test_method'>test_method</span>
+  <span class='id identifier rubyid_l'>l</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>  override_tim_equ_set = </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_wrap_if_string'>wrap_if_string</span><span class='lparen'>(</span><span class='id identifier rubyid_timing_equation'>timing_equation</span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'>;</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_timing_equation'>timing_equation</span>
+  <span class='id identifier rubyid_l'>l</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>  override_tim_spec_set = </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_wrap_if_string'>wrap_if_string</span><span class='lparen'>(</span><span class='id identifier rubyid_timing_spec'>timing_spec</span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'>;</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_timing_spec'>timing_spec</span>
+  <span class='id identifier rubyid_l'>l</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>  override_timset = </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_wrap_if_string'>wrap_if_string</span><span class='lparen'>(</span><span class='id identifier rubyid_timing_set'>timing_set</span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'>;</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_timing_set'>timing_set</span>
+  <span class='id identifier rubyid_l'>l</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>  site_control = &quot;parallel:&quot;;</span><span class='tstring_end'>&#39;</span></span>
+  <span class='id identifier rubyid_l'>l</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>  site_match = 2;</span><span class='tstring_end'>&#39;</span></span>
+  <span class='id identifier rubyid_l'>l</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>  test_level = </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_test_level'>test_level</span><span class='embexpr_end'>}</span><span class='tstring_content'>;</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_test_level'>test_level</span>
   <span class='id identifier rubyid_l'>l</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -757,12 +787,12 @@ error when called</p>
       <pre class="lines">
 
 
-113
-114
-115</pre>
+128
+129
+130</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/smartest_based_tester/base/test_suite.rb', line 113</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/smartest_based_tester/base/test_suite.rb', line 128</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_name='>name=</span><span class='lparen'>(</span><span class='id identifier rubyid_val'>val</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_fail'>fail</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Once assigned the name of a test suite cannot be changed!</span><span class='tstring_end'>&#39;</span></span>
@@ -787,13 +817,13 @@ error when called</p>
       <pre class="lines">
 
 
-103
-104
-105
-106</pre>
+118
+119
+120
+121</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/smartest_based_tester/base/test_suite.rb', line 103</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/smartest_based_tester/base/test_suite.rb', line 118</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_pattern='>pattern=</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
   <span class='const'><span class='object_link'><a href="../../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_record_pattern_reference'>record_pattern_reference</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_name'>name</span>
@@ -841,12 +871,12 @@ error when called</p>
       <pre class="lines">
 
 
-147
-148
-149</pre>
+162
+163
+164</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/smartest_based_tester/base/test_suite.rb', line 147</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/smartest_based_tester/base/test_suite.rb', line 162</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='id identifier rubyid_method'>method</span><span class='rparen'>)</span>
   <span class='lparen'>(</span><span class='id identifier rubyid_test_method'>test_method</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_test_method'>test_method</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='id identifier rubyid_method'>method</span><span class='rparen'>)</span><span class='rparen'>)</span> <span class='op'>||</span> <span class='kw'>super</span>
@@ -871,12 +901,12 @@ error when called</p>
       <pre class="lines">
 
 
-155
-156
-157</pre>
+170
+171
+172</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/smartest_based_tester/base/test_suite.rb', line 155</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/smartest_based_tester/base/test_suite.rb', line 170</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_to_meta'>to_meta</span>
   <span class='id identifier rubyid_meta'>meta</span> <span class='op'>||</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
@@ -891,9 +921,9 @@ error when called</p>
 </div>
 
       <div id="footer">
-  Generated on Tue Oct  3 09:11:51 2017 by
+  Generated on Mon Nov 20 13:31:44 2017 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.9 (ruby-2.3.0).
+  0.9.9 (ruby-2.3.3).
 </div>
 
     </div>
