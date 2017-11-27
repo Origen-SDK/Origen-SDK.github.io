@@ -6,7 +6,7 @@
 <title>
   Module: OrigenTesters::PatternCompilers
   
-    &mdash; Origen Testers 0.14.0
+    &mdash; Origen Testers 0.15.0
   
 </title>
 
@@ -79,7 +79,7 @@
   <dl>
     <dt>Defined in:</dt>
     <dd>lib/origen_testers/pattern_compilers.rb<span class="defines">,<br />
-  lib/origen_testers/pattern_compilers/job.rb,<br /> lib/origen_testers/pattern_compilers/assembler.rb,<br /> lib/origen_testers/pattern_compilers/ultraflex_pattern_compiler.rb</span>
+  lib/origen_testers/pattern_compilers/job.rb,<br /> lib/origen_testers/pattern_compilers/base.rb,<br /> lib/origen_testers/pattern_compilers/j750.rb,<br /> lib/origen_testers/pattern_compilers/v93k.rb,<br /> lib/origen_testers/pattern_compilers/runner.rb,<br /> lib/origen_testers/pattern_compilers/assembler.rb,<br /> lib/origen_testers/pattern_compilers/ultraflex.rb,<br /> lib/origen_testers/pattern_compilers/igxl_based.rb,<br /> lib/origen_testers/pattern_compilers/v93k/digcap.rb,<br /> lib/origen_testers/pattern_compilers/v93k/multiport.rb</span>
 </dd>
   </dl>
   
@@ -89,9 +89,11 @@
 <p class="children">
   
     
+      <strong class="modules">Modules:</strong> <span class='object_link'><a href="PatternCompilers/Runner.html" title="OrigenTesters::PatternCompilers::Runner (module)">Runner</a></span>
+    
   
     
-      <strong class="classes">Classes:</strong> <span class='object_link'><a href="PatternCompilers/Job.html" title="OrigenTesters::PatternCompilers::Job (class)">Job</a></span>, <span class='object_link'><a href="PatternCompilers/UltraFlexPatternCompiler.html" title="OrigenTesters::PatternCompilers::UltraFlexPatternCompiler (class)">UltraFlexPatternCompiler</a></span>
+      <strong class="classes">Classes:</strong> <span class='object_link'><a href="PatternCompilers/BasePatternCompiler.html" title="OrigenTesters::PatternCompilers::BasePatternCompiler (class)">BasePatternCompiler</a></span>, <span class='object_link'><a href="PatternCompilers/IGXLBasedPatternCompiler.html" title="OrigenTesters::PatternCompilers::IGXLBasedPatternCompiler (class)">IGXLBasedPatternCompiler</a></span>, <span class='object_link'><a href="PatternCompilers/J750PatternCompiler.html" title="OrigenTesters::PatternCompilers::J750PatternCompiler (class)">J750PatternCompiler</a></span>, <span class='object_link'><a href="PatternCompilers/Job.html" title="OrigenTesters::PatternCompilers::Job (class)">Job</a></span>, <span class='object_link'><a href="PatternCompilers/UltraFLEXPatternCompiler.html" title="OrigenTesters::PatternCompilers::UltraFLEXPatternCompiler (class)">UltraFLEXPatternCompiler</a></span>, <span class='object_link'><a href="PatternCompilers/V93KPatternCompiler.html" title="OrigenTesters::PatternCompilers::V93KPatternCompiler (class)">V93KPatternCompiler</a></span>
     
   
 </p>
@@ -102,39 +104,11 @@
       <dt id="PLATFORMS-constant" class="">PLATFORMS =
         
       </dt>
-      <dd><pre class="code"><span class='lbracket'>[</span><span class='symbol'>:ultraflex</span><span class='rbracket'>]</span></pre></dd>
-    
-      <dt id="LINUX_PATTERN_COMPILER-constant" class="">LINUX_PATTERN_COMPILER =
-        <div class="docstring">
-  <div class="discussion">
-    
-<p>Linux compiler executable path</p>
-
-
-  </div>
-</div>
-<div class="tags">
-  
-
-</div>
-      </dt>
-      <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'><span class='object_link'><a href="../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_root!'>root!</span><span class='embexpr_end'>}</span><span class='tstring_content'>/bin/latest/bin/atpcompiler</span><span class='tstring_end'>&quot;</span></span></pre></dd>
-    
-      <dt id="WINDOWS_PATTERN_COMPILER-constant" class="">WINDOWS_PATTERN_COMPILER =
-        <div class="docstring">
-  <div class="discussion">
-    
-<p>Windows compiler executable path</p>
-
-
-  </div>
-</div>
-<div class="tags">
-  
-
-</div>
-      </dt>
-      <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'>ENV</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>IGXLROOT</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='embexpr_end'>}</span><span class='tstring_content'>/bin/apc.exe</span><span class='tstring_end'>&quot;</span></span></pre></dd>
+      <dd><pre class="code"><span class='lbrace'>{</span>
+  <span class='label'>ultraflex:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>UltraFLEX</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+  <span class='label'>j750:</span>      <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>J750</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+  <span class='label'>v93k:</span>      <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>V93K</span><span class='tstring_end'>&#39;</span></span>
+<span class='rbrace'>}</span></pre></dd>
     
   </dl>
 
@@ -155,11 +129,9 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#add_pattern_compiler-instance_method" title="#add_pattern_compiler (instance method)">#<strong>add_pattern_compiler</strong>(id, platform, options = {})  &#x21d2; Object </a>
+      <a href="#add_pattern_compiler-instance_method" title="#add_pattern_compiler (instance method)">#<strong>add_pattern_compiler</strong>(id, plat, options = {})  &#x21d2; Object </a>
     
 
-    
-      (also: #add_compiler)
     
   </span>
   
@@ -181,11 +153,33 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#delete_pattern_compiler-instance_method" title="#delete_pattern_compiler (instance method)">#<strong>delete_pattern_compiler</strong>(id)  &#x21d2; Object </a>
+      <a href="#default_pattern_compiler-instance_method" title="#default_pattern_compiler (instance method)">#<strong>default_pattern_compiler</strong>(p = platform)  &#x21d2; Object </a>
     
 
     
-      (also: #delete_compiler)
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Get the default pattern compiler for the current of speficied platform.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#delete_pattern_compiler-instance_method" title="#delete_pattern_compiler (instance method)">#<strong>delete_pattern_compiler</strong>(id, p = platform)  &#x21d2; Object </a>
+    
+
     
   </span>
   
@@ -211,8 +205,6 @@
     
 
     
-      (also: #delete_compilers)
-    
   </span>
   
   
@@ -224,7 +216,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Delete pattern compiler instances.</p>
+<p>Delete all pattern compiler instances for a given platform.</p>
 </div></span>
   
 </li>
@@ -236,8 +228,6 @@
       <a href="#pattern_compiler_instances-instance_method" title="#pattern_compiler_instances (instance method)">#<strong>pattern_compiler_instances</strong>(p = platform)  &#x21d2; Object </a>
     
 
-    
-      (also: #compiler_instances)
     
   </span>
   
@@ -260,11 +250,9 @@ selected tester platform.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#pattern_compiler_options-instance_method" title="#pattern_compiler_options (instance method)">#<strong>pattern_compiler_options</strong>  &#x21d2; Object </a>
+      <a href="#pattern_compiler_options-instance_method" title="#pattern_compiler_options (instance method)">#<strong>pattern_compiler_options</strong>(p = platform)  &#x21d2; Object </a>
     
 
-    
-      (also: #compiler_options)
     
   </span>
   
@@ -276,7 +264,9 @@ selected tester platform.</p>
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>Execute the compiler with &#39;help&#39; switch.</p>
+</div></span>
   
 </li>
 
@@ -288,8 +278,6 @@ selected tester platform.</p>
     
 
     
-      (also: #compiler_platforms)
-    
   </span>
   
   
@@ -300,7 +288,9 @@ selected tester platform.</p>
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>All platforms that have supported pattern compilers (returns Array).</p>
+</div></span>
   
 </li>
 
@@ -308,11 +298,9 @@ selected tester platform.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#pattern_compiler_supported%3F-instance_method" title="#pattern_compiler_supported? (instance method)">#<strong>pattern_compiler_supported?</strong>  &#x21d2; Boolean </a>
+      <a href="#pattern_compiler_supported%3F-instance_method" title="#pattern_compiler_supported? (instance method)">#<strong>pattern_compiler_supported?</strong>(p = platform)  &#x21d2; Boolean </a>
     
 
-    
-      (also: #compiler_supported?)
     
   </span>
   
@@ -334,11 +322,9 @@ selected tester platform.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#pattern_compiler_version-instance_method" title="#pattern_compiler_version (instance method)">#<strong>pattern_compiler_version</strong>  &#x21d2; Object </a>
+      <a href="#pattern_compiler_version-instance_method" title="#pattern_compiler_version (instance method)">#<strong>pattern_compiler_version</strong>(p = platform)  &#x21d2; Object </a>
     
 
-    
-      (also: #compiler_version)
     
   </span>
   
@@ -350,7 +336,9 @@ selected tester platform.</p>
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>Execute the compiler with &#39;version&#39; swtich.</p>
+</div></span>
   
 </li>
 
@@ -358,11 +346,9 @@ selected tester platform.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#pattern_compilers-instance_method" title="#pattern_compilers (instance method)">#<strong>pattern_compilers</strong>(id = nil)  &#x21d2; Object </a>
+      <a href="#pattern_compilers-instance_method" title="#pattern_compilers (instance method)">#<strong>pattern_compilers</strong>(id = nil, options = {})  &#x21d2; Object </a>
     
 
-    
-      (also: #compilers)
     
   </span>
   
@@ -382,6 +368,79 @@ tester platform.</p>
 </li>
 
       
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#platform_compiler-instance_method" title="#platform_compiler (instance method)">#<strong>platform_compiler</strong>(p = platform)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Return the Compiler Class of the current or specified platform.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#set_default_pattern_compiler-instance_method" title="#set_default_pattern_compiler (instance method)">#<strong>set_default_pattern_compiler</strong>(id, p = platform)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Set a (already created) pattern compiler as the default for current or
+specified platform.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#verify_unique_platform_id-instance_method" title="#verify_unique_platform_id (instance method)">#<strong>verify_unique_platform_id</strong>(id, platform, options = {})  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Check compiler instance name is unique for given platform.</p>
+</div></span>
+  
+</li>
+
+      
     </ul>
   
 
@@ -394,13 +453,9 @@ tester platform.</p>
       <div class="method_details first">
   <h3 class="signature first" id="add_pattern_compiler-instance_method">
   
-    #<strong>add_pattern_compiler</strong>(id, platform, options = {})  &#x21d2; <tt>Object</tt> 
+    #<strong>add_pattern_compiler</strong>(id, plat, options = {})  &#x21d2; <tt>Object</tt> 
   
 
-  
-    <span class="aliases">Also known as:
-    <span class="names"><span id='add_compiler-instance_method'>add_compiler</span></span>
-    </span>
   
 
   
@@ -432,24 +487,63 @@ tester platform.</p>
 56
 57
 58
-59
-60</pre>
+59</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/origen_testers/pattern_compilers.rb', line 48</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_add_pattern_compiler'>add_pattern_compiler</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_platform'>platform</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_add_pattern_compiler'>add_pattern_compiler</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_plat'>plat</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_pattern_compilers'>pattern_compilers</span>
   <span class='id identifier rubyid_id'>id</span> <span class='op'>=</span> <span class='id identifier rubyid_id'>id</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span>
-  <span class='id identifier rubyid_platform'>platform</span> <span class='op'>=</span> <span class='id identifier rubyid_platform'>platform</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span>
+  <span class='id identifier rubyid_plat'>plat</span> <span class='op'>=</span> <span class='id identifier rubyid_plat'>plat</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span>
   <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:location</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:location</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span> <span class='kw'>unless</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:location</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
-  <span class='kw'>case</span> <span class='id identifier rubyid_platform'>platform</span>
-  <span class='kw'>when</span> <span class='symbol'>:ultraflex</span>
-    <span class='id identifier rubyid_fail'>fail</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Compiler ID </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_id'>id</span><span class='embexpr_end'>}</span><span class='tstring_content'> for platform </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_platform'>platform</span><span class='embexpr_end'>}</span><span class='tstring_content'> already exists!  Pick another name, delete the compiler, or clear all compilers</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='ivar'>@pattern_compilers</span><span class='lbracket'>[</span><span class='id identifier rubyid_platform'>platform</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_keys'>keys</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span> <span class='id identifier rubyid_id'>id</span>
-    <span class='ivar'>@pattern_compilers</span><span class='lbracket'>[</span><span class='id identifier rubyid_platform'>platform</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='id identifier rubyid_id'>id</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="PatternCompilers/UltraFlexPatternCompiler.html" title="OrigenTesters::PatternCompilers::UltraFlexPatternCompiler (class)">UltraFlexPatternCompiler</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="PatternCompilers/UltraFlexPatternCompiler.html#initialize-instance_method" title="OrigenTesters::PatternCompilers::UltraFlexPatternCompiler#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
-  <span class='kw'>else</span>
-    <span class='id identifier rubyid_fail'>fail</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Platform </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_platform'>platform</span><span class='embexpr_end'>}</span><span class='tstring_content'> is not valid, please choose from </span><span class='embexpr_beg'>#{</span><span class='const'><span class='object_link'><a href="#PLATFORMS-constant" title="OrigenTesters::PatternCompilers::PLATFORMS (constant)">PLATFORMS</a></span></span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>, </span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
-  <span class='kw'>end</span>
+
+  <span class='id identifier rubyid_verify_unique_platform_id'>verify_unique_platform_id</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_plat'>plat</span><span class='rparen'>)</span>    <span class='comment'># do not allow duplicate ids for a given platform
+</span>  <span class='ivar'>@pattern_compilers</span><span class='lbracket'>[</span><span class='id identifier rubyid_plat'>plat</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='id identifier rubyid_id'>id</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_platform_compiler'>platform_compiler</span><span class='lparen'>(</span><span class='id identifier rubyid_plat'>plat</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
+
+  <span class='id identifier rubyid_default'>default</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:default</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='kw'>false</span>
+  <span class='ivar'>@default_pattern_compiler</span><span class='lbracket'>[</span><span class='id identifier rubyid_plat'>plat</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_id'>id</span> <span class='kw'>if</span> <span class='id identifier rubyid_default'>default</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="default_pattern_compiler-instance_method">
+  
+    #<strong>default_pattern_compiler</strong>(p = platform)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Get the default pattern compiler for the current of speficied platform</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+63
+64
+65</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/pattern_compilers.rb', line 63</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_default_pattern_compiler'>default_pattern_compiler</span><span class='lparen'>(</span><span class='id identifier rubyid_p'>p</span> <span class='op'>=</span> <span class='id identifier rubyid_platform'>platform</span><span class='rparen'>)</span>
+  <span class='ivar'>@default_pattern_compiler</span><span class='lbracket'>[</span><span class='id identifier rubyid_p'>p</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span><span class='rbracket'>]</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -459,13 +553,9 @@ tester platform.</p>
       <div class="method_details ">
   <h3 class="signature " id="delete_pattern_compiler-instance_method">
   
-    #<strong>delete_pattern_compiler</strong>(id)  &#x21d2; <tt>Object</tt> 
+    #<strong>delete_pattern_compiler</strong>(id, p = platform)  &#x21d2; <tt>Object</tt> 
   
 
-  
-    <span class="aliases">Also known as:
-    <span class="names"><span id='delete_compiler-instance_method'>delete_compiler</span></span>
-    </span>
   
 
   
@@ -486,15 +576,15 @@ tester platform.</p>
       <pre class="lines">
 
 
-42
-43
-44</pre>
+86
+87
+88</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/pattern_compilers.rb', line 42</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/pattern_compilers.rb', line 86</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_delete_pattern_compiler'>delete_pattern_compiler</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='rparen'>)</span>
-  <span class='ivar'>@pattern_compilers</span><span class='lbracket'>[</span><span class='id identifier rubyid_platform'>platform</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_delete'>delete</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_delete_pattern_compiler'>delete_pattern_compiler</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_p'>p</span> <span class='op'>=</span> <span class='id identifier rubyid_platform'>platform</span><span class='rparen'>)</span>
+  <span class='ivar'>@pattern_compilers</span><span class='lbracket'>[</span><span class='id identifier rubyid_p'>p</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_delete'>delete</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -508,17 +598,15 @@ tester platform.</p>
   
 
   
-    <span class="aliases">Also known as:
-    <span class="names"><span id='delete_compilers-instance_method'>delete_compilers</span></span>
-    </span>
-  
 
   
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Delete pattern compiler instances.  If no argument default to current
-platform</p>
+<p>Delete all pattern compiler instances for a given platform.  If no</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_argument'>argument</span> <span class='id identifier rubyid_default'>default</span> <span class='id identifier rubyid_to'>to</span> <span class='id identifier rubyid_current'>current</span> <span class='id identifier rubyid_platform'>platform</span>
+</code></pre>
 
 
   </div>
@@ -532,12 +620,12 @@ platform</p>
       <pre class="lines">
 
 
-36
-37
-38</pre>
+80
+81
+82</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/pattern_compilers.rb', line 36</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/pattern_compilers.rb', line 80</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_delete_pattern_compilers'>delete_pattern_compilers</span><span class='lparen'>(</span><span class='id identifier rubyid_p'>p</span> <span class='op'>=</span> <span class='id identifier rubyid_platform'>platform</span><span class='rparen'>)</span>
   <span class='ivar'>@pattern_compilers</span><span class='lbracket'>[</span><span class='id identifier rubyid_p'>p</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_delete_if'>delete_if</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_k'>k</span><span class='comma'>,</span> <span class='id identifier rubyid_v'>v</span><span class='op'>|</span> <span class='kw'>true</span> <span class='rbrace'>}</span>
@@ -553,10 +641,6 @@ platform</p>
     #<strong>pattern_compiler_instances</strong>(p = platform)  &#x21d2; <tt>Object</tt> 
   
 
-  
-    <span class="aliases">Also known as:
-    <span class="names"><span id='compiler_instances-instance_method'>compiler_instances</span></span>
-    </span>
   
 
   
@@ -578,19 +662,23 @@ selected tester platform.</p>
       <pre class="lines">
 
 
-65
-66
-67
-68
-69
-70</pre>
+102
+103
+104
+105
+106
+107
+108
+109</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/pattern_compilers.rb', line 65</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/pattern_compilers.rb', line 102</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_pattern_compiler_instances'>pattern_compiler_instances</span><span class='lparen'>(</span><span class='id identifier rubyid_p'>p</span> <span class='op'>=</span> <span class='id identifier rubyid_platform'>platform</span><span class='rparen'>)</span>
   <span class='comment'># Check if nil which means no tester is defined so ask user to supply it
-</span>  <span class='id identifier rubyid_fail'>fail</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>No tester platform defined so supply one of the following as an argument: </span><span class='embexpr_beg'>#{</span><span class='const'><span class='object_link'><a href="#PLATFORMS-constant" title="OrigenTesters::PatternCompilers::PLATFORMS (constant)">PLATFORMS</a></span></span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>, </span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_p'>p</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+</span>  <span class='kw'>if</span> <span class='id identifier rubyid_p'>p</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+    <span class='id identifier rubyid_fail'>fail</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>No tester platform defined, supply one of the following as an argument: </span><span class='embexpr_beg'>#{</span><span class='const'><span class='object_link'><a href="#PLATFORMS-constant" title="OrigenTesters::PatternCompilers::PLATFORMS (constant)">PLATFORMS</a></span></span><span class='period'>.</span><span class='id identifier rubyid_keys'>keys</span><span class='period'>.</span><span class='id identifier rubyid_sort'>sort</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>, </span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+  <span class='kw'>end</span>
   <span class='id identifier rubyid_p'>p</span> <span class='op'>=</span> <span class='id identifier rubyid_p'>p</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span>
   <span class='ivar'>@pattern_compilers</span><span class='lbracket'>[</span><span class='id identifier rubyid_p'>p</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_keys'>keys</span>
 <span class='kw'>end</span></pre>
@@ -602,35 +690,38 @@ selected tester platform.</p>
       <div class="method_details ">
   <h3 class="signature " id="pattern_compiler_options-instance_method">
   
-    #<strong>pattern_compiler_options</strong>  &#x21d2; <tt>Object</tt> 
+    #<strong>pattern_compiler_options</strong>(p = platform)  &#x21d2; <tt>Object</tt> 
   
 
   
-    <span class="aliases">Also known as:
-    <span class="names"><span id='compiler_options-instance_method'>compiler_options</span></span>
-    </span>
-  
 
   
-</h3><table class="source_code">
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Execute the compiler with &#39;help&#39; switch</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-73
-74
-75
-76
-77</pre>
+122
+123
+124</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/pattern_compilers.rb', line 73</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/pattern_compilers.rb', line 122</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_pattern_compiler_options'>pattern_compiler_options</span>
-  <span class='id identifier rubyid_cmd'>cmd</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span>
-  <span class='id identifier rubyid_running_on_windows?'>running_on_windows?</span> <span class='op'>?</span> <span class='id identifier rubyid_cmd'>cmd</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'><span class='object_link'><a href="#WINDOWS_PATTERN_COMPILER-constant" title="OrigenTesters::PatternCompilers::WINDOWS_PATTERN_COMPILER (constant)">WINDOWS_PATTERN_COMPILER</a></span></span><span class='embexpr_end'>}</span><span class='tstring_content'> -help</span><span class='tstring_end'>&quot;</span></span> <span class='op'>:</span> <span class='id identifier rubyid_cmd'>cmd</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'><span class='object_link'><a href="#LINUX_PATTERN_COMPILER-constant" title="OrigenTesters::PatternCompilers::LINUX_PATTERN_COMPILER (constant)">LINUX_PATTERN_COMPILER</a></span></span><span class='embexpr_end'>}</span><span class='tstring_content'> -help</span><span class='tstring_end'>&quot;</span></span>
-  <span class='id identifier rubyid_system'>system</span> <span class='id identifier rubyid_cmd'>cmd</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_pattern_compiler_options'>pattern_compiler_options</span><span class='lparen'>(</span><span class='id identifier rubyid_p'>p</span> <span class='op'>=</span> <span class='id identifier rubyid_platform'>platform</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_system'>system</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_platform_compiler'>platform_compiler</span><span class='lparen'>(</span><span class='id identifier rubyid_p'>p</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_compiler_options'>compiler_options</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -644,27 +735,34 @@ selected tester platform.</p>
   
 
   
-    <span class="aliases">Also known as:
-    <span class="names"><span id='compiler_platforms-instance_method'>compiler_platforms</span></span>
-    </span>
-  
 
   
-</h3><table class="source_code">
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>All platforms that have supported pattern compilers (returns Array)</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-30
-31
-32</pre>
+73
+74
+75</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/pattern_compilers.rb', line 30</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/pattern_compilers.rb', line 73</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_pattern_compiler_platforms'>pattern_compiler_platforms</span>
-  <span class='const'><span class='object_link'><a href="#PLATFORMS-constant" title="OrigenTesters::PatternCompilers::PLATFORMS (constant)">PLATFORMS</a></span></span>
+  <span class='const'><span class='object_link'><a href="#PLATFORMS-constant" title="OrigenTesters::PatternCompilers::PLATFORMS (constant)">PLATFORMS</a></span></span><span class='period'>.</span><span class='id identifier rubyid_keys'>keys</span><span class='period'>.</span><span class='id identifier rubyid_sort'>sort</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -674,13 +772,9 @@ selected tester platform.</p>
       <div class="method_details ">
   <h3 class="signature " id="pattern_compiler_supported?-instance_method">
   
-    #<strong>pattern_compiler_supported?</strong>  &#x21d2; <tt>Boolean</tt> 
+    #<strong>pattern_compiler_supported?</strong>(p = platform)  &#x21d2; <tt>Boolean</tt> 
   
 
-  
-    <span class="aliases">Also known as:
-    <span class="names"><span id='compiler_supported?-instance_method'>compiler_supported?</span></span>
-    </span>
   
 
   
@@ -714,15 +808,15 @@ selected tester platform.</p>
       <pre class="lines">
 
 
-88
-89
-90</pre>
+134
+135
+136</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/pattern_compilers.rb', line 88</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/pattern_compilers.rb', line 134</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_pattern_compiler_supported?'>pattern_compiler_supported?</span>
-  <span class='const'><span class='object_link'><a href="#PLATFORMS-constant" title="OrigenTesters::PatternCompilers::PLATFORMS (constant)">PLATFORMS</a></span></span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span> <span class='id identifier rubyid_platform'>platform</span> <span class='op'>?</span> <span class='kw'>true</span> <span class='op'>:</span> <span class='kw'>false</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_pattern_compiler_supported?'>pattern_compiler_supported?</span><span class='lparen'>(</span><span class='id identifier rubyid_p'>p</span> <span class='op'>=</span> <span class='id identifier rubyid_platform'>platform</span><span class='rparen'>)</span>
+  <span class='const'><span class='object_link'><a href="#PLATFORMS-constant" title="OrigenTesters::PatternCompilers::PLATFORMS (constant)">PLATFORMS</a></span></span><span class='period'>.</span><span class='id identifier rubyid_keys'>keys</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='id identifier rubyid_p'>p</span><span class='rparen'>)</span> <span class='op'>?</span> <span class='kw'>true</span> <span class='op'>:</span> <span class='kw'>false</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -732,60 +826,16 @@ selected tester platform.</p>
       <div class="method_details ">
   <h3 class="signature " id="pattern_compiler_version-instance_method">
   
-    #<strong>pattern_compiler_version</strong>  &#x21d2; <tt>Object</tt> 
+    #<strong>pattern_compiler_version</strong>(p = platform)  &#x21d2; <tt>Object</tt> 
   
 
-  
-    <span class="aliases">Also known as:
-    <span class="names"><span id='compiler_version-instance_method'>compiler_version</span></span>
-    </span>
-  
-
-  
-</h3><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-80
-81
-82
-83
-84</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/pattern_compilers.rb', line 80</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_pattern_compiler_version'>pattern_compiler_version</span>
-  <span class='id identifier rubyid_cmd'>cmd</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span>
-  <span class='id identifier rubyid_running_on_windows?'>running_on_windows?</span> <span class='op'>?</span> <span class='id identifier rubyid_cmd'>cmd</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'><span class='object_link'><a href="#WINDOWS_PATTERN_COMPILER-constant" title="OrigenTesters::PatternCompilers::WINDOWS_PATTERN_COMPILER (constant)">WINDOWS_PATTERN_COMPILER</a></span></span><span class='embexpr_end'>}</span><span class='tstring_content'> -version</span><span class='tstring_end'>&quot;</span></span> <span class='op'>:</span> <span class='id identifier rubyid_cmd'>cmd</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'><span class='object_link'><a href="#LINUX_PATTERN_COMPILER-constant" title="OrigenTesters::PatternCompilers::LINUX_PATTERN_COMPILER (constant)">LINUX_PATTERN_COMPILER</a></span></span><span class='embexpr_end'>}</span><span class='tstring_content'> -version</span><span class='tstring_end'>&quot;</span></span>
-  <span class='id identifier rubyid_system'>system</span> <span class='id identifier rubyid_cmd'>cmd</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <h3 class="signature " id="pattern_compilers-instance_method">
-  
-    #<strong>pattern_compilers</strong>(id = nil)  &#x21d2; <tt>Object</tt> 
-  
-
-  
-    <span class="aliases">Also known as:
-    <span class="names"><span id='compilers-instance_method'>compilers</span></span>
-    </span>
   
 
   
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Hash wrapper for compiler instances, defaults to display currently enabled
-tester platform.  If none is set then user must supply a valid tester
-platform argument</p>
+<p>Execute the compiler with &#39;version&#39; swtich</p>
 
 
   </div>
@@ -799,32 +849,243 @@ platform argument</p>
       <pre class="lines">
 
 
-16
-17
-18
-19
-20
-21
+128
+129
+130</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/pattern_compilers.rb', line 128</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_pattern_compiler_version'>pattern_compiler_version</span><span class='lparen'>(</span><span class='id identifier rubyid_p'>p</span> <span class='op'>=</span> <span class='id identifier rubyid_platform'>platform</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_system'>system</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_platform_compiler'>platform_compiler</span><span class='lparen'>(</span><span class='id identifier rubyid_p'>p</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_compiler_version'>compiler_version</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="pattern_compilers-instance_method">
+  
+    #<strong>pattern_compilers</strong>(id = nil, options = {})  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Hash wrapper for compiler instances, defaults to display currently enabled
+tester platform. If no tester is set then user must supply a valid tester
+platform argument User can also supply alternate tester platform (i.e. not
+the current tester target)</p>
+
+<pre class="code ruby"><code class="ruby">pattern_compilers()                    =&gt; hash of compilers for current tester platform
+pattern_compilers(id1)                 =&gt; inspect options of compiler &#39;id1&#39; for current tester platfrom
+pattern_compiler(platform: :v93k)      =&gt; hash of compilers for specified tester platfrom (v93k)
+pattern_compiler(id2, platform: :v93k) =&gt; inspect options of compiler &#39;id2&#39; for specified tester platfrom (v93k)</code></pre>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
 22
 23
 24
 25
 26
-27</pre>
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/pattern_compilers.rb', line 16</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/pattern_compilers.rb', line 22</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_pattern_compilers'>pattern_compilers</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
-  <span class='ivar'>@pattern_compilers</span> <span class='op'>||=</span> <span class='kw'>begin</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_pattern_compilers'>pattern_compilers</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_id'>id</span> <span class='kw'>if</span> <span class='id identifier rubyid_id'>id</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>Hash</span>
+  <span class='id identifier rubyid_plat'>plat</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:platform</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='id identifier rubyid_platform'>platform</span>     <span class='comment'># use platform option or current tester platform
+</span>
+  <span class='comment'># Build up empty hash structure for all supported plaforms
+</span>  <span class='ivar'>@pattern_compilers</span> <span class='op'>||=</span> <span class='kw'>begin</span>
     <span class='id identifier rubyid_hash'>hash</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
-    <span class='const'><span class='object_link'><a href="#PLATFORMS-constant" title="OrigenTesters::PatternCompilers::PLATFORMS (constant)">PLATFORMS</a></span></span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_platform'>platform</span><span class='op'>|</span> <span class='id identifier rubyid_hash'>hash</span><span class='lbracket'>[</span><span class='id identifier rubyid_platform'>platform</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span> <span class='rbrace'>}</span>
+    <span class='const'><span class='object_link'><a href="#PLATFORMS-constant" title="OrigenTesters::PatternCompilers::PLATFORMS (constant)">PLATFORMS</a></span></span><span class='period'>.</span><span class='id identifier rubyid_keys'>keys</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_p'>p</span><span class='op'>|</span> <span class='id identifier rubyid_hash'>hash</span><span class='lbracket'>[</span><span class='id identifier rubyid_p'>p</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span> <span class='rbrace'>}</span>
     <span class='id identifier rubyid_hash'>hash</span>
   <span class='kw'>end</span>
+
+  <span class='ivar'>@default_pattern_compiler</span> <span class='op'>||=</span> <span class='kw'>begin</span>
+    <span class='id identifier rubyid_hash'>hash</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+    <span class='const'><span class='object_link'><a href="#PLATFORMS-constant" title="OrigenTesters::PatternCompilers::PLATFORMS (constant)">PLATFORMS</a></span></span><span class='period'>.</span><span class='id identifier rubyid_keys'>keys</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_p'>p</span><span class='op'>|</span> <span class='id identifier rubyid_hash'>hash</span><span class='lbracket'>[</span><span class='id identifier rubyid_p'>p</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='kw'>nil</span> <span class='rbrace'>}</span>
+    <span class='id identifier rubyid_hash'>hash</span>
+  <span class='kw'>end</span>
+
   <span class='kw'>if</span> <span class='id identifier rubyid_id'>id</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
-    <span class='ivar'>@pattern_compilers</span><span class='lbracket'>[</span><span class='id identifier rubyid_platform'>platform</span><span class='rbracket'>]</span>
+    <span class='ivar'>@pattern_compilers</span><span class='lbracket'>[</span><span class='id identifier rubyid_plat'>plat</span><span class='rbracket'>]</span>
   <span class='kw'>else</span>
-    <span class='ivar'>@pattern_compilers</span><span class='lbracket'>[</span><span class='id identifier rubyid_platform'>platform</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='id identifier rubyid_id'>id</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_inspect_options'>inspect_options</span>
+    <span class='ivar'>@pattern_compilers</span><span class='lbracket'>[</span><span class='id identifier rubyid_plat'>plat</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='id identifier rubyid_id'>id</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_inspect_options'>inspect_options</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="platform_compiler-instance_method">
+  
+    #<strong>platform_compiler</strong>(p = platform)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Return the Compiler Class of the current or specified platform</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+113
+114
+115
+116
+117
+118
+119</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/pattern_compilers.rb', line 113</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_platform_compiler'>platform_compiler</span><span class='lparen'>(</span><span class='id identifier rubyid_p'>p</span> <span class='op'>=</span> <span class='id identifier rubyid_platform'>platform</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_pattern_compiler_supported?'>pattern_compiler_supported?</span><span class='lparen'>(</span><span class='id identifier rubyid_p'>p</span><span class='rparen'>)</span>
+    <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>OrigenTesters::PatternCompilers::</span><span class='embexpr_beg'>#{</span><span class='const'><span class='object_link'><a href="#PLATFORMS-constant" title="OrigenTesters::PatternCompilers::PLATFORMS (constant)">PLATFORMS</a></span></span><span class='lbracket'>[</span><span class='id identifier rubyid_p'>p</span><span class='rbracket'>]</span><span class='embexpr_end'>}</span><span class='tstring_content'>PatternCompiler</span><span class='tstring_end'>&quot;</span></span><span class='period'>.</span><span class='id identifier rubyid_constantize'>constantize</span>
+  <span class='kw'>else</span>
+    <span class='id identifier rubyid_fail'>fail</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Platform </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_platform'>platform</span><span class='embexpr_end'>}</span><span class='tstring_content'> is not valid, please choose from </span><span class='embexpr_beg'>#{</span><span class='const'><span class='object_link'><a href="#PLATFORMS-constant" title="OrigenTesters::PatternCompilers::PLATFORMS (constant)">PLATFORMS</a></span></span><span class='period'>.</span><span class='id identifier rubyid_keys'>keys</span><span class='period'>.</span><span class='id identifier rubyid_sort'>sort</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>, </span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="set_default_pattern_compiler-instance_method">
+  
+    #<strong>set_default_pattern_compiler</strong>(id, p = platform)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Set a (already created) pattern compiler as the default for current or
+specified platform</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+68
+69
+70</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/pattern_compilers.rb', line 68</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_set_default_pattern_compiler'>set_default_pattern_compiler</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_p'>p</span> <span class='op'>=</span> <span class='id identifier rubyid_platform'>platform</span><span class='rparen'>)</span>
+  <span class='ivar'>@default_pattern_compiler</span><span class='lbracket'>[</span><span class='id identifier rubyid_p'>p</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_id'>id</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="verify_unique_platform_id-instance_method">
+  
+    #<strong>verify_unique_platform_id</strong>(id, platform, options = {})  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Check compiler instance name is unique for given platform</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+92
+93
+94
+95
+96
+97
+98</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/pattern_compilers.rb', line 92</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_verify_unique_platform_id'>verify_unique_platform_id</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_platform'>platform</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='ivar'>@pattern_compilers</span><span class='lbracket'>[</span><span class='id identifier rubyid_platform'>platform</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_keys'>keys</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span> <span class='id identifier rubyid_id'>id</span>
+    <span class='id identifier rubyid_fail_msg'>fail_msg</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Compiler ID </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_id'>id</span><span class='embexpr_end'>}</span><span class='tstring_content'> for platform </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_platform'>platform</span><span class='embexpr_end'>}</span><span class='tstring_content'> already exists! </span><span class='tstring_end'>&quot;</span></span>
+    <span class='id identifier rubyid_fail_msg'>fail_msg</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Pick another name, delete the compiler, or clear all compilers</span><span class='tstring_end'>&#39;</span></span>
+    <span class='id identifier rubyid_fail'>fail</span> <span class='id identifier rubyid_fail_msg'>fail_msg</span>
   <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -837,9 +1098,9 @@ platform argument</p>
 </div>
 
       <div id="footer">
-  Generated on Mon Nov 20 13:31:20 2017 by
+  Generated on Mon Nov 27 10:23:22 2017 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.9 (ruby-2.3.3).
+  0.9.9 (ruby-2.3.0).
 </div>
 
     </div>
