@@ -6,7 +6,7 @@
 <title>
   Module: Origen::TopLevel
   
-    &mdash; Origen Core 0.27.0
+    &mdash; Origen Core 0.28.0
   
 </title>
 
@@ -455,17 +455,17 @@ before calling this method.</p>
       <pre class="lines">
 
 
-101
-102
-103
-104
-105
 106
 107
-108</pre>
+108
+109
+110
+111
+112
+113</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/top_level.rb', line 101</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/top_level.rb', line 106</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_add_package'>add_package</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid__options'>_options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_p'>p</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="ChipPackage.html" title="Origen::ChipPackage (class)">ChipPackage</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
@@ -511,15 +511,15 @@ specifically specified by the application this will return nil.</p>
       <pre class="lines">
 
 
-72
-73
-74
-75
-76
-77</pre>
+77
+78
+79
+80
+81
+82</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/top_level.rb', line 72</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/top_level.rb', line 77</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_current_package'>current_package</span><span class='lparen'>(</span><span class='id identifier rubyid__options'>_options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='ivar'>@current_package_id</span>
@@ -566,13 +566,23 @@ specifically specified by the application this will return nil.</p>
 
 65
 66
-67</pre>
+67
+68
+69
+70
+71
+72</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/origen/top_level.rb', line 65</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_current_package='>current_package=</span><span class='lparen'>(</span><span class='id identifier rubyid_val'>val</span><span class='rparen'>)</span>
-  <span class='ivar'>@current_package_id</span> <span class='op'>=</span> <span class='id identifier rubyid_val'>val</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="ChipPackage.html" title="Origen::ChipPackage (class)">ChipPackage</a></span></span><span class='rparen'>)</span> <span class='op'>?</span> <span class='id identifier rubyid_val'>val</span><span class='period'>.</span><span class='id identifier rubyid_id'>id</span> <span class='op'>:</span> <span class='id identifier rubyid_val'>val</span>
+  <span class='ivar'>@current_package_id</span> <span class='op'>=</span> <span class='kw'>case</span> <span class='id identifier rubyid_val'>val</span>
+  <span class='kw'>when</span> <span class='const'><span class='object_link'><a href="ChipPackage.html" title="Origen::ChipPackage (class)">ChipPackage</a></span></span>
+    <span class='id identifier rubyid_val'>val</span><span class='period'>.</span><span class='id identifier rubyid_id'>id</span>
+  <span class='kw'>else</span>
+    <span class='id identifier rubyid_packages'>packages</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='id identifier rubyid_val'>val</span><span class='rparen'>)</span> <span class='op'>?</span> <span class='id identifier rubyid_val'>val</span> <span class='op'>:</span> <span class='kw'>nil</span>
+  <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -611,12 +621,12 @@ loaded</p>
       <pre class="lines">
 
 
-116
-117
-118</pre>
+121
+122
+123</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/top_level.rb', line 116</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/top_level.rb', line 121</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_delete_all_packages'>delete_all_packages</span>
   <span class='ivar'>@_packages</span> <span class='op'>=</span> <span class='kw'>nil</span>
@@ -663,12 +673,12 @@ loaded</p>
       <pre class="lines">
 
 
-110
-111
-112</pre>
+115
+116
+117</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/top_level.rb', line 110</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/top_level.rb', line 115</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_includes_origen_top_level?'>includes_origen_top_level?</span>
   <span class='kw'>true</span>
@@ -735,17 +745,17 @@ supplied, otherwise returns an object representing the given package ID</p>
       <pre class="lines">
 
 
-82
-83
-84
-85
-86
 87
 88
-89</pre>
+89
+90
+91
+92
+93
+94</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/top_level.rb', line 82</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/top_level.rb', line 87</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_packages'>packages</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid__options'>_options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_id'>id</span> <span class='kw'>if</span> <span class='id identifier rubyid_id'>id</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="../Hash.html" title="Hash (class)">Hash</a></span></span><span class='rparen'>)</span>
@@ -947,15 +957,15 @@ before calling this method.</p>
       <pre class="lines">
 
 
-94
-95
-96
-97
-98
-99</pre>
+99
+100
+101
+102
+103
+104</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/top_level.rb', line 94</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/top_level.rb', line 99</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_with_package'>with_package</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid__options'>_options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_orig'>orig</span> <span class='op'>=</span> <span class='id identifier rubyid_package'>package</span>
@@ -973,9 +983,9 @@ before calling this method.</p>
 </div>
 
       <div id="footer">
-  Generated on Mon Oct 30 11:32:31 2017 by
+  Generated on Wed Nov 29 13:58:59 2017 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.9 (ruby-2.3.3).
+  0.9.9 (ruby-2.3.0).
 </div>
 
     </div>
