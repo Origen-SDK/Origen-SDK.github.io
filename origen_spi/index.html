@@ -169,6 +169,28 @@ can be changed after instantiation. See API for more details.</p>
 </div>
     </div>
 
+    <p>Once the driver is instantiated shift operations can be performed by calls to the shift method (overlay/store/masking etc. is handled):</p>
+
+    <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>  <span style="color:#777"># shift out, masking input compares</span>
+  dut.spi.shift <span style="color:#606">master_out</span>: <span style="color:#00D">0xFF</span>, <span style="color:#606">size</span>: <span style="color:#00D">32</span>
+  
+  <span style="color:#777"># shift out, register - size doesn't need to be passed when register is provided</span>
+  dut.spi.shift <span style="color:#606">master_out</span>: dut.my_reg
+  
+  <span style="color:#777"># shift in read examples:</span>
+  dut.spi.shift <span style="color:#606">master_in</span>: <span style="color:#00D">0xFF</span>, <span style="color:#606">size</span>: <span style="color:#00D">32</span>
+  
+  <span style="color:#777"># provide a register to mask or store (mark the bits appropriately)</span>
+  dut.spi.shift <span style="color:#606">master_in</span>: dut.my_reg
+  
+  <span style="color:#777"># simultaneous shift in/out</span>
+  dut.spi.shift <span style="color:#606">master_out</span>: some_value_or_reg, <span style="color:#606">master_in</span>: some_other_value_or_reg
+</pre></div>
+</div>
+    </div>
+
     <div>    
   <a class="anchor" name="How_To_Setup_a_Development_Environment"></a>          
   <h3><a href="#How_To_Setup_a_Development_Environment">How To Setup a Development Environment</a></h3>          
