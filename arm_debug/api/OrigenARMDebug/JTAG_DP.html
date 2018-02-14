@@ -6,7 +6,7 @@
 <title>
   Class: OrigenARMDebug::JTAG_DP
   
-    &mdash; Origen ARM Debug 1.0.2
+    &mdash; Origen ARM Debug 1.1.0
   
 </title>
 
@@ -107,6 +107,69 @@
 
 
 
+
+  <h2>Instance Attribute Summary <small><a href="#" class="summary_toggle">collapse</a></small></h2>
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#apacc_select-instance_method" title="#apacc_select (instance method)">#<strong>apacc_select</strong>  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the value of attribute apacc_select.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#dpacc_select-instance_method" title="#dpacc_select (instance method)">#<strong>dpacc_select</strong>  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the value of attribute dpacc_select.</p>
+</div></span>
+  
+</li>
+
+    
+  </ul>
 
 
 
@@ -222,8 +285,6 @@
       <pre class="lines">
 
 
-5
-6
 7
 8
 9
@@ -265,13 +326,33 @@
 45
 46
 47
-48</pre>
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/jtag_dp.rb', line 5</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/jtag_dp.rb', line 7</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_add_reg'>add_reg</span> <span class='symbol'>:ir</span><span class='comma'>,</span> <span class='int'>0</span><span class='comma'>,</span> <span class='label'>size:</span> <span class='int'>4</span>
+  <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span>
+    <span class='label'>ir_size:</span>       <span class='int'>4</span><span class='comma'>,</span>
+    <span class='label'>idcode_select:</span> <span class='int'>0b1110</span><span class='comma'>,</span>
+    <span class='label'>abort_select:</span>  <span class='int'>0b1000</span><span class='comma'>,</span>
+    <span class='label'>dpacc_select:</span>  <span class='int'>0b1010</span><span class='comma'>,</span>
+    <span class='label'>apacc_select:</span>  <span class='int'>0b1011</span>
+  <span class='rbrace'>}</span><span class='period'>.</span><span class='id identifier rubyid_merge'>merge</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
+  <span class='ivar'>@dpacc_select</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:dpacc_select</span><span class='rbracket'>]</span>
+  <span class='ivar'>@apacc_select</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:apacc_select</span><span class='rbracket'>]</span>
+  <span class='id identifier rubyid_add_reg'>add_reg</span> <span class='symbol'>:ir</span><span class='comma'>,</span> <span class='int'>0</span><span class='comma'>,</span> <span class='label'>size:</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:ir_size</span><span class='rbracket'>]</span>
 
   <span class='comment'># Virtual reg used to represent all of the various 35-bit scan chains
 </span>  <span class='id identifier rubyid_reg'>reg</span> <span class='symbol'>:dr</span><span class='comma'>,</span> <span class='int'>0</span><span class='comma'>,</span> <span class='label'>size:</span> <span class='int'>35</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_reg'>reg</span><span class='op'>|</span>
@@ -280,7 +361,7 @@
     <span class='id identifier rubyid_reg'>reg</span><span class='period'>.</span><span class='id identifier rubyid_bit'>bit</span> <span class='int'>0</span><span class='comma'>,</span> <span class='symbol'>:rnw</span>
   <span class='kw'>end</span>
 
-  <span class='id identifier rubyid_reg'>reg</span> <span class='symbol'>:idcode</span><span class='comma'>,</span> <span class='int'>0b1110</span><span class='comma'>,</span> <span class='label'>access:</span> <span class='symbol'>:ro</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_reg'>reg</span><span class='op'>|</span>
+  <span class='id identifier rubyid_reg'>reg</span> <span class='symbol'>:idcode</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:idcode_select</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='label'>access:</span> <span class='symbol'>:ro</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_reg'>reg</span><span class='op'>|</span>
     <span class='id identifier rubyid_reg'>reg</span><span class='period'>.</span><span class='id identifier rubyid_bit'>bit</span> <span class='int'>31</span><span class='op'>..</span><span class='int'>28</span><span class='comma'>,</span> <span class='symbol'>:version</span>
     <span class='id identifier rubyid_reg'>reg</span><span class='period'>.</span><span class='id identifier rubyid_bit'>bit</span> <span class='int'>27</span><span class='op'>..</span><span class='int'>12</span><span class='comma'>,</span> <span class='symbol'>:partno</span>
     <span class='id identifier rubyid_reg'>reg</span><span class='period'>.</span><span class='id identifier rubyid_bit'>bit</span> <span class='int'>11</span><span class='op'>..</span><span class='int'>1</span><span class='comma'>,</span> <span class='symbol'>:designer</span>
@@ -310,7 +391,7 @@
 
   <span class='id identifier rubyid_add_reg'>add_reg</span> <span class='symbol'>:rdbuff</span><span class='comma'>,</span> <span class='int'>0xC</span><span class='comma'>,</span> <span class='label'>access:</span> <span class='symbol'>:ro</span><span class='comma'>,</span> <span class='label'>reset:</span> <span class='int'>0</span>
 
-  <span class='id identifier rubyid_reg'>reg</span> <span class='symbol'>:abort</span><span class='comma'>,</span> <span class='int'>0b1000</span><span class='comma'>,</span> <span class='label'>access:</span> <span class='symbol'>:wo</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_reg'>reg</span><span class='op'>|</span>
+  <span class='id identifier rubyid_reg'>reg</span> <span class='symbol'>:abort</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:abort_select</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='label'>access:</span> <span class='symbol'>:wo</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_reg'>reg</span><span class='op'>|</span>
     <span class='id identifier rubyid_reg'>reg</span><span class='period'>.</span><span class='id identifier rubyid_bit'>bit</span> <span class='int'>0</span><span class='comma'>,</span> <span class='symbol'>:dapabort</span>
   <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
@@ -320,6 +401,97 @@
 </div>
   
 </div>
+
+  <div id="instance_attr_details" class="attr_details">
+    <h2>Instance Attribute Details</h2>
+    
+      
+      <span id=""></span>
+      <div class="method_details first">
+  <h3 class="signature first" id="apacc_select-instance_method">
+  
+    #<strong>apacc_select</strong>  &#x21d2; <tt>Object</tt>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the value of attribute apacc_select</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+5
+6
+7</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/jtag_dp.rb', line 5</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_apacc_select'>apacc_select</span>
+  <span class='ivar'>@apacc_select</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="dpacc_select-instance_method">
+  
+    #<strong>dpacc_select</strong>  &#x21d2; <tt>Object</tt>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the value of attribute dpacc_select</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+5
+6
+7</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/jtag_dp.rb', line 5</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_dpacc_select'>dpacc_select</span>
+  <span class='ivar'>@dpacc_select</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
 
 
   <div id="instance_method_details" class="method_details_list">
@@ -341,12 +513,12 @@
       <pre class="lines">
 
 
-54
-55
-56</pre>
+65
+66
+67</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/jtag_dp.rb', line 54</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/jtag_dp.rb', line 65</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_abort'>abort</span>
   <span class='id identifier rubyid_reg'>reg</span><span class='lparen'>(</span><span class='symbol'>:abort</span><span class='rparen'>)</span>
@@ -371,12 +543,12 @@
       <pre class="lines">
 
 
-50
-51
-52</pre>
+61
+62
+63</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/jtag_dp.rb', line 50</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/jtag_dp.rb', line 61</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_select'>select</span>
   <span class='id identifier rubyid_reg'>reg</span><span class='lparen'>(</span><span class='symbol'>:select</span><span class='rparen'>)</span>
@@ -391,7 +563,7 @@
 </div>
 
       <div id="footer">
-  Generated on Thu Nov 16 13:58:54 2017 by
+  Generated on Wed Feb 14 07:52:11 2018 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.9 (ruby-2.3.0).
 </div>

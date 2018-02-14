@@ -75,7 +75,8 @@
   <body>
     
       <div class="container">
-        <nav class="navbar navbar-inverse navbar-fixed-top"><div class="container">
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
         <span class="sr-only">Toggle navigation</span>
@@ -87,21 +88,25 @@
     </div>
     <div id="navbar" class="collapse navbar-collapse">
       <ul class="nav navbar-nav">
-<li class=""><a href="/arm_debug/api/">API</a></li>
+        <li class=""><a href="/arm_debug/api/">API</a></li>
         <li class=""><a href="/arm_debug/coverage">Coverage</a></li>
         <li class=""><a href="/arm_debug/release_notes">Release Notes</a></li>
         <li><a href="https://github.com/Origen-SDK/origen_arm_debug">Github</a></li>
       </ul>
 <a href="http://origen-sdk.org" class=" pull-right">
-  <img src="http://origen-sdk.org/img/origen-device.png" style="height:30px; margin-top: 10px;"><img src="http://origen-sdk.org/img/origen-text.png" style="height:15px; margin-top: 10px; margin-left: 5px;"></a>
+  <img src="http://origen-sdk.org/img/origen-device.png" style="height:30px; margin-top: 10px;">
+  <img src="http://origen-sdk.org/img/origen-text.png" style="height:15px; margin-top: 10px; margin-left: 5px;">
+</a>
 
     </div>
 <!--/.nav-collapse -->
   </div>
-</nav><div class="row">
+</nav>
+
+<div class="row">
   <div class="span12">
 
-    <h1>OrigenARMDebug <span style="font-size: 14px">(1.0.2)</span>
+    <h1>OrigenARMDebug <span style="font-size: 14px">(1.1.0)</span>
 </h1>
 
     <div>    
@@ -120,7 +125,7 @@
 
     <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre>gem <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">origen_arm_debug</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">&gt;= 1.0.2</span><span style="color:#710">"</span></span>
+  <div class="code"><pre>gem <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">origen_arm_debug</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">&gt;= 1.1.0</span><span style="color:#710">"</span></span>
 </pre></div>
 </div>
     </div>
@@ -129,7 +134,7 @@
 
     <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre>spec.add_development_dependency <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">origen_arm_debug</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">&gt;= 1.0.2</span><span style="color:#710">"</span></span>
+  <div class="code"><pre>spec.add_development_dependency <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">origen_arm_debug</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">&gt;= 1.1.0</span><span style="color:#710">"</span></span>
 </pre></div>
 </div>
     </div>
@@ -142,24 +147,23 @@ if your app is a plugin.</p>
   <h3><a href="#How_To_Use">How To Use</a></h3>          
 </div>
 
-    <p>Include the <code>OrigenARMDebug</code> module in your DUT class, then hook it up
-to the Origen register API via
+    <p>The most common way to use the Arm Debugger plugin is through the Origen register API via
 <code>read_register</code> and <code>write_register</code> methods.</p>
 
-    <p>You must also include a compatible physical driver depending on what debug
+    <p>You must include a compatible physical driver depending on what debug
 interface your device has, one of the following can be used:</p>
 
     <ul>
-<li><a href="http://origen-sdk.org/jtag">JTAG</a></li>
+      <li><a href="http://origen-sdk.org/jtag">JTAG</a></li>
       <li><a href="http://origen-sdk.org/swd">Single Wire Debug</a></li>
     </ul>
-<div class="language-ruby highlighter-coderay">
+
+    <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">DUT</span>
   include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">TopLevel</span>
-  include <span style="color:#036;font-weight:bold">OrigenARMDebug</span>
 
-  <span style="color:#777"># Also include the required physical driver, JTAG in this example</span>
+  <span style="color:#777"># Include the required physical driver, JTAG in this example</span>
   include <span style="color:#036;font-weight:bold">OrigenJTAG</span>
 
   <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>
@@ -171,7 +175,11 @@ interface your device has, one of the following can be used:</p>
     <span style="color:#777"># Simple example using default wait-states and latency:</span>
     <span style="color:#777">#   mem_ap:  APSEL = 0x00 (base_address[31:24])</span>
     <span style="color:#777">#   mem2_ap: APSEL = 0x01 (base_address[31:24])</span>
-    sub_block <span style="color:#A60">:arm_debug</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">OrigenARMDebug::DAP</span><span style="color:#710">'</span></span>, <span style="color:#606">mem_aps</span>: { <span style="color:#606">mem_ap</span>: <span style="color:#00D">0x00000000</span>, <span style="color:#606">mem2_ap</span>: <span style="color:#00D">0x01000000</span> }                           
+    mem_aps = {
+      <span style="color:#606">mem_ap</span>: { <span style="color:#606">base_address</span>: <span style="color:#00D">0x00000000</span> }
+      <span style="color:#606">mem2_ap</span>: { <span style="color:#606">base_address</span>: <span style="color:#00D">0x10000000</span> }
+    }
+    sub_block <span style="color:#A60">:arm_debug</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">OrigenARMDebug::DAP</span><span style="color:#710">'</span></span>, <span style="color:#606">mem_aps</span>: mem_aps                           
   <span style="color:#080;font-weight:bold">end</span>
 
   <span style="color:#777"># Hook the ARMDebug module into the register API, any register read</span>
@@ -210,16 +218,54 @@ arm_debug.ahb_ap.csw.write!(<span style="color:#00D">0x23000052</span>)
     <p>You can also adjust the intermediate wait-states and latency parameters:</p>
 
     <ul>
-<li><a href="http://origen-sdk.org/arm_debug/api/OrigenARMDebug/AP.html#apreg_access_wait-instance_method">AP.apreg_access_wait</a></li>
+      <li><a href="http://origen-sdk.org/arm_debug/api/OrigenARMDebug/AP.html#apreg_access_wait-instance_method">AP.apreg_access_wait</a></li>
       <li><a href="http://origen-sdk.org/arm_debug/api/OrigenARMDebug/MemAP.html#apmem_access_wait-instance_method">MemAP.apmem_access_wait</a></li>
       <li><a href="http://origen-sdk.org/arm_debug/api/OrigenARMDebug/MemAP.html#latency-instance_method">MemAP.latency</a></li>
     </ul>
-<div class="language-ruby highlighter-coderay">
+
+    <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#777"># Assuming ahb_ap has been previously defined</span>
 dut.arm_debug.ahb_ap.apmem_access_wait = <span style="color:#00D">16</span>
 dut.arm_debug.ahb_ap.apreg_access_wait = <span style="color:#00D">12</span>
 dut.arm_debug.ahb_ap.latency = <span style="color:#00D">8</span>
+
+<span style="color:#777"># You can define these at instantiation as well</span>
+mem_aps = {
+  <span style="color:#606">mem_ap</span>: { <span style="color:#606">base_address</span>: <span style="color:#00D">0x00000000</span>, <span style="color:#606">latency</span>: <span style="color:#00D">8</span>, <span style="color:#606">apreg_access_wait</span>: <span style="color:#00D">12</span>, <span style="color:#606">apmem_access_wait</span>: <span style="color:#00D">16</span> }
+  <span style="color:#606">mem2_ap</span>: { <span style="color:#606">base_address</span>: <span style="color:#00D">0x10000000</span>, <span style="color:#606">latency</span>: <span style="color:#00D">8</span>, <span style="color:#606">apreg_access_wait</span>: <span style="color:#00D">12</span>, <span style="color:#606">apmem_access_wait</span>: <span style="color:#00D">16</span> }
+}
+sub_block <span style="color:#A60">:arm_debug</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">OrigenARMDebug::DAP</span><span style="color:#710">'</span></span>, <span style="color:#606">mem_aps</span>: mem_aps
+</pre></div>
+</div>
+    </div>
+
+    <p>When used with the JTAG physical driver the default IR size is 4 and the default register select values are:</p>
+
+    <pre><code>idcode_select = 0b1110
+abort_select  = 0b1000
+dpacc_select  = 0b1010
+apacc_select  = 0b1011
+</code></pre>
+
+    <p>You can set non-default values at instantiation like this:</p>
+
+    <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>mem_aps = {
+  <span style="color:#606">mem_ap</span>: { <span style="color:#606">base_address</span>: <span style="color:#00D">0x00000000</span> }
+  <span style="color:#606">mem2_ap</span>: { <span style="color:#606">base_address</span>: <span style="color:#00D">0x10000000</span> }
+}
+instantiation_options[<span style="color:#A60">:class_name</span>] = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">OrigenARMDebug::DAP</span><span style="color:#710">'</span></span>
+instantiation_options[<span style="color:#A60">:mem_aps</span>] = mem_aps
+
+instantiation_options[<span style="color:#A60">:ir_size</span>] = <span style="color:#00D">8</span>
+instantiation_options[<span style="color:#A60">:idcode_select</span>] = <span style="color:#00D">0xFE</span>
+instantiation_options[<span style="color:#A60">:abort_select</span>] = <span style="color:#00D">0xF8</span>
+instantiation_options[<span style="color:#A60">:dpacc_select</span>] = <span style="color:#00D">0xFA</span>
+instantiation_options[<span style="color:#A60">:apacc_select</span>] = <span style="color:#00D">0xFB</span>
+
+sub_block <span style="color:#A60">:arm_debug</span>, instantiation_options
 </pre></div>
 </div>
     </div>
@@ -330,7 +376,7 @@ any changes!</p>
 
     <div style="position: relative">
   <hr>
-<div>    
+  <div>    
   <a class="anchor" name="Comments"></a>          
   <h4><a href="#Comments">Comments</a></h4>          
 </div>
@@ -361,12 +407,14 @@ any changes!</p>
         dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
     })();
-</script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</script>
+
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
 </noscript>
 
     <div style="position: relative">
   <hr>
-<div>    
+  <div>    
   <a class="anchor" name="Comments"></a>          
   <h4><a href="#Comments">Comments</a></h4>          
 </div>
@@ -397,11 +445,15 @@ any changes!</p>
         dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
     })();
-</script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</script>
+
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
 </noscript>
 
   </div>
 </div>
+
+
       </div><!-- /.container -->
     
 
