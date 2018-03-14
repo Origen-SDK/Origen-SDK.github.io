@@ -6,7 +6,7 @@
 <title>
   Class: OrigenJTAG::Driver
   
-    &mdash; Origen JTAG 0.17.0
+    &mdash; Origen JTAG 0.17.2
   
 </title>
 
@@ -977,24 +977,24 @@ written out prior to shifting data.</p>
       <pre class="lines">
 
 
-374
-375
-376
-377
-378
-379
-380
-381
-382
-383
-384
-385
-386
-387
-388</pre>
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 374</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 395</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_read_dr'>read_dr</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_tester'>tester</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:read_dr</span><span class='rparen'>)</span>
@@ -1129,24 +1129,24 @@ written out prior to shifting data.</p>
       <pre class="lines">
 
 
-444
-445
-446
-447
-448
-449
-450
-451
-452
-453
-454
-455
-456
-457
-458</pre>
+465
+466
+467
+468
+469
+470
+471
+472
+473
+474
+475
+476
+477
+478
+479</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 444</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 465</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_read_ir'>read_ir</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_tester'>tester</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:read_ir</span><span class='rparen'>)</span>
@@ -1456,7 +1456,28 @@ of a shift operation.</p>
 226
 227
 228
-229</pre>
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 104</span>
@@ -1526,8 +1547,23 @@ of a shift operation.</p>
     <span class='kw'>if</span> <span class='id identifier rubyid_tester'>tester</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:source_memory</span><span class='rparen'>)</span>
       <span class='kw'>if</span> <span class='id identifier rubyid_ovl_reg'>ovl_reg</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_ovl_reg'>ovl_reg</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_has_overlay?'>has_overlay?</span> <span class='op'>&amp;&amp;</span> <span class='op'>!</span><span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_mode'>mode</span><span class='period'>.</span><span class='id identifier rubyid_simulation?'>simulation?</span>
         <span class='id identifier rubyid_overlay_options'>overlay_options</span><span class='lbracket'>[</span><span class='symbol'>:pins</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_owner'>owner</span><span class='period'>.</span><span class='id identifier rubyid_pin'>pin</span><span class='lparen'>(</span><span class='symbol'>:tdi</span><span class='rparen'>)</span>
-        <span class='id identifier rubyid_overlay_options'>overlay_options</span><span class='lbracket'>[</span><span class='symbol'>:overlay_str</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_ovl_reg'>ovl_reg</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_overlay_str'>overlay_str</span>
-        <span class='id identifier rubyid_overlay_options'>overlay_options</span><span class='lbracket'>[</span><span class='symbol'>:overlay_style</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='symbol'>:label</span> <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:no_subr</span><span class='rbracket'>]</span>
+        <span class='kw'>if</span> <span class='id identifier rubyid_global_ovl'>global_ovl</span>
+          <span class='id identifier rubyid_overlay_options'>overlay_options</span><span class='lbracket'>[</span><span class='symbol'>:overlay_str</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_global_ovl'>global_ovl</span>
+        <span class='kw'>else</span>
+          <span class='id identifier rubyid_overlay_options'>overlay_options</span><span class='lbracket'>[</span><span class='symbol'>:overlay_str</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_ovl_reg'>ovl_reg</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_overlay_str'>overlay_str</span>
+        <span class='kw'>end</span>
+        <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:no_subr</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='id identifier rubyid_global_ovl'>global_ovl</span>
+          <span class='kw'>if</span> <span class='id identifier rubyid_global_ovl'>global_ovl</span>
+            <span class='id identifier rubyid_overlay_options'>overlay_options</span><span class='lbracket'>[</span><span class='symbol'>:overlay_style</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='symbol'>:global_label</span>
+          <span class='kw'>else</span>
+            <span class='id identifier rubyid_overlay_options'>overlay_options</span><span class='lbracket'>[</span><span class='symbol'>:overlay_style</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='symbol'>:label</span>
+          <span class='kw'>end</span>
+        <span class='kw'>end</span>
+        <span class='id identifier rubyid_tester_subr_overlay'>tester_subr_overlay</span> <span class='op'>=</span> <span class='op'>!</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:no_subr</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='id identifier rubyid_global_ovl'>global_ovl</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_tester'>tester</span><span class='period'>.</span><span class='id identifier rubyid_overlay_style'>overlay_style</span> <span class='op'>==</span> <span class='symbol'>:subroutine</span>
+        <span class='id identifier rubyid_owner'>owner</span><span class='period'>.</span><span class='id identifier rubyid_pin'>pin</span><span class='lparen'>(</span><span class='symbol'>:tdi</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_drive'>drive</span><span class='lparen'>(</span><span class='int'>0</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_tester_subr_overlay'>tester_subr_overlay</span>
+        <span class='id identifier rubyid_owner'>owner</span><span class='period'>.</span><span class='id identifier rubyid_pin'>pin</span><span class='lparen'>(</span><span class='symbol'>:tdo</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_assert'>assert</span><span class='lparen'>(</span><span class='id identifier rubyid_tdo_reg'>tdo_reg</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:read</span><span class='rbracket'>]</span> <span class='kw'>unless</span> <span class='id identifier rubyid_tester_subr_overlay'>tester_subr_overlay</span>
+        <span class='comment'># Force the last bit to be shifted from this method if overlay requested on the last bit
+</span>        <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:cycle_last</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='kw'>true</span> <span class='kw'>if</span> <span class='id identifier rubyid_i'>i</span> <span class='op'>==</span> <span class='id identifier rubyid_size'>size</span> <span class='op'>-</span> <span class='int'>1</span>
       <span class='kw'>end</span>
     <span class='kw'>else</span>
       <span class='comment'># Overlay - reconfigure pin action for overlay if necessary
@@ -1550,17 +1586,23 @@ of a shift operation.</p>
 </span>    <span class='comment'>#   execute a single TCLK period.  Special handling of subroutines,
 </span>    <span class='comment'>#   case of last bit in shift, and store vector (within a multi-cycle
 </span>    <span class='comment'>#   tclk config).
-</span>    <span class='kw'>if</span> <span class='id identifier rubyid_call_subroutine'>call_subroutine</span> <span class='op'>&amp;&amp;</span> <span class='op'>!</span><span class='id identifier rubyid_tester'>tester</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:source_memory</span><span class='rparen'>)</span>
-      <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_tester'>tester</span><span class='period'>.</span><span class='id identifier rubyid_call_subroutine'>call_subroutine</span><span class='lparen'>(</span><span class='id identifier rubyid_call_subroutine'>call_subroutine</span><span class='rparen'>)</span>
+</span>    <span class='kw'>if</span> <span class='id identifier rubyid_call_subroutine'>call_subroutine</span> <span class='op'>||</span> <span class='id identifier rubyid_tester_subr_overlay'>tester_subr_overlay</span>
       <span class='ivar'>@last_data_vector_shifted</span> <span class='op'>=</span> <span class='kw'>true</span>
     <span class='kw'>else</span>
       <span class='ivar'>@last_data_vector_shifted</span> <span class='op'>=</span> <span class='kw'>false</span>
-      <span class='ivar'>@next_data_vector_to_be_stored</span> <span class='op'>=</span> <span class='kw'>false</span>
+    <span class='kw'>end</span>
 
+    <span class='kw'>if</span> <span class='id identifier rubyid_call_subroutine'>call_subroutine</span>
+      <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_tester'>tester</span><span class='period'>.</span><span class='id identifier rubyid_call_subroutine'>call_subroutine</span><span class='lparen'>(</span><span class='id identifier rubyid_call_subroutine'>call_subroutine</span><span class='rparen'>)</span>
+    <span class='kw'>else</span>
+      <span class='ivar'>@next_data_vector_to_be_stored</span> <span class='op'>=</span> <span class='kw'>false</span>
       <span class='comment'># Don&#39;t latch the last bit, that will be done when leaving the state.
 </span>      <span class='kw'>if</span> <span class='id identifier rubyid_i'>i</span> <span class='op'>!=</span> <span class='id identifier rubyid_size'>size</span> <span class='op'>-</span> <span class='int'>1</span> <span class='op'>||</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:cycle_last</span><span class='rbracket'>]</span>
         <span class='kw'>if</span> <span class='id identifier rubyid_i'>i</span> <span class='op'>==</span> <span class='id identifier rubyid_size'>size</span> <span class='op'>-</span> <span class='int'>1</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:includes_last_bit</span><span class='rbracket'>]</span>
-          <span class='id identifier rubyid_owner'>owner</span><span class='period'>.</span><span class='id identifier rubyid_pin'>pin</span><span class='lparen'>(</span><span class='symbol'>:tms</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_drive'>drive</span><span class='lparen'>(</span><span class='int'>1</span><span class='rparen'>)</span>
+          <span class='kw'>unless</span> <span class='id identifier rubyid_tester_subr_overlay'>tester_subr_overlay</span>
+            <span class='id identifier rubyid_owner'>owner</span><span class='period'>.</span><span class='id identifier rubyid_pin'>pin</span><span class='lparen'>(</span><span class='symbol'>:tms</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_drive'>drive</span><span class='lparen'>(</span><span class='int'>1</span><span class='rparen'>)</span>
+            <span class='ivar'>@last_data_vector_shifted</span> <span class='op'>=</span> <span class='kw'>true</span>
+          <span class='kw'>end</span>
         <span class='kw'>end</span>
         <span class='id identifier rubyid_tclk_cycle'>tclk_cycle</span> <span class='kw'>do</span>
           <span class='kw'>if</span> <span class='id identifier rubyid_store_tdo_this_tclk'>store_tdo_this_tclk</span> <span class='op'>&amp;&amp;</span> <span class='ivar'>@next_data_vector_to_be_stored</span>
@@ -1620,27 +1662,6 @@ similar</p>
       <pre class="lines">
 
 
-235
-236
-237
-238
-239
-240
-241
-242
-243
-244
-245
-246
-247
-248
-249
-250
-251
-252
-253
-254
-255
 256
 257
 258
@@ -1685,10 +1706,31 @@ similar</p>
 297
 298
 299
-300</pre>
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 235</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 256</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_tclk_cycle'>tclk_cycle</span>
   <span class='kw'>case</span> <span class='ivar'>@tclk_format</span>
@@ -1808,31 +1850,31 @@ TCLK</p>
       <pre class="lines">
 
 
-306
-307
-308
-309
-310
-311
-312
-313
-314
-315
-316
-317
-318
-319
-320
-321
-322
-323
-324
-325
-326
-327</pre>
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 306</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 327</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='id identifier rubyid_val'>val</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='ivar'>@deferred_compare</span>
@@ -1970,22 +2012,22 @@ written out prior to shifting data.</p>
       <pre class="lines">
 
 
-343
-344
-345
-346
-347
-348
-349
-350
-351
-352
-353
-354
-355</pre>
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 343</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 364</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_write_dr'>write_dr</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_tester'>tester</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:write_dr</span><span class='rparen'>)</span>
@@ -2133,25 +2175,25 @@ write occurs.</p>
       <pre class="lines">
 
 
-410
-411
-412
-413
-414
-415
-416
-417
-418
-419
-420
-421
-422
-423
-424
-425</pre>
+431
+432
+433
+434
+435
+436
+437
+438
+439
+440
+441
+442
+443
+444
+445
+446</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 410</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 431</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_write_ir'>write_ir</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_tester'>tester</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:write_ir</span><span class='rparen'>)</span>
@@ -2179,9 +2221,9 @@ write occurs.</p>
 </div>
 
       <div id="footer">
-  Generated on Tue Sep 26 10:32:40 2017 by
+  Generated on Wed Mar 14 07:34:16 2018 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.8 (ruby-2.3.0).
+  0.9.9 (ruby-2.3.0).
 </div>
 
     </div>
