@@ -75,7 +75,8 @@
   <body>
     
       <div class="container">
-        <nav class="navbar navbar-inverse navbar-fixed-top"><div class="container">
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
         <span class="sr-only">Toggle navigation</span>
@@ -87,22 +88,26 @@
     </div>
     <div id="navbar" class="collapse navbar-collapse">
       <ul class="nav navbar-nav">
-<li class=""><a href="/cross_origen/examples">Examples</a></li>
+        <li class=""><a href="/cross_origen/examples">Examples</a></li>
         <li class=""><a href="/cross_origen/api/">API</a></li>
         <li class=""><a href="/cross_origen/coverage">Coverage</a></li>
         <li class=""><a href="/cross_origen/release_notes">Release Notes</a></li>
         <li><a href="https://github.com/Origen-SDK/cross_origen">Github</a></li>
       </ul>
 <a href="http://origen-sdk.org" class=" pull-right">
-  <img src="http://origen-sdk.org/img/origen-device.png" style="height:30px; margin-top: 10px;"><img src="http://origen-sdk.org/img/origen-text.png" style="height:15px; margin-top: 10px; margin-left: 5px;"></a>
+  <img src="http://origen-sdk.org/img/origen-device.png" style="height:30px; margin-top: 10px;">
+  <img src="http://origen-sdk.org/img/origen-text.png" style="height:15px; margin-top: 10px; margin-left: 5px;">
+</a>
 
     </div>
 <!--/.nav-collapse -->
   </div>
-</nav><div class="row">
+</nav>
+
+<div class="row">
   <div class="span12">
 
-    <h1>Cross Origen <span style="font-size: 14px">(0.7.0)</span>
+    <h1>Cross Origen <span style="font-size: 14px">(1.0.0)</span>
 </h1>
 
     <div>    
@@ -124,7 +129,7 @@ party tools.</p>
 
     <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre>gem <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">cross_origen</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">&gt;= 0.7.0</span><span style="color:#710">"</span></span>
+  <div class="code"><pre>gem <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">cross_origen</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">&gt;= 1.0.0</span><span style="color:#710">"</span></span>
 </pre></div>
 </div>
     </div>
@@ -133,7 +138,7 @@ party tools.</p>
 
     <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre>spec.add_runtime_dependency <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">cross_origen</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">&gt;= 0.7.0</span><span style="color:#710">"</span></span>
+  <div class="code"><pre>spec.add_runtime_dependency <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">cross_origen</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">&gt;= 1.0.0</span><span style="color:#710">"</span></span>
 </pre></div>
 </div>
     </div>
@@ -151,11 +156,12 @@ party tools.</p>
     <p>Currently the following formats are supported:</p>
 
     <ul>
-<li>IP-XACT - Import and Export registers and hierarchy</li>
+      <li>IP-XACT - Import and Export registers and hierarchy</li>
+      <li>CMSIS-SVD - Import registers and hierarchy</li>
       <li>RALF (Synopsys format) - Export registers</li>
-      <li>Origen - Export registers and hierarchy</li>
     </ul>
-<p>See the <a href="/cross_origen/examples">examples</a> for format specific documentation, but
+
+    <p>See the <a href="/cross_origen/examples">examples</a> for format specific documentation, but
 most formats should follow this basic structure…</p>
 
     <div>    
@@ -164,18 +170,18 @@ most formats should follow this basic structure…</p>
 </div>
 
     <p>When the <code>CrossOrigen</code> module is included in a class it gets access
-to an <code>cr_import</code> method.
+to a <code>cr_import</code> method.
 This will automatically detect the type of the given file and select the appropriate
 import rules.</p>
 
     <p>The file to be imported must exist locally or it can be pulled automatically from
-a 3rd party respository in which case the file will be fetched the first time Origen
+a 3rd party repository in which case the file will be fetched the first time Origen
 is invoked and then cached locally for future invocations.
 Supported repositories are shown in the example below.</p>
 
     <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">D_IP_ANA_TEST_ANNEX_SYN</span>
+  <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MyDevice</span>
 
   include <span style="color:#036;font-weight:bold">CrossOrigen</span>
 
@@ -185,16 +191,36 @@ Supported repositories are shown in the example below.</p>
     <span style="color:#777"># Import from Design Sync</span>
     cr_import(<span style="color:#606">vault</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">sync://sync-15040:15040/Projects/nvm_c90tfsn2w/ftf2/rtl_v/kx2_4m/.regs</span><span style="color:#710">"</span></span>, <span style="color:#606">version</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">ftf2_kx2_4096k2_256_128k_64_4k.00.00.01.00</span><span style="color:#710">"</span></span>) 
   <span style="color:#080;font-weight:bold">end</span>
-
 <span style="color:#080;font-weight:bold">end</span>
 </pre></div>
 </div>
     </div>
 
-    <p>The plugin will add attribute getter and setter methods to the top-level object and to registers and bits
-to contain any metadata information which does not have a direct equivalent within Origen. Generally
-the name given to such data will be the lower cased and underscored (following std Ruby
-conventions) version of the attribute name.</p>
+    <p>The given file(s) will be parsed the first time the model is instantiated, which could take some time
+depending on the amount of data being imported.</p>
+
+    <p>During the import process, the data from the files will be converted to Origen native format and stored
+to the application’s <code>vendor</code> directory. You should check these generated files into your revision control
+system, although you should refrain from modifying them by hand since edits will be lost if the import
+process is repeated in future.</p>
+
+    <p>On subsequent model instantiations, the <code>cr_import</code> method will recognize that the data has already been
+imported and it will load directly from the <code>vendor</code> dir. Generally speaking, this will make the model
+instantiation time instant, regardless of how much data was originally imported.</p>
+
+    <p>If you obtain a new version of the 3rd party source file, it can be re-imported by passing a
+<code>refresh</code> option to <code>cr_import</code>:</p>
+
+    <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>cr_import(<span style="color:#606">path</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.root<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">/imports/test-annex-Block-registers.xml</span><span style="color:#710">"</span></span>, <span style="color:#606">refresh</span>: <span style="color:#069">true</span>)
+</pre></div>
+</div>
+    </div>
+
+    <p>Or, a global refresh (meaning every <code>cr_import</code> that is encountered with a given Origen command) can be
+invoked by passing the <code>--refresh</code> option to any Origen command which will instantiate the model you
+wish to refresh.</p>
 
     <div>    
   <a class="anchor" name="Data_Export"></a>          
@@ -241,7 +267,7 @@ any changes!</p>
 
     <div style="position: relative">
   <hr>
-<div>    
+  <div>    
   <a class="anchor" name="Comments"></a>          
   <h4><a href="#Comments">Comments</a></h4>          
 </div>
@@ -272,11 +298,15 @@ any changes!</p>
         dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
     })();
-</script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</script>
+
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
 </noscript>
 
   </div>
 </div>
+
+
       </div><!-- /.container -->
     
 
@@ -285,7 +315,7 @@ any changes!</p>
         <p class="pull-left text-muted">
           Generated with the <a href="http://origen-sdk.org">Origen Semiconductor Developer's Kit</a>
         </p>
-        <p class="pull-right text-muted">Origen is released under the terms of the <a href="http://choosealicense.com/licenses/lgpl-3.0/">LGPLv3</a></p>
+        <p class="pull-right text-muted">Origen is released under the terms of the <a href="https://choosealicense.com/licenses/mit/">MIT license</a></p>
       </div>
     </footer>
     <!-- Bootstrap core JavaScript
