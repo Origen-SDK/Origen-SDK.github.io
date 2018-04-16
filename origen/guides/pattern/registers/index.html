@@ -602,6 +602,47 @@ vref.write!
       </div>
 
       <div>    
+  <a class="anchor" name="Combining_Multiple_Bit_Level_Accesses_Into_A_Single_Transaction"></a>          
+  <h4><a href="#Combining_Multiple_Bit_Level_Accesses_Into_A_Single_Transaction">Combining Multiple Bit Level Accesses Into A Single Transaction</a></h4>          
+</div>
+
+      <p>Multiple individual bits within a register can be accessed/manipulated within a single
+transaction by making multiple bit-level calls to <code>read</code> (or <code>write</code>), followed by a single
+register-level <code>read!</code> (or <code>write!</code>) operation:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>my_reg.my_bits_x.read(<span style="color:#00D">1</span>)
+my_reg.my_bits_z.read(<span style="color:#00D">0b101</span>)
+my_reg.read!
+</pre></div>
+</div>
+      </div>
+
+      <p>Sometimes you will see application code that combines the final transaction request with the
+final bit-level operation, this will do the same thing as the above example:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>my_reg.my_bits_x.read(<span style="color:#00D">1</span>)
+my_reg.my_bits_z.read!(<span style="color:#00D">0b101</span>)
+</pre></div>
+</div>
+      </div>
+
+      <p>If you prefer, an equivalent block form API is also available, this is equivalent to the above example:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>my_reg.read! <span style="color:#080;font-weight:bold">do</span> |reg|
+  reg.my_bits_x.read(<span style="color:#00D">1</span>)
+  reg.my_bits_z.read(<span style="color:#00D">0b101</span>)
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+      </div>
+
+      <div>    
   <a class="anchor" name="Writing_a_Driver"></a>          
   <h4><a href="#Writing_a_Driver">Writing a Driver</a></h4>          
 </div>
