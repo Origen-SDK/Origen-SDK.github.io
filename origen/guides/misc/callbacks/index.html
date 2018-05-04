@@ -358,6 +358,7 @@
 <li class=""><a href="/origen/guides/misc/session">Session Store</a></li>
 <li class=""><a href="/origen/guides/misc/lsf">LSF API</a></li>
 <li class=""><a href="/origen/guides/misc/users">Users, Emails &amp; Maillists</a></li>
+<li class=""><a href="/origen/guides/misc/utilities">Utilities &amp; Helpers</a></li>
 <li class=""><a href="/origen/guides/misc/coreext">Ruby Extensions</a></li>
 <li class=""><a href="/origen/guides/misc/logger">Logger</a></li>
 <li class=""><a href="/origen/guides/misc/commands">Adding Commands</a></li>
@@ -749,13 +750,15 @@ such as clocks and register settings.</p>
       <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">on_mode_changed</span>(options)
-  <span style="color:#080;font-weight:bold">case</span> options[<span style="color:#A60">:mode</span>]
-  <span style="color:#080;font-weight:bold">when</span> <span style="color:#A60">:mode1</span>
-    clocks(<span style="color:#A60">:coreclk</span>).setpoint = <span style="color:#60E">1.2</span>.Ghz
-    clocks(<span style="color:#A60">:memclk</span>).setpoint = <span style="color:#00D">600</span>.Mhz
-  <span style="color:#080;font-weight:bold">when</span> <span style="color:#A60">:mode2</span>
-    clocks(<span style="color:#A60">:coreclk</span>).setpoint = <span style="color:#60E">1.0</span>.Ghz
-    clocks(<span style="color:#A60">:memclk</span>).setpoint = <span style="color:#00D">500</span>.Mhz
+  <span style="color:#080;font-weight:bold">if</span> options[<span style="color:#A60">:instance</span>] == <span style="color:#069">self</span>
+    <span style="color:#080;font-weight:bold">case</span> options[<span style="color:#A60">:mode</span>]
+    <span style="color:#080;font-weight:bold">when</span> <span style="color:#A60">:mode1</span>
+      clocks(<span style="color:#A60">:coreclk</span>).setpoint = <span style="color:#60E">1.2</span>.Ghz
+      clocks(<span style="color:#A60">:memclk</span>).setpoint = <span style="color:#00D">600</span>.Mhz
+    <span style="color:#080;font-weight:bold">when</span> <span style="color:#A60">:mode2</span>
+      clocks(<span style="color:#A60">:coreclk</span>).setpoint = <span style="color:#60E">1.0</span>.Ghz
+      clocks(<span style="color:#A60">:memclk</span>).setpoint = <span style="color:#00D">500</span>.Mhz
+    <span style="color:#080;font-weight:bold">end</span>
   <span style="color:#080;font-weight:bold">end</span>
 <span style="color:#080;font-weight:bold">end</span>
 </pre></div>

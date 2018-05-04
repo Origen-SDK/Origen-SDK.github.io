@@ -358,6 +358,7 @@
 <li class=""><a href="/origen/guides/misc/session">Session Store</a></li>
 <li class=""><a href="/origen/guides/misc/lsf">LSF API</a></li>
 <li class=""><a href="/origen/guides/misc/users">Users, Emails &amp; Maillists</a></li>
+<li class=""><a href="/origen/guides/misc/utilities">Utilities &amp; Helpers</a></li>
 <li class=""><a href="/origen/guides/misc/coreext">Ruby Extensions</a></li>
 <li class=""><a href="/origen/guides/misc/logger">Logger</a></li>
 <li class=""><a href="/origen/guides/misc/commands">Adding Commands</a></li>
@@ -597,47 +598,6 @@ vref.level.store!
 <span style="color:#777"># Dynamically overlay the value written to the level bits</span>
 vref.level.overlay(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">vref_setting</span><span style="color:#710">"</span></span>)
 vref.write!
-</pre></div>
-</div>
-      </div>
-
-      <div>    
-  <a class="anchor" name="Combining_Multiple_Bit_Level_Accesses_Into_A_Single_Transaction"></a>          
-  <h4><a href="#Combining_Multiple_Bit_Level_Accesses_Into_A_Single_Transaction">Combining Multiple Bit Level Accesses Into A Single Transaction</a></h4>          
-</div>
-
-      <p>Multiple individual bits within a register can be accessed/manipulated within a single
-transaction by making multiple bit-level calls to <code>read</code> (or <code>write</code>), followed by a single
-register-level <code>read!</code> (or <code>write!</code>) operation:</p>
-
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>my_reg.my_bits_x.read(<span style="color:#00D">1</span>)
-my_reg.my_bits_z.read(<span style="color:#00D">0b101</span>)
-my_reg.read!
-</pre></div>
-</div>
-      </div>
-
-      <p>Sometimes you will see application code that combines the final transaction request with the
-final bit-level operation, this will do the same thing as the above example:</p>
-
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>my_reg.my_bits_x.read(<span style="color:#00D">1</span>)
-my_reg.my_bits_z.read!(<span style="color:#00D">0b101</span>)
-</pre></div>
-</div>
-      </div>
-
-      <p>If you prefer, an equivalent block form API is also available, this is equivalent to the above example:</p>
-
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>my_reg.read! <span style="color:#080;font-weight:bold">do</span> |reg|
-  reg.my_bits_x.read(<span style="color:#00D">1</span>)
-  reg.my_bits_z.read(<span style="color:#00D">0b101</span>)
-<span style="color:#080;font-weight:bold">end</span>
 </pre></div>
 </div>
       </div>
