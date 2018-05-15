@@ -6,7 +6,7 @@
 <title>
   File: README
   
-    &mdash; test_ids 0.8.0
+    &mdash; test_ids 0.8.1
   
 </title>
 
@@ -136,11 +136,11 @@ If an entry for any of the keys is already present in the options, then that wil
 available to each one:</p>
 
 <ul>
-  <li><strong>bin</strong> - These are generated first, and therefore can only be configured to be generated from a range</li>
+  <li><strong>bin</strong> - These are generated first, and therefore can only be configured to be generated from a range. They can also be generated from a specific range per test. Please see Using specific ranges below.</li>
   <li><strong>softbin</strong> - These come next, and they can be generated from a range or from either a template or a function which
-references the bin number</li>
+references the bin number. They can also be generated from a specific range per test. Please see Using specific ranges below.</li>
   <li><strong>number</strong> - The test number comes last, and they can be generated from a range or from either a template or a function which
-references the bin number and/or softbin number</li>
+references the bin number and/or softbin number. They can also be generated from a specific range per test. Please see Using specific ranges below.</li>
 </ul>
 
 <h3 id="assigning-a-range">Assigning a Range</h3>
@@ -309,6 +309,91 @@ to a Symbol or String value as shown below:</p>
 </div>
 </div>
 
+<h3 id="using-specified-ranges-beta-feature">Using specified ranges (Beta Feature)</h3>
+
+<p><strong>It is assumed that in the configuration the user will configure the bins first, softbins next and numbers last</strong></p>
+
+<p>A new limited feature has been added to the plugin. It will let the user specify ranges in the flow for different TYPE (softbin/bin/number) and the plugin will figure out the next available number from that range.</p>
+
+<p>Application side, the user needs to make sure that a check if in place in the interface to confirm that the softbin/bin/numbers being passed to a function or method are not nil.</p>
+
+<p>Example: if number is a function of both softbin and bin, and softbin uses specific ranges, the following will be required in the configuration</p>
+
+<div class="language-ruby highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre class="code ruby"><code class="ruby">&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n1&quot; name=&quot;n1&quot;&gt;1&lt;/a&gt;&lt;/span&gt;config.numbers &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;do&lt;/span&gt; |bin, softbin|
+&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n2&quot; name=&quot;n2&quot;&gt;2&lt;/a&gt;&lt;/span&gt; &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;unless&lt;/span&gt; softbin.nil?
+&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n3&quot; name=&quot;n3&quot;&gt;3&lt;/a&gt;&lt;/span&gt;  (softbin * &lt;span style=&quot;color:#00D&quot;&gt;10&lt;/span&gt;) + bin 
+&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n4&quot; name=&quot;n4&quot;&gt;4&lt;/a&gt;&lt;/span&gt; &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;end&lt;/span&gt; 
+&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n5&quot; name=&quot;n5&quot;&gt;5&lt;/a&gt;&lt;/span&gt;&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;end&lt;/span&gt;
+</code></pre></div>
+</div>
+</div>
+
+<p>To enable specific ranges for SoftBins the TestId configuration will be as follows:</p>
+
+<div class="language-ruby highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre class="code ruby"><code class="ruby">&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n1&quot; name=&quot;n1&quot;&gt;1&lt;/a&gt;&lt;/span&gt;
+&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n2&quot; name=&quot;n2&quot;&gt;2&lt;/a&gt;&lt;/span&gt;     &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;if&lt;/span&gt; options[&lt;span style=&quot;color:#A60&quot;&gt;:environment&lt;/span&gt;] == &lt;span style=&quot;color:#A60&quot;&gt;:probe&lt;/span&gt;
+&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n3&quot; name=&quot;n3&quot;&gt;3&lt;/a&gt;&lt;/span&gt;        &lt;span style=&quot;color:#036;font-weight:bold&quot;&gt;TestIds&lt;/span&gt;.configure &lt;span style=&quot;color:#A60&quot;&gt;:wafer_test&lt;/span&gt; &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;do&lt;/span&gt; |config|
+&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n4&quot; name=&quot;n4&quot;&gt;4&lt;/a&gt;&lt;/span&gt;          config.softbins.size = &lt;span style=&quot;color:#00D&quot;&gt;5&lt;/span&gt;
+&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n5&quot; name=&quot;n5&quot;&gt;5&lt;/a&gt;&lt;/span&gt;          config.softbins &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;do&lt;/span&gt; |bin, options|
+&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n6&quot; name=&quot;n6&quot;&gt;6&lt;/a&gt;&lt;/span&gt;           &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;if&lt;/span&gt; !options[&lt;span style=&quot;color:#A60&quot;&gt;:softbin_range&lt;/span&gt;].nil? &amp;&amp; options[&lt;span style=&quot;color:#A60&quot;&gt;:softbin_range&lt;/span&gt;].is_a?(&lt;span style=&quot;color:#036;font-weight:bold&quot;&gt;Range&lt;/span&gt;) 
+&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n7&quot; name=&quot;n7&quot;&gt;7&lt;/a&gt;&lt;/span&gt;            &lt;span style=&quot;color:#036;font-weight:bold&quot;&gt;TestIds&lt;/span&gt;.next_in_range(options[&lt;span style=&quot;color:#A60&quot;&gt;:softbin_range&lt;/span&gt;],options)
+&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n8&quot; name=&quot;n8&quot;&gt;8&lt;/a&gt;&lt;/span&gt;           &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n9&quot; name=&quot;n9&quot;&gt;9&lt;/a&gt;&lt;/span&gt;          &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;line-numbers&quot;&gt;&lt;strong&gt;&lt;a href=&quot;#n10&quot; name=&quot;n10&quot;&gt;10&lt;/a&gt;&lt;/strong&gt;&lt;/span&gt;        &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n11&quot; name=&quot;n11&quot;&gt;11&lt;/a&gt;&lt;/span&gt;        &lt;span style=&quot;color:#777&quot;&gt;# else different environment settings&lt;/span&gt;
+&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n12&quot; name=&quot;n12&quot;&gt;12&lt;/a&gt;&lt;/span&gt;      &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n13&quot; name=&quot;n13&quot;&gt;13&lt;/a&gt;&lt;/span&gt;
+</code></pre></div>
+</div>
+</div>
+
+<p>Similar configurations are available for bins and numbers as well.</p>
+
+<div class="language-ruby highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre class="code ruby"><code class="ruby">&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n1&quot; name=&quot;n1&quot;&gt;1&lt;/a&gt;&lt;/span&gt;
+&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n2&quot; name=&quot;n2&quot;&gt;2&lt;/a&gt;&lt;/span&gt;    &lt;span style=&quot;color:#036;font-weight:bold&quot;&gt;TestIds&lt;/span&gt;.configure &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;do&lt;/span&gt; |config|
+&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n3&quot; name=&quot;n3&quot;&gt;3&lt;/a&gt;&lt;/span&gt;      config.bins &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;do&lt;/span&gt; |options|
+&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n4&quot; name=&quot;n4&quot;&gt;4&lt;/a&gt;&lt;/span&gt;       &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;if&lt;/span&gt; options[&lt;span style=&quot;color:#A60&quot;&gt;:bin_range&lt;/span&gt;].is_a?(&lt;span style=&quot;color:#036;font-weight:bold&quot;&gt;Range&lt;/span&gt;)
+&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n5&quot; name=&quot;n5&quot;&gt;5&lt;/a&gt;&lt;/span&gt;        &lt;span style=&quot;color:#036;font-weight:bold&quot;&gt;TestIds&lt;/span&gt;.next_in_range(options[&lt;span style=&quot;color:#A60&quot;&gt;:bin_range&lt;/span&gt;], options)
+&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n6&quot; name=&quot;n6&quot;&gt;6&lt;/a&gt;&lt;/span&gt;       &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n7&quot; name=&quot;n7&quot;&gt;7&lt;/a&gt;&lt;/span&gt;     &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;end&lt;/span&gt; 
+</code></pre></div>
+</div>
+</div>
+
+<div class="language-ruby highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre class="code ruby"><code class="ruby">&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n1&quot; name=&quot;n1&quot;&gt;1&lt;/a&gt;&lt;/span&gt;
+&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n2&quot; name=&quot;n2&quot;&gt;2&lt;/a&gt;&lt;/span&gt;    &lt;span style=&quot;color:#036;font-weight:bold&quot;&gt;TestIds&lt;/span&gt;.configure &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;do&lt;/span&gt; |config|
+&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n3&quot; name=&quot;n3&quot;&gt;3&lt;/a&gt;&lt;/span&gt;      config.bins.include &lt;&lt; (&lt;span style=&quot;color:#00D&quot;&gt;1&lt;/span&gt;..&lt;span style=&quot;color:#00D&quot;&gt;4&lt;/span&gt;)
+&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n4&quot; name=&quot;n4&quot;&gt;4&lt;/a&gt;&lt;/span&gt;      config.softbins.include &lt;&lt; (&lt;span style=&quot;color:#00D&quot;&gt;500&lt;/span&gt;..&lt;span style=&quot;color:#00D&quot;&gt;600&lt;/span&gt;)
+&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n5&quot; name=&quot;n5&quot;&gt;5&lt;/a&gt;&lt;/span&gt;      config.numbers &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;do&lt;/span&gt; |bin, softbin, options|
+&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n6&quot; name=&quot;n6&quot;&gt;6&lt;/a&gt;&lt;/span&gt;       &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;if&lt;/span&gt; options[&lt;span style=&quot;color:#A60&quot;&gt;:number_range&lt;/span&gt;].is_a?(&lt;span style=&quot;color:#036;font-weight:bold&quot;&gt;Range&lt;/span&gt;)
+&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n7&quot; name=&quot;n7&quot;&gt;7&lt;/a&gt;&lt;/span&gt;        &lt;span style=&quot;color:#036;font-weight:bold&quot;&gt;TestIds&lt;/span&gt;.next_in_range(options[&lt;span style=&quot;color:#A60&quot;&gt;:number_range&lt;/span&gt;], options)
+&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n8&quot; name=&quot;n8&quot;&gt;8&lt;/a&gt;&lt;/span&gt;       &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;line-numbers&quot;&gt; &lt;a href=&quot;#n9&quot; name=&quot;n9&quot;&gt;9&lt;/a&gt;&lt;/span&gt;     &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;end&lt;/span&gt; 
+&lt;span class=&quot;line-numbers&quot;&gt;&lt;strong&gt;&lt;a href=&quot;#n10&quot; name=&quot;n10&quot;&gt;10&lt;/a&gt;&lt;/strong&gt;&lt;/span&gt;
+</code></pre></div>
+</div>
+</div>
+
+<p>Please be aware use of specific ranges for more than one TYPE (bin/softbin/numbers) in the configurations has not yet been verified and will most likely need further enhancements to this method.</p>
+
+<p>For more examples, please look at the examples in spec/specific_ranges.rb file</p>
+
+<p><em>Also if the current provided range is not sufficient, the plugin will display an Origen error log warning and raise an exception, thus stopping generation until the range is increased.</em></p>
+
+<div class="language-ruby highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre class="code ruby"><code class="ruby">&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n1&quot; name=&quot;n1&quot;&gt;1&lt;/a&gt;&lt;/span&gt;[&lt;span style=&quot;color:#036;font-weight:bold&quot;&gt;ERROR&lt;/span&gt;]      &lt;span style=&quot;color:#60E&quot;&gt;2.500&lt;/span&gt;[&lt;span style=&quot;color:#60E&quot;&gt;0.051&lt;/span&gt;]    || &lt;span style=&quot;color:#036;font-weight:bold&quot;&gt;Assigned&lt;/span&gt; value &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;not&lt;/span&gt; &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;in&lt;/span&gt; range
+&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n2&quot; name=&quot;n2&quot;&gt;2&lt;/a&gt;&lt;/span&gt;
+&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n3&quot; name=&quot;n3&quot;&gt;3&lt;/a&gt;&lt;/span&gt;&lt;span style=&quot;color:#036;font-weight:bold&quot;&gt;COMPLETE&lt;/span&gt; &lt;span style=&quot;color:#036;font-weight:bold&quot;&gt;CALL&lt;/span&gt; &lt;span style=&quot;color:#036;font-weight:bold&quot;&gt;STACK&lt;/span&gt;
+&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n4&quot; name=&quot;n4&quot;&gt;4&lt;/a&gt;&lt;/span&gt;-------------------
+&lt;span class=&quot;line-numbers&quot;&gt;&lt;a href=&quot;#n5&quot; name=&quot;n5&quot;&gt;5&lt;/a&gt;&lt;/span&gt;
+</code></pre></div>
+</div>
+</div>
+
 <h2 id="storage">Storage</h2>
 
 <p>The main benefit of this plugin is to get consistent number assignments across different invocations of the program
@@ -417,9 +502,9 @@ valid under the new configuration get re-generated.</p>
 </div></div>
 
       <div id="footer">
-  Generated on Tue Jul  4 05:40:46 2017 by
+  Generated on Tue May 15 06:56:59 2018 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.9 (ruby-2.1.5).
+  0.9.9 (ruby-2.3.0).
 </div>
 
     </div>

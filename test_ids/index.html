@@ -90,7 +90,7 @@
 </nav><div class="row">
   <div class="span12">
 
-    <h1>TestIds <span style="font-size: 14px">(0.8.0)</span>
+    <h1>TestIds <span style="font-size: 14px">(0.8.1)</span>
 </h1>
 
     <p>An Origen plugin to automatically assign and maintain test program bin and test numbers.</p>
@@ -182,13 +182,13 @@ available to each one:</p>
 
     <ul>
 <li>
-<strong>bin</strong> - These are generated first, and therefore can only be configured to be generated from a range</li>
+<strong>bin</strong> - These are generated first, and therefore can only be configured to be generated from a range. They can also be generated from a specific range per test. Please see Using specific ranges below.</li>
       <li>
 <strong>softbin</strong> - These come next, and they can be generated from a range or from either a template or a function which
-references the bin number</li>
+references the bin number. They can also be generated from a specific range per test. Please see Using specific ranges below.</li>
       <li>
 <strong>number</strong> - The test number comes last, and they can be generated from a range or from either a template or a function which
-references the bin number and/or softbin number</li>
+references the bin number and/or softbin number. They can also be generated from a specific range per test. Please see Using specific ranges below.</li>
     </ul>
 <div>    
   <a class="anchor" name="Assigning_a_Range"></a>          
@@ -382,6 +382,99 @@ func <span style="color:#A60">:my_func_16mhz</span>, <span style="color:#606">te
 func <span style="color:#A60">:my_func_33mhz</span>, <span style="color:#606">bin</span>: <span style="color:#A60">:my_func</span>
 func <span style="color:#A60">:my_func_25mhz</span>, <span style="color:#606">bin</span>: <span style="color:#A60">:my_func</span>
 func <span style="color:#A60">:my_func_16mhz</span>, <span style="color:#606">bin</span>: <span style="color:#A60">:my_func</span>
+</pre></div>
+</div>
+    </div>
+
+    <div>    
+  <a class="anchor" name="Using_specified_ranges_(Beta_Feature)"></a>          
+  <h3><a href="#Using_specified_ranges_(Beta_Feature)">Using specified ranges (Beta Feature)</a></h3>          
+</div>
+
+    <p><strong>It is assumed that in the configuration the user will configure the bins first, softbins next and numbers last</strong></p>
+
+    <p>A new limited feature has been added to the plugin. It will let the user specify ranges in the flow for different TYPE (softbin/bin/number) and the plugin will figure out the next available number from that range.</p>
+
+    <p>Application side, the user needs to make sure that a check if in place in the interface to confirm that the softbin/bin/numbers being passed to a function or method are not nil.</p>
+
+    <p>Example: if number is a function of both softbin and bin, and softbin uses specific ranges, the following will be required in the configuration</p>
+
+    <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>config.numbers <span style="color:#080;font-weight:bold">do</span> |bin, softbin|
+ <span style="color:#080;font-weight:bold">unless</span> softbin.nil?
+  (softbin * <span style="color:#00D">10</span>) + bin 
+ <span style="color:#080;font-weight:bold">end</span> 
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+    </div>
+
+    <p>To enable specific ranges for SoftBins the TestId configuration will be as follows:</p>
+
+    <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>
+     <span style="color:#080;font-weight:bold">if</span> options[<span style="color:#A60">:environment</span>] == <span style="color:#A60">:probe</span>
+        <span style="color:#036;font-weight:bold">TestIds</span>.configure <span style="color:#A60">:wafer_test</span> <span style="color:#080;font-weight:bold">do</span> |config|
+          config.softbins.size = <span style="color:#00D">5</span>
+          config.softbins <span style="color:#080;font-weight:bold">do</span> |bin, options|
+           <span style="color:#080;font-weight:bold">if</span> !options[<span style="color:#A60">:softbin_range</span>].nil? &amp;&amp; options[<span style="color:#A60">:softbin_range</span>].is_a?(<span style="color:#036;font-weight:bold">Range</span>) 
+            <span style="color:#036;font-weight:bold">TestIds</span>.next_in_range(options[<span style="color:#A60">:softbin_range</span>],options)
+           <span style="color:#080;font-weight:bold">end</span>
+          <span style="color:#080;font-weight:bold">end</span>
+        <span style="color:#080;font-weight:bold">end</span>
+        <span style="color:#777"># else different environment settings</span>
+      <span style="color:#080;font-weight:bold">end</span>
+
+</pre></div>
+</div>
+    </div>
+
+    <p>Similar configurations are available for bins and numbers as well.</p>
+
+    <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>
+    <span style="color:#036;font-weight:bold">TestIds</span>.configure <span style="color:#080;font-weight:bold">do</span> |config|
+      config.bins <span style="color:#080;font-weight:bold">do</span> |options|
+       <span style="color:#080;font-weight:bold">if</span> options[<span style="color:#A60">:bin_range</span>].is_a?(<span style="color:#036;font-weight:bold">Range</span>)
+        <span style="color:#036;font-weight:bold">TestIds</span>.next_in_range(options[<span style="color:#A60">:bin_range</span>], options)
+       <span style="color:#080;font-weight:bold">end</span>
+     <span style="color:#080;font-weight:bold">end</span> 
+</pre></div>
+</div>
+    </div>
+
+    <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>
+    <span style="color:#036;font-weight:bold">TestIds</span>.configure <span style="color:#080;font-weight:bold">do</span> |config|
+      config.bins.include &lt;&lt; (<span style="color:#00D">1</span>..<span style="color:#00D">4</span>)
+      config.softbins.include &lt;&lt; (<span style="color:#00D">500</span>..<span style="color:#00D">600</span>)
+      config.numbers <span style="color:#080;font-weight:bold">do</span> |bin, softbin, options|
+       <span style="color:#080;font-weight:bold">if</span> options[<span style="color:#A60">:number_range</span>].is_a?(<span style="color:#036;font-weight:bold">Range</span>)
+        <span style="color:#036;font-weight:bold">TestIds</span>.next_in_range(options[<span style="color:#A60">:number_range</span>], options)
+       <span style="color:#080;font-weight:bold">end</span>
+     <span style="color:#080;font-weight:bold">end</span> 
+
+</pre></div>
+</div>
+    </div>
+
+    <p>Please be aware use of specific ranges for more than one TYPE (bin/softbin/numbers) in the configurations has not yet been verified and will most likely need further enhancements to this method.</p>
+
+    <p>For more examples, please look at the examples in spec/specific_ranges.rb file</p>
+
+    <p><em>Also if the current provided range is not sufficient, the plugin will display an Origen error log warning and raise an exception, thus stopping generation until the range is increased.</em></p>
+
+    <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>[<span style="color:#036;font-weight:bold">ERROR</span>]      <span style="color:#60E">2.500</span>[<span style="color:#60E">0.051</span>]    || <span style="color:#036;font-weight:bold">Assigned</span> value <span style="color:#080;font-weight:bold">not</span> <span style="color:#080;font-weight:bold">in</span> range
+
+<span style="color:#036;font-weight:bold">COMPLETE</span> <span style="color:#036;font-weight:bold">CALL</span> <span style="color:#036;font-weight:bold">STACK</span>
+-------------------
+
 </pre></div>
 </div>
     </div>
