@@ -299,23 +299,6 @@ bit descriptions:</p>
 </div>
     </div>
 
-    <div class="language-eruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>## Register Map with Current Value
-
-% $dut.regs.each do |name, reg|
-
-<span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> render <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">doc_helpers/register.html</span><span style="color:#710">"</span></span>, <span style="color:#606">reg</span>: reg, <span style="color:#606">preserve_target</span>: <span style="color:#069">true</span>, <span style="color:#606">descriptions</span>: <span style="color:#069">true</span> , <span style="color:#606">current_value</span>: <span style="color:#069">true</span><span style="font-weight:bold;color:#666">%&gt;</span></span>
-
-% end
-</pre></div>
-</div>
-    </div>
-
-    <p>Please note that the highlighting only works when the bit values match 
-explicitly.  It will not match partial descriptions, e.g. value is 000
-and bitfield description is 00.</p>
-
     <div class="register">
 <a class="anchor" name="mclkdiv"></a>
 
@@ -325,10 +308,6 @@ and bitfield description is 00.</p>
   <h4><a href="#0x3_-_The_Long_Name_of_the_Reg_(mclkdiv)">0x3 - The Long Name of the Reg (mclkdiv)</a></h4>          
 </div>
 </a>
-<div>    
-  <a class="anchor" name="Current_Value:_0x8400"></a>          
-  <h4><a href="#Current_Value:_0x8400">Current Value: 0x8400</a></h4>          
-</div>
 
 <div style="margin: 0 0 20px 0">
 
@@ -377,14 +356,14 @@ operations.</p>
       <td class="readable writable"></td>
       <td class="readable writable" colspan="2"></td>
     </tr>
-<tr class="current_value">
-<td class="heading">Current Value</td>
+<tr class="reset">
+<td class="heading">Reset</td>
         <td>1</td>
         <td>0</td>
             <td colspan="2">0</td>
         <td>0</td>
         <td>1</td>
-            <td colspan="2">0</td>
+            <td colspan="2">X</td>
     </tr>
 </tbody>
 </table>
@@ -419,10 +398,10 @@ operations.</p>
       <td class="not-writable"></td> 
       <td class="not-writable"></td> 
     </tr>
-<tr class="current_value">
-<td class="heading">Current Value</td>
-            <td colspan="1">0</td>
-            <td colspan="5">0</td>
+<tr class="reset">
+<td class="heading">Reset</td>
+            <td colspan="1">X</td>
+            <td colspan="5">M</td>
       <td></td> 
       <td></td> 
     </tr>
@@ -448,10 +427,17 @@ operations.</p>
               <p><strong>Oscillator (Hi)</strong> - Firmware FMU clock source selection. (Note that in addition to this firmware-controlled bit, the
 FMU clock source is also dependent on test and power control discretes).</p>
 
-              <p>0 | FMU clock is the externally supplied bus clock ipg_clk<br><span style="background-color: #66FF66"> 1 | FMU clock is the internal oscillator from the TFS hardblock
-</span><br></p>
-
-            </td>
+              <table class="table"><tbody>
+<tr>
+<td>0</td>
+                    <td>FMU clock is the externally supplied bus clock ipg_clk</td>
+                  </tr>
+<tr>
+<td>1</td>
+                    <td>FMU clock is the internal oscillator from the TFS hardblock</td>
+                  </tr>
+</tbody></table>
+</td>
     </tr>
 <tr>
 <td>
@@ -494,10 +480,17 @@ See the TFL3 Hard Block Creation Guide for more details.</p>
 Load Memory (LDM) instruction. The setting of this bit only makes a difference when reading with LDM, all other
 MGATE reads from UIFR/RIFR will always have ECC disabled and reads from FW will have ECC enabled.</p>
 
-              <p>0 | ECC is disabled for UIFR, RIFR, and FW reads when using the LDM instruction<br><span style="background-color: #66FF66"> 1 | ECC is enabled for all UIFR, RIFR, and FW reads when using the LDM instruction
-</span><br></p>
-
-            </td>
+              <table class="table"><tbody>
+<tr>
+<td>0</td>
+                    <td>ECC is disabled for UIFR, RIFR, and FW reads when using the LDM instruction</td>
+                  </tr>
+<tr>
+<td>1</td>
+                    <td>ECC is enabled for all UIFR, RIFR, and FW reads when using the LDM instruction</td>
+                  </tr>
+</tbody></table>
+</td>
     </tr>
 <tr>
 <td>
@@ -557,6 +550,23 @@ achieved with 8-bit and 16-bit PTIMER loads for various input clock frequencies 
 </tbody>
 </table>
 </div>
+
+    <div class="language-eruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>## Register Map with Current Value
+
+% $dut.regs.each do |name, reg|
+
+<span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> render <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">doc_helpers/register.html</span><span style="color:#710">"</span></span>, <span style="color:#606">reg</span>: reg, <span style="color:#606">preserve_target</span>: <span style="color:#069">true</span>, <span style="color:#606">descriptions</span>: <span style="color:#069">true</span> , <span style="color:#606">current_value</span>: <span style="color:#069">true</span><span style="font-weight:bold;color:#666">%&gt;</span></span>
+
+% end
+</pre></div>
+</div>
+    </div>
+
+    <p>Please note that the highlighting only works when the bit values match 
+explicitly.  It will not match partial descriptions, e.g. value is 000
+and bitfield description is 00.</p>
 
     <div>    
   <a class="anchor" name="Additional_Test_Cases"></a>          
