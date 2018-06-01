@@ -6,7 +6,7 @@
 <title>
   Class: OrigenJTAG::Driver
   
-    &mdash; Origen JTAG 0.18.0
+    &mdash; Origen JTAG 0.19.0
   
 </title>
 
@@ -593,7 +593,13 @@ register.</p>
 71
 72
 73
-74</pre>
+74
+75
+76
+77
+78
+79
+80</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 34</span>
@@ -638,6 +644,12 @@ register.</p>
   <span class='ivar'>@tdo_store_cycle</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:tdo_store_cycle</span><span class='rbracket'>]</span>
   <span class='ivar'>@state</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:init_state</span><span class='rbracket'>]</span>
   <span class='ivar'>@log_state_changes</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:log_state_changes</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='kw'>false</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:tclk_vals</span><span class='rbracket'>]</span>
+    <span class='ivar'>@tclk_vals</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:tclk_vals</span><span class='rbracket'>]</span>
+    <span class='kw'>unless</span> <span class='ivar'>@tclk_vals</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'>Hash</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='ivar'>@tclk_vals</span><span class='period'>.</span><span class='id identifier rubyid_key?'>key?</span><span class='lparen'>(</span><span class='symbol'>:on</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='ivar'>@tclk_vals</span><span class='period'>.</span><span class='id identifier rubyid_key?'>key?</span><span class='lparen'>(</span><span class='symbol'>:off</span><span class='rparen'>)</span>
+      <span class='id identifier rubyid_fail'>fail</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>When specifying TCLK values, you must supply a hash with both :on and :off keys, e.g. tclk_vals: { on: &#39;P&#39;, off: 0 }</span><span class='tstring_end'>&quot;</span></span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -987,12 +999,6 @@ written out prior to shifting data.</p>
       <pre class="lines">
 
 
-401
-402
-403
-404
-405
-406
 407
 408
 409
@@ -1001,10 +1007,16 @@ written out prior to shifting data.</p>
 412
 413
 414
-415</pre>
+415
+416
+417
+418
+419
+420
+421</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 401</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 407</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_read_dr'>read_dr</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_tester'>tester</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:read_dr</span><span class='rparen'>)</span>
@@ -1139,12 +1151,6 @@ written out prior to shifting data.</p>
       <pre class="lines">
 
 
-471
-472
-473
-474
-475
-476
 477
 478
 479
@@ -1153,10 +1159,16 @@ written out prior to shifting data.</p>
 482
 483
 484
-485</pre>
+485
+486
+487
+488
+489
+490
+491</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 471</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 477</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_read_ir'>read_ir</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_tester'>tester</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:read_ir</span><span class='rparen'>)</span>
@@ -1341,12 +1353,6 @@ of a shift operation.</p>
       <pre class="lines">
 
 
-110
-111
-112
-113
-114
-115
 116
 117
 118
@@ -1487,10 +1493,16 @@ of a shift operation.</p>
 253
 254
 255
-256</pre>
+256
+257
+258
+259
+260
+261
+262</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 110</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 116</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_shift'>shift</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span>
@@ -1672,12 +1684,6 @@ similar</p>
       <pre class="lines">
 
 
-262
-263
-264
-265
-266
-267
 268
 269
 270
@@ -1737,10 +1743,16 @@ similar</p>
 324
 325
 326
-327</pre>
+327
+328
+329
+330
+331
+332
+333</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 262</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 268</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_tclk_cycle'>tclk_cycle</span>
   <span class='kw'>case</span> <span class='ivar'>@tclk_format</span>
@@ -1774,7 +1786,7 @@ similar</p>
 
     <span class='kw'>if</span> <span class='id identifier rubyid_i'>i</span> <span class='op'>&lt;</span> <span class='lparen'>(</span><span class='ivar'>@tclk_multiple</span> <span class='op'>+</span> <span class='int'>1</span><span class='rparen'>)</span> <span class='op'>/</span> <span class='int'>2</span>
       <span class='comment'># first half of cycle
-</span>      <span class='ivar'>@tck_pin</span><span class='period'>.</span><span class='id identifier rubyid_drive'>drive</span><span class='lparen'>(</span><span class='id identifier rubyid_tclk_val'>tclk_val</span><span class='rparen'>)</span>
+</span>      <span class='ivar'>@tck_pin</span><span class='period'>.</span><span class='id identifier rubyid_drive'>drive</span><span class='lparen'>(</span><span class='ivar'>@tclk_vals</span> <span class='op'>?</span> <span class='ivar'>@tclk_vals</span><span class='lbracket'>[</span><span class='symbol'>:on</span><span class='rbracket'>]</span> <span class='op'>:</span> <span class='id identifier rubyid_tclk_val'>tclk_val</span><span class='rparen'>)</span>
       <span class='kw'>unless</span> <span class='id identifier rubyid_tdo_already_suspended'>tdo_already_suspended</span>
         <span class='kw'>unless</span> <span class='id identifier rubyid_tdo_to_be_captured'>tdo_to_be_captured</span>
           <span class='kw'>if</span> <span class='id identifier rubyid_mask_tdo_half0'>mask_tdo_half0</span>
@@ -1788,7 +1800,7 @@ similar</p>
       <span class='kw'>end</span>
     <span class='kw'>else</span>
       <span class='comment'># second half of cycle
-</span>      <span class='ivar'>@tck_pin</span><span class='period'>.</span><span class='id identifier rubyid_drive'>drive</span><span class='lparen'>(</span><span class='int'>1</span> <span class='op'>-</span> <span class='id identifier rubyid_tclk_val'>tclk_val</span><span class='rparen'>)</span>
+</span>      <span class='ivar'>@tck_pin</span><span class='period'>.</span><span class='id identifier rubyid_drive'>drive</span><span class='lparen'>(</span><span class='ivar'>@tclk_vals</span> <span class='op'>?</span> <span class='ivar'>@tclk_vals</span><span class='lbracket'>[</span><span class='symbol'>:off</span><span class='rbracket'>]</span> <span class='op'>:</span> <span class='lparen'>(</span><span class='int'>1</span> <span class='op'>-</span> <span class='id identifier rubyid_tclk_val'>tclk_val</span><span class='rparen'>)</span><span class='rparen'>)</span>
       <span class='kw'>unless</span> <span class='id identifier rubyid_tdo_already_suspended'>tdo_already_suspended</span>
         <span class='kw'>unless</span> <span class='id identifier rubyid_tdo_to_be_captured'>tdo_to_be_captured</span>
           <span class='kw'>if</span> <span class='id identifier rubyid_mask_tdo_half1'>mask_tdo_half1</span>
@@ -1860,12 +1872,6 @@ TCLK</p>
       <pre class="lines">
 
 
-333
-334
-335
-336
-337
-338
 339
 340
 341
@@ -1881,10 +1887,16 @@ TCLK</p>
 351
 352
 353
-354</pre>
+354
+355
+356
+357
+358
+359
+360</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 333</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 339</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='id identifier rubyid_val'>val</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='ivar'>@deferred_compare</span>
@@ -2022,22 +2034,22 @@ written out prior to shifting data.</p>
       <pre class="lines">
 
 
-370
-371
-372
-373
-374
-375
 376
 377
 378
 379
 380
 381
-382</pre>
+382
+383
+384
+385
+386
+387
+388</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 370</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 376</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_write_dr'>write_dr</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_tester'>tester</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:write_dr</span><span class='rparen'>)</span>
@@ -2185,12 +2197,6 @@ write occurs.</p>
       <pre class="lines">
 
 
-437
-438
-439
-440
-441
-442
 443
 444
 445
@@ -2200,10 +2206,16 @@ write occurs.</p>
 449
 450
 451
-452</pre>
+452
+453
+454
+455
+456
+457
+458</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 437</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 443</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_write_ir'>write_ir</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_tester'>tester</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:write_ir</span><span class='rparen'>)</span>
@@ -2231,9 +2243,9 @@ write occurs.</p>
 </div>
 
       <div id="footer">
-  Generated on Thu Apr 19 07:27:30 2018 by
+  Generated on Fri Jun  1 14:58:12 2018 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.9 (ruby-2.3.0).
+  0.9.9 (ruby-2.4.4).
 </div>
 
     </div>
