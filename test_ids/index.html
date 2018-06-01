@@ -65,7 +65,8 @@
   <body>
     
       <div class="container">
-        <nav class="navbar navbar-inverse navbar-fixed-top"><div class="container">
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
         <span class="sr-only">Toggle navigation</span>
@@ -77,20 +78,24 @@
     </div>
     <div id="navbar" class="collapse navbar-collapse">
       <ul class="nav navbar-nav">
-<li class=""><a href="/test_ids/api/">API</a></li>
+        <li class=""><a href="/test_ids/api/">API</a></li>
         <li><a href="https://github.com/Origen-SDK/test_ids">Github</a></li>
         <li class=""><a href="/test_ids/release_notes">Release Notes</a></li>
       </ul>
 <a href="http://origen-sdk.org" class=" pull-right">
-  <img src="http://origen-sdk.org/img/origen-device.png" style="height:30px; margin-top: 10px;"><img src="http://origen-sdk.org/img/origen-text.png" style="height:15px; margin-top: 10px; margin-left: 5px;"></a>
+  <img src="http://origen-sdk.org/img/origen-device.png" style="height:30px; margin-top: 10px;">
+  <img src="http://origen-sdk.org/img/origen-text.png" style="height:15px; margin-top: 10px; margin-left: 5px;">
+</a>
 
     </div>
 <!--/.nav-collapse -->
   </div>
-</nav><div class="row">
+</nav>
+
+<div class="row">
   <div class="span12">
 
-    <h1>TestIds <span style="font-size: 14px">(0.8.2)</span>
+    <h1>TestIds <span style="font-size: 14px">(1.0.0)</span>
 </h1>
 
     <p><a href="https://coveralls.io/github/Origen-SDK/test_ids?branch=master"><img src="https://coveralls.io/repos/github/Origen-SDK/test_ids/badge.svg?branch=master" alt="Coverage Status"></a></p>
@@ -137,8 +142,8 @@ require it somewhere (at the top of your test program interface would be a good 
       <span style="color:#036;font-weight:bold">TestIds</span>.configure <span style="color:#080;font-weight:bold">do</span> |config|
         config.bins.include &lt;&lt; (<span style="color:#00D">100</span>..<span style="color:#00D">500</span>)
         config.softbins = <span style="color:#A60">:bbb000</span>
-        config.numbers <span style="color:#080;font-weight:bold">do</span> |bin, softbin|
-          (softbin * <span style="color:#00D">10</span>) + bin 
+        config.numbers <span style="color:#606">needs</span>: [<span style="color:#A60">:bin</span>, <span style="color:#A60">:softbin</span>] <span style="color:#080;font-weight:bold">do</span> |options|
+          (options[<span style="color:#A60">:softbin</span>] * <span style="color:#00D">10</span>) + options[<span style="color:#A60">:bin</span>] 
         <span style="color:#080;font-weight:bold">end</span>
       <span style="color:#080;font-weight:bold">end</span>
     <span style="color:#080;font-weight:bold">end</span>
@@ -146,7 +151,7 @@ require it somewhere (at the top of your test program interface would be a good 
 </div>
     </div>
 
-    <p>Then anytime that you call <code>flow.test(my_test_instance, options)</code> within your application’s interface, assignments for <code>:bin</code>, <code>:softbin</code> and <code>:number</code> will automatically be injected into the options before it hits OrigenTesters.
+    <p>Then, anytime that you call <code>flow.test(my_test_instance, options)</code> within your application’s interface, assignments for <code>:bin</code>, <code>:softbin</code> and <code>:number</code> will automatically be injected into the options before it hits OrigenTesters.
 If an entry for any of the keys is already present in the options, then that will be given priority and TestIds will not attempt to assign a value for that attribute.</p>
 
     <p>If you want to prevent TestIds from generating a given attribute and really pass <code>nil</code> for that attribute to OrigenTesters, then assign it to the value <code>:none</code>:</p>
@@ -162,10 +167,19 @@ If an entry for any of the keys is already present in the options, then that wil
 
     <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">TestIds</span>.allocate(my_test, options)   <span style="color:#777"># =&gt; { bin: 5, bin_size: 1, softbin: 1250, softbin_size: 1 number: 10250010, number_size: 1 }</span>
+  <div class="code"><pre><span style="color:#036;font-weight:bold">TestIds</span>.allocate(my_test, options)   <span style="color:#777"># =&gt; { bin: 5, bin_size: 1, softbin: 1250, softbin_size: 1, number: 10250010, number_size: 1 }</span>
 
 <span style="color:#777"># The above returns the same numbers that would be injected into the options when calling:</span>
 flow.test my_test, options
+</pre></div>
+</div>
+    </div>
+
+    <p>The convenience methods <code>allocate_bin</code>, <code>allocate_softbin</code> and <code>allocate_number</code> exist to generate only the respective number type:</p>
+
+    <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#036;font-weight:bold">TestIds</span>.allocate_number(my_test, options)   <span style="color:#777"># =&gt; { number: 10250010, number_size: 1 }</span>
 </pre></div>
 </div>
     </div>
@@ -184,20 +198,10 @@ flow.test my_test, options
   <h2><a href="#Configuration">Configuration</a></h2>          
 </div>
 
-    <p>The various ID types are generated in the following order which places some constraints on the configuration options
-available to each one:</p>
+    <p>All ID types (bin, softbin or number), can be generated from either a range, an algorithm, or a function. There now follows a description
+of how to configure each one…</p>
 
-    <ul>
-<li>
-<strong>bin</strong> - These are generated first, and therefore can only be configured to be generated from a range. They can also be generated from a specific range per test. Please see Using specific ranges below.</li>
-      <li>
-<strong>softbin</strong> - These come next, and they can be generated from a range or from either a template or a function which
-references the bin number. They can also be generated from a specific range per test. Please see Using specific ranges below.</li>
-      <li>
-<strong>number</strong> - The test number comes last, and they can be generated from a range or from either a template or a function which
-references the bin number and/or softbin number. They can also be generated from a specific range per test. Please see Using specific ranges below.</li>
-    </ul>
-<div>    
+    <div>    
   <a class="anchor" name="Assigning_a_Range"></a>          
   <h3><a href="#Assigning_a_Range">Assigning a Range</a></h3>          
 </div>
@@ -247,26 +251,29 @@ the example below:</p>
     </div>
 
     <div>    
-  <a class="anchor" name="Assigning_a_Template"></a>          
-  <h3><a href="#Assigning_a_Template">Assigning a Template</a></h3>          
+  <a class="anchor" name="Assigning_an_Algorithm"></a>          
+  <h3><a href="#Assigning_an_Algorithm">Assigning an Algorithm</a></h3>          
 </div>
 
-    <p>Softbin and test numbers can also be generated from a template. Note that if you supply a template for a given ID type
+    <p>Softbin and test numbers can also be generated from an algorithm. Note that if you supply an algorithm for a given ID type
 then you cannot also supply a range.</p>
 
     <p>The template describes the form that the given number should have, using the following key:</p>
 
     <ul>
-<li>
+      <li>
 <strong>b</strong> - A bin number digit</li>
       <li>
 <strong>s</strong> - A softbin number digit</li>
+      <li>
+<strong>n</strong> - A test number digit</li>
       <li>
 <strong>x</strong> - A uniqueness counter</li>
       <li>
 <strong>0-9</strong> - A static digit</li>
     </ul>
-<p>For example, to make the softbins equal to the bin number * 100, you can simply do:</p>
+
+    <p>For example, to make the softbins equal to the bin number * 100, you can simply do:</p>
 
     <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
@@ -294,23 +301,32 @@ you can make some of the digits a unique counter instead:</p>
   <h3><a href="#Assigning_a_Function">Assigning a Function</a></h3>          
 </div>
 
-    <p>If your softbins or test numbers are a function which cannot be expressed using the above template rules, then you can always
-fall back to a custom function.</p>
+    <p>If your numbers need to be derived from a function which cannot be expressed using the above algorithm rules, then you can always
+fall back to a custom callback function, here are some examples:</p>
 
     <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># The softbin function has access to the bin number</span>
-config.softbins <span style="color:#080;font-weight:bold">do</span> |bin|
-  bin * <span style="color:#00D">3</span>
+  <div class="code"><pre>config.softbins <span style="color:#606">needs</span>: <span style="color:#A60">:bin</span> <span style="color:#080;font-weight:bold">do</span> |options|
+  options[<span style="color:#A60">:bin</span>] * <span style="color:#00D">3</span>
 <span style="color:#080;font-weight:bold">end</span>
 
-<span style="color:#777"># And the test number function has access to the softbin too</span>
-config.numbers <span style="color:#080;font-weight:bold">do</span> |bin, softbin|
-  (softbin * <span style="color:#00D">10</span>) + bin 
+config.numbers <span style="color:#606">needs</span>: [<span style="color:#A60">:bin</span>, <span style="color:#A60">:softbin</span>] <span style="color:#080;font-weight:bold">do</span> |options|
+  (options[<span style="color:#A60">:softbin</span>] * <span style="color:#00D">10</span>) + options[<span style="color:#A60">:bin</span>] 
 <span style="color:#080;font-weight:bold">end</span>
 </pre></div>
 </div>
     </div>
+
+    <p>The callback function will have access to all options passed into <code>flow.test</code> by your test program flow, or any passed to
+<code>TestIDs.allocate</code> if called directly.</p>
+
+    <p>Additionally, you should indicate if your function depends on one of the other number types (bin, softbin or number) via the
+<code>:needs</code> option as shown.
+This will ensure that TestIds generates them in the correct order required to ensure that the dependent type is always available
+in the options.</p>
+
+    <p>Note that the natural generation order may mean that it appears to work without supplying the <code>:needs</code> information, however it
+is recommended to always supply this to ensure robust operation across all corner cases.</p>
 
     <div>    
   <a class="anchor" name="Manual_Allocation"></a>          
@@ -393,95 +409,67 @@ func <span style="color:#A60">:my_func_16mhz</span>, <span style="color:#606">bi
 </div>
     </div>
 
-    <div>    
-  <a class="anchor" name="Using_specified_ranges_(Beta_Feature)"></a>          
-  <h3><a href="#Using_specified_ranges_(Beta_Feature)">Using specified ranges (Beta Feature)</a></h3>          
-</div>
+    <p>Finally, if the same test occurs in multiple test flows then it will be assigned the same numbers
+unless it has been differentiated by one of the approaches discussed above.</p>
 
-    <p><strong>It is assumed that in the configuration the user will configure the bins first, softbins next and numbers last</strong></p>
-
-    <p>A new limited feature has been added to the plugin. It will let the user specify ranges in the flow for different TYPE (softbin/bin/number) and the plugin will figure out the next available number from that range.</p>
-
-    <p>Application side, the user needs to make sure that a check if in place in the interface to confirm that the softbin/bin/numbers being passed to a function or method are not nil.</p>
-
-    <p>Example: if number is a function of both softbin and bin, and softbin uses specific ranges, the following will be required in the configuration</p>
+    <p>However, if you generally want to treat tests within different flows as being different, then setting the
+<code>unique_by_flow</code> configuration option to <code>true</code> will cause TestIds to append the flow name to whatever the
+test ID had otherwise been resolved to, thereby ensuring that matching tests in different flows
+will be treated as different tests:</p>
 
     <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre>config.numbers <span style="color:#080;font-weight:bold">do</span> |bin, softbin|
- <span style="color:#080;font-weight:bold">unless</span> softbin.nil?
-  (softbin * <span style="color:#00D">10</span>) + bin 
- <span style="color:#080;font-weight:bold">end</span> 
+  <div class="code"><pre><span style="color:#036;font-weight:bold">TestIds</span>.configure <span style="color:#A60">:my_config</span> <span style="color:#080;font-weight:bold">do</span> |config|
+  config.unique_by_flow = <span style="color:#069">true</span>
 <span style="color:#080;font-weight:bold">end</span>
 </pre></div>
 </div>
     </div>
 
-    <p>To enable specific ranges for SoftBins the TestId configuration will be as follows:</p>
+    <div>    
+  <a class="anchor" name="Next_In_Range_(Beta_Feature)"></a>          
+  <h2><a href="#Next_In_Range_(Beta_Feature)">Next In Range (Beta Feature)</a></h2>          
+</div>
+
+    <p>This feature enables user-specified number ranges to be used within callback functions and TestIds will keep track of
+how many numbers in the range have been consumed so far.</p>
+
+    <p>This is best shown by example:</p>
 
     <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre>
-     <span style="color:#080;font-weight:bold">if</span> options[<span style="color:#A60">:environment</span>] == <span style="color:#A60">:probe</span>
-        <span style="color:#036;font-weight:bold">TestIds</span>.configure <span style="color:#A60">:wafer_test</span> <span style="color:#080;font-weight:bold">do</span> |config|
-          config.softbins.size = <span style="color:#00D">5</span>
-          config.softbins <span style="color:#080;font-weight:bold">do</span> |bin, options|
-           <span style="color:#080;font-weight:bold">if</span> !options[<span style="color:#A60">:softbin_range</span>].nil? &amp;&amp; options[<span style="color:#A60">:softbin_range</span>].is_a?(<span style="color:#036;font-weight:bold">Range</span>) 
-            <span style="color:#036;font-weight:bold">TestIds</span>.next_in_range(options[<span style="color:#A60">:softbin_range</span>],options)
-           <span style="color:#080;font-weight:bold">end</span>
-          <span style="color:#080;font-weight:bold">end</span>
-        <span style="color:#080;font-weight:bold">end</span>
-        <span style="color:#777"># else different environment settings</span>
-      <span style="color:#080;font-weight:bold">end</span>
-
+  <div class="code"><pre><span style="color:#036;font-weight:bold">TestIds</span>.configure <span style="color:#A60">:wafer_test</span> <span style="color:#080;font-weight:bold">do</span> |config|
+  config.bins.include &lt;&lt; (<span style="color:#00D">1</span>..<span style="color:#00D">5</span>)
+  config.softbins.size = <span style="color:#00D">5</span>
+  config.softbins <span style="color:#606">needs</span>: <span style="color:#A60">:bin</span> <span style="color:#080;font-weight:bold">do</span> |options|
+    <span style="color:#080;font-weight:bold">if</span> options[<span style="color:#A60">:bin</span>] == <span style="color:#00D">1</span>
+      <span style="color:#036;font-weight:bold">TestIds</span>.next_in_range((<span style="color:#00D">1000</span>..<span style="color:#00D">2000</span>))
+    <span style="color:#080;font-weight:bold">else</span>
+      <span style="color:#036;font-weight:bold">TestIds</span>.next_in_range((<span style="color:#00D">10000</span>..<span style="color:#00D">99999</span>), <span style="color:#606">size</span>: <span style="color:#00D">5</span>)   <span style="color:#777"># Increment by 5 instead of the default of 1</span>
+    <span style="color:#080;font-weight:bold">end</span>
+  <span style="color:#080;font-weight:bold">end</span>
+<span style="color:#080;font-weight:bold">end</span>
 </pre></div>
 </div>
     </div>
 
-    <p>Similar configurations are available for bins and numbers as well.</p>
+    <p>The <code>next_in_range</code> method will increment through the range and return the next number. The last number given out is recorded
+in the TestIds database so that it will continue from that point the next time.</p>
 
-    <div class="language-ruby highlighter-coderay">
+    <p>Note that use of the same ranges for more than one ID type (bin, softbin or number) within the configurations has not yet been verified,
+and will most likely need further enhancements to this method.</p>
+
+    <p>For more examples, please look at the examples in the <code>spec/specific_ranges.rb</code> file.</p>
+
+    <p><em>Note that if the end of the provided range is reached, the plugin will display an Origen error log warning and raise an exception, thus stopping generation until the range is increased.</em></p>
+
+    <div class="language-text highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre>
-    <span style="color:#036;font-weight:bold">TestIds</span>.configure <span style="color:#080;font-weight:bold">do</span> |config|
-      config.bins <span style="color:#080;font-weight:bold">do</span> |options|
-       <span style="color:#080;font-weight:bold">if</span> options[<span style="color:#A60">:bin_range</span>].is_a?(<span style="color:#036;font-weight:bold">Range</span>)
-        <span style="color:#036;font-weight:bold">TestIds</span>.next_in_range(options[<span style="color:#A60">:bin_range</span>], options)
-       <span style="color:#080;font-weight:bold">end</span>
-     <span style="color:#080;font-weight:bold">end</span> 
-</pre></div>
-</div>
-    </div>
+  <div class="code"><pre>[ERROR]      2.500[0.051]    || Assigned value not in range
 
-    <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>
-    <span style="color:#036;font-weight:bold">TestIds</span>.configure <span style="color:#080;font-weight:bold">do</span> |config|
-      config.bins.include &lt;&lt; (<span style="color:#00D">1</span>..<span style="color:#00D">4</span>)
-      config.softbins.include &lt;&lt; (<span style="color:#00D">500</span>..<span style="color:#00D">600</span>)
-      config.numbers <span style="color:#080;font-weight:bold">do</span> |bin, softbin, options|
-       <span style="color:#080;font-weight:bold">if</span> options[<span style="color:#A60">:number_range</span>].is_a?(<span style="color:#036;font-weight:bold">Range</span>)
-        <span style="color:#036;font-weight:bold">TestIds</span>.next_in_range(options[<span style="color:#A60">:number_range</span>], options)
-       <span style="color:#080;font-weight:bold">end</span>
-     <span style="color:#080;font-weight:bold">end</span> 
-
-</pre></div>
-</div>
-    </div>
-
-    <p>Please be aware use of specific ranges for more than one TYPE (bin/softbin/numbers) in the configurations has not yet been verified and will most likely need further enhancements to this method.</p>
-
-    <p>For more examples, please look at the examples in spec/specific_ranges.rb file</p>
-
-    <p><em>Also if the current provided range is not sufficient, the plugin will display an Origen error log warning and raise an exception, thus stopping generation until the range is increased.</em></p>
-
-    <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>[<span style="color:#036;font-weight:bold">ERROR</span>]      <span style="color:#60E">2.500</span>[<span style="color:#60E">0.051</span>]    || <span style="color:#036;font-weight:bold">Assigned</span> value <span style="color:#080;font-weight:bold">not</span> <span style="color:#080;font-weight:bold">in</span> range
-
-<span style="color:#036;font-weight:bold">COMPLETE</span> <span style="color:#036;font-weight:bold">CALL</span> <span style="color:#036;font-weight:bold">STACK</span>
+COMPLETE CALL STACK
 -------------------
-
+...
 </pre></div>
 </div>
     </div>
@@ -543,7 +531,7 @@ that can be achieved like this:</p>
 
     <div>    
   <a class="anchor" name="Multiple_Configurations"></a>          
-  <h3><a href="#Multiple_Configurations">Multiple Configurations</a></h3>          
+  <h2><a href="#Multiple_Configurations">Multiple Configurations</a></h2>          
 </div>
 
     <p>It may be the case that you want a different configuration for wafer test vs. final test for example. Multiple
@@ -558,16 +546,16 @@ independent configurations can be created by supplying an identifier, like this:
     <span style="color:#036;font-weight:bold">TestIds</span>.configure <span style="color:#A60">:wafer_test</span> <span style="color:#080;font-weight:bold">do</span> |config|
       config.bins.include &lt;&lt; (<span style="color:#00D">100</span>..<span style="color:#00D">500</span>)
       config.softbins = <span style="color:#A60">:bbb000</span>
-      config.numbers <span style="color:#080;font-weight:bold">do</span> |bin, softbin|
-        (softbin * <span style="color:#00D">10</span>) + bin 
+      config.numbers <span style="color:#606">needs</span>: [<span style="color:#A60">:bin</span>, <span style="color:#A60">:softbin</span>] <span style="color:#080;font-weight:bold">do</span> |options|
+        (options[<span style="color:#A60">:softbin</span>] * <span style="color:#00D">10</span>) + options[<span style="color:#A60">:bin</span>] 
       <span style="color:#080;font-weight:bold">end</span>
     <span style="color:#080;font-weight:bold">end</span>
   <span style="color:#080;font-weight:bold">else</span>
     <span style="color:#036;font-weight:bold">TestIds</span>.configure <span style="color:#A60">:final_test</span> <span style="color:#080;font-weight:bold">do</span> |config|
       config.bins.include &lt;&lt; (<span style="color:#00D">1000</span>..<span style="color:#00D">2000</span>)
       config.softbins = <span style="color:#A60">:bbb000</span>
-      config.numbers <span style="color:#080;font-weight:bold">do</span> |bin, softbin|
-        (softbin * <span style="color:#00D">10</span>) + bin 
+      config.numbers <span style="color:#606">needs</span>: [<span style="color:#A60">:bin</span>, <span style="color:#A60">:softbin</span>] <span style="color:#080;font-weight:bold">do</span> |options|
+        (options[<span style="color:#A60">:softbin</span>] * <span style="color:#00D">10</span>) + options[<span style="color:#A60">:bin</span>] 
       <span style="color:#080;font-weight:bold">end</span>
     <span style="color:#080;font-weight:bold">end</span>
   <span style="color:#080;font-weight:bold">end</span>
@@ -586,6 +574,86 @@ independent configurations can be created by supplying an identifier, like this:
 </pre></div>
 </div>
     </div>
+
+    <div>    
+  <a class="anchor" name="Multiple_Active_Configurations"></a>          
+  <h3><a href="#Multiple_Active_Configurations">Multiple Active Configurations</a></h3>          
+</div>
+
+    <p>It is also possible to define multiple configurations and then switch back and forth between them at runtime.</p>
+
+    <p>If you test program interface logic defines multiple configurations at runtime like this:</p>
+
+    <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#036;font-weight:bold">TestIds</span>.repo =  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">ssh://git@github.com:myaccount/my_test_ids.git</span><span style="color:#710">"</span></span>
+  
+<span style="color:#036;font-weight:bold">TestIds</span>.configure <span style="color:#A60">:my_config_1</span> <span style="color:#080;font-weight:bold">do</span> |config|
+  config.bins.include &lt;&lt; (<span style="color:#00D">100</span>..<span style="color:#00D">500</span>)
+  config.softbins = <span style="color:#A60">:bbb000</span>
+  config.numbers <span style="color:#606">needs</span>: [<span style="color:#A60">:bin</span>, <span style="color:#A60">:softbin</span>] <span style="color:#080;font-weight:bold">do</span> |options|
+    (options[<span style="color:#A60">:softbin</span>] * <span style="color:#00D">10</span>) + options[<span style="color:#A60">:bin</span>] 
+  <span style="color:#080;font-weight:bold">end</span>
+<span style="color:#080;font-weight:bold">end</span>
+
+<span style="color:#036;font-weight:bold">TestIds</span>.configure <span style="color:#A60">:my_config_2</span> <span style="color:#080;font-weight:bold">do</span> |config|
+  config.bins.include &lt;&lt; (<span style="color:#00D">1000</span>..<span style="color:#00D">2000</span>)
+  config.softbins = <span style="color:#A60">:bbb000</span>
+  config.numbers <span style="color:#606">needs</span>: [<span style="color:#A60">:bin</span>, <span style="color:#A60">:softbin</span>] <span style="color:#080;font-weight:bold">do</span> |options|
+    (options[<span style="color:#A60">:softbin</span>] * <span style="color:#00D">10</span>) + options[<span style="color:#A60">:bin</span>] 
+  <span style="color:#080;font-weight:bold">end</span>
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+    </div>
+
+    <p>Then, by default the active configuration will be the last one that was defined, <code>:my_config_2</code> in this case.</p>
+
+    <p>To switch the active configuration use this API:</p>
+
+    <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#036;font-weight:bold">TestIds</span>.allocate(my_test, options)    <span style="color:#777"># Allocated from :my_config_2</span>
+
+<span style="color:#036;font-weight:bold">TestIds</span>.config = <span style="color:#A60">:my_config_1</span>
+
+<span style="color:#036;font-weight:bold">TestIds</span>.allocate(my_test, options)    <span style="color:#777"># Allocated from :my_config_1</span>
+</pre></div>
+</div>
+    </div>
+
+    <p>or to temporarily switch:</p>
+
+    <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#036;font-weight:bold">TestIds</span>.allocate(my_test, options)    <span style="color:#777"># Allocated from :my_config_2</span>
+
+<span style="color:#036;font-weight:bold">TestIds</span>.with_config <span style="color:#A60">:my_config_1</span> <span style="color:#080;font-weight:bold">do</span>
+
+  <span style="color:#036;font-weight:bold">TestIds</span>.allocate(my_test, options)    <span style="color:#777"># Allocated from :my_config_1</span>
+
+<span style="color:#080;font-weight:bold">end</span>
+
+<span style="color:#036;font-weight:bold">TestIds</span>.allocate(my_test, options)    <span style="color:#777"># Allocated from :my_config_2</span>
+</pre></div>
+</div>
+    </div>
+
+    <p>Finally, it is even possible to enable different configurations for different ID types:</p>
+
+    <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#036;font-weight:bold">TestIds</span>.bin_config = <span style="color:#A60">:my_config_1</span>
+<span style="color:#036;font-weight:bold">TestIds</span>.softbin_config = <span style="color:#A60">:my_config_1</span>
+<span style="color:#036;font-weight:bold">TestIds</span>.number_config = <span style="color:#A60">:my_config_2</span>
+
+<span style="color:#036;font-weight:bold">TestIds</span>.allocate(my_test, options)    <span style="color:#777"># Bin and Softbin allocated from :my_config_1, Number from :my_config_2</span>
+</pre></div>
+</div>
+    </div>
+
+    <p>If only <code>TestIds.number_config</code> had been set, then the others would continue to be allocated from the default
+active configuration.</p>
 
     <div>    
   <a class="anchor" name="Notes_on_Duplicates"></a>          
@@ -611,7 +679,7 @@ valid under the new configuration get re-generated.</p>
 
     <div style="position: relative">
   <hr>
-<div>    
+  <div>    
   <a class="anchor" name="Comments"></a>          
   <h4><a href="#Comments">Comments</a></h4>          
 </div>
@@ -642,11 +710,15 @@ valid under the new configuration get re-generated.</p>
         dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
     })();
-</script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</script>
+
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
 </noscript>
 
   </div>
 </div>
+
+
       </div><!-- /.container -->
     
 
