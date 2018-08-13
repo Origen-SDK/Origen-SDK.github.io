@@ -75,7 +75,8 @@
   <body>
     
       <div class="container">
-        <nav class="navbar navbar-inverse navbar-fixed-top"><div class="container">
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
         <span class="sr-only">Toggle navigation</span>
@@ -87,23 +88,28 @@
     </div>
     <div id="navbar" class="collapse navbar-collapse">
       <ul class="nav navbar-nav">
-<li class="active"><a href="/doc_helpers/helpers">Helpers</a></li>
+        <li class="active"><a href="/doc_helpers/helpers">Helpers</a></li>
         <li class=""><a href="/doc_helpers/release_notes">Release Notes</a></li>
         <li><a href="https://github.com/Origen-SDK/origen_doc_helpers">Github</a></li>
       </ul>
 <a href="http://origen-sdk.org" class=" pull-right">
-  <img src="http://origen-sdk.org/img/origen-device.png" style="height:30px; margin-top: 10px;"><img src="http://origen-sdk.org/img/origen-text.png" style="height:15px; margin-top: 10px; margin-left: 5px;"></a>
+  <img src="http://origen-sdk.org/img/origen-device.png" style="height:30px; margin-top: 10px;">
+  <img src="http://origen-sdk.org/img/origen-text.png" style="height:15px; margin-top: 10px; margin-left: 5px;">
+</a>
 
     </div>
 <!--/.nav-collapse -->
   </div>
-</nav><div class="row">
+</nav>
+
+<div class="row">
   <div class="col-md-3 sidebar-nav-container">
     <div class="well sidebar-nav" style="margin-top: 20px;">
         <div id="search">
           <form style="margin-bottom: 15px;">
             <div class="input-group">
-              <input class="form-control" type="search" placeholder="Search these docs..."><span class="input-group-btn">
+              <input class="form-control" type="search" placeholder="Search these docs...">
+              <span class="input-group-btn">
                 <button type="submit" class="btn btn-search">GO!</button>
               </span>
             </div>
@@ -115,7 +121,7 @@
 <li class="active"><a href="/doc_helpers/helpers/searchable/intro/">Introduction</a></li>
 <li class=""><a href="/doc_helpers/helpers/searchable/page2/">Page 2</a></li>
            </ul>
-<div class="panel panel-default">
+          <div class="panel panel-default">
             <div class="panel-heading clickable" data-toggle="collapse" data-parent="#sidebar-accordion" href="#sidebar-collapse-1">
               <a class="no-underline">
                 Topic 1
@@ -127,7 +133,7 @@
 <li class=""><a href="/doc_helpers/helpers/searchable/topic1/item1">First Item</a></li>
 <li class=""><a href="/doc_helpers/helpers/searchable/topic1/item2">Second Item</a></li>
                 </ul>
-</div>
+              </div>
             </div>
           </div>
       
@@ -138,10 +144,13 @@
   </div>
 
   <div class="col-md-9 nav-page-container">
-    <article class="search-results"><h2 class="topic-subtitle">Creating Searchable Documents</h2>
+    <article class="search-results">
+
+      <h2 class="topic-subtitle">Creating Searchable Documents</h2>
 
       <hr>
-<p>This helper provides a layout that will create a nested collection of
+
+      <p>This helper provides a layout that will create a nested collection of
 documents like this one and which are searchable via the box on the 
 top left.</p>
 
@@ -190,6 +199,63 @@ index[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#7
 </pre></div>
 </div>
       </div>
+
+      <div>    
+  <a class="anchor" name="Guide_Index_API"></a>          
+  <h4><a href="#Guide_Index_API">Guide Index API</a></h4>          
+</div>
+
+      <p>An API is available to programatically define the document index, here is the first example above defined
+via the API rather than creating the hash explicitly:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>index = <span style="color:#036;font-weight:bold">OrigenDocHelpers</span>::<span style="color:#036;font-weight:bold">GuideIndex</span>.new
+index.section <span style="color:#069">nil</span> <span style="color:#080;font-weight:bold">do</span> |section|
+  section.page <span style="color:#A60">:intro</span>, <span style="color:#606">heading</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Introduction</span><span style="color:#710">"</span></span>
+  section.page <span style="color:#A60">:page2</span>, <span style="color:#606">heading</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Page 2</span><span style="color:#710">"</span></span>
+  <span style="color:#080;font-weight:bold">end</span>
+index.section <span style="color:#A60">:topic1</span>, <span style="color:#606">heading</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Topic 1</span><span style="color:#710">"</span></span> <span style="color:#080;font-weight:bold">do</span> |section|
+  section.page <span style="color:#A60">:item1</span>, <span style="color:#606">heading</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">First Item</span><span style="color:#710">"</span></span>
+  section.page <span style="color:#A60">:item2</span>, <span style="color:#606">heading</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Second Item</span><span style="color:#710">"</span></span>
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>On the face of it, this is just a slightly different way of writing the same thing and you may or may not prefer
+using the API vs. defining the hash directly.</p>
+
+      <p>However, the advantage of the API is that it allows the index to be defined out of order, allowing the user
+to insert entries at specific points in the index table. This can be useful to allow plugins to add pages to
+a parent application’s guide section.</p>
+
+      <p>This is achieved by adding <code>:before</code> and <code>:after</code> options, here for example to add a new section before “Topic 1”:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>index.section <span style="color:#A60">:topic0</span>, <span style="color:#606">heading</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Topic 0</span><span style="color:#710">"</span></span>, <span style="color:#606">before</span>: <span style="color:#A60">:topic1</span> <span style="color:#080;font-weight:bold">do</span> |section|
+  section.page <span style="color:#A60">:my_topic</span>
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>or to add a new page within the “Topic 1” section:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>index.section <span style="color:#A60">:topic1</span> <span style="color:#080;font-weight:bold">do</span> |section|
+  section.page <span style="color:#A60">:my_topic</span>, <span style="color:#606">heading</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">My Heading</span><span style="color:#710">"</span></span>, <span style="color:#606">after</span>: <span style="color:#A60">:item1</span>
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>Note that both the <code>.section</code> and <code>.page</code> methods support the use of <code>:before</code> or <code>:after</code>.</p>
+
+      <p>If neither option is given when referencing an existing <code>GuideIndex</code> instance then the new section/page
+will simply be appended onto the end.</p>
 
       <div>    
   <a class="anchor" name="The_Layout_Helper"></a>          
@@ -299,7 +365,7 @@ Hello I'm item 1
 
       <div style="position: relative">
   <hr>
-<div>    
+  <div>    
   <a class="anchor" name="Comments"></a>          
   <h4><a href="#Comments">Comments</a></h4>          
 </div>
@@ -330,14 +396,18 @@ Hello I'm item 1
         dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
     })();
-</script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</script>
+
+      <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
 </noscript>
 
     </article>
-</div>
+  </div>
 </div>
 
 <script src="/doc_helpers/search.js"></script>
+
+
       </div><!-- /.container -->
     
 
