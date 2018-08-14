@@ -6,7 +6,7 @@
 <title>
   Class: Origen::Utility::Collector
   
-    &mdash; Origen Core 0.33.3
+    &mdash; Origen Core 0.34.0
   
 </title>
 
@@ -129,7 +129,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Returns the value of attribute <em>hash</em>.</p>
+<p>Returns the collector&#39;s hash.</p>
 </div></span>
   
 </li>
@@ -158,9 +158,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Need to keep a seperate methods list so we know what&#39;s been added by
-method missing instead of what&#39;s been added either by the hash or by
-method missing.</p>
+<p>List of the currently seen method names.</p>
 </div></span>
   
 </li>
@@ -189,7 +187,7 @@ method missing.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Returns the value of attribute merge_method.</p>
+<p>Queries the current merge_method.</p>
 </div></span>
   
 </li>
@@ -211,7 +209,7 @@ method missing.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#initialize-instance_method" title="#initialize (instance method)">#<strong>initialize</strong>(options = {}, &amp;block)  &#x21d2; Collector </a>
+      <a href="#initialize-instance_method" title="#initialize (instance method)">#<strong>initialize</strong>(options = {}) {|self| ... } &#x21d2; Collector </a>
     
 
     
@@ -228,7 +226,8 @@ method missing.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>A new instance of Collector.</p>
+<p>Creates a new Collector object and creates a Hash out of the methods names
+and values in the given block.</p>
 </div></span>
   
 </li>
@@ -251,15 +250,18 @@ method missing.</p>
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>Using the method name, creates a key in the Collector with argument given
+to the method.</p>
+</div></span>
   
 </li>
 
       
-        <li class="public ">
+        <li class="public deprecated">
   <span class="summary_signature">
     
-      <a href="#store-instance_method" title="#store (instance method)">#<strong>store</strong>  &#x21d2; Object </a>
+      <a href="#store-instance_method" title="#store (instance method)">#<strong>store</strong>  &#x21d2; Hash </a>
     
 
     
@@ -269,12 +271,12 @@ method missing.</p>
   
   
   
-  
+  <span class="deprecated note title">deprecated</span>
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Legacy store method.</p>
+    <span class="summary_desc"><strong>Deprecated.</strong> <div class='inline'>
+<p>Use Ruby-centric <span class='object_link'><a href="#to_hash-instance_method" title="Origen::Utility::Collector#to_hash (method)">#to_hash</a></span> instead.</p>
 </div></span>
   
 </li>
@@ -283,7 +285,7 @@ method missing.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#to_hash-instance_method" title="#to_hash (instance method)">#<strong>to_hash</strong>  &#x21d2; Object </a>
+      <a href="#to_hash-instance_method" title="#to_hash (instance method)">#<strong>to_hash</strong>  &#x21d2; Hash </a>
     
 
     
@@ -299,7 +301,9 @@ method missing.</p>
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the collector, as a Hash.</p>
+</div></span>
   
 </li>
 
@@ -313,7 +317,7 @@ method missing.</p>
     <div class="method_details first">
   <h3 class="signature first" id="initialize-instance_method">
   
-    #<strong>initialize</strong>(options = {}, &amp;block)  &#x21d2; <tt><span class='object_link'><a href="" title="Origen::Utility::Collector (class)">Collector</a></span></tt> 
+    #<strong>initialize</strong>(options = {}) {|self| ... } &#x21d2; <tt><span class='object_link'><a href="" title="Origen::Utility::Collector (class)">Collector</a></span></tt> 
   
 
   
@@ -322,13 +326,131 @@ method missing.</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns a new instance of Collector</p>
+<p>Creates a new Collector object and creates a Hash out of the methods names
+and values in the given block.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+  <div class="examples">
+    <p class="tag_title">Examples:</p>
+    
+      
+        <p class="example_title"><div class='inline'>
+<p>Create a collector to transform a block into a Hash</p>
+</div></p>
+      
+      <pre class="example code"><code><span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Utility.html" title="Origen::Utility (module)">Utility</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="" title="Origen::Utility::Collector (class)">Collector</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_c'>c</span><span class='op'>|</span> <span class='id identifier rubyid_c'>c</span><span class='period'>.</span><span class='id identifier rubyid_my_param'>my_param</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>My Parameter</span><span class='tstring_end'>&#39;</span></span><span class='rbrace'>}</span><span class='period'>.</span><span class='id identifier rubyid_to_h'>to_h</span> <span class='comment'>#=&gt; {my_param: &#39;My Parameter&#39;}</span></code></pre>
+    
+  </div>
+<p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>options</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../../Hash.html" title="Hash (class)">Hash</a></span></tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>{}</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Customization options.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+  
+    
+    
+    <p class="tag_title">Options Hash (<tt>options</tt>):</p>
+    <ul class="option">
+      
+        <li>
+          <span class="name">:hash</span>
+          <span class="type">(<tt><span class='object_link'><a href="../../Hash.html" title="Hash (class)">Hash</a></span></tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'>
+<p>Input, or starting, values that are set in the output hash prior to calling
+the given block.</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">:merge_method</span>
+          <span class="type">(<tt><span class='object_link'><a href="../../Symbol.html" title="Symbol (class)">Symbol</a></span></tt>)</span>
+          <span class="default">
+            
+              &mdash; default:
+              <tt>:keep_hash</tt>
+            
+          </span>
+          
+            &mdash; <div class='inline'>
+<p>Indicates how arguments that exist in both the input hash and in the block
+should be handled. Accpeted values are :keep_hash, :keep_block, :fail.</p>
+</div>
+          
+        </li>
+      
+    </ul>
+  
+
+<p class="tag_title">Yields:</p>
+<ul class="yield">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>self</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Passes the collector to the given block.</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Raises:</p>
+<ul class="raise">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../OrigenError.html" title="Origen::OrigenError (class)">Origen::OrigenError</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Raised when an unknown merge method is used.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+  <p class="tag_title">See Also:</p>
+  <ul class="see">
+    
+      <li><a href="http://origen-sdk.org/origen/guides/misc/utilities/#Collector" target="_parent" title="http://origen-sdk.org/origen/guides/misc/utilities/#Collector">http://origen-sdk.org/origen/guides/misc/utilities/#Collector</a></li>
+    
+  </ul>
 
 </div><table class="source_code">
   <tr>
@@ -336,23 +458,23 @@ method missing.</p>
       <pre class="lines">
 
 
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26</pre>
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/utility/collector.rb', line 13</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/utility/collector.rb', line 28</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
   <span class='ivar'>@merge_method</span> <span class='op'>=</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='lbracket'>[</span><span class='symbol'>:merge_method</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='symbol'>:keep_hash</span>
@@ -390,41 +512,105 @@ method missing.</p>
   
 
   
-</h3><table class="source_code">
+</h3><div class="docstring">
+  <div class="discussion">
+    
+  <div class="note notetag">
+    <strong>Note:</strong>
+    <div class='inline'>
+<p>If no args are given, the method key is set to <code>nil</code>.</p>
+</div>
+  </div>
+
+
+<p>Using the method name, creates a key in the Collector with argument given
+to the method.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Raises:</p>
+<ul class="raise">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>ArgumentError</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Raised when a method attempts to use both arguments and a block in the same
+line. E.g.: <code>collector.my_param &#39;my_param&#39; { &#39;MyParam&#39;
+}</code></p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>ArgumentError</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Raised when a method attempts to use multiple input values. E.g.:
+<code>collector.my_param &#39;my_param&#39;, &#39;MyParam&#39;</code></p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../OrigenError.html" title="Origen::OrigenError (class)">Origen::OrigenError</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Raised when a method is set more than once. I.e., overriding values are not
+allowed. E.g.: <code>collector.my_param &#39;my_param&#39;;
+collector.my_param &#39;MyParam&#39;</code></p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../OrigenError.html" title="Origen::OrigenError (class)">Origen::OrigenError</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Raised when the input hash and the block attempt to set the same method
+name and the merge method is set to <code>:fail</code>.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+  <p class="tag_title">See Also:</p>
+  <ul class="see">
+    
+      <li><a href="http://origen-sdk.org/origen/guides/misc/utilities/#Collector" target="_parent" title="http://origen-sdk.org/origen/guides/misc/utilities/#Collector">http://origen-sdk.org/origen/guides/misc/utilities/#Collector</a></li>
+    
+  </ul>
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-40
-41
-42
-43
-44
-45
-46
-47
-48
-49
-50
-51
-52
-53
-54
-55
-56
-57
-58
-59
-60
-61
-62
-63
-64
-65
-66
-67
-68
 69
 70
 71
@@ -432,10 +618,39 @@ method missing.</p>
 73
 74
 75
-76</pre>
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/utility/collector.rb', line 40</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/utility/collector.rb', line 69</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_method_missing'>method_missing</span><span class='lparen'>(</span><span class='id identifier rubyid_method'>method</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid__block'>_block</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_key'>key</span> <span class='op'>=</span> <span class='id identifier rubyid_method'>method</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='period'>.</span><span class='id identifier rubyid_sub'>sub</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>=</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span>
@@ -498,7 +713,7 @@ method missing.</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns the value of attribute <em>hash</em></p>
+<p>Returns the collector&#39;s hash. This is the same as calling <span class='object_link'><a href="#to_h-instance_method" title="Origen::Utility::Collector#to_h (method)">#to_h</a></span></p>
 
 
   </div>
@@ -512,12 +727,12 @@ method missing.</p>
       <pre class="lines">
 
 
-4
 5
-6</pre>
+6
+7</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/utility/collector.rb', line 4</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/utility/collector.rb', line 5</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid__hash_'>_hash_</span>
   <span class='ivar'>@_hash_</span>
@@ -541,11 +756,7 @@ method missing.</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Need to keep a seperate methods list so we know what&#39;s been added by
-method missing instead of what&#39;s been added either by the hash or by
-method missing. Only overwriting a value in the block should cause an
-error. Overriding a value from the hash depends on the merge method&#39;s
-setting.</p>
+<p>List of the currently seen method names.</p>
 
 
   </div>
@@ -559,12 +770,12 @@ setting.</p>
       <pre class="lines">
 
 
-11
-12
-13</pre>
+16
+17
+18</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/utility/collector.rb', line 11</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/utility/collector.rb', line 16</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid__methods_'>_methods_</span>
   <span class='ivar'>@_methods_</span>
@@ -588,7 +799,7 @@ setting.</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns the value of attribute merge_method</p>
+<p>Queries the current merge_method.</p>
 
 
   </div>
@@ -602,12 +813,12 @@ setting.</p>
       <pre class="lines">
 
 
-5
-6
-7</pre>
+8
+9
+10</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/utility/collector.rb', line 5</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/utility/collector.rb', line 8</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_merge_method'>merge_method</span>
   <span class='ivar'>@merge_method</span>
@@ -627,7 +838,7 @@ setting.</p>
       <div class="method_details first">
   <h3 class="signature first" id="store-instance_method">
   
-    #<strong>store</strong>  &#x21d2; <tt><span class='object_link'><a href="../../Object.html" title="Object (class)">Object</a></span></tt> 
+    #<strong>store</strong>  &#x21d2; <tt><span class='object_link'><a href="../../Hash.html" title="Hash (class)">Hash</a></span></tt> 
   
 
   
@@ -635,14 +846,35 @@ setting.</p>
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Legacy store method.</p>
+    <div class="note deprecated"><strong>Deprecated.</strong> <div class='inline'>
+<p>Use Ruby-centric <span class='object_link'><a href="#to_hash-instance_method" title="Origen::Utility::Collector#to_hash (method)">#to_hash</a></span> instead.</p>
+</div></div>
+
+<p>Retrieve the collector&#39;s hash.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../../Hash.html" title="Hash (class)">Hash</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Hash representation of the collector.</p>
+</div>
+      
+    </li>
+  
+</ul>
 
 </div><table class="source_code">
   <tr>
@@ -650,14 +882,14 @@ setting.</p>
       <pre class="lines">
 
 
-29
-30
-31
-32
-33</pre>
+46
+47
+48
+49
+50</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/utility/collector.rb', line 29</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/utility/collector.rb', line 46</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_store'>store</span>
   <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_log'><span class='object_link'><a href="../../Origen.html#log-class_method" title="Origen.log (method)">log</a></span></span><span class='period'>.</span><span class='id identifier rubyid_deprecate'>deprecate</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Collector::store method was used. Please use the Ruby-centric Collector::to_h or Collector::to_hash method instead</span><span class='tstring_end'>&#39;</span></span> \
@@ -672,7 +904,7 @@ setting.</p>
       <div class="method_details ">
   <h3 class="signature " id="to_hash-instance_method">
   
-    #<strong>to_hash</strong>  &#x21d2; <tt><span class='object_link'><a href="../../Object.html" title="Object (class)">Object</a></span></tt> 
+    #<strong>to_hash</strong>  &#x21d2; <tt><span class='object_link'><a href="../../Hash.html" title="Hash (class)">Hash</a></span></tt> 
   
 
   
@@ -682,18 +914,47 @@ setting.</p>
   
 
   
-</h3><table class="source_code">
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the collector, as a Hash.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../../Hash.html" title="Hash (class)">Hash</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Hash representation of the collector.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-35
-36
-37</pre>
+54
+55
+56</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/utility/collector.rb', line 35</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/utility/collector.rb', line 54</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_to_hash'>to_hash</span>
   <span class='ivar'>@_hash_</span>
@@ -708,9 +969,9 @@ setting.</p>
 </div>
 
       <div id="footer">
-  Generated on Wed Jun 20 12:17:58 2018 by
+  Generated on Tue Aug 14 11:36:50 2018 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.14 (ruby-2.4.4).
+  0.9.16 (ruby-2.2.10).
 </div>
 
     </div>

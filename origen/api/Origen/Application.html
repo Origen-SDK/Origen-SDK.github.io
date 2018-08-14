@@ -6,7 +6,7 @@
 <title>
   Class: Origen::Application
   
-    &mdash; Origen Core 0.33.3
+    &mdash; Origen Core 0.34.0
   
 </title>
 
@@ -765,6 +765,57 @@ object_store  [@load_event, @static_resources, @transient_resources] end.</p>
 
   
     <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#fail-instance_method" title="#fail (instance method)">#<strong>fail</strong>(message: nil, exception_class: RuntimeError)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Prepends the application name to the fail message and throws a RuntimeError
+exception.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#fail!-instance_method" title="#fail! (instance method)">#<strong>fail!</strong>(message: nil, exception_class: RuntimeError, exit_status: 1)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Similar to Origen.app.fail, but will instead print the message using
+Origen.log.error and exit the current process (using <code>exit 1</code>)
+UNLESS –debug is used.</p>
+</div></span>
   
 </li>
 
@@ -2507,14 +2558,14 @@ them during application configuration.</p>
       <pre class="lines">
 
 
-911
-912
-913
-914
-915</pre>
+958
+959
+960
+961
+962</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 911</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 958</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_add_lib_to_load_path!'>add_lib_to_load_path!</span> <span class='comment'>#:nodoc:
 </span>  <span class='lbracket'>[</span><span class='id identifier rubyid_root'><span class='object_link'><a href="../top-level-namespace.html" title="Top Level Namespace (root)">root</a></span></span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>lib</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='comma'>,</span> <span class='id identifier rubyid_root'><span class='object_link'><a href="../top-level-namespace.html" title="Top Level Namespace (root)">root</a></span></span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>vendor</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>lib</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_path'>path</span><span class='op'>|</span>
@@ -3415,6 +3466,274 @@ object_store</p>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_environment'>environment</span>
   <span class='ivar'>@environment</span> <span class='op'>||=</span> <span class='const'><span class='object_link'><a href="Application/Environment.html" title="Origen::Application::Environment (class)">Environment</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="fail-instance_method">
+  
+    #<strong>fail</strong>(message: nil, exception_class: RuntimeError)  &#x21d2; <tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Prepends the application name to the fail message and throws a RuntimeError
+exception. Very similar to the plain <code>fail</code> method with the
+addition of prepending the application name. Prepended message: &#39;Fail
+in app.name: &#39; If no message if provided, message is set to &#39;Fail
+in app.name&#39;</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>message</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Message to print with the exception. If the message option is nil, a
+default message will be used instead.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>exception_class</span>
+      
+      
+        <span class='type'>(<tt>Class</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Custom Exception class to throw. May require the full namespace, e.g.
+<code>Origen::OrigenError</code> instead of just <code>OrigenError</code>.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Raises:</p>
+<ul class="raise">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>RuntimeError</tt>, <tt>exception_class</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Option exception_class is raised, defaulting to <code>RuntimeError</code>.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+910
+911
+912
+913
+914
+915
+916
+917
+918
+919
+920
+921
+922
+923</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 910</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_fail'>fail</span><span class='lparen'>(</span><span class='label'>message:</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='label'>exception_class:</span> <span class='const'>RuntimeError</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_message'>message</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='op'>?</span> <span class='id identifier rubyid_message'>message</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Fail in </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span> <span class='op'>:</span> <span class='id identifier rubyid_message'>message</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Fail in </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'>: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_message'>message</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+  <span class='id identifier rubyid_e'>e</span> <span class='op'>=</span> <span class='id identifier rubyid_exception_class'>exception_class</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_message'>message</span><span class='rparen'>)</span>
+
+  <span class='comment'># If the caller is Origen.app.fail!, remove this caller from the backtrace, leaving where Origen.app.fail! was called.
+</span>  <span class='comment'># As an aside, if there&#39;s an exception raised in Origen.app.fail!, then that would actually raise a Kernel.fail, so there&#39;s no concern with masking
+</span>  <span class='comment'># out a problem with Origen.app.fail! by doing this.
+</span>  <span class='kw'>if</span> <span class='id identifier rubyid_caller'>caller</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span> <span class='op'>=~</span> <span class='lparen'>(</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>lib\/origen\/application.rb:\d+:in `fail!&#39;</span><span class='regexp_end'>/</span></span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_e'>e</span><span class='period'>.</span><span class='id identifier rubyid_set_backtrace'>set_backtrace</span><span class='lparen'>(</span><span class='id identifier rubyid_caller'>caller</span><span class='lbracket'>[</span><span class='int'>1</span><span class='op'>..</span><span class='op'>-</span><span class='int'>1</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+  <span class='kw'>else</span>
+    <span class='id identifier rubyid_e'>e</span><span class='period'>.</span><span class='id identifier rubyid_set_backtrace'>set_backtrace</span><span class='lparen'>(</span><span class='id identifier rubyid_caller'>caller</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+  <span class='const'>Kernel</span><span class='period'>.</span><span class='id identifier rubyid_fail'>fail</span><span class='lparen'>(</span><span class='id identifier rubyid_e'>e</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="fail!-instance_method">
+  
+    #<strong>fail!</strong>(message: nil, exception_class: RuntimeError, exit_status: 1)  &#x21d2; <tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Similar to Origen.app.fail, but will instead print the message using
+Origen.log.error and exit the current process (using <code>exit 1</code>)
+UNLESS –debug is used. In those cases, <code>exit</code> will not be used
+and instead this will behave the same as <span class='object_link'><a href="#fail-instance_method" title="Origen::Application#fail (method)">#fail</a></span>.
+Purpose here is to allow fail! for normal usage, but provide more details
+as to where fail! was used when running in debug.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>message</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Message to print with the exception. If the message option is nil, a
+default message will be used instead.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>exception_class</span>
+      
+      
+        <span class='type'>(<tt>Class</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Custom Exception class to throw. May require the full namespace.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>exit_status</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Exit status to use when exiting the application.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Raises:</p>
+<ul class="raise">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>RuntimeError</tt>, <tt>SystemExit</tt>, <tt>exception_class</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>When debug is disabled, <code>SystemExit</code> will be raised. When debug
+is enabled, exception_class will be raised, defaulting to
+<code>RuntimeError</code>.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+933
+934
+935
+936
+937
+938
+939
+940
+941
+942
+943
+944
+945
+946
+947
+948</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 933</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_fail!'>fail!</span><span class='lparen'>(</span><span class='label'>message:</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='label'>exception_class:</span> <span class='const'>RuntimeError</span><span class='comma'>,</span> <span class='label'>exit_status:</span> <span class='int'>1</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='const'><span class='object_link'><a href="../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_debug?'><span class='object_link'><a href="../Origen.html#debug%3F-class_method" title="Origen.debug? (method)">debug?</a></span></span>
+    <span class='comment'># rubocop:disable Style/RedundantSelf
+</span>    <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_fail'>fail</span><span class='lparen'>(</span><span class='label'>message:</span> <span class='id identifier rubyid_message'>message</span><span class='comma'>,</span> <span class='label'>exception_class:</span> <span class='id identifier rubyid_exception_class'>exception_class</span><span class='rparen'>)</span>
+    <span class='comment'># rubocop:enable Style/RedundantSelf
+</span>  <span class='kw'>else</span>
+    <span class='kw'>begin</span>
+      <span class='comment'># rubocop:disable Style/RedundantSelf
+</span>      <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_fail'>fail</span><span class='lparen'>(</span><span class='label'>message:</span> <span class='id identifier rubyid_message'>message</span><span class='comma'>,</span> <span class='label'>exception_class:</span> <span class='id identifier rubyid_exception_class'>exception_class</span><span class='rparen'>)</span>
+      <span class='comment'># rubocop:enable Style/RedundantSelf
+</span>    <span class='kw'>rescue</span> <span class='id identifier rubyid_exception_class'>exception_class</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_e'>e</span>
+      <span class='const'><span class='object_link'><a href="../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_log'><span class='object_link'><a href="../Origen.html#log-class_method" title="Origen.log (method)">log</a></span></span><span class='period'>.</span><span class='id identifier rubyid_error'>error</span><span class='lparen'>(</span><span class='id identifier rubyid_e'>e</span><span class='period'>.</span><span class='id identifier rubyid_message'>message</span><span class='rparen'>)</span>
+      <span class='id identifier rubyid_exit'>exit</span> <span class='id identifier rubyid_exit_status'>exit_status</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -6135,9 +6454,9 @@ to instantiate an Origen::Tester::Doc instance</p>
 </div>
 
       <div id="footer">
-  Generated on Wed Jun 20 12:17:53 2018 by
+  Generated on Tue Aug 14 11:36:43 2018 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.14 (ruby-2.4.4).
+  0.9.16 (ruby-2.2.10).
 </div>
 
     </div>
