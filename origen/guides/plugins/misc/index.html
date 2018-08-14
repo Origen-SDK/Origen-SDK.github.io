@@ -19,8 +19,8 @@
     <link rel="author" href="https://plus.google.com/u/1/b/106463981272125989995/106463981272125989">
   
   
-    <meta property="og:url" content="http://origen-sdk.org/origen/guides/documentation/linking">
-    <meta name="twitter:url" content="http://origen-sdk.org/origen/guides/documentation/linking">
+    <meta property="og:url" content="http://origen-sdk.org/origen/guides/plugins/misc">
+    <meta name="twitter:url" content="http://origen-sdk.org/origen/guides/plugins/misc">
   
   
     <meta property="og:image" content="http://origen-sdk.org/favicon-260x260.png">
@@ -308,12 +308,12 @@
                 Documentation Generator
               </a>
             </div>
-            <div id="sidebar-collapse-7" class="panel-collapse collapse in">
+            <div id="sidebar-collapse-7" class="panel-collapse collapse ">
               <div class="panel-body">
                 <ul class="nav nav-list">
 <li class=""><a href="/origen/guides/documentation/introduction">Introduction</a></li>
 <li class=""><a href="/origen/guides/documentation/markdown">Markdown</a></li>
-<li class="active"><a href="/origen/guides/documentation/linking">Linking</a></li>
+<li class=""><a href="/origen/guides/documentation/linking">Linking</a></li>
 <li class=""><a href="/origen/guides/documentation/styling">Styling</a></li>
 <li class=""><a href="/origen/guides/documentation/testing">Testing</a></li>
 <li class=""><a href="/origen/guides/documentation/api">API Generation</a></li>
@@ -328,7 +328,7 @@
                 Plugins
               </a>
             </div>
-            <div id="sidebar-collapse-8" class="panel-collapse collapse ">
+            <div id="sidebar-collapse-8" class="panel-collapse collapse in">
               <div class="panel-body">
                 <ul class="nav nav-list">
 <li class=""><a href="/origen/guides/plugins/introduction">Introduction</a></li>
@@ -339,7 +339,7 @@
 <li class=""><a href="/origen/guides/plugins/development">Dev Considerations</a></li>
 <li class=""><a href="/origen/guides/plugins/paths">Paths &amp; Origen.root</a></li>
 <li class=""><a href="/origen/guides/plugins/app">Config &amp; Origen.app</a></li>
-<li class=""><a href="/origen/guides/plugins/misc">Miscellaneous Topics</a></li>
+<li class="active"><a href="/origen/guides/plugins/misc">Miscellaneous Topics</a></li>
                 </ul>
               </div>
             </div>
@@ -396,22 +396,123 @@
   <div class="col-md-9 nav-page-container">
     <article class="search-results">
 
-      <h3 class="topic-title">Documentation Generator</h3>
+      <h3 class="topic-title">Plugins</h3>
 
-      <h2 class="topic-subtitle">Linking</h2>
+      <h2 class="topic-subtitle">Miscellaneous Topics</h2>
 
       <hr>
 
-      <div class="alert alert-danger" role="alert">
-  <strong>Sorry, Documentation Fail</strong>
+      <p>Topics on this page relate to plugins in general but do not fit into any of the previous topics and are too minor in scope and content to warrant their own pages.</p>
+
+      <div class="list-group">
+  <li class="list-group-item"><a href="#Failing_the_Application">Failing the Application</a></li>
 </div>
 
-      <p>Unfortunately this guide has not been written yet, but it is an area that is on our road map.</p>
+      <div>    
+  <a class="anchor" name="Failing_the_Application"></a>          
+  <h3><a href="#Failing_the_Application">Failing the Application</a></h3>          
+</div>
 
-      <p>Please comment below to let us know that you were looking for it, this will help us to prioritize which
-sections to write next.</p>
+      <p>Sometimes, the usage of your application or plugin is not correct, certain conditions are not met, or some other circumstance arises in which the application or
+plugin cannot continue. In these instances, the best course of action is to print the error message and exit the current process.</p>
 
-      <p>If you need help on this item in the meantime, please ask a question in the <a href="https://disqus.com/home/channel/origensdk/">Origen forum</a>.</p>
+      <p>Ruby provides a few methods to do this. Most commonly:</p>
+
+      <ul>
+        <li>
+<code>throw</code>: raises an exception.</li>
+        <li>
+<code>fail/raise</code>: raises a runtime error.</li>
+        <li>
+<code>exit</code>: raises a <code>SystemExit</code> error but still runs <code>ensure</code> blocks and can be rescued.</li>
+        <li>
+<code>exit!</code>: kills the process immediately.</li>
+      </ul>
+
+      <p>Each of these has their place, but their usefulness is based primarily on the information you, as the developer, provide. For example, using <code>exit!</code> without any error message
+just kills the process, without any information going back to the user. <code>fail</code> can be used to dump a stack trace, but for those that aren’t power users, and
+especially for those who are newer to programming, this can be almost as bad as providing no details, with the exception of sending the stack trace to someone else.</p>
+
+      <p>Information on the <i>what, where, when, and why</i> for failing and exiting the process is readily available online, both for Ruby and for programming in 
+general. Discussions on those matters get into <i>best practices</i>, <i>use cases</i>, <i>coding styles</i>, etc., and are way out of the scope of this guide. What
+will be covered is <i>how</i> Origen can help you when you choose to exit the process and/or raise an exception.</p>
+
+      <p>Origen provides two methods to help with this: <code>Origen.app.fail</code>, and <code>Origen.app.fail!</code>. The former behaves almost identically to the standard
+<code>fail</code> method, with the exception of accepting a hash instead of string, and prepending the current application that is calling
+<code>Origen.app.fail</code>.</p>
+
+      <p>Note that these are <code>Origen::Application</code> instance methods, and <code>Origen.app</code> will always reference the application. For usage in plugins,
+<code>Origen.app!</code> should be used instead. See <a href="/origen/guides/plugins/app/#Am_I_the_Current_Application_or_Plugin?">here</a> 
+for additional information.</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.app!.name
+  <span style="color:#777">#=&gt; my_app</span>
+
+fail
+  <span style="color:#777">#=&gt; RuntimeError with no message</span>
+
+<span style="color:#777"># Just fail the application, without adding details:</span>
+<span style="color:#036;font-weight:bold">Origen</span>.app!.fail
+  <span style="color:#777">#=&gt; RuntimeError with message: 'Fail in my_app'</span>
+
+<span style="color:#777"># Fail the application with some context:</span>
+<span style="color:#036;font-weight:bold">Origen</span>.app!.fail(<span style="color:#606">message</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">An unknown condition occured!</span><span style="color:#710">'</span></span>)
+  <span style="color:#777">#=&gt; RuntimeError with message: 'Fail in my_app: An unknown condition occured!'</span>
+
+<span style="color:#777"># Fail the application with some context and a custom exception:</span>
+<span style="color:#036;font-weight:bold">Origen</span>.app!.fail(<span style="color:#606">message</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">An unknown condition occured!</span><span style="color:#710">'</span></span>, <span style="color:#606">exception_class</span>: <span style="color:#036;font-weight:bold">StandardError</span>)
+  <span style="color:#777">#=&gt; StandardError with message: 'Fail in my_app: An unknown condition occured!'</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>Note that <code>exception_class</code> should be a <code>class object</code> (of type <code>class</code>), <b>not</b> an instance of the class.</p>
+
+      <p><code>Origen.app.fail!</code> performs the same function as <code>Origen.app.fail</code> but raises a <code>SystemExit</code> and quits the process cleanly
+(no stack trace). It also prints the message using <a href="/origen/guides/misc/logger/">Origen’s Logger</a>,
+instead of using the exception message to convey information.</p>
+
+      <p>The key difference, however, is if the current process is run with <code>debug enabled</code> (using the <code>-d</code> or <code>--debug</code> command line options)
+then <code>Origen.app.fail!</code> behaves identically to <code>Origen.app.fail</code>. The intention is give a user-facing API a clean exit while displaying in the
+familiar Origen-logger format, while allowing users to generate more useful bug reports, or just for the curious user themselves to get more information.</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.debugger_enabled?
+  <span style="color:#777">#=&gt; false</span>
+
+<span style="color:#036;font-weight:bold">Origen</span>.app!.name
+  <span style="color:#777">#=&gt; :my_app</span>
+
+<span style="color:#036;font-weight:bold">Origen</span>.app.fail!(<span style="color:#606">message</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">An unknown condition occured!</span><span style="color:#710">'</span></span>)
+  <span style="color:#777">#=&gt; [ERROR]      0.009[0.009]    || Fail in my_app: An unknown condition occured!</span>
+  <span style="color:#777">#=&gt; *Process Terminates*</span>
+</pre></div>
+</div>
+      </div>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.debugger_enabled?
+  <span style="color:#777">#=&gt; true</span>
+
+<span style="color:#036;font-weight:bold">Origen</span>.app!.name
+  <span style="color:#777">#=&gt; :my_app</span>
+
+<span style="color:#036;font-weight:bold">Origen</span>.app.fail!(<span style="color:#606">message</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">An unknown condition occured!</span><span style="color:#710">'</span></span>)
+  <span style="color:#777">#=&gt; RuntimeError with message: Fail in my_app: An unknown condition occured!</span>
+  <span style="color:#777">#=&gt; *Process terminates with #raise instead of #exit*</span>
+  <span style="color:#777">#=&gt; *Exception and stack trace printed to console*</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>By default, the <code>status</code> of a process exited with <code>Origen.app.fail!</code> will be <code>1</code>. You can provide an option <code>exit_status</code>
+to exit with that status instead.</p>
+
+      <p>Full API documentation is available on the <a href="/origen/api/Origen/Application.html#fail-instance_method">API</a></p>
 
       <div style="position: relative">
   <hr>

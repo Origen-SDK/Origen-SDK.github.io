@@ -19,8 +19,8 @@
     <link rel="author" href="https://plus.google.com/u/1/b/106463981272125989995/106463981272125989">
   
   
-    <meta property="og:url" content="http://origen-sdk.org/origen/guides/pattern/documenting">
-    <meta name="twitter:url" content="http://origen-sdk.org/origen/guides/pattern/documenting">
+    <meta property="og:url" content="http://origen-sdk.org/origen/home/stephen/">
+    <meta name="twitter:url" content="http://origen-sdk.org/origen/home/stephen/">
   
   
     <meta property="og:image" content="http://origen-sdk.org/favicon-260x260.png">
@@ -339,6 +339,7 @@
 <li class=""><a href="/origen/guides/plugins/development">Dev Considerations</a></li>
 <li class=""><a href="/origen/guides/plugins/paths">Paths &amp; Origen.root</a></li>
 <li class=""><a href="/origen/guides/plugins/app">Config &amp; Origen.app</a></li>
+<li class=""><a href="/origen/guides/plugins/misc">Miscellaneous Topics</a></li>
                 </ul>
               </div>
             </div>
@@ -733,6 +734,162 @@ section will be limited to 10 lines:</p>
 </pre></div>
 </div>
       </div>
+
+      <div>    
+  <a class="anchor" name="Pattern_Headers"></a>          
+  <h4><a href="#Pattern_Headers">Pattern Headers</a></h4>          
+</div>
+
+      <p>When you generate a pattern, you’ll notice the top section contains some useful information, such as the user that generated the pattern, a
+timestamp, the current environment, version of the application, the gems used, etc.  This section is called the <code>pattern header</code> and may look something
+like this:</p>
+
+      <pre><code>// ***************************************************************************
+// GENERATED:
+//   Time:    24-Jun-2018 10:06AM
+//   By:      coreyeng
+//   Mode:    debug
+//   Command: origen g iterator_postfix_test_x_bx -t debug.rb
+// ***************************************************************************
+// ENVIRONMENT:
+//   Application
+//     Source:    git@github.com:Origen-SDK/origen.git
+//     Version:   0.33.1
+//     Branch:    fixes(c4e8e1d0db0) (+local edits)
+//   Origen
+//     Source:    https://github.com/Origen-SDK/origen
+//     Version:   0.33.1
+//   Plugins
+//     atp:                      1.1.0
+//     origen_core_support:      0.2.3
+//     origen_debuggers:         0.6.0
+//     origen_doc_helpers:       0.5.2
+//     origen_testers:           0.16.1
+//     origen_updater:           0.7.0
+// ***************************************************************************
+</code></pre>
+
+      <p>The pattern header can also serve as place for the application, current plugin, or other shared plugins, to add specific comments that relate to
+how that pattern was generated or how it should be used.</p>
+
+      <p>Three <a href="/origen/guides/plugins/app/">configuration attributes</a>
+exist that will inject additional comments into the pattern header: <code>shared_pattern_header</code>, <code>application_pattern_header</code>,
+and <code>current_plugin_pattern_header</code>.</p>
+
+      <p>These configuration attributes should be <code>blocks</code> that accept an <code>options hash</code> and return either a <code>String</code>,
+<code>Array of Strings</code>, or another <code>block</code>. <code>Strings</code> and <code>Arrays</code> will have the formatting handled
+for you, but <code>blocks</code> can handle the formatting themselves and can provide custom header comment formatting.</p>
+
+      <p>Assume we have two plugins, <code>plugin1</code> and <code>plugin2</code> that are each needed to generate a pattern located in the
+application <code>my_app</code>. With <u>no plugin set</u> and with the configuration attributes set as follows:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#777"># plugin1/config/application.rb</span>
+
+config.shared_pattern_header <span style="color:#080;font-weight:bold">do</span>
+  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Hi from shared </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.app!.name<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">!</span><span style="color:#710">"</span></span>
+<span style="color:#080;font-weight:bold">end</span>
+
+config.current_plugin_pattern_header <span style="color:#080;font-weight:bold">do</span>
+  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Hi from current plugin: </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.app!.name<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">!</span><span style="color:#710">"</span></span>
+<span style="color:#080;font-weight:bold">end</span>
+
+<span style="color:#777"># plugin2/config/application.rb</span>
+
+config.shared_pattern_header <span style="color:#080;font-weight:bold">do</span>
+  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Hi from shared </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.app!.name<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">!</span><span style="color:#710">"</span></span>
+<span style="color:#080;font-weight:bold">end</span>
+
+config.current_plugin_pattern_header <span style="color:#080;font-weight:bold">do</span>
+  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Hi from current plugin: </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.app!.name<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">!</span><span style="color:#710">"</span></span>
+<span style="color:#080;font-weight:bold">end</span>
+
+<span style="color:#777"># my_app/config/application.rb</span>
+
+config.shared_pattern_header <span style="color:#080;font-weight:bold">do</span>
+  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Hi from application </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.app!.name<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">!</span><span style="color:#710">"</span></span>
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>generating a pattern, will yield the following appended to the pattern header:</p>
+
+      <pre><code>// ***************************************************************************
+// Header Comments From Shared Plugins:
+//   Header Comments From Shared Plugin: plugin1:
+//     Hi from shared plugin1!
+//   Header Comments From Shared Plugin: plugin2:
+//     Hi from shared plugin2!
+// ***************************************************************************
+// Header Comments From Application: my_app:
+//   Hi from application my_app!
+// ***************************************************************************
+</code></pre>
+
+      <p>You’ll notice here that there’s no <code>current_plugin_pattern_header</code> printed. This will be printed when
+the current plugin is set to a plugin that has this configuration attribute. Setting the current plugin to
+<code>plugin1</code>, you’ll now get both shared headers, the current plugin’s header, and the application header:</p>
+
+      <pre><code>// ***************************************************************************
+// Header Comments From Shared Plugins:
+//   Header Comments From Shared Plugin: plugin1:
+//     Hi from shared plugin1!
+//   Header Comments From Shared Plugin: plugin2:
+//     Hi from shared plugin2!
+// ***************************************************************************
+// Header Comments From The Current Plugin: plugin1:
+//   Hi from current plugin plugin1!
+// ***************************************************************************
+// Header Comments From Application: my_app:
+//   Hi from application my_app!
+// ***************************************************************************
+</code></pre>
+
+      <p>As previously said, you can provide either a <code>block, proc, or lambda</code> (anything that responds to <code>call</code> will work) and use 
+<code>cc, ss, c2</code>, etc. to handle arbitrary headers or formatting. For example, changing <code>shared_pattern_header</code> in <code>plugin2</code>:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#777"># plugin2/config/application.rb</span>
+
+config.shared_pattern_header <span style="color:#080;font-weight:bold">do</span>
+  proc <span style="color:#080;font-weight:bold">do</span> 
+    c2 <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Hi from block in </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.app!.name<span style="font-weight:bold;color:#666">}</span></span><span style="color:#710">"</span></span>
+  <span style="color:#080;font-weight:bold">end</span>
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>Will show the following in the pattern header:</p>
+
+      <pre><code>// ***************************************************************************
+// Header Comments From Shared Plugins:
+//   Header Comments From Shared Plugin: plugin1:
+//     Hi from shared plugin1!
+//   Header Comments From Shared Plugin: plugin2:
+// Hi from block in plugin2!
+// ***************************************************************************
+// Header Comments From The Current Plugin: plugin1:
+//   Hi from current plugin plugin1!
+// ***************************************************************************
+// Header Comments From Application: my_app:
+//   Hi from application my_app!
+// ***************************************************************************
+</code></pre>
+
+      <div class="alert alert-info" role="alert">
+  <strong>Info:</strong> Although the guides here show an <code>option hash</code>, there are currently no options <i>actually</i> being passed in, i.e., its just
+  an empty hash. This is only because this is a new feature, and by using an options hash here, future versions of Origen will be able to add any options that should
+  go to the pattern header without affecting the method prototype.
+</div>
+
+      <div class="alert alert-warning" role="alert">
+  <strong>Deprecated:</strong> You may see <code>config.pattern_header</code> in some legacy applications. <code>config.pattern_header</code> is limited to only the
+  current plugin and must handle formatting itself. This is now deprecated but is left in for legacy purposes.
+</div>
 
       <div style="position: relative">
   <hr>
