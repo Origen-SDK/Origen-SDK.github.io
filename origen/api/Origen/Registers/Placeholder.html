@@ -6,7 +6,7 @@
 <title>
   Class: Origen::Registers::Placeholder
   
-    &mdash; Origen Core 0.34.3
+    &mdash; Origen Core 0.35.0
   
 </title>
 
@@ -612,7 +612,12 @@ already reset.</p>
 140
 141
 142
-143</pre>
+143
+144
+145
+146
+147
+148</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 138</span>
@@ -622,6 +627,11 @@ already reset.</p>
   <span class='ivar'>@name</span> <span class='op'>=</span> <span class='id identifier rubyid_name'>name</span>
   <span class='ivar'>@attributes</span> <span class='op'>=</span> <span class='id identifier rubyid_attributes'>attributes</span>
   <span class='ivar'>@feature</span> <span class='op'>=</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:_feature</span><span class='rbracket'>]</span> <span class='kw'>if</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='period'>.</span><span class='id identifier rubyid_key?'>key?</span><span class='lparen'>(</span><span class='symbol'>:_feature</span><span class='rparen'>)</span>
+
+  <span class='comment'># Give reg.new a way to tell if coming from Placeholder
+</span>  <span class='kw'>if</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:bit_info</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'><span class='object_link'><a href="../../Hash.html" title="Hash (class)">Hash</a></span></span>
+    <span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:bit_info</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='symbol'>:from_placeholder</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='kw'>true</span>
+  <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -651,12 +661,12 @@ already reset.</p>
       <pre class="lines">
 
 
-249
-250
-251</pre>
+254
+255
+256</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 249</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 254</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_method_missing'>method_missing</span><span class='lparen'>(</span><span class='id identifier rubyid_method'>method</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_materialize'>materialize</span><span class='period'>.</span><span class='id identifier rubyid_send'>send</span><span class='lparen'>(</span><span class='id identifier rubyid_method'>method</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
@@ -869,12 +879,12 @@ already reset.</p>
       <pre class="lines">
 
 
-261
-262
-263</pre>
+266
+267
+268</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 261</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 266</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_clone'>clone</span>
   <span class='id identifier rubyid_materialize'>materialize</span><span class='period'>.</span><span class='id identifier rubyid_clone'>clone</span>
@@ -921,12 +931,12 @@ already reset.</p>
       <pre class="lines">
 
 
-269
-270
-271</pre>
+274
+275
+276</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 269</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 274</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_contains_bits?'>contains_bits?</span>
   <span class='kw'>true</span>
@@ -951,12 +961,12 @@ already reset.</p>
       <pre class="lines">
 
 
-265
-266
-267</pre>
+270
+271
+272</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 265</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 270</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_dup'>dup</span>
   <span class='id identifier rubyid_materialize'>materialize</span><span class='period'>.</span><span class='id identifier rubyid_dup'>dup</span>
@@ -1005,11 +1015,6 @@ already reset.</p>
       <pre class="lines">
 
 
-152
-153
-154
-155
-156
 157
 158
 159
@@ -1068,10 +1073,15 @@ already reset.</p>
 212
 213
 214
-215</pre>
+215
+216
+217
+218
+219
+220</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 152</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 157</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_enabled?'>enabled?</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_feature'>feature</span>
@@ -1185,11 +1195,6 @@ already reset.</p>
       <pre class="lines">
 
 
-218
-219
-220
-221
-222
 223
 224
 225
@@ -1200,10 +1205,15 @@ already reset.</p>
 230
 231
 232
-233</pre>
+233
+234
+235
+236
+237
+238</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 218</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 223</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_enabled_by_feature?'>enabled_by_feature?</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='op'>!</span><span class='id identifier rubyid_name'>name</span>
@@ -1241,12 +1251,12 @@ already reset.</p>
       <pre class="lines">
 
 
-245
-246
-247</pre>
+250
+251
+252</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 245</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 250</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_freeze'>freeze</span>
   <span class='id identifier rubyid_materialize'>materialize</span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span>
@@ -1282,12 +1292,12 @@ already reset.</p>
       <pre class="lines">
 
 
-237
-238
-239</pre>
+242
+243
+244</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 237</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 242</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_inspect'>inspect</span>
   <span class='id identifier rubyid_materialize'>materialize</span><span class='period'>.</span><span class='id identifier rubyid_inspect'>inspect</span>
@@ -1336,13 +1346,13 @@ already reset.</p>
       <pre class="lines">
 
 
-146
-147
-148
-149</pre>
+151
+152
+153
+154</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 146</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 151</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='id identifier rubyid_klass'>klass</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_klass'>klass</span> <span class='op'>==</span> <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Registers.html" title="Origen::Registers (module)">Registers</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Reg.html" title="Origen::Registers::Reg (class)">Reg</a></span></span> <span class='op'>||</span>
@@ -1368,12 +1378,12 @@ already reset.</p>
       <pre class="lines">
 
 
-257
-258
-259</pre>
+262
+263
+264</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 257</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 262</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_materialize'>materialize</span>
   <span class='id identifier rubyid_owner'>owner</span><span class='period'>.</span><span class='id identifier rubyid_instantiate_reg'>instantiate_reg</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='rparen'>)</span>
@@ -1410,11 +1420,11 @@ already reset</p>
       <pre class="lines">
 
 
-242
-243</pre>
+247
+248</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 242</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 247</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_reset'>reset</span>
 <span class='kw'>end</span></pre>
@@ -1460,12 +1470,12 @@ already reset</p>
       <pre class="lines">
 
 
-253
-254
-255</pre>
+258
+259
+260</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 253</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 258</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='id identifier rubyid_method'>method</span><span class='comma'>,</span> <span class='id identifier rubyid_include_private'>include_private</span> <span class='op'>=</span> <span class='kw'>false</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_materialize'>materialize</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='id identifier rubyid_method'>method</span><span class='comma'>,</span> <span class='id identifier rubyid_include_private'>include_private</span><span class='rparen'>)</span>
@@ -1490,12 +1500,12 @@ already reset</p>
       <pre class="lines">
 
 
-273
-274
-275</pre>
+278
+279
+280</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 273</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers.rb', line 278</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_to_json'>to_json</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_materialize'>materialize</span><span class='period'>.</span><span class='id identifier rubyid_to_json'>to_json</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
@@ -1510,9 +1520,9 @@ already reset</p>
 </div>
 
       <div id="footer">
-  Generated on Fri Aug 17 12:15:49 2018 by
+  Generated on Fri Aug 24 01:57:44 2018 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.16 (ruby-2.3.0).
+  0.9.16 (ruby-2.5.1).
 </div>
 
     </div>

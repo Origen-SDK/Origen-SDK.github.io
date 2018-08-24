@@ -6,7 +6,7 @@
 <title>
   Class: Origen::VersionString
   
-    &mdash; Origen Core 0.34.3
+    &mdash; Origen Core 0.35.0
   
 </title>
 
@@ -972,11 +972,6 @@ if the condition does not specify a maximum nil will be returned</p>
       <pre class="lines">
 
 
-347
-348
-349
-350
-351
 352
 353
 354
@@ -987,10 +982,15 @@ if the condition does not specify a maximum nil will be returned</p>
 359
 360
 361
-362</pre>
+362
+363
+364
+365
+366
+367</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 347</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 352</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_maximum_version'>maximum_version</span><span class='lparen'>(</span><span class='id identifier rubyid_condition'>condition</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_condition'>condition</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>^==?\s*(.*)</span><span class='regexp_end'>/</span></span>
@@ -1040,11 +1040,6 @@ if the condition does not specify a minimum nil will be returned</p>
       <pre class="lines">
 
 
-328
-329
-330
-331
-332
 333
 334
 335
@@ -1055,10 +1050,15 @@ if the condition does not specify a minimum nil will be returned</p>
 340
 341
 342
-343</pre>
+343
+344
+345
+346
+347
+348</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 328</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 333</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_minimum_version'>minimum_version</span><span class='lparen'>(</span><span class='id identifier rubyid_condition'>condition</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_condition'>condition</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>^==?\s*(.*)</span><span class='regexp_end'>/</span></span>
@@ -1147,19 +1147,19 @@ if the condition does not specify a minimum nil will be returned</p>
       <pre class="lines">
 
 
-158
-159
-160
-161
-162
 163
 164
 165
 166
-167</pre>
+167
+168
+169
+170
+171
+172</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 158</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 163</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_bugfix'>bugfix</span>
   <span class='ivar'>@bugfix</span> <span class='op'>||=</span> <span class='kw'>begin</span>
@@ -1225,11 +1225,6 @@ conditions:</p>
       <pre class="lines">
 
 
-203
-204
-205
-206
-207
 208
 209
 210
@@ -1268,10 +1263,15 @@ conditions:</p>
 243
 244
 245
-246</pre>
+246
+247
+248
+249
+250
+251</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 203</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 208</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_condition_met?'>condition_met?</span><span class='lparen'>(</span><span class='id identifier rubyid_condition'>condition</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_condition'>condition</span> <span class='op'>=</span> <span class='id identifier rubyid_condition'>condition</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='period'>.</span><span class='id identifier rubyid_strip'>strip</span>
@@ -1419,13 +1419,23 @@ conditions:</p>
 
 34
 35
-36</pre>
+36
+37
+38
+39
+40
+41</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 34</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_equal?'>equal?</span><span class='lparen'>(</span><span class='id identifier rubyid_version'>version</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_condition_met?'>condition_met?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>== </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_version'>version</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+  <span class='comment'># If not a valid version string, compare using regular string comparison
+</span>  <span class='kw'>if</span> <span class='id identifier rubyid_valid?'>valid?</span>
+    <span class='id identifier rubyid_condition_met?'>condition_met?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>== </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_version'>version</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+  <span class='kw'>else</span>
+    <span class='id identifier rubyid_orig_equal?'>orig_equal?</span><span class='lparen'>(</span><span class='id identifier rubyid_version'>version</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1473,12 +1483,12 @@ conditions:</p>
       <pre class="lines">
 
 
-52
-53
-54</pre>
+57
+58
+59</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 52</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 57</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_greater_than?'>greater_than?</span><span class='lparen'>(</span><span class='id identifier rubyid_version'>version</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_condition_met?'>condition_met?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>&gt; </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_version'>version</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
@@ -1529,12 +1539,12 @@ conditions:</p>
       <pre class="lines">
 
 
-58
-59
-60</pre>
+63
+64
+65</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 58</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 63</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_greater_than_or_equal_to?'>greater_than_or_equal_to?</span><span class='lparen'>(</span><span class='id identifier rubyid_version'>version</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_condition_met?'>condition_met?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>&gt;= </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_version'>version</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
@@ -1581,12 +1591,12 @@ conditions:</p>
       <pre class="lines">
 
 
-183
-184
-185</pre>
+188
+189
+190</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 183</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 188</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_latest?'>latest?</span>
   <span class='id identifier rubyid_downcase'>downcase</span><span class='period'>.</span><span class='id identifier rubyid_orig_equal?'>orig_equal?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>trunk</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='op'>||</span> <span class='id identifier rubyid_downcase'>downcase</span><span class='period'>.</span><span class='id identifier rubyid_orig_equal?'>orig_equal?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>latest</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
@@ -1637,12 +1647,12 @@ conditions:</p>
       <pre class="lines">
 
 
-40
-41
-42</pre>
+45
+46
+47</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 40</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 45</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_less_than?'>less_than?</span><span class='lparen'>(</span><span class='id identifier rubyid_version'>version</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_condition_met?'>condition_met?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>&lt; </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_version'>version</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
@@ -1693,12 +1703,12 @@ conditions:</p>
       <pre class="lines">
 
 
-46
-47
-48</pre>
+51
+52
+53</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 46</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 51</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_less_than_or_equal_to?'>less_than_or_equal_to?</span><span class='lparen'>(</span><span class='id identifier rubyid_version'>version</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_condition_met?'>condition_met?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>&lt;= </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_version'>version</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
@@ -1723,19 +1733,19 @@ conditions:</p>
       <pre class="lines">
 
 
-136
-137
-138
-139
-140
 141
 142
 143
 144
-145</pre>
+145
+146
+147
+148
+149
+150</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 136</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 141</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_major'>major</span>
   <span class='ivar'>@major</span> <span class='op'>||=</span> <span class='kw'>begin</span>
@@ -1767,19 +1777,19 @@ conditions:</p>
       <pre class="lines">
 
 
-147
-148
-149
-150
-151
 152
 153
 154
 155
-156</pre>
+156
+157
+158
+159
+160
+161</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 147</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 152</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_minor'>minor</span>
   <span class='ivar'>@minor</span> <span class='op'>||=</span> <span class='kw'>begin</span>
@@ -1811,11 +1821,6 @@ conditions:</p>
       <pre class="lines">
 
 
-77
-78
-79
-80
-81
 82
 83
 84
@@ -1834,10 +1839,15 @@ conditions:</p>
 97
 98
 99
-100</pre>
+100
+101
+102
+103
+104
+105</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 77</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 82</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_next_dev'>next_dev</span><span class='lparen'>(</span><span class='id identifier rubyid_type'>type</span> <span class='op'>=</span> <span class='symbol'>:minor</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_semantic?'>semantic?</span>
@@ -1883,11 +1893,6 @@ conditions:</p>
       <pre class="lines">
 
 
-102
-103
-104
-105
-106
 107
 108
 109
@@ -1915,10 +1920,15 @@ conditions:</p>
 131
 132
 133
-134</pre>
+134
+135
+136
+137
+138
+139</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 102</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 107</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_next_prod'>next_prod</span><span class='lparen'>(</span><span class='id identifier rubyid_type'>type</span> <span class='op'>=</span> <span class='symbol'>:minor</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_semantic?'>semantic?</span>
@@ -1985,11 +1995,6 @@ chronological comparison with other versions</p>
       <pre class="lines">
 
 
-250
-251
-252
-253
-254
 255
 256
 257
@@ -2007,10 +2012,15 @@ chronological comparison with other versions</p>
 269
 270
 271
-272</pre>
+272
+273
+274
+275
+276
+277</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 250</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 255</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_numeric'>numeric</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_latest?'>latest?</span>
@@ -2059,20 +2069,20 @@ chronological comparison with other versions</p>
       <pre class="lines">
 
 
-170
-171
-172
-173
-174
 175
 176
 177
 178
 179
-180</pre>
+180
+181
+182
+183
+184
+185</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 170</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 175</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_pre'>pre</span>
   <span class='ivar'>@pre</span> <span class='op'>||=</span> <span class='kw'>begin</span>
@@ -2117,16 +2127,16 @@ if not already present</p>
       <pre class="lines">
 
 
-366
-367
-368
-369
-370
 371
-372</pre>
+372
+373
+374
+375
+376
+377</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 366</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 371</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_prefixed'>prefixed</span><span class='lparen'>(</span><span class='id identifier rubyid_str'>str</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>v</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='kw'>self</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>^</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_str'>str</span><span class='embexpr_end'>}</span><span class='regexp_end'>/</span></span>
@@ -2233,14 +2243,14 @@ if not already present</p>
       <pre class="lines">
 
 
-71
-72
-73
-74
-75</pre>
+76
+77
+78
+79
+80</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 71</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 76</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_semantic?'>semantic?</span>
   <span class='op'>!</span><span class='op'>!</span><span class='lparen'>(</span><span class='kw'>self</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>^v?\d+\.\d+\.\d+$</span><span class='regexp_end'>/</span></span> <span class='op'>||</span>
@@ -2291,13 +2301,13 @@ if not already present</p>
       <pre class="lines">
 
 
-188
-189
-190
-191</pre>
+193
+194
+195
+196</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 188</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 193</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_timestamp?'>timestamp?</span>
   <span class='op'>!</span><span class='op'>!</span><span class='lparen'>(</span><span class='kw'>self</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>^Rel\d\d\d\d\d\d\d\d$</span><span class='regexp_end'>/</span></span> <span class='op'>||</span>
@@ -2335,18 +2345,18 @@ error will be raised</p>
       <pre class="lines">
 
 
-294
-295
-296
-297
-298
 299
 300
 301
-302</pre>
+302
+303
+304
+305
+306
+307</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 294</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 299</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_to_date'>to_date</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_latest?'>latest?</span>
@@ -2389,11 +2399,6 @@ error will be raised</p>
       <pre class="lines">
 
 
-276
-277
-278
-279
-280
 281
 282
 283
@@ -2403,10 +2408,15 @@ error will be raised</p>
 287
 288
 289
-290</pre>
+290
+291
+292
+293
+294
+295</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 276</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 281</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_to_time'>to_time</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_latest?'>latest?</span>
@@ -2468,12 +2478,12 @@ version number</p>
       <pre class="lines">
 
 
-66
-67
-68</pre>
+71
+72
+73</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 66</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 71</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_valid?'>valid?</span><span class='lparen'>(</span><span class='id identifier rubyid__options'>_options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_latest?'>latest?</span> <span class='op'>||</span> <span class='id identifier rubyid_semantic?'>semantic?</span> <span class='op'>||</span> <span class='id identifier rubyid_timestamp?'>timestamp?</span>
@@ -2510,19 +2520,19 @@ false</p>
       <pre class="lines">
 
 
-315
-316
-317
-318
-319
 320
 321
 322
 323
-324</pre>
+324
+325
+326
+327
+328
+329</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 315</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 320</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_validate!'>validate!</span><span class='lparen'>(</span><span class='id identifier rubyid_msg'>msg</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
   <span class='kw'>unless</span> <span class='id identifier rubyid_valid?'>valid?</span>
@@ -2566,14 +2576,14 @@ wrapped in a VersionString if valid, will raise an error if not</p>
       <pre class="lines">
 
 
-307
-308
-309
-310
-311</pre>
+312
+313
+314
+315
+316</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 307</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/version_string.rb', line 312</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_validate_condition!'>validate_condition!</span><span class='lparen'>(</span><span class='id identifier rubyid_condition'>condition</span><span class='comma'>,</span> <span class='id identifier rubyid_tag'>tag</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_tag'>tag</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="" title="Origen::VersionString (class)">VersionString</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="#initialize-instance_method" title="Origen::VersionString#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_tag'>tag</span><span class='rparen'>)</span>
@@ -2590,9 +2600,9 @@ wrapped in a VersionString if valid, will raise an error if not</p>
 </div>
 
       <div id="footer">
-  Generated on Fri Aug 17 12:15:56 2018 by
+  Generated on Fri Aug 24 01:57:48 2018 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.16 (ruby-2.3.0).
+  0.9.16 (ruby-2.5.1).
 </div>
 
     </div>
