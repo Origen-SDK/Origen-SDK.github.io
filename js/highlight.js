@@ -4,12 +4,12 @@ highlight v4
 
 Highlights arbitrary terms.
 
-<http://johannburkard.de/blog/programming/javascript/highlight-javascript-text-higlighting-jquery-plugin.html>
+<https://johannburkard.de/blog/programming/javascript/highlight-javascript-text-higlighting-jquery-plugin.html>
 
 MIT license.
 
 Johann Burkard
-<http://johannburkard.de>
+<https://johannburkard.de>
 <mailto:jb@eaio.com>
 
 
