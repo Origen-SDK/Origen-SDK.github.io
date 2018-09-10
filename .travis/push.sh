@@ -7,4 +7,4 @@ git add .
 git commit --message "Travis build: $TRAVIS_BUILD_NUMBER [ci skip]"
 
 git remote add github https://${GH_TOKEN}@github.com/Origen-SDK/Origen-SDK.github.io
-git push github
+git push github HEAD:master
