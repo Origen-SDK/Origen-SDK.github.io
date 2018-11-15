@@ -6,7 +6,7 @@
 <title>
   Class: Origen::Users::User
   
-    &mdash; Origen Core 0.36.0
+    &mdash; Origen Core 0.37.0
   
 </title>
 
@@ -109,7 +109,7 @@
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#email-instance_method" title="#email (instance method)">#<strong>email</strong>  &#x21d2; Object </a>
+      <a href="#email-instance_method" title="#email (instance method)">#<strong>email</strong>(options = {})  &#x21d2; Object </a>
     
 
     
@@ -415,11 +415,11 @@ home directory and only readable by them).</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#id-instance_method" title="#id (instance method)">#<strong>id</strong>  &#x21d2; Object </a>
+      <a href="#id-instance_method" title="#id (instance method)">#<strong>id</strong>(options = {})  &#x21d2; Object </a>
     
 
     
-      (also: #core_id)
+      (also: #core_id, #username)
     
   </span>
   
@@ -786,7 +786,6 @@ directory.</p>
       <pre class="lines">
 
 
-137
 138
 139
 140
@@ -797,10 +796,11 @@ directory.</p>
 145
 146
 147
-148</pre>
+148
+149</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/users/user.rb', line 137</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/users/user.rb', line 138</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_method_missing'>method_missing</span><span class='lparen'>(</span><span class='id identifier rubyid_method'>method</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_l'>l</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_ldap'><span class='object_link'><a href="../../Origen.html#ldap-class_method" title="Origen.ldap (method)">ldap</a></span></span><span class='period'>.</span><span class='id identifier rubyid_lookup'>lookup</span><span class='lparen'>(</span><span class='kw'>self</span><span class='rparen'>)</span>
@@ -829,7 +829,7 @@ directory.</p>
       <div class="method_details first">
   <h3 class="signature first" id="email-instance_method">
   
-    #<strong>email</strong>  &#x21d2; <tt><span class='object_link'><a href="../../Object.html" title="Object (class)">Object</a></span></tt> 
+    #<strong>email</strong>(options = {})  &#x21d2; <tt><span class='object_link'><a href="../../Object.html" title="Object (class)">Object</a></span></tt> 
   
 
   
@@ -841,7 +841,6 @@ directory.</p>
       <pre class="lines">
 
 
-76
 77
 78
 79
@@ -855,12 +854,13 @@ directory.</p>
 87
 88
 89
-90</pre>
+90
+91</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/users/user.rb', line 76</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/users/user.rb', line 77</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_email'>email</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_email'>email</span><span class='lparen'>(</span><span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_current?'>current?</span>
     <span class='ivar'>@email</span> <span class='op'>||=</span> <span class='const'>ENV</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>ORIGEN_EMAIL</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='id identifier rubyid_email_from_rc'>email_from_rc</span> <span class='op'>||</span> <span class='kw'>begin</span>
       <span class='kw'>if</span> <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_site_config'><span class='object_link'><a href="../../Origen.html#site_config-class_method" title="Origen.site_config (method)">site_config</a></span></span><span class='period'>.</span><span class='id identifier rubyid_email_domain'>email_domain</span>
@@ -897,12 +897,12 @@ directory.</p>
       <pre class="lines">
 
 
-68
 69
-70</pre>
+70
+71</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/users/user.rb', line 68</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/users/user.rb', line 69</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_name'>name</span>
   <span class='ivar'>@name</span> <span class='op'>||=</span> <span class='const'>ENV</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>ORIGEN_NAME</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='id identifier rubyid_name_from_rc'>name_from_rc</span> <span class='op'>||</span> <span class='ivar'>@id</span>
@@ -1043,7 +1043,6 @@ directory.</p>
       <pre class="lines">
 
 
-126
 127
 128
 129
@@ -1051,10 +1050,11 @@ directory.</p>
 131
 132
 133
-134</pre>
+134
+135</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/users/user.rb', line 126</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/users/user.rb', line 127</span>
 
 <span class='kw'>def</span> <span class='op'>==</span><span class='lparen'>(</span><span class='id identifier rubyid_user'>user</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_user'>user</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Users.html" title="Origen::Users (module)">Users</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="" title="Origen::Users::User (class)">User</a></span></span><span class='rparen'>)</span>
@@ -1109,12 +1109,12 @@ directory.</p>
       <pre class="lines">
 
 
-53
 54
-55</pre>
+55
+56</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/users/user.rb', line 53</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/users/user.rb', line 54</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_admin?'>admin?</span>
   <span class='id identifier rubyid_role'>role</span> <span class='op'>==</span> <span class='symbol'>:admin</span>
@@ -1138,7 +1138,7 @@ directory.</p>
     
 <p>Returns a private global Origen session store (stored in the user&#39;s
 home directory and only readable by them). See - <a
-href="https://origen-sdk.org/origen/guides/misc/session/#Global_Sessions">origen-sdk.org/origen/guides/misc/session/#Global_Sessions</a></p>
+href="http://origen-sdk.org/origen/guides/misc/session/#Global_Sessions">origen-sdk.org/origen/guides/misc/session/#Global_Sessions</a></p>
 
 
   </div>
@@ -1152,16 +1152,16 @@ href="https://origen-sdk.org/origen/guides/misc/session/#Global_Sessions">origen
       <pre class="lines">
 
 
-168
 169
 170
 171
 172
 173
-174</pre>
+174
+175</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/users/user.rb', line 168</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/users/user.rb', line 169</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_auth_session'>auth_session</span>
   <span class='ivar'>@session</span> <span class='op'>||=</span> <span class='kw'>begin</span>
@@ -1214,12 +1214,12 @@ href="https://origen-sdk.org/origen/guides/misc/session/#Global_Sessions">origen
       <pre class="lines">
 
 
-58
 59
-60</pre>
+60
+61</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/users/user.rb', line 58</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/users/user.rb', line 59</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_current?'>current?</span>
   <span class='id identifier rubyid_id'>id</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='period'>.</span><span class='id identifier rubyid_downcase'>downcase</span> <span class='op'>==</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='period'>.</span><span class='id identifier rubyid_current_user_id'>current_user_id</span>
@@ -1244,12 +1244,12 @@ href="https://origen-sdk.org/origen/guides/misc/session/#Global_Sessions">origen
       <pre class="lines">
 
 
-203
 204
-205</pre>
+205
+206</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/users/user.rb', line 203</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/users/user.rb', line 204</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_decrypt'>decrypt</span><span class='lparen'>(</span><span class='id identifier rubyid_text'>text</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_text'>text</span>
@@ -1274,12 +1274,12 @@ href="https://origen-sdk.org/origen/guides/misc/session/#Global_Sessions">origen
       <pre class="lines">
 
 
-92
 93
-94</pre>
+94
+95</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/users/user.rb', line 92</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/users/user.rb', line 93</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_email_from_rc'>email_from_rc</span>
   <span class='const'><span class='object_link'><a href="../RevisionControl.html" title="Origen::RevisionControl (module)">RevisionControl</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../RevisionControl/Git.html" title="Origen::RevisionControl::Git (class)">Git</a></span></span><span class='period'>.</span><span class='id identifier rubyid_user_email'><span class='object_link'><a href="../RevisionControl/Git.html#user_email-class_method" title="Origen::RevisionControl::Git.user_email (method)">user_email</a></span></span>
@@ -1304,12 +1304,12 @@ href="https://origen-sdk.org/origen/guides/misc/session/#Global_Sessions">origen
       <pre class="lines">
 
 
-207
 208
-209</pre>
+209
+210</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/users/user.rb', line 207</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/users/user.rb', line 208</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_encrypt'>encrypt</span><span class='lparen'>(</span><span class='id identifier rubyid_text'>text</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_text'>text</span>
@@ -1322,12 +1322,12 @@ href="https://origen-sdk.org/origen/guides/misc/session/#Global_Sessions">origen
       <div class="method_details ">
   <h3 class="signature " id="id-instance_method">
   
-    #<strong>id</strong>  &#x21d2; <tt><span class='object_link'><a href="../../Object.html" title="Object (class)">Object</a></span></tt> 
+    #<strong>id</strong>(options = {})  &#x21d2; <tt><span class='object_link'><a href="../../Object.html" title="Object (class)">Object</a></span></tt> 
   
 
   
     <span class="aliases">Also known as:
-    <span class="names"><span id='core_id-instance_method'>core_id</span></span>
+    <span class="names"><span id='core_id-instance_method'>core_id</span>, <span id='username-instance_method'>username</span></span>
     </span>
   
 
@@ -1345,7 +1345,7 @@ href="https://origen-sdk.org/origen/guides/misc/session/#Global_Sessions">origen
     <td>
       <pre class="code"><span class="info file"># File 'lib/origen/users/user.rb', line 47</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_id'>id</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_id'>id</span><span class='lparen'>(</span><span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='ivar'>@id</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='period'>.</span><span class='id identifier rubyid_downcase'>downcase</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -1379,13 +1379,13 @@ href="https://origen-sdk.org/origen/guides/misc/session/#Global_Sessions">origen
       <pre class="lines">
 
 
-63
 64
 65
-66</pre>
+66
+67</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/users/user.rb', line 63</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/users/user.rb', line 64</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initials'>initials</span>
   <span class='id identifier rubyid_initials'>initials</span> <span class='op'>=</span> <span class='id identifier rubyid_name'>name</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>\s+</span><span class='regexp_end'>/</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_n'>n</span><span class='op'>|</span> <span class='id identifier rubyid_n'>n</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_chr'>chr</span> <span class='rbrace'>}</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
@@ -1431,7 +1431,6 @@ href="https://origen-sdk.org/origen/guides/misc/session/#Global_Sessions">origen
       <pre class="lines">
 
 
-101
 102
 103
 104
@@ -1442,10 +1441,11 @@ href="https://origen-sdk.org/origen/guides/misc/session/#Global_Sessions">origen
 109
 110
 111
-112</pre>
+112
+113</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/users/user.rb', line 101</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/users/user.rb', line 102</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_lookup'>lookup</span><span class='lparen'>(</span><span class='id identifier rubyid_default'>default</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Unknown</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
   <span class='id identifier rubyid_data'>data</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_ldap'><span class='object_link'><a href="../../Origen.html#ldap-class_method" title="Origen.ldap (method)">ldap</a></span></span><span class='period'>.</span><span class='id identifier rubyid_lookup'>lookup</span><span class='lparen'>(</span><span class='kw'>self</span><span class='rparen'>)</span>
@@ -1490,12 +1490,12 @@ href="https://origen-sdk.org/origen/guides/misc/session/#Global_Sessions">origen
       <pre class="lines">
 
 
-161
 162
-163</pre>
+163
+164</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/users/user.rb', line 161</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/users/user.rb', line 162</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_name_and_email'>name_and_email</span>
   <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'> &lt;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_email'>email</span><span class='embexpr_end'>}</span><span class='tstring_content'>&gt;</span><span class='tstring_end'>&quot;</span></span>
@@ -1520,12 +1520,12 @@ href="https://origen-sdk.org/origen/guides/misc/session/#Global_Sessions">origen
       <pre class="lines">
 
 
-72
 73
-74</pre>
+74
+75</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/users/user.rb', line 72</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/users/user.rb', line 73</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_name_from_rc'>name_from_rc</span>
   <span class='const'><span class='object_link'><a href="../RevisionControl.html" title="Origen::RevisionControl (module)">RevisionControl</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../RevisionControl/Git.html" title="Origen::RevisionControl::Git (class)">Git</a></span></span><span class='period'>.</span><span class='id identifier rubyid_user_name'><span class='object_link'><a href="../RevisionControl/Git.html#user_name-class_method" title="Origen::RevisionControl::Git.user_name (method)">user_name</a></span></span>
@@ -1564,7 +1564,6 @@ it yet they will be prompted to enter it, it will then be stored</p>
       <pre class="lines">
 
 
-180
 181
 182
 183
@@ -1585,10 +1584,11 @@ it yet they will be prompted to enter it, it will then be stored</p>
 198
 199
 200
-201</pre>
+201
+202</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/users/user.rb', line 180</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/users/user.rb', line 181</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_password'>password</span><span class='lparen'>(</span><span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='kw'>unless</span> <span class='id identifier rubyid_current?'>current?</span>
@@ -1652,13 +1652,13 @@ via the lookup method.</p>
       <pre class="lines">
 
 
-120
 121
 122
-123</pre>
+123
+124</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/users/user.rb', line 120</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/users/user.rb', line 121</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_raw'>raw</span>
   <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_ldap'><span class='object_link'><a href="../../Origen.html#ldap-class_method" title="Origen.ldap (method)">ldap</a></span></span><span class='period'>.</span><span class='id identifier rubyid_display'>display</span><span class='lparen'>(</span><span class='kw'>self</span><span class='rparen'>)</span>
@@ -1706,7 +1706,6 @@ via the lookup method.</p>
       <pre class="lines">
 
 
-150
 151
 152
 153
@@ -1714,10 +1713,11 @@ via the lookup method.</p>
 155
 156
 157
-158</pre>
+158
+159</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/users/user.rb', line 150</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/users/user.rb', line 151</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='id identifier rubyid_method'>method</span><span class='comma'>,</span> <span class='id identifier rubyid_include_private'>include_private</span> <span class='op'>=</span> <span class='kw'>false</span><span class='rparen'>)</span>
   <span class='kw'>super</span> <span class='op'>||</span> <span class='kw'>begin</span>
@@ -1792,8 +1792,8 @@ via the lookup method.</p>
 </div>
 
       <div id="footer">
-  Generated on Mon Oct  8 11:19:28 2018 by
-  <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  Generated on Thu Nov 15 17:24:52 2018 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.16 (ruby-2.5.1).
 </div>
 
