@@ -6,7 +6,7 @@
 <title>
   Class: Origen::Registers::Bit
   
-    &mdash; Origen Core 0.37.0
+    &mdash; Origen Core 0.38.0
   
 </title>
 
@@ -127,6 +127,13 @@
 following key values. Implemented refers to whether the behaviour is
 accurately modelled by the Origen register model or not.</p>
 
+<p>:base is used in CrossOrigen to set the IP-XACT access type on export.</p>
+
+<p>:read and :write are used in CrossOrigen for IP-XACT export to cover
+&#39;readAction&#39; and &#39;modifiedWriteValue&#39; attributes in the
+IEEE 1685-2009 schema - they do not affect Origen Core functionality
+(yet?).</p>
+
 
   </div>
 </div>
@@ -136,34 +143,34 @@ accurately modelled by the Origen register model or not.</p>
 </div>
         </dt>
         <dd><pre class="code"><span class='lbrace'>{</span>
-  <span class='label'>ro:</span>    <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Read-Only</span><span class='tstring_end'>&#39;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
-  <span class='label'>rw:</span>    <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Read-Write</span><span class='tstring_end'>&#39;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
-  <span class='label'>rc:</span>    <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Read-only, Clear-on-read</span><span class='tstring_end'>&#39;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
-  <span class='label'>rs:</span>    <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Set-on-read (all bits become &#39;1&#39; on read)</span><span class='tstring_end'>&quot;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
-  <span class='label'>wrc:</span>   <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Writable, clear-on-read</span><span class='tstring_end'>&#39;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
-  <span class='label'>wrs:</span>   <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Writable, Sets-on-read</span><span class='tstring_end'>&#39;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
-  <span class='label'>wc:</span>    <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Clear-on-write</span><span class='tstring_end'>&#39;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
-  <span class='label'>ws:</span>    <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Set-on-write</span><span class='tstring_end'>&#39;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
-  <span class='label'>wsrc:</span>  <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Set-on-write, clear-on-read</span><span class='tstring_end'>&#39;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
-  <span class='label'>wcrs:</span>  <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Clear-on-write, set-on-read</span><span class='tstring_end'>&#39;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
-  <span class='label'>w1c:</span>   <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Write &#39;1&#39; to clear bits</span><span class='tstring_end'>&quot;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
-  <span class='label'>w1s:</span>   <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Write &#39;1&#39; to set bits</span><span class='tstring_end'>&quot;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
-  <span class='label'>w1t:</span>   <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Write &#39;1&#39; to toggle bits</span><span class='tstring_end'>&quot;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
-  <span class='label'>w0c:</span>   <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Write &#39;0&#39; to clear bits</span><span class='tstring_end'>&quot;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
-  <span class='label'>w0s:</span>   <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Write &#39;0&#39; to set bits</span><span class='tstring_end'>&quot;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
-  <span class='label'>w0t:</span>   <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Write &#39;0&#39; to toggle bits</span><span class='tstring_end'>&quot;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
-  <span class='label'>w1src:</span> <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Write &#39;1&#39; to set and clear-on-read</span><span class='tstring_end'>&quot;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
-  <span class='label'>w1crs:</span> <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Write &#39;1&#39; to clear and set-on-read</span><span class='tstring_end'>&quot;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
-  <span class='label'>w0src:</span> <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Write &#39;0&#39; to set and clear-on-read</span><span class='tstring_end'>&quot;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
-  <span class='label'>w0crs:</span> <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Write &#39;0&#39; to clear and set-on-read</span><span class='tstring_end'>&quot;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
-  <span class='label'>wo:</span>    <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Write-only</span><span class='tstring_end'>&#39;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
-  <span class='label'>woc:</span>   <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>When written sets the field to &#39;0&#39;. Read undeterministic</span><span class='tstring_end'>&quot;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
-  <span class='label'>worz:</span>  <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Write-only, Reads zero</span><span class='tstring_end'>&#39;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
-  <span class='label'>wos:</span>   <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>When written sets all bits to &#39;1&#39;. Read undeterministic</span><span class='tstring_end'>&quot;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
-  <span class='label'>w1:</span>    <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Write-once. Next time onwards, write is ignored. Read returns the value</span><span class='tstring_end'>&#39;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
-  <span class='label'>wo1:</span>   <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Write-once. Next time onwards, write is ignored. Read is undeterministic</span><span class='tstring_end'>&#39;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
-  <span class='label'>dc:</span>    <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>RW but no check</span><span class='tstring_end'>&#39;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
-  <span class='label'>rowz:</span>  <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Read-only, value is cleared on read</span><span class='tstring_end'>&#39;</span></span> <span class='rbrace'>}</span>
+  <span class='label'>ro:</span>    <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>base:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>read-only</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>      <span class='label'>write:</span> <span class='kw'>nil</span><span class='comma'>,</span>            <span class='label'>read:</span> <span class='kw'>nil</span><span class='comma'>,</span>      <span class='label'>writable:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>readable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>w1c:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>set_only:</span> <span class='kw'>false</span><span class='comma'>,</span>  <span class='label'>clr_only:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Read-Only</span><span class='tstring_end'>&#39;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
+  <span class='label'>rw:</span>    <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>base:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>read-write</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>     <span class='label'>write:</span> <span class='kw'>nil</span><span class='comma'>,</span>            <span class='label'>read:</span> <span class='kw'>nil</span><span class='comma'>,</span>      <span class='label'>writable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>readable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>w1c:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>set_only:</span> <span class='kw'>false</span><span class='comma'>,</span>  <span class='label'>clr_only:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Read-Write</span><span class='tstring_end'>&#39;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
+  <span class='label'>rc:</span>    <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>base:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>read-only</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>      <span class='label'>write:</span> <span class='kw'>nil</span><span class='comma'>,</span>            <span class='label'>read:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>clear</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>  <span class='label'>writable:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>readable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>w1c:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>set_only:</span> <span class='kw'>false</span><span class='comma'>,</span>  <span class='label'>clr_only:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Read-only, Clear-on-read</span><span class='tstring_end'>&#39;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
+  <span class='label'>rs:</span>    <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>base:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>read-only</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>      <span class='label'>write:</span> <span class='kw'>nil</span><span class='comma'>,</span>            <span class='label'>read:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>set</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>    <span class='label'>writable:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>readable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>w1c:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>set_only:</span> <span class='kw'>false</span><span class='comma'>,</span>  <span class='label'>clr_only:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Set-on-read (all bits become &#39;1&#39; on read)</span><span class='tstring_end'>&quot;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
+  <span class='label'>wrc:</span>   <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>base:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>read-write</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>     <span class='label'>write:</span> <span class='kw'>nil</span><span class='comma'>,</span>            <span class='label'>read:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>clear</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>  <span class='label'>writable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>readable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>w1c:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>set_only:</span> <span class='kw'>false</span><span class='comma'>,</span>  <span class='label'>clr_only:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Writable, clear-on-read</span><span class='tstring_end'>&#39;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
+  <span class='label'>wrs:</span>   <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>base:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>read-write</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>     <span class='label'>write:</span> <span class='kw'>nil</span><span class='comma'>,</span>            <span class='label'>read:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>set</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>    <span class='label'>writable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>readable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>w1c:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>set_only:</span> <span class='kw'>false</span><span class='comma'>,</span>  <span class='label'>clr_only:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Writable, Sets-on-read</span><span class='tstring_end'>&#39;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
+  <span class='label'>wc:</span>    <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>base:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>read-write</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>     <span class='label'>write:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>clear</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>        <span class='label'>read:</span> <span class='kw'>nil</span><span class='comma'>,</span>      <span class='label'>writable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>readable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>w1c:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>set_only:</span> <span class='kw'>false</span><span class='comma'>,</span>  <span class='label'>clr_only:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Clear-on-write</span><span class='tstring_end'>&#39;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
+  <span class='label'>ws:</span>    <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>base:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>read-write</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>     <span class='label'>write:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>set</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>          <span class='label'>read:</span> <span class='kw'>nil</span><span class='comma'>,</span>      <span class='label'>writable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>readable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>w1c:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>set_only:</span> <span class='kw'>true</span><span class='comma'>,</span>   <span class='label'>clr_only:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Set-on-write</span><span class='tstring_end'>&#39;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
+  <span class='label'>wsrc:</span>  <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>base:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>read-write</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>     <span class='label'>write:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>set</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>          <span class='label'>read:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>clear</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>  <span class='label'>writable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>readable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>w1c:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>set_only:</span> <span class='kw'>false</span><span class='comma'>,</span>  <span class='label'>clr_only:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Set-on-write, clear-on-read</span><span class='tstring_end'>&#39;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
+  <span class='label'>wcrs:</span>  <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>base:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>read-write</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>     <span class='label'>write:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>clear</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>        <span class='label'>read:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>set</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>    <span class='label'>writable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>readable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>w1c:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>set_only:</span> <span class='kw'>false</span><span class='comma'>,</span>  <span class='label'>clr_only:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Clear-on-write, set-on-read</span><span class='tstring_end'>&#39;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
+  <span class='label'>w1c:</span>   <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>base:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>read-write</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>     <span class='label'>write:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>oneToClear</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>   <span class='label'>read:</span> <span class='kw'>nil</span><span class='comma'>,</span>      <span class='label'>writable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>readable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>w1c:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>set_only:</span> <span class='kw'>false</span><span class='comma'>,</span>  <span class='label'>clr_only:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Write &#39;1&#39; to clear bits</span><span class='tstring_end'>&quot;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
+  <span class='label'>w1s:</span>   <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>base:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>read-write</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>     <span class='label'>write:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>oneToSet</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>     <span class='label'>read:</span> <span class='kw'>nil</span><span class='comma'>,</span>      <span class='label'>writable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>readable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>w1c:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>set_only:</span> <span class='kw'>false</span><span class='comma'>,</span>  <span class='label'>clr_only:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Write &#39;1&#39; to set bits</span><span class='tstring_end'>&quot;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
+  <span class='label'>w1t:</span>   <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>base:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>read-write</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>     <span class='label'>write:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>oneToToggle</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>  <span class='label'>read:</span> <span class='kw'>nil</span><span class='comma'>,</span>      <span class='label'>writable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>readable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>w1c:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>set_only:</span> <span class='kw'>false</span><span class='comma'>,</span>  <span class='label'>clr_only:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Write &#39;1&#39; to toggle bits</span><span class='tstring_end'>&quot;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
+  <span class='label'>w0c:</span>   <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>base:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>read-write</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>     <span class='label'>write:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>zeroToClear</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>  <span class='label'>read:</span> <span class='kw'>nil</span><span class='comma'>,</span>      <span class='label'>writable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>readable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>w1c:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>set_only:</span> <span class='kw'>false</span><span class='comma'>,</span>  <span class='label'>clr_only:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Write &#39;0&#39; to clear bits</span><span class='tstring_end'>&quot;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
+  <span class='label'>w0s:</span>   <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>base:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>read-write</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>     <span class='label'>write:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>zeroToSet</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>    <span class='label'>read:</span> <span class='kw'>nil</span><span class='comma'>,</span>      <span class='label'>writable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>readable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>w1c:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>set_only:</span> <span class='kw'>false</span><span class='comma'>,</span>  <span class='label'>clr_only:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Write &#39;0&#39; to set bits</span><span class='tstring_end'>&quot;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
+  <span class='label'>w0t:</span>   <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>base:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>read-write</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>     <span class='label'>write:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>zeroToToggle</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>read:</span> <span class='kw'>nil</span><span class='comma'>,</span>      <span class='label'>writable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>readable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>w1c:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>set_only:</span> <span class='kw'>false</span><span class='comma'>,</span>  <span class='label'>clr_only:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Write &#39;0&#39; to toggle bits</span><span class='tstring_end'>&quot;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
+  <span class='label'>w1src:</span> <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>base:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>read-write</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>     <span class='label'>write:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>oneToSet</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>     <span class='label'>read:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>clear</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>  <span class='label'>writable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>readable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>w1c:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>set_only:</span> <span class='kw'>false</span><span class='comma'>,</span>  <span class='label'>clr_only:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Write &#39;1&#39; to set and clear-on-read</span><span class='tstring_end'>&quot;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
+  <span class='label'>w1crs:</span> <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>base:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>read-write</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>     <span class='label'>write:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>oneToClear</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>   <span class='label'>read:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>set</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>    <span class='label'>writable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>readable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>w1c:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>set_only:</span> <span class='kw'>false</span><span class='comma'>,</span>  <span class='label'>clr_only:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Write &#39;1&#39; to clear and set-on-read</span><span class='tstring_end'>&quot;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
+  <span class='label'>w0src:</span> <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>base:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>read-write</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>     <span class='label'>write:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>zeroToSet</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>    <span class='label'>read:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>clear</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>  <span class='label'>writable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>readable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>w1c:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>set_only:</span> <span class='kw'>false</span><span class='comma'>,</span>  <span class='label'>clr_only:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Write &#39;0&#39; to set and clear-on-read</span><span class='tstring_end'>&quot;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
+  <span class='label'>w0crs:</span> <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>base:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>read-write</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>     <span class='label'>write:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>zeroToClear</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>  <span class='label'>read:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>set</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>    <span class='label'>writable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>readable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>w1c:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>set_only:</span> <span class='kw'>false</span><span class='comma'>,</span>  <span class='label'>clr_only:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Write &#39;0&#39; to clear and set-on-read</span><span class='tstring_end'>&quot;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
+  <span class='label'>wo:</span>    <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>base:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>write-only</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>     <span class='label'>write:</span> <span class='kw'>nil</span><span class='comma'>,</span>            <span class='label'>read:</span> <span class='kw'>nil</span><span class='comma'>,</span>      <span class='label'>writable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>readable:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>w1c:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>set_only:</span> <span class='kw'>false</span><span class='comma'>,</span>  <span class='label'>clr_only:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Write-only</span><span class='tstring_end'>&#39;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
+  <span class='label'>woc:</span>   <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>base:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>write-only</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>     <span class='label'>write:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>clear</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>        <span class='label'>read:</span> <span class='kw'>nil</span><span class='comma'>,</span>      <span class='label'>writable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>readable:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>w1c:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>set_only:</span> <span class='kw'>false</span><span class='comma'>,</span>  <span class='label'>clr_only:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>When written sets the field to &#39;0&#39;. Read undeterministic</span><span class='tstring_end'>&quot;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
+  <span class='label'>worz:</span>  <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>base:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>write-only</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>     <span class='label'>write:</span> <span class='kw'>nil</span><span class='comma'>,</span>            <span class='label'>read:</span> <span class='kw'>nil</span><span class='comma'>,</span>      <span class='label'>writable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>readable:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>w1c:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>set_only:</span> <span class='kw'>false</span><span class='comma'>,</span>  <span class='label'>clr_only:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Write-only, Reads zero</span><span class='tstring_end'>&#39;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
+  <span class='label'>wos:</span>   <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>base:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>write-only</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>     <span class='label'>write:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>set</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>          <span class='label'>read:</span> <span class='kw'>nil</span><span class='comma'>,</span>      <span class='label'>writable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>readable:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>w1c:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>set_only:</span> <span class='kw'>true</span><span class='comma'>,</span>   <span class='label'>clr_only:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>When written sets all bits to &#39;1&#39;. Read undeterministic</span><span class='tstring_end'>&quot;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
+  <span class='label'>w1:</span>    <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>base:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>read-writeOnce</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>write:</span> <span class='kw'>nil</span><span class='comma'>,</span>            <span class='label'>read:</span> <span class='kw'>nil</span><span class='comma'>,</span>      <span class='label'>writable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>readable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>w1c:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>set_only:</span> <span class='kw'>false</span><span class='comma'>,</span>  <span class='label'>clr_only:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Write-once. Next time onwards, write is ignored. Read returns the value</span><span class='tstring_end'>&#39;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
+  <span class='label'>wo1:</span>   <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>base:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>writeOnce</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>      <span class='label'>write:</span> <span class='kw'>nil</span><span class='comma'>,</span>            <span class='label'>read:</span> <span class='kw'>nil</span><span class='comma'>,</span>      <span class='label'>writable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>readable:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>w1c:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>set_only:</span> <span class='kw'>false</span><span class='comma'>,</span>  <span class='label'>clr_only:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Write-once. Next time onwards, write is ignored. Read is undeterministic</span><span class='tstring_end'>&#39;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
+  <span class='label'>dc:</span>    <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>base:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>read-write</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>     <span class='label'>write:</span> <span class='kw'>nil</span><span class='comma'>,</span>            <span class='label'>read:</span> <span class='kw'>nil</span><span class='comma'>,</span>      <span class='label'>writable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>readable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>w1c:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>set_only:</span> <span class='kw'>false</span><span class='comma'>,</span>  <span class='label'>clr_only:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>RW but no check</span><span class='tstring_end'>&#39;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
+  <span class='label'>rowz:</span>  <span class='lbrace'>{</span> <span class='label'>implemented:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>base:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>read-only</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>      <span class='label'>write:</span> <span class='kw'>nil</span><span class='comma'>,</span>            <span class='label'>read:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>clear</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>  <span class='label'>writable:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>readable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='label'>w1c:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>set_only:</span> <span class='kw'>false</span><span class='comma'>,</span>  <span class='label'>clr_only:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Read-only, value is cleared on read</span><span class='tstring_end'>&#39;</span></span> <span class='rbrace'>}</span>
 <span class='rbrace'>}</span></pre></dd>
       
     </dl>
@@ -199,6 +206,35 @@ accurately modelled by the Origen register model or not.</p>
 <p>Returns the access method for the given bit (a symbol), see the
 ACCESS_CODES constant for the possible values this can have and their
 meaning.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#base_access-instance_method" title="#base_access (instance method)">#<strong>base_access</strong>  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the basic access string for a given access method.</p>
 </div></span>
   
 </li>
@@ -323,6 +359,36 @@ meaning.</p>
       <li class="public ">
   <span class="summary_signature">
     
+      <a href="#mod_write_value-instance_method" title="#mod_write_value (instance method)">#<strong>mod_write_value</strong>  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns mod_write_value - what write value modification occurs when
+written.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#nvm_dep-instance_method" title="#nvm_dep (instance method)">#<strong>nvm_dep</strong>  &#x21d2; Object </a>
     
 
@@ -431,6 +497,35 @@ meaning.</p>
   
     <span class="summary_desc"><div class='inline'>
 <p>Returns the integer position of the bit within the register.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#read_action-instance_method" title="#read_action (instance method)">#<strong>read_action</strong>  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns read_action - whether anything happens to the bit when read.</p>
 </div></span>
   
 </li>
@@ -747,6 +842,28 @@ attributes set.</p>
   <span class="summary_signature">
     
       <a href="#abs_path-instance_method" title="#abs_path (instance method)">#<strong>abs_path</strong>  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#access_codes-instance_method" title="#access_codes (instance method)">#<strong>access_codes</strong>  &#x21d2; Object </a>
     
 
     
@@ -1668,19 +1785,6 @@ read-only, the value of the bit can be forced with &#39;force: true&#39;.</p>
       <pre class="lines">
 
 
-88
-89
-90
-91
-92
-93
-94
-95
-96
-97
-98
-99
-100
 101
 102
 103
@@ -1742,10 +1846,23 @@ read-only, the value of the bit can be forced with &#39;force: true&#39;.</p>
 159
 160
 161
-162</pre>
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 88</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 101</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_owner'>owner</span><span class='comma'>,</span> <span class='id identifier rubyid_position'>position</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span> <span class='comment'># rubocop:disable MethodLength
 </span>  <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='lbrace'>{</span>
@@ -1861,16 +1978,16 @@ read-only, the value of the bit can be forced with &#39;force: true&#39;.</p>
       <pre class="lines">
 
 
-475
-476
 477
 478
 479
 480
-481</pre>
+481
+482
+483</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 475</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 477</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_method_missing'>method_missing</span><span class='lparen'>(</span><span class='id identifier rubyid_method'>method</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span> <span class='comment'># :nodoc:
 </span>  <span class='kw'>if</span> <span class='id identifier rubyid_meta_data_method?'>meta_data_method?</span><span class='lparen'>(</span><span class='id identifier rubyid_method'>method</span><span class='rparen'>)</span>
@@ -1919,15 +2036,60 @@ meaning</p>
       <pre class="lines">
 
 
-86
-87
-88</pre>
+96
+97
+98</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 86</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 96</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_access'>access</span>
   <span class='ivar'>@access</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="base_access-instance_method">
+  
+    #<strong>base_access</strong>  &#x21d2; <tt><span class='object_link'><a href="../../Object.html" title="Object (class)">Object</a></span></tt>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the basic access string for a given access method.  Possible
+values: read-write, read-only, write-only, writeOnce, read-writeOnce.  Used
+primarily by CrossOrigen IP-XACT import/export.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+99
+100
+101</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 99</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_base_access'>base_access</span>
+  <span class='ivar'>@base_access</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1962,12 +2124,12 @@ meaning</p>
       <pre class="lines">
 
 
-72
-73
-74</pre>
+78
+79
+80</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 72</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 78</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_clr_only='>clr_only=</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='rparen'>)</span>
   <span class='ivar'>@clr_only</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span>
@@ -2005,12 +2167,12 @@ meaning</p>
       <pre class="lines">
 
 
-44
-45
-46</pre>
+50
+51
+52</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 44</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 50</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_data'>data</span>
   <span class='ivar'>@data</span>
@@ -2048,12 +2210,12 @@ meaning</p>
       <pre class="lines">
 
 
-60
-61
-62</pre>
+66
+67
+68</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 60</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 66</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_feature'>feature</span>
   <span class='ivar'>@feature</span>
@@ -2095,15 +2257,58 @@ meaning</p>
       <pre class="lines">
 
 
-81
-82
-83</pre>
+91
+92
+93</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 81</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 91</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_meta'>meta</span>
   <span class='ivar'>@meta</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="mod_write_value-instance_method">
+  
+    #<strong>mod_write_value</strong>  &#x21d2; <tt><span class='object_link'><a href="../../Object.html" title="Object (class)">Object</a></span></tt>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns mod_write_value - what write value modification occurs when written</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+84
+85
+86</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 84</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_mod_write_value'>mod_write_value</span>
+  <span class='ivar'>@mod_write_value</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -2138,12 +2343,12 @@ meaning</p>
       <pre class="lines">
 
 
-76
-77
-78</pre>
+86
+87
+88</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 76</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 86</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_nvm_dep'>nvm_dep</span>
   <span class='ivar'>@nvm_dep</span>
@@ -2181,12 +2386,12 @@ meaning</p>
       <pre class="lines">
 
 
-46
-47
-48</pre>
+52
+53
+54</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 46</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 52</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_overlay'>overlay</span>
   <span class='ivar'>@overlay</span>
@@ -2224,12 +2429,12 @@ meaning</p>
       <pre class="lines">
 
 
-40
-41
-42</pre>
+46
+47
+48</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 40</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 46</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_owner'>owner</span>
   <span class='ivar'>@owner</span>
@@ -2267,15 +2472,58 @@ meaning</p>
       <pre class="lines">
 
 
-42
-43
-44</pre>
+48
+49
+50</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 42</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 48</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_position'>position</span>
   <span class='ivar'>@position</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="read_action-instance_method">
+  
+    #<strong>read_action</strong>  &#x21d2; <tt><span class='object_link'><a href="../../Object.html" title="Object (class)">Object</a></span></tt>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns read_action - whether anything happens to the bit when read</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+82
+83
+84</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 82</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_read_action'>read_action</span>
+  <span class='ivar'>@read_action</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -2316,12 +2564,12 @@ instantiation, e.g.</p>
       <pre class="lines">
 
 
-52
-53
-54</pre>
+58
+59
+60</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 52</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 58</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_read_data_matches_write'>read_data_matches_write</span>
   <span class='ivar'>@read_data_matches_write</span>
@@ -2359,12 +2607,12 @@ instantiation, e.g.</p>
       <pre class="lines">
 
 
-68
-69
-70</pre>
+74
+75
+76</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 68</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 74</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_readable='>readable=</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='rparen'>)</span>
   <span class='ivar'>@readable</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span>
@@ -2406,12 +2654,12 @@ instantiation, e.g.</p>
       <pre class="lines">
 
 
-62
-63
-64</pre>
+68
+69
+70</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 62</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 68</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_reset_val'>reset_val</span>
   <span class='ivar'>@reset_val</span>
@@ -2449,12 +2697,12 @@ instantiation, e.g.</p>
       <pre class="lines">
 
 
-74
-75
-76</pre>
+80
+81
+82</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 74</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 80</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_set_only='>set_only=</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='rparen'>)</span>
   <span class='ivar'>@set_only</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span>
@@ -2494,12 +2742,12 @@ checks</p>
       <pre class="lines">
 
 
-79
-80
-81</pre>
+89
+90
+91</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 79</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 89</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_start'>start</span>
   <span class='ivar'>@start</span>
@@ -2538,12 +2786,12 @@ Reg#sticky_overlay for a full description. This is true by default.</p>
       <pre class="lines">
 
 
-55
-56
-57</pre>
+61
+62
+63</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 55</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 61</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_sticky_overlay'>sticky_overlay</span>
   <span class='ivar'>@sticky_overlay</span>
@@ -2582,12 +2830,12 @@ Reg#sticky_store for a full description. This is false by default.</p>
       <pre class="lines">
 
 
-58
-59
-60</pre>
+64
+65
+66</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 58</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 64</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_sticky_store'>sticky_store</span>
   <span class='ivar'>@sticky_store</span>
@@ -2625,12 +2873,12 @@ Reg#sticky_store for a full description. This is false by default.</p>
       <pre class="lines">
 
 
-70
-71
-72</pre>
+76
+77
+78</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 70</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 76</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_w1c'>w1c</span>
   <span class='ivar'>@w1c</span>
@@ -2668,12 +2916,12 @@ Reg#sticky_store for a full description. This is false by default.</p>
       <pre class="lines">
 
 
-66
-67
-68</pre>
+72
+73
+74</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 66</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 72</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_writable='>writable=</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='rparen'>)</span>
   <span class='ivar'>@writable</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span>
@@ -2717,12 +2965,12 @@ attributes set</p>
       <pre class="lines">
 
 
-403
-404
-405</pre>
+405
+406
+407</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 403</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 405</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_null'>null</span><span class='lparen'>(</span><span class='id identifier rubyid_owner'>owner</span><span class='comma'>,</span> <span class='id identifier rubyid_position'>position</span><span class='rparen'>)</span> <span class='comment'># :nodoc:
 </span>  <span class='const'><span class='object_link'><a href="" title="Origen::Registers::Bit (class)">Bit</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="#initialize-instance_method" title="Origen::Registers::Bit#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_owner'>owner</span><span class='comma'>,</span> <span class='id identifier rubyid_position'>position</span><span class='comma'>,</span> <span class='label'>writable:</span> <span class='kw'>false</span><span class='rparen'>)</span>
@@ -2753,15 +3001,45 @@ attributes set</p>
       <pre class="lines">
 
 
-222
-223
-224</pre>
+224
+225
+226</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 222</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 224</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_abs_path'>abs_path</span>
   <span class='ivar'>@abs_path</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="access_codes-instance_method">
+  
+    #<strong>access_codes</strong>  &#x21d2; <tt><span class='object_link'><a href="../../Object.html" title="Object (class)">Object</a></span></tt> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+177
+178
+179</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 177</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_access_codes'>access_codes</span>
+  <span class='const'><span class='object_link'><a href="#ACCESS_CODES-constant" title="Origen::Registers::Bit::ACCESS_CODES (constant)">ACCESS_CODES</a></span></span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -2796,16 +3074,16 @@ sticky_store or sticky_overlay attributes are set respectively.</p>
       <pre class="lines">
 
 
-380
-381
 382
 383
 384
 385
-386</pre>
+386
+387
+388</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 380</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 382</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_clear_flags'>clear_flags</span>
   <span class='ivar'>@read</span> <span class='op'>=</span> <span class='kw'>false</span>
@@ -2845,13 +3123,13 @@ sticky_store or sticky_overlay attributes are set respectively.</p>
       <pre class="lines">
 
 
-389
-390
 391
-392</pre>
+392
+393
+394</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 389</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 391</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_clear_read_flag'>clear_read_flag</span>
   <span class='ivar'>@read</span> <span class='op'>=</span> <span class='kw'>false</span>
@@ -2888,15 +3166,15 @@ sticky_store or sticky_overlay attributes are set respectively.</p>
       <pre class="lines">
 
 
-440
-441
 442
 443
 444
-445</pre>
+445
+446
+447</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 440</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 442</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_clear_start'>clear_start</span>
   <span class='kw'>if</span> <span class='ivar'>@start</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_set?'>set?</span>
@@ -2935,15 +3213,15 @@ sticky_store or sticky_overlay attributes are set respectively.</p>
       <pre class="lines">
 
 
-432
-433
 434
 435
 436
-437</pre>
+437
+438
+439</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 432</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 434</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_clear_w1c'>clear_w1c</span>
   <span class='kw'>if</span> <span class='ivar'>@w1c</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_set?'>set?</span>
@@ -2982,12 +3260,12 @@ sticky_store or sticky_overlay attributes are set respectively.</p>
       <pre class="lines">
 
 
-427
-428
-429</pre>
+429
+430
+431</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 427</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 429</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_data_in_position'>data_in_position</span>
   <span class='id identifier rubyid_data'>data</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_position'>position</span>
@@ -3025,17 +3303,17 @@ applied to this bit specifically however, use the meta method to get that.</p>
       <pre class="lines">
 
 
-236
-237
 238
 239
 240
 241
 242
-243</pre>
+243
+244
+245</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 236</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 238</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_default_bit_metadata'>default_bit_metadata</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_owner'>owner</span>
@@ -3076,17 +3354,17 @@ applied to this bit specifically however, use the meta method to get that.</p>
       <pre class="lines">
 
 
-255
-256
 257
 258
 259
 260
 261
-262</pre>
+262
+263
+264</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 255</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 257</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_delete'>delete</span>
   <span class='ivar'>@sticky_overlay</span> <span class='op'>=</span> <span class='kw'>false</span>
@@ -3138,8 +3416,6 @@ applied to this bit specifically however, use the meta method to get that.</p>
       <pre class="lines">
 
 
-502
-503
 504
 505
 506
@@ -3201,10 +3477,12 @@ applied to this bit specifically however, use the meta method to get that.</p>
 562
 563
 564
-565</pre>
+565
+566
+567</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 502</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 504</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_enabled?'>enabled?</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_feature'>feature</span>
@@ -3318,8 +3596,6 @@ applied to this bit specifically however, use the meta method to get that.</p>
       <pre class="lines">
 
 
-484
-485
 486
 487
 488
@@ -3333,10 +3609,12 @@ applied to this bit specifically however, use the meta method to get that.</p>
 496
 497
 498
-499</pre>
+499
+500
+501</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 484</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 486</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_enabled_by_feature?'>enabled_by_feature?</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='op'>!</span><span class='id identifier rubyid_name'>name</span>
@@ -3374,17 +3652,17 @@ applied to this bit specifically however, use the meta method to get that.</p>
       <pre class="lines">
 
 
-466
-467
 468
 469
 470
 471
 472
-473</pre>
+473
+474
+475</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 466</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 468</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_extract_meta_data'>extract_meta_data</span><span class='lparen'>(</span><span class='id identifier rubyid_method'>method</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_method'>method</span> <span class='op'>=</span> <span class='id identifier rubyid_method'>method</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='period'>.</span><span class='id identifier rubyid_sub'>sub</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>?</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
@@ -3440,12 +3718,12 @@ and where the bit has not been written or read to a specific value yet.</p>
       <pre class="lines">
 
 
-290
-291
-292</pre>
+292
+293
+294</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 290</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 292</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_has_known_value?'>has_known_value?</span>
   <span class='op'>!</span><span class='ivar'>@reset_val</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="../../Symbol.html" title="Symbol (class)">Symbol</a></span></span><span class='rparen'>)</span> <span class='op'>||</span> <span class='ivar'>@updated_post_reset</span>
@@ -3496,16 +3774,16 @@ name</p>
       <pre class="lines">
 
 
-358
-359
 360
 361
 362
 363
-364</pre>
+364
+365
+366</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 358</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 360</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_has_overlay?'>has_overlay?</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_name'>name</span>
@@ -3534,12 +3812,12 @@ name</p>
       <pre class="lines">
 
 
-245
-246
-247</pre>
+247
+248
+249</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 245</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 247</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_inspect'>inspect</span>
   <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>&lt;</span><span class='embexpr_beg'>#{</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='embexpr_end'>}</span><span class='tstring_content'>:</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_object_id'>object_id</span><span class='embexpr_end'>}</span><span class='tstring_content'>&gt;</span><span class='tstring_end'>&quot;</span></span>
@@ -3590,12 +3868,12 @@ name</p>
       <pre class="lines">
 
 
-372
-373
-374</pre>
+374
+375
+376</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 372</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 374</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_is_readable?'>is_readable?</span>
   <span class='ivar'>@readable</span>
@@ -3644,12 +3922,12 @@ name</p>
       <pre class="lines">
 
 
-347
-348
-349</pre>
+349
+350
+351</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 347</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 349</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_is_to_be_read?'>is_to_be_read?</span>
   <span class='ivar'>@read</span>
@@ -3698,12 +3976,12 @@ name</p>
       <pre class="lines">
 
 
-352
-353
-354</pre>
+354
+355
+356</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 352</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 354</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_is_to_be_stored?'>is_to_be_stored?</span>
   <span class='ivar'>@store</span>
@@ -3756,12 +4034,12 @@ name</p>
       <pre class="lines">
 
 
-367
-368
-369</pre>
+369
+370
+371</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 367</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 369</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_is_writable?'>is_writable?</span>
   <span class='ivar'>@writable</span>
@@ -3799,13 +4077,13 @@ return %1_0000</p>
       <pre class="lines">
 
 
-397
-398
 399
-400</pre>
+400
+401
+402</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 397</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 399</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_mask'>mask</span>
   <span class='id identifier rubyid_mask_val'>mask_val</span> <span class='op'>=</span> <span class='int'>1</span>
@@ -3857,8 +4135,6 @@ return %1_0000</p>
       <pre class="lines">
 
 
-453
-454
 455
 456
 457
@@ -3868,10 +4144,12 @@ return %1_0000</p>
 461
 462
 463
-464</pre>
+464
+465
+466</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 453</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 455</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_meta_data_method?'>meta_data_method?</span><span class='lparen'>(</span><span class='id identifier rubyid_method'>method</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_attr_name'>attr_name</span> <span class='op'>=</span> <span class='id identifier rubyid_method'>method</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='period'>.</span><span class='id identifier rubyid_gsub'>gsub</span><span class='lparen'>(</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>\??=?</span><span class='regexp_end'>/</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span>
@@ -3916,12 +4194,12 @@ return %1_0000</p>
       <pre class="lines">
 
 
-342
-343
-344</pre>
+344
+345
+346</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 342</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 344</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_overlay_str'>overlay_str</span>
   <span class='ivar'>@overlay</span>
@@ -3946,12 +4224,12 @@ return %1_0000</p>
       <pre class="lines">
 
 
-218
-219
-220</pre>
+220
+221
+222</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 218</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 220</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_path_var'>path_var</span>
   <span class='ivar'>@path</span>
@@ -3992,8 +4270,6 @@ the expected data for when the read is performed.</p>
       <pre class="lines">
 
 
-317
-318
 319
 320
 321
@@ -4001,10 +4277,12 @@ the expected data for when the read is performed.</p>
 323
 324
 325
-326</pre>
+326
+327
+328</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 317</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 319</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_read'>read</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid__options'>_options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='comment'># First properly assign the args if value is absent...
@@ -4047,8 +4325,6 @@ the expected data for when the read is performed.</p>
       <pre class="lines">
 
 
-270
-271
 272
 273
 274
@@ -4056,10 +4332,12 @@ the expected data for when the read is performed.</p>
 276
 277
 278
-279</pre>
+279
+280
+281</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 270</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 272</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_reset'>reset</span>
   <span class='kw'>if</span> <span class='ivar'>@reset_val</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="../../Symbol.html" title="Symbol (class)">Symbol</a></span></span><span class='rparen'>)</span>
@@ -4115,13 +4393,13 @@ the expected data for when the read is performed.</p>
       <pre class="lines">
 
 
-447
-448
 449
-450</pre>
+450
+451
+452</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 447</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 449</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span> <span class='comment'># :nodoc:
 </span>  <span class='id identifier rubyid_sym'>sym</span> <span class='op'>=</span> <span class='id identifier rubyid_args'>args</span><span class='period'>.</span><span class='id identifier rubyid_first'>first</span>
@@ -4171,12 +4449,12 @@ the expected data for when the read is performed.</p>
       <pre class="lines">
 
 
-265
-266
-267</pre>
+267
+268
+269</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 265</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 267</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_set?'>set?</span>
   <span class='ivar'>@data</span> <span class='op'>==</span> <span class='int'>1</span> <span class='op'>?</span> <span class='kw'>true</span> <span class='op'>:</span> <span class='kw'>false</span>
@@ -4201,23 +4479,6 @@ the expected data for when the read is performed.</p>
       <pre class="lines">
 
 
-164
-165
-166
-167
-168
-169
-170
-171
-172
-173
-174
-175
-176
-177
-178
-179
-180
 181
 182
 183
@@ -4236,10 +4497,12 @@ the expected data for when the read is performed.</p>
 196
 197
 198
-199</pre>
+199
+200
+201</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 164</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 181</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_set_access'>set_access</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='rparen'>)</span>
   <span class='kw'>unless</span> <span class='const'><span class='object_link'><a href="#ACCESS_CODES-constant" title="Origen::Registers::Bit::ACCESS_CODES (constant)">ACCESS_CODES</a></span></span><span class='period'>.</span><span class='id identifier rubyid_keys'>keys</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='rparen'>)</span>
@@ -4252,30 +4515,15 @@ the expected data for when the read is performed.</p>
   <span class='kw'>end</span>
   <span class='ivar'>@access</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span>
 
-  <span class='comment'># Set readable &amp; writable based on access
-</span>  <span class='kw'>if</span> <span class='ivar'>@access</span> <span class='op'>==</span> <span class='symbol'>:ro</span>
-    <span class='ivar'>@readable</span> <span class='op'>=</span> <span class='kw'>true</span>
-    <span class='ivar'>@writable</span> <span class='op'>=</span> <span class='kw'>false</span>
-  <span class='kw'>elsif</span> <span class='ivar'>@access</span> <span class='op'>==</span> <span class='symbol'>:wo</span> <span class='op'>||</span> <span class='ivar'>@access</span> <span class='op'>==</span> <span class='symbol'>:worz</span>
-    <span class='ivar'>@writable</span> <span class='op'>=</span> <span class='kw'>true</span>
-    <span class='ivar'>@readable</span> <span class='op'>=</span> <span class='kw'>false</span>
-  <span class='kw'>elsif</span> <span class='ivar'>@access</span> <span class='op'>==</span> <span class='symbol'>:w1c</span>
-    <span class='ivar'>@w1c</span> <span class='op'>=</span> <span class='kw'>true</span>
-    <span class='ivar'>@writable</span> <span class='op'>=</span> <span class='kw'>true</span>
-    <span class='ivar'>@readable</span> <span class='op'>=</span> <span class='kw'>true</span>  <span class='comment'># Is this always valid?
-</span>  <span class='kw'>elsif</span> <span class='ivar'>@access</span> <span class='op'>==</span> <span class='symbol'>:wc</span>
-    <span class='ivar'>@clr_only</span> <span class='op'>=</span> <span class='kw'>true</span>
-    <span class='ivar'>@writable</span> <span class='op'>=</span> <span class='kw'>true</span>
-    <span class='ivar'>@readable</span> <span class='op'>=</span> <span class='kw'>true</span>  <span class='comment'># Is this always valid?
-</span>  <span class='kw'>elsif</span> <span class='ivar'>@access</span> <span class='op'>==</span> <span class='symbol'>:ws</span>
-    <span class='ivar'>@set_only</span> <span class='op'>=</span> <span class='kw'>true</span>
-    <span class='ivar'>@writable</span> <span class='op'>=</span> <span class='kw'>true</span>
-    <span class='ivar'>@readable</span> <span class='op'>=</span> <span class='kw'>true</span>  <span class='comment'># Is this always valid?
-</span>  <span class='comment'># Catch all for now until the behavior of this class is based around @access
-</span>  <span class='kw'>else</span>
-    <span class='ivar'>@writable</span> <span class='op'>=</span> <span class='kw'>true</span>
-    <span class='ivar'>@readable</span> <span class='op'>=</span> <span class='kw'>true</span>
-  <span class='kw'>end</span>
+  <span class='comment'># Set access attributes by pulling key-value pairs from ACCESS_CODES[&lt;access&gt;]
+</span>  <span class='ivar'>@readable</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="#ACCESS_CODES-constant" title="Origen::Registers::Bit::ACCESS_CODES (constant)">ACCESS_CODES</a></span></span><span class='lbracket'>[</span><span class='ivar'>@access</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='symbol'>:readable</span><span class='rbracket'>]</span>
+  <span class='ivar'>@writable</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="#ACCESS_CODES-constant" title="Origen::Registers::Bit::ACCESS_CODES (constant)">ACCESS_CODES</a></span></span><span class='lbracket'>[</span><span class='ivar'>@access</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='symbol'>:writable</span><span class='rbracket'>]</span>
+  <span class='ivar'>@w1c</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="#ACCESS_CODES-constant" title="Origen::Registers::Bit::ACCESS_CODES (constant)">ACCESS_CODES</a></span></span><span class='lbracket'>[</span><span class='ivar'>@access</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='symbol'>:w1c</span><span class='rbracket'>]</span>
+  <span class='ivar'>@set_only</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="#ACCESS_CODES-constant" title="Origen::Registers::Bit::ACCESS_CODES (constant)">ACCESS_CODES</a></span></span><span class='lbracket'>[</span><span class='ivar'>@access</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='symbol'>:set_only</span><span class='rbracket'>]</span>
+  <span class='ivar'>@clr_only</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="#ACCESS_CODES-constant" title="Origen::Registers::Bit::ACCESS_CODES (constant)">ACCESS_CODES</a></span></span><span class='lbracket'>[</span><span class='ivar'>@access</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='symbol'>:clr_only</span><span class='rbracket'>]</span>
+  <span class='ivar'>@base_access</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="#ACCESS_CODES-constant" title="Origen::Registers::Bit::ACCESS_CODES (constant)">ACCESS_CODES</a></span></span><span class='lbracket'>[</span><span class='ivar'>@access</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='symbol'>:base</span><span class='rbracket'>]</span>
+  <span class='ivar'>@read_action</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="#ACCESS_CODES-constant" title="Origen::Registers::Bit::ACCESS_CODES (constant)">ACCESS_CODES</a></span></span><span class='lbracket'>[</span><span class='ivar'>@access</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='symbol'>:read</span><span class='rbracket'>]</span>
+  <span class='ivar'>@mod_write_value</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="#ACCESS_CODES-constant" title="Origen::Registers::Bit::ACCESS_CODES (constant)">ACCESS_CODES</a></span></span><span class='lbracket'>[</span><span class='ivar'>@access</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='symbol'>:write</span><span class='rbracket'>]</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -4308,8 +4556,6 @@ the expected data for when the read is performed.</p>
       <pre class="lines">
 
 
-202
-203
 204
 205
 206
@@ -4322,10 +4568,12 @@ the expected data for when the read is performed.</p>
 213
 214
 215
-216</pre>
+216
+217
+218</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 202</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 204</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_set_access_from_rw'>set_access_from_rw</span>
   <span class='kw'>if</span> <span class='ivar'>@w1c</span>
@@ -4374,13 +4622,13 @@ value in this bit</p>
       <pre class="lines">
 
 
-409
-410
 411
-412</pre>
+412
+413
+414</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 409</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 411</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_setting'>setting</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_value'>value</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span> <span class='op'>&amp;</span> <span class='int'>1</span>   <span class='comment'># As this bit can only hold one bit of data force it
@@ -4450,12 +4698,12 @@ value in this bit</p>
       <pre class="lines">
 
 
-422
-423
-424</pre>
+424
+425
+426</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 422</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 424</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_shift_out_left'>shift_out_left</span>
   <span class='kw'>yield</span> <span class='kw'>self</span>
@@ -4492,12 +4740,12 @@ will return something higher</p>
       <pre class="lines">
 
 
-250
-251
-252</pre>
+252
+253
+254</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 250</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 252</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_size'>size</span>
   <span class='int'>1</span>
@@ -4533,13 +4781,13 @@ will return something higher</p>
       <pre class="lines">
 
 
-330
-331
 332
-333</pre>
+333
+334
+335</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 330</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 332</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_store'>store</span>
   <span class='ivar'>@store</span> <span class='op'>=</span> <span class='kw'>true</span>
@@ -4590,12 +4838,12 @@ not been defined within the parent register</p>
       <pre class="lines">
 
 
-283
-284
-285</pre>
+285
+286
+287</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 283</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 285</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_undefined?'>undefined?</span>
   <span class='ivar'>@undefined</span>
@@ -4646,12 +4894,12 @@ BitCollection#write! method has not been called yet to apply it to silicon</p>
       <pre class="lines">
 
 
-417
-418
-419</pre>
+419
+420
+421</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 417</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 419</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_update_required?'>update_required?</span>
   <span class='ivar'>@update_required</span>
@@ -4688,8 +4936,6 @@ read-only, the value of the bit can be forced with &#39;force: true&#39;</p>
       <pre class="lines">
 
 
-296
-297
 298
 299
 300
@@ -4705,10 +4951,12 @@ read-only, the value of the bit can be forced with &#39;force: true&#39;</p>
 310
 311
 312
-313</pre>
+313
+314
+315</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 296</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/bit.rb', line 298</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_write'>write</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='comment'># If an array is written it means a data value and an overlay have been supplied
@@ -4738,8 +4986,8 @@ read-only, the value of the bit can be forced with &#39;force: true&#39;</p>
 </div>
 
       <div id="footer">
-  Generated on Thu Nov 15 17:24:54 2018 by
-  <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  Generated on Mon Dec 10 11:13:31 2018 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.16 (ruby-2.5.1).
 </div>
 
