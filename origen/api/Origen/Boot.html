@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>
+  Module: Origen::Boot
+  
+    &mdash; Origen Core 0.40.0
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  pathId = "Origen::Boot";
+  relpath = '../';
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div class="nav_wrap">
+      <iframe id="nav" src="../class_list.html?1"></iframe>
+      <div id="resizer"></div>
+    </div>
+
+    <div id="main" tabindex="-1">
+      <div id="header">
+        <div id="menu">
+  
+    <a href="../_index.html">Index (B)</a> &raquo;
+    <span class='title'><span class='object_link'><a href="../Origen.html" title="Origen (module)">Origen</a></span></span>
+     &raquo; 
+    <span class="title">Boot</span>
+  
+</div>
+
+        <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="../class_list.html">
+
+        <svg width="24" height="24">
+          <rect x="0" y="4" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="12" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="20" width="24" height="4" rx="1" ry="1"></rect>
+        </svg>
+    </a>
+  
+</div>
+        <div class="clear"></div>
+      </div>
+
+      <div id="content"><h1>Module: Origen::Boot
+  
+  
+  
+</h1>
+<div class="box_info">
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+  <dl>
+    <dt>Defined in:</dt>
+    <dd>lib/origen/boot/app.rb</dd>
+  </dl>
+  
+</div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>Provides methods for setting up, booting and archiving an Origen
+application</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+  
+    <h2>
+      Constant Summary
+      <small><a href="#" class="constants_summary_toggle">collapse</a></small>
+    </h2>
+
+    <dl class="constants">
+      
+        <dt id="BIN_DEPS-constant" class="">BIN_DEPS =
+          <div class="docstring">
+  <div class="discussion">
+    
+<p>Gem executables that Origen depends on [bin name, gem name]</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code">[%w(rspec rspec-core), %w(nanoc nanoc), %w(yard yard),
+%w(rubocop rubocop), %w(rake rake)</pre></dd>
+      
+        <dt id="BUNDLER_WARNING-constant" class="">BUNDLER_WARNING =
+          
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>
+From Origen 0.40.0 onwards, a new way of launching Origen is supported and
+you are seeing this message because your application is still setup to run
+the old way.
+
+The main difference is that Origen is now launched via an Origen-owned binstub
+(./lbin/origen) rather than a Bundler-owned binstub. This means that Origen can
+no longer be prevented from running due to a Bundler configuration issue within
+your workspace and it should mean that Origen invocation becomes more reliable.
+
+It is recommended that you follow these instructions to upgrade your application
+to the new system.
+
+If have already done this and you are seeing this message again, then Bundler has
+overwritten the binstub at ./lbin/origen and you should perform the upgrade again.
+
+To upgrade, run the following command:
+
+ origen setup
+
+If you ever run the `bundle` or `bundle install` commands manually, never use
+the --binstubs option or it will roll you back to the old system.
+
+Under the new system, you should check the `./lbin` directory into your source
+control system, so remove it from your `.gitignore` (or equivalent) and check
+it in.
+
+When you install a new gem whose executable you want to use in your app,
+generate a binstub for it via the following command:
+
+  origen new binstub some-gem-name
+
+______________________________________________________________________________________
+
+</span><span class='tstring_end'>&#39;</span></span></pre></dd>
+      
+        <dt id="BUNDLER_SETUP-constant" class="">BUNDLER_SETUP =
+          
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>%q(</span><span class='tstring_content'>
+  if Origen.site_config.gem_manage_bundler
+    FileUtils.mkdir_p(File.join(origen_root, &#39;.bundle&#39;))
+    File.open(File.join(origen_root, &#39;.bundle&#39;, &#39;config&#39;), &#39;w&#39;) do |f|
+      f.puts &#39;# Origen is managing this file, any local edits will be overwritten&#39;
+      f.puts &#39;# IT SHOULD NOT BE CHECKED INTO REVISION CONTROL!&#39;
+      f.puts &#39;---&#39;
+      f.puts &#39;BUNDLE_BIN: false&#39;
+      # If gems have been installed to the app, always use them
+      bundle_path = File.join(origen_root, &#39;vendor&#39;, &#39;gems&#39;)
+      if File.exist?(bundle_path)
+        # Only keep the gems we actually need when installing to the application, but
+        # don&#39;t do this when installing outside since other apps might use them
+        f.puts &#39;BUNDLE_CLEAN: true&#39;
+      else
+        bundle_path = File.expand_path(Origen.site_config.gem_install_dir)
+      end
+      f.puts &quot;BUNDLE_PATH: \&quot;#{bundle_path}\&quot;&quot;
+      Array(Origen.site_config.gem_build_switches).each do |build_switches|
+        switches = build_switches.strip.split(&#39; &#39;)
+        gem = switches.shift
+        f.puts &quot;BUNDLE_BUILD__#{gem.upcase}: \&quot;#{switches.join(&#39; &#39;)}\&quot;&quot;
+      end
+    end
+  end
+</span><span class='tstring_end'>)</span></span></pre></dd>
+      
+        <dt id="UPDATER_WARNING-constant" class="">UPDATER_WARNING =
+          
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>
+The bin/fix_my_workspace script is not compatible with the new way that Origen is
+launched and you should remove it from your application.
+
+Do this by deleting bin/fix_my_workspace and also remove the origen_updater gem from
+your application.
+
+The command `origen setup` can be used in place of fix_my_workspace under the
+new system, however the new system should be more robust and such workspace repairs
+should no longer be required.
+
+______________________________________________________________________________________
+
+</span><span class='tstring_end'>&#39;</span></span></pre></dd>
+      
+        <dt id="PATH_WARNING-constant" class="">PATH_WARNING =
+          
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>%q(</span><span class='tstring_content'>
+Warning, your PATH does not contain ./lbin which is expected by Origen.
+You can correct this by adding one of the following lines to the end of your
+environment setup file:
+
+  In ~/.bashrc or ~/.bashrc.user:  export PATH=&quot;./lbin:$PATH&quot;&#39;
+  In ~/.tcshrc or ~/.tcshrc.user:  setenv PATH &quot;./lbin:$PATH&quot;&#39;
+
+______________________________________________________________________________________
+
+</span><span class='tstring_end'>)</span></span></pre></dd>
+      
+        <dt id="BINSTUB-constant" class="">BINSTUB =
+          
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>#!/usr/bin/env ruby
+#
+# This file was generated by Origen.
+#
+
+require &#39;rubygems&#39;
+
+origen_lib = File.expand_path(&#39;../../lib/origen&#39;, Gem.bin_path(&#39;origen&#39;, &#39;origen&#39;))
+boot = File.join(origen_lib, &#39;boot.rb&#39;)
+ORIGEN_ROOT = File.expand_path(&#39;..&#39;, __dir__)
+origen_root = ORIGEN_ROOT
+
+# If the Origen version supports the new boot system then use it
+if File.exist?(boot)
+  load boot
+
+# Otherwise fall back to an (improved) old-style invocation via Bundler
+else
+  require &#39;pathname&#39;
+  require &#39;fileutils&#39;
+  $_origen_invocation_pwd = Pathname.pwd
+  require File.join(origen_lib, &#39;site_config&#39;)
+</span><span class='tstring_end'>&quot;</span></span> <span class='op'>+</span> <span class='const'><span class='object_link'><a href="#BUNDLER_SETUP-constant" title="Origen::Boot::BUNDLER_SETUP (constant)">BUNDLER_SETUP</a></span></span> <span class='op'>+</span> <span class='tstring'><span class='tstring_beg'>%q(</span><span class='tstring_content'>
+  bundle_binstub = File.expand_path(&#39;../bundle&#39;, __FILE__)
+
+  if File.file?(bundle_binstub)
+    if File.read(bundle_binstub, 300) =~ /This file was generated by Bundler/
+      load(bundle_binstub)
+    else
+      abort(&quot;Your `bin/bundle` was not generated by Bundler, so this binstub cannot run.
+  Replace `bin/bundle` by running `bundle binstubs bundler --force`, then run this command again.&quot;)
+    end
+  end
+  require &#39;bundler/setup&#39;
+
+  load Gem.bin_path(&#39;origen&#39;, &#39;origen&#39;)
+end
+</span><span class='tstring_end'>)</span></span></pre></dd>
+      
+    </dl>
+  
+
+
+
+
+
+
+
+  
+    <h2>
+      Class Method Summary
+      <small><a href="#" class="summary_toggle">collapse</a></small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#app!-class_method" title="app! (class method)">.<strong>app!</strong>(origen_root)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Boot the application at the given root.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#copy_system_gems-class_method" title="copy_system_gems (class method)">.<strong>copy_system_gems</strong>(origen_root, bundle_path)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#create_origen_binstub-class_method" title="create_origen_binstub (class method)">.<strong>create_origen_binstub</strong>(origen_root)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#setup-class_method" title="setup (class method)">.<strong>setup</strong>(origen_root)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#setup_bundler-class_method" title="setup_bundler (class method)">.<strong>setup_bundler</strong>(origen_root)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="app!-class_method">
+  
+    .<strong>app!</strong>(origen_root)  &#x21d2; <tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Boot the application at the given root</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/boot/app.rb', line 158</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_app!'>app!</span><span class='lparen'>(</span><span class='id identifier rubyid_origen_root'>origen_root</span><span class='rparen'>)</span>
+  <span class='comment'># This will be used to collect warnings about the user&#39;s application environment, however showing them
+</span>  <span class='comment'># will be deferred until it has been determined that the application is using Origen &gt;= 0.40.0 - i.e. we
+</span>  <span class='comment'># don&#39;t want to start complaining to the user about existing apps until they have intentionally upgraded
+</span>  <span class='comment'># their Origen version.
+</span>  <span class='id identifier rubyid_warnings'>warnings</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
+
+  <span class='id identifier rubyid_exec_remote'>exec_remote</span> <span class='op'>=</span> <span class='const'>ARGV</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>--exec_remote</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='op'>?</span> <span class='kw'>true</span> <span class='op'>:</span> <span class='kw'>false</span>
+  <span class='id identifier rubyid_lbin_dir'>lbin_dir</span> <span class='op'>=</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='id identifier rubyid_origen_root'>origen_root</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>lbin</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_origen_binstub'>origen_binstub</span> <span class='op'>=</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='id identifier rubyid_lbin_dir'>lbin_dir</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>origen</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+
+  <span class='kw'>unless</span> <span class='id identifier rubyid_exec_remote'>exec_remote</span>
+    <span class='kw'>if</span> <span class='const'><span class='object_link'><a href="../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_os'><span class='object_link'><a href="../Origen.html#os-class_method" title="Origen.os (method)">os</a></span></span><span class='period'>.</span><span class='id identifier rubyid_windows?'>windows?</span>
+      <span class='id identifier rubyid_warnings'>warnings</span> <span class='op'>&lt;&lt;</span> <span class='const'><span class='object_link'><a href="#PATH_WARNING-constant" title="Origen::Boot::PATH_WARNING (constant)">PATH_WARNING</a></span></span> <span class='kw'>unless</span> <span class='const'>ENV</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>PATH</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>\.\\lbin(;|$)</span><span class='regexp_end'>/</span></span>
+    <span class='kw'>else</span>
+      <span class='id identifier rubyid_warnings'>warnings</span> <span class='op'>&lt;&lt;</span> <span class='const'><span class='object_link'><a href="#PATH_WARNING-constant" title="Origen::Boot::PATH_WARNING (constant)">PATH_WARNING</a></span></span> <span class='kw'>unless</span> <span class='const'>ENV</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>PATH</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>(^|:)\.\/lbin(:|$)</span><span class='regexp_end'>/</span></span>
+    <span class='kw'>end</span>
+
+    <span class='kw'>if</span> <span class='op'>!</span><span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_exist?'>exist?</span><span class='lparen'>(</span><span class='id identifier rubyid_origen_binstub'>origen_binstub</span><span class='rparen'>)</span> <span class='op'>||</span>
+       <span class='lparen'>(</span><span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_exist?'>exist?</span><span class='lparen'>(</span><span class='id identifier rubyid_origen_binstub'>origen_binstub</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_read'>read</span><span class='lparen'>(</span><span class='id identifier rubyid_origen_binstub'>origen_binstub</span><span class='rparen'>)</span> <span class='op'>!~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>This file was generated by Origen</span><span class='regexp_end'>/</span></span><span class='rparen'>)</span>
+      <span class='id identifier rubyid_warnings'>warnings</span> <span class='op'>&lt;&lt;</span> <span class='const'><span class='object_link'><a href="#BUNDLER_WARNING-constant" title="Origen::Boot::BUNDLER_WARNING (constant)">BUNDLER_WARNING</a></span></span>
+    <span class='kw'>elsif</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_exist?'>exist?</span><span class='lparen'>(</span><span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='id identifier rubyid_origen_root'>origen_root</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>bin</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>fix_my_workspace</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='rparen'>)</span>
+      <span class='id identifier rubyid_warnings'>warnings</span> <span class='op'>&lt;&lt;</span> <span class='const'><span class='object_link'><a href="#UPDATER_WARNING-constant" title="Origen::Boot::UPDATER_WARNING (constant)">UPDATER_WARNING</a></span></span>
+    <span class='kw'>end</span>
+
+    <span class='id identifier rubyid_setup_bundler'>setup_bundler</span><span class='lparen'>(</span><span class='id identifier rubyid_origen_root'>origen_root</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+
+  <span class='id identifier rubyid_boot_app'>boot_app</span> <span class='op'>=</span> <span class='kw'>true</span>
+
+  <span class='const'>Dir</span><span class='period'>.</span><span class='id identifier rubyid_chdir'>chdir</span> <span class='id identifier rubyid_origen_root'>origen_root</span> <span class='kw'>do</span>
+    <span class='comment'># Overriding bundler here so that bundle install can be automated as required, otherwise if just call
+</span>    <span class='comment'># require &#39;bundler/setup&#39; then it will exit in the event of errors
+</span>    <span class='id identifier rubyid_require'>require</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>bundler</span><span class='tstring_end'>&#39;</span></span>
+    <span class='kw'>begin</span>
+      <span class='const'>Bundler</span><span class='period'>.</span><span class='id identifier rubyid_setup'>setup</span>
+    <span class='kw'>rescue</span> <span class='const'>Gem</span><span class='op'>::</span><span class='const'>LoadError</span><span class='comma'>,</span> <span class='const'>Bundler</span><span class='op'>::</span><span class='const'>BundlerError</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_e'>e</span>
+      <span class='id identifier rubyid_puts'>puts</span> <span class='id identifier rubyid_e'>e</span>
+      <span class='id identifier rubyid_puts'>puts</span>
+      <span class='kw'>if</span> <span class='id identifier rubyid_exec_remote'>exec_remote</span>
+        <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>App failed to boot, run it locally so that this can be resolved before re-submitting to the LSF</span><span class='tstring_end'>&#39;</span></span>
+        <span class='id identifier rubyid_exit'>exit</span> <span class='int'>1</span>
+      <span class='kw'>end</span>
+      <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Attempting to resolve this...</span><span class='tstring_end'>&#39;</span></span>
+      <span class='id identifier rubyid_puts'>puts</span>
+
+      <span class='id identifier rubyid_passed'>passed</span> <span class='op'>=</span> <span class='kw'>false</span>
+
+      <span class='const'>Bundler</span><span class='period'>.</span><span class='id identifier rubyid_with_clean_env'>with_clean_env</span> <span class='kw'>do</span>
+        <span class='id identifier rubyid_cmd'>cmd</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>bundle install</span><span class='tstring_end'>&#39;</span></span>
+        <span class='id identifier rubyid_cmd'>cmd</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> --local</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>if</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_exist?'>exist?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>.origen_archive</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+        <span class='id identifier rubyid_passed'>passed</span> <span class='op'>=</span> <span class='id identifier rubyid_system'>system</span><span class='lparen'>(</span><span class='id identifier rubyid_cmd'>cmd</span><span class='rparen'>)</span>
+      <span class='kw'>end</span>
+
+      <span class='kw'>if</span> <span class='id identifier rubyid_passed'>passed</span>
+        <span class='const'>Bundler</span><span class='period'>.</span><span class='id identifier rubyid_with_clean_env'>with_clean_env</span> <span class='kw'>do</span>
+          <span class='id identifier rubyid_exec'>exec</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>origen </span><span class='embexpr_beg'>#{</span><span class='const'>ARGV</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> </span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+        <span class='kw'>end</span>
+        <span class='id identifier rubyid_exit'>exit</span> <span class='int'>0</span>
+      <span class='kw'>else</span>
+        <span class='id identifier rubyid_puts'>puts</span>
+        <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>If you have just updated a gem version and are now getting an error that Bundler cannot find compatible versions for it then first try running &#39;bundle update &lt;gemname&gt;&#39;.</span><span class='tstring_end'>&quot;</span></span>
+        <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>For example if you have just changed the version of origen run &#39;bundle update origen&#39;.</span><span class='tstring_end'>&quot;</span></span>
+        <span class='id identifier rubyid_exit'>exit</span> <span class='int'>1</span>
+      <span class='kw'>end</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+  <span class='kw'>unless</span> <span class='id identifier rubyid_exec_remote'>exec_remote</span>
+    <span class='comment'># The application&#39;s bundle is safely loaded, do a final check to make sure that Origen&#39;s
+</span>    <span class='comment'># required bin dependencies have binstubs
+</span>    <span class='kw'>if</span> <span class='const'><span class='object_link'><a href="#BIN_DEPS-constant" title="Origen::Boot::BIN_DEPS (constant)">BIN_DEPS</a></span></span><span class='period'>.</span><span class='id identifier rubyid_any?'>any?</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_bin'>bin</span><span class='comma'>,</span> <span class='id identifier rubyid_gem'>gem</span><span class='op'>|</span> <span class='op'>!</span><span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_exist?'>exist?</span><span class='lparen'>(</span><span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='id identifier rubyid_lbin_dir'>lbin_dir</span><span class='comma'>,</span> <span class='id identifier rubyid_bin'>bin</span><span class='rparen'>)</span><span class='rparen'>)</span> <span class='rbrace'>}</span>
+      <span class='id identifier rubyid_system'>system</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>bundle binstubs </span><span class='embexpr_beg'>#{</span><span class='const'><span class='object_link'><a href="#BIN_DEPS-constant" title="Origen::Boot::BIN_DEPS (constant)">BIN_DEPS</a></span></span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_bin'>bin</span><span class='comma'>,</span> <span class='id identifier rubyid_gem'>gem</span><span class='op'>|</span> <span class='id identifier rubyid_gem'>gem</span> <span class='rbrace'>}</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> </span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'> --path </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_lbin_dir'>lbin_dir</span><span class='embexpr_end'>}</span><span class='tstring_content'> --force</span><span class='tstring_end'>&quot;</span></span>
+    <span class='kw'>end</span>
+    <span class='kw'>if</span> <span class='const'><span class='object_link'><a href="../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_site_config'><span class='object_link'><a href="../Origen.html#site_config-class_method" title="Origen.site_config (method)">site_config</a></span></span><span class='period'>.</span><span class='id identifier rubyid_use_bootsnap'>use_bootsnap</span> <span class='op'>&amp;&amp;</span> <span class='op'>!</span><span class='const'><span class='object_link'><a href="../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_os'><span class='object_link'><a href="../Origen.html#os-class_method" title="Origen.os (method)">os</a></span></span><span class='period'>.</span><span class='id identifier rubyid_windows?'>windows?</span>
+      <span class='const'>ENV</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>BOOTSNAP_CACHE_DIR</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span> <span class='op'>||=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_origen_root'>origen_root</span><span class='embexpr_end'>}</span><span class='tstring_content'>/tmp/cache</span><span class='tstring_end'>&quot;</span></span>
+      <span class='id identifier rubyid_require'>require</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>bootsnap/setup</span><span class='tstring_end'>&#39;</span></span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+  <span class='id identifier rubyid_require'>require</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>origen</span><span class='tstring_end'>&#39;</span></span>
+  <span class='id identifier rubyid_warnings'>warnings</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="copy_system_gems-class_method">
+  
+    .<strong>copy_system_gems</strong>(origen_root, bundle_path)  &#x21d2; <tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/boot/app.rb', line 275</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_copy_system_gems'>copy_system_gems</span><span class='lparen'>(</span><span class='id identifier rubyid_origen_root'>origen_root</span><span class='comma'>,</span> <span class='id identifier rubyid_bundle_path'>bundle_path</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_require'>require</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>byebug</span><span class='tstring_end'>&#39;</span></span>
+  <span class='kw'>if</span> <span class='const'><span class='object_link'><a href="../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_site_config'><span class='object_link'><a href="../Origen.html#site_config-class_method" title="Origen.site_config (method)">site_config</a></span></span><span class='period'>.</span><span class='id identifier rubyid_gem_use_from_system'>gem_use_from_system</span>
+    <span class='id identifier rubyid_local_gem_dir'>local_gem_dir</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_bundle_path'>bundle_path</span><span class='embexpr_end'>}</span><span class='tstring_content'>/ruby/</span><span class='embexpr_beg'>#{</span><span class='const'>Pathname</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='const'>Gem</span><span class='period'>.</span><span class='id identifier rubyid_dir'>dir</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_basename'>basename</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+    <span class='id identifier rubyid_gem_dir'>gem_dir</span> <span class='op'>=</span> <span class='const'>Pathname</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='const'>Gem</span><span class='period'>.</span><span class='id identifier rubyid_dir'>dir</span><span class='rparen'>)</span>
+
+    <span class='const'><span class='object_link'><a href="../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_site_config'><span class='object_link'><a href="../Origen.html#site_config-class_method" title="Origen.site_config (method)">site_config</a></span></span><span class='period'>.</span><span class='id identifier rubyid_gem_use_from_system'>gem_use_from_system</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_gem'>gem</span><span class='comma'>,</span> <span class='id identifier rubyid_version'>version</span><span class='op'>|</span>
+      <span class='kw'>begin</span>
+        <span class='comment'># This will raise an error if the system doesn&#39;t have this gem installed, that
+</span>        <span class='comment'># will be rescued below
+</span>        <span class='id identifier rubyid_spec'>spec</span> <span class='op'>=</span> <span class='const'>Gem</span><span class='op'>::</span><span class='const'>Specification</span><span class='period'>.</span><span class='id identifier rubyid_find_by_name'>find_by_name</span><span class='lparen'>(</span><span class='id identifier rubyid_gem'>gem</span><span class='comma'>,</span> <span class='id identifier rubyid_version'>version</span><span class='rparen'>)</span>
+
+        <span class='comment'># If the spec has returned a handle to a system installed gem. If this script has been invoked through
+</span>        <span class='comment'># Bundler then it could point to some other gem dir. The only time this should occur is when switching
+</span>        <span class='comment'># from the old system to the new system, but can&#39;t work out how to fix it so just disabling in that case.
+</span>        <span class='kw'>if</span> <span class='id identifier rubyid_spec'>spec</span><span class='period'>.</span><span class='id identifier rubyid_gem_dir'>gem_dir</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_gem_dir'>gem_dir</span><span class='embexpr_end'>}</span><span class='regexp_end'>/</span></span>
+
+          <span class='id identifier rubyid_local_dir'>local_dir</span> <span class='op'>=</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='id identifier rubyid_local_gem_dir'>local_gem_dir</span><span class='comma'>,</span> <span class='const'>Pathname</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_spec'>spec</span><span class='period'>.</span><span class='id identifier rubyid_gem_dir'>gem_dir</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_relative_path_from'>relative_path_from</span><span class='lparen'>(</span><span class='id identifier rubyid_gem_dir'>gem_dir</span><span class='rparen'>)</span><span class='rparen'>)</span>
+          <span class='const'>FileUtils</span><span class='period'>.</span><span class='id identifier rubyid_mkdir_p'>mkdir_p</span> <span class='id identifier rubyid_local_dir'>local_dir</span>
+          <span class='const'>FileUtils</span><span class='period'>.</span><span class='id identifier rubyid_cp_r'>cp_r</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_spec'>spec</span><span class='period'>.</span><span class='id identifier rubyid_gem_dir'>gem_dir</span><span class='embexpr_end'>}</span><span class='tstring_content'>/.</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_local_dir'>local_dir</span><span class='rparen'>)</span>
+
+          <span class='id identifier rubyid_local_file'>local_file</span> <span class='op'>=</span> <span class='const'>Pathname</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='id identifier rubyid_local_gem_dir'>local_gem_dir</span><span class='comma'>,</span> <span class='const'>Pathname</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_spec'>spec</span><span class='period'>.</span><span class='id identifier rubyid_cache_file'>cache_file</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_relative_path_from'>relative_path_from</span><span class='lparen'>(</span><span class='id identifier rubyid_gem_dir'>gem_dir</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='rparen'>)</span>
+          <span class='const'>FileUtils</span><span class='period'>.</span><span class='id identifier rubyid_mkdir_p'>mkdir_p</span> <span class='id identifier rubyid_local_file'>local_file</span><span class='period'>.</span><span class='id identifier rubyid_dirname'>dirname</span>
+          <span class='const'>FileUtils</span><span class='period'>.</span><span class='id identifier rubyid_cp'>cp</span><span class='lparen'>(</span><span class='id identifier rubyid_spec'>spec</span><span class='period'>.</span><span class='id identifier rubyid_cache_file'>cache_file</span><span class='comma'>,</span> <span class='id identifier rubyid_local_file'>local_file</span><span class='rparen'>)</span>
+
+          <span class='kw'>if</span> <span class='id identifier rubyid_spec'>spec</span><span class='period'>.</span><span class='id identifier rubyid_extension_dir'>extension_dir</span> <span class='op'>&amp;&amp;</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_exist?'>exist?</span><span class='lparen'>(</span><span class='id identifier rubyid_spec'>spec</span><span class='period'>.</span><span class='id identifier rubyid_extension_dir'>extension_dir</span><span class='rparen'>)</span>
+            <span class='id identifier rubyid_local_dir'>local_dir</span> <span class='op'>=</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='id identifier rubyid_local_gem_dir'>local_gem_dir</span><span class='comma'>,</span> <span class='const'>Pathname</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_spec'>spec</span><span class='period'>.</span><span class='id identifier rubyid_extension_dir'>extension_dir</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_relative_path_from'>relative_path_from</span><span class='lparen'>(</span><span class='id identifier rubyid_gem_dir'>gem_dir</span><span class='rparen'>)</span><span class='rparen'>)</span>
+            <span class='const'>FileUtils</span><span class='period'>.</span><span class='id identifier rubyid_mkdir_p'>mkdir_p</span> <span class='id identifier rubyid_local_dir'>local_dir</span>
+            <span class='const'>FileUtils</span><span class='period'>.</span><span class='id identifier rubyid_cp_r'>cp_r</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_spec'>spec</span><span class='period'>.</span><span class='id identifier rubyid_extension_dir'>extension_dir</span><span class='embexpr_end'>}</span><span class='tstring_content'>/.</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_local_dir'>local_dir</span><span class='rparen'>)</span>
+          <span class='kw'>end</span>
+
+          <span class='id identifier rubyid_local_file'>local_file</span> <span class='op'>=</span> <span class='const'>Pathname</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='id identifier rubyid_local_gem_dir'>local_gem_dir</span><span class='comma'>,</span> <span class='const'>Pathname</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_spec'>spec</span><span class='period'>.</span><span class='id identifier rubyid_spec_file'>spec_file</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_relative_path_from'>relative_path_from</span><span class='lparen'>(</span><span class='id identifier rubyid_gem_dir'>gem_dir</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='rparen'>)</span>
+          <span class='const'>FileUtils</span><span class='period'>.</span><span class='id identifier rubyid_mkdir_p'>mkdir_p</span> <span class='id identifier rubyid_local_file'>local_file</span><span class='period'>.</span><span class='id identifier rubyid_dirname'>dirname</span>
+          <span class='const'>FileUtils</span><span class='period'>.</span><span class='id identifier rubyid_cp'>cp</span><span class='lparen'>(</span><span class='id identifier rubyid_spec'>spec</span><span class='period'>.</span><span class='id identifier rubyid_spec_file'>spec_file</span><span class='comma'>,</span> <span class='id identifier rubyid_local_file'>local_file</span><span class='rparen'>)</span>
+
+          <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Copied </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_gem'>gem</span><span class='embexpr_end'>}</span><span class='tstring_content'> </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_version'>version</span><span class='embexpr_end'>}</span><span class='tstring_content'> from the system into </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_bundle_path'>bundle_path</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+
+        <span class='kw'>end</span>
+
+      <span class='kw'>rescue</span> <span class='const'>Exception</span> <span class='comment'># Gem::LoadError  # Rescue everything here, this is a try-our-best operation, better to
+</span>        <span class='comment'># continue and try and install the gem if this fails rather than crash
+</span>        <span class='comment'># This just means that one of the gems that should be copied from the system
+</span>        <span class='comment'># was not actually installed in the system, so nothing we can do about that here
+</span>      <span class='kw'>end</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="create_origen_binstub-class_method">
+  
+    .<strong>create_origen_binstub</strong>(origen_root)  &#x21d2; <tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/boot/app.rb', line 248</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_create_origen_binstub'>create_origen_binstub</span><span class='lparen'>(</span><span class='id identifier rubyid_origen_root'>origen_root</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_lbin_dir'>lbin_dir</span> <span class='op'>=</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='id identifier rubyid_origen_root'>origen_root</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>lbin</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+
+  <span class='const'>FileUtils</span><span class='period'>.</span><span class='id identifier rubyid_mkdir_p'>mkdir_p</span><span class='lparen'>(</span><span class='id identifier rubyid_lbin_dir'>lbin_dir</span><span class='rparen'>)</span>
+  <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_open'>open</span><span class='lparen'>(</span><span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='id identifier rubyid_lbin_dir'>lbin_dir</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>origen</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>w</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_f'>f</span><span class='op'>|</span>
+    <span class='id identifier rubyid_f'>f</span><span class='period'>.</span><span class='id identifier rubyid_puts'>puts</span> <span class='const'><span class='object_link'><a href="#BINSTUB-constant" title="Origen::Boot::BINSTUB (constant)">BINSTUB</a></span></span>
+  <span class='kw'>end</span>
+  <span class='const'>FileUtils</span><span class='period'>.</span><span class='id identifier rubyid_chmod'>chmod</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>+x</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='id identifier rubyid_lbin_dir'>lbin_dir</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>origen</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='rparen'>)</span>
+
+  <span class='kw'>if</span> <span class='const'><span class='object_link'><a href="../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_os'><span class='object_link'><a href="../Origen.html#os-class_method" title="Origen.os (method)">os</a></span></span><span class='period'>.</span><span class='id identifier rubyid_windows?'>windows?</span>
+    <span class='const'>Dir</span><span class='period'>.</span><span class='id identifier rubyid_glob'>glob</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_origen_root'>origen_root</span><span class='embexpr_end'>}</span><span class='tstring_content'>/lbin/*</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_bin'>bin</span><span class='op'>|</span>
+      <span class='kw'>unless</span> <span class='id identifier rubyid_bin'>bin</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>.bat$</span><span class='regexp_end'>/</span></span>
+        <span class='id identifier rubyid_bat'>bat</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_bin'>bin</span><span class='embexpr_end'>}</span><span class='tstring_content'>.bat</span><span class='tstring_end'>&quot;</span></span>
+        <span class='kw'>unless</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_exist?'>exist?</span><span class='lparen'>(</span><span class='id identifier rubyid_bat'>bat</span><span class='rparen'>)</span>
+          <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_open'>open</span><span class='lparen'>(</span><span class='id identifier rubyid_bat'>bat</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>w</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_f'>f</span><span class='op'>|</span> <span class='id identifier rubyid_f'>f</span><span class='period'>.</span><span class='id identifier rubyid_write'>write</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>@&quot;ruby.exe&quot; &quot;%~dpn0&quot; %*</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='rbrace'>}</span>
+        <span class='kw'>end</span>
+      <span class='kw'>end</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="setup-class_method">
+  
+    .<strong>setup</strong>(origen_root)  &#x21d2; <tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+240
+241
+242
+243
+244
+245
+246</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/boot/app.rb', line 240</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_setup'>setup</span><span class='lparen'>(</span><span class='id identifier rubyid_origen_root'>origen_root</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_create_origen_binstub'>create_origen_binstub</span><span class='lparen'>(</span><span class='id identifier rubyid_origen_root'>origen_root</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_bundle_path'>bundle_path</span> <span class='op'>=</span> <span class='id identifier rubyid_setup_bundler'>setup_bundler</span><span class='lparen'>(</span><span class='id identifier rubyid_origen_root'>origen_root</span><span class='rparen'>)</span>
+  <span class='kw'>unless</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_exist?'>exist?</span><span class='lparen'>(</span><span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='id identifier rubyid_origen_root'>origen_root</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>.origen_archive</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_copy_system_gems'>copy_system_gems</span><span class='lparen'>(</span><span class='id identifier rubyid_origen_root'>origen_root</span><span class='comma'>,</span> <span class='id identifier rubyid_bundle_path'>bundle_path</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="setup_bundler-class_method">
+  
+    .<strong>setup_bundler</strong>(origen_root)  &#x21d2; <tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+269
+270
+271
+272
+273</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/boot/app.rb', line 269</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_setup_bundler'>setup_bundler</span><span class='lparen'>(</span><span class='id identifier rubyid_origen_root'>origen_root</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_bundle_path'>bundle_path</span> <span class='op'>=</span> <span class='kw'>nil</span>
+  <span class='id identifier rubyid_eval'>eval</span> <span class='const'><span class='object_link'><a href="#BUNDLER_SETUP-constant" title="Origen::Boot::BUNDLER_SETUP (constant)">BUNDLER_SETUP</a></span></span>  <span class='comment'># Will update bundle_path
+</span>  <span class='id identifier rubyid_bundle_path'>bundle_path</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+
+      <div id="footer">
+  Generated on Tue Dec 11 11:31:26 2018 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.9.16 (ruby-2.5.1).
+</div>
+
+    </div>
+  </body>
+</html>
