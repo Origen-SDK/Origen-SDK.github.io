@@ -6,7 +6,7 @@
 <title>
   Class: CrossOrigen::IpXact
   
-    &mdash; Cross Origen 1.1.0
+    &mdash; Cross Origen 1.2.0
   
 </title>
 
@@ -112,9 +112,36 @@
   
 </p>
 
+  
+    <h2>
+      Constant Summary
+      <small><a href="#" class="constants_summary_toggle">collapse</a></small>
+    </h2>
+
+    <dl class="constants">
+      
+        <dt id="access_hash-classvariable" class="">@@access_hash =
+          <div class="docstring">
+  <div class="discussion">
+    
+<p>Create a shorthand way to reference Origen Core&#39;s Bit ACCESS_CODES</p>
 
 
-  <h2>Constant Summary</h2>
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='const'>Origen</span><span class='op'>::</span><span class='const'>Registers</span><span class='op'>::</span><span class='const'>Bit</span><span class='period'>.</span><span class='id identifier rubyid_const_get'>const_get</span><span class='lparen'>(</span><span class='symbol'>:ACCESS_CODES</span><span class='rparen'>)</span></pre></dd>
+      
+    </dl>
+  
+
+
+
+  
   
   <h3 class="inherited">Constants inherited
      from <span class='object_link'><a href="XMLDoc.html" title="CrossOrigen::XMLDoc (class)">XMLDoc</a></span></h3>
@@ -202,7 +229,14 @@ fields.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Returns a string representing the owner object in IP-XACT XML.</p>
+<p>Returns a string representing the owner object in IP-XACT XML Usable /
+Available options:   :vendor             = Company name/web address, ex:
+&#39;nxp.com&#39;   :library            = IP Library   :schema            
+= &#39;1685-2009&#39; or default of Spirit 1.4 (when no :schema option
+passed)   :bus_interface      = only &#39;AMBA3&#39; supported at this time
+:mmap_name          = Optionally set the memoryMap name to something other
+than the module name   :mmap_ref           = memoryMapRef name, ex:
+&#39;UserMap&#39;.</p>
 </div></span>
   
 </li>
@@ -249,28 +283,28 @@ fields.</p>
       <pre class="lines">
 
 
-99
-100
-101
-102
-103
-104
-105
-106
-107
-108
-109
-110
-111
-112
-113
-114
-115
-116
-117</pre>
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/cross_origen/ip_xact.rb', line 99</span>
+      <pre class="code"><span class="info file"># File 'lib/cross_origen/ip_xact.rb', line 129</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_doc'>doc</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='comment'># If a fragment of IP-XACT is given, then wrap it with a valid header and we will try our best
@@ -279,8 +313,8 @@ fields.</p>
 
     <span class='id identifier rubyid_content'>content</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>%(</span><span class='tstring_content'>
 &lt;?xml version=&quot;1.0&quot;?&gt;
-&lt;spirit:component xmlns:spirit=&quot;https://www.spiritconsortium.org/XMLSchema/SPIRIT/1.4&quot;
-xmlns:xsi=&quot;https://www.w3.org/2001/XMLSchema-instance&quot;
+&lt;spirit:component xmlns:spirit=&quot;http://www.spiritconsortium.org/XMLSchema/SPIRIT/1.4&quot;
+xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
 xsi:schemaLocation=&quot;$REGMEM_HOME/builder/ipxact/schema/ipxact
       $REGMEM_HOME/builder/ipxact/schema/ipxact/index.xsd&quot;&gt;
     </span><span class='embexpr_beg'>#{</span><span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_read'>read</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'>
@@ -323,9 +357,6 @@ fields</p>
       <pre class="lines">
 
 
-10
-11
-12
 13
 14
 15
@@ -410,10 +441,40 @@ fields</p>
 94
 95
 96
-97</pre>
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/cross_origen/ip_xact.rb', line 10</span>
+      <pre class="code"><span class="info file"># File 'lib/cross_origen/ip_xact.rb', line 13</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_import'>import</span><span class='lparen'>(</span><span class='id identifier rubyid_file'>file</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span> <span class='comment'># rubocop:disable CyclomaticComplexity
 </span>  <span class='id identifier rubyid_require'>require</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>kramdown</span><span class='tstring_end'>&#39;</span></span>
@@ -474,15 +535,42 @@ fields</p>
             <span class='comment'># Do a logical bitwise AND with the reset value and mask
 </span>            <span class='id identifier rubyid_reset_value'>reset_value</span> <span class='op'>=</span> <span class='id identifier rubyid_reset_value'>reset_value</span> <span class='op'>&amp;</span> <span class='id identifier rubyid_reset_mask'>reset_mask</span>
           <span class='kw'>end</span>
-          <span class='id identifier rubyid_addr_block_obj'>addr_block_obj</span><span class='period'>.</span><span class='id identifier rubyid_reg'>reg</span> <span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_addr_offset'>addr_offset</span><span class='comma'>,</span> <span class='label'>size:</span> <span class='id identifier rubyid_size'>size</span><span class='comma'>,</span> <span class='label'>access:</span> <span class='id identifier rubyid_access'>access</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='id identifier rubyid_reg_description'>reg_description</span><span class='lparen'>(</span><span class='id identifier rubyid_register'>register</span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_reg'>reg</span><span class='op'>|</span>
+          <span class='comment'># Future expansion: pull in HDL path as abs_path in Origen.
+</span>          <span class='id identifier rubyid_addr_block_obj'>addr_block_obj</span><span class='period'>.</span><span class='id identifier rubyid_reg'>reg</span> <span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_addr_offset'>addr_offset</span><span class='comma'>,</span> <span class='label'>size:</span> <span class='id identifier rubyid_size'>size</span><span class='comma'>,</span> <span class='label'>access:</span> <span class='id identifier rubyid_access'>access</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='id identifier rubyid_reg_description'>reg_description</span><span class='lparen'>(</span><span class='id identifier rubyid_register'>register</span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_reg'>reg</span><span class='op'>|</span>
             <span class='id identifier rubyid_register'>register</span><span class='period'>.</span><span class='id identifier rubyid_xpath'>xpath</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>spirit:field</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_field'>field</span><span class='op'>|</span>
               <span class='id identifier rubyid_name'>name</span> <span class='op'>=</span> <span class='id identifier rubyid_fetch'>fetch</span> <span class='id identifier rubyid_field'>field</span><span class='period'>.</span><span class='id identifier rubyid_at_xpath'>at_xpath</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>spirit:name</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='comma'>,</span> <span class='label'>downcase:</span> <span class='kw'>true</span><span class='comma'>,</span> <span class='label'>to_sym:</span> <span class='kw'>true</span><span class='comma'>,</span> <span class='label'>get_text:</span> <span class='kw'>true</span>
               <span class='id identifier rubyid_bit_offset'>bit_offset</span> <span class='op'>=</span> <span class='id identifier rubyid_fetch'>fetch</span> <span class='id identifier rubyid_field'>field</span><span class='period'>.</span><span class='id identifier rubyid_at_xpath'>at_xpath</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>spirit:bitOffset</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='comma'>,</span> <span class='label'>get_text:</span> <span class='kw'>true</span><span class='comma'>,</span> <span class='label'>to_i:</span> <span class='kw'>true</span>
               <span class='id identifier rubyid_bit_width'>bit_width</span> <span class='op'>=</span> <span class='id identifier rubyid_fetch'>fetch</span> <span class='id identifier rubyid_field'>field</span><span class='period'>.</span><span class='id identifier rubyid_at_xpath'>at_xpath</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>spirit:bitWidth</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='comma'>,</span> <span class='label'>get_text:</span> <span class='kw'>true</span><span class='comma'>,</span> <span class='label'>to_i:</span> <span class='kw'>true</span>
-              <span class='id identifier rubyid_access'>access</span> <span class='op'>=</span> <span class='id identifier rubyid_fetch'>fetch</span> <span class='id identifier rubyid_field'>field</span><span class='period'>.</span><span class='id identifier rubyid_at_xpath'>at_xpath</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>spirit:access</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='comma'>,</span> <span class='label'>get_text:</span> <span class='kw'>true</span>
-              <span class='kw'>if</span> <span class='id identifier rubyid_access'>access</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>\S+\-\S+</span><span class='regexp_end'>/</span></span>
-                <span class='id identifier rubyid_access'>access</span> <span class='op'>=</span> <span class='id identifier rubyid_access'>access</span><span class='lbracket'>[</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>^(\S)</span><span class='regexp_end'>/</span></span><span class='comma'>,</span> <span class='int'>1</span><span class='rbracket'>]</span> <span class='op'>+</span> <span class='id identifier rubyid_access'>access</span><span class='lbracket'>[</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>\-(\S)\S+$</span><span class='regexp_end'>/</span></span><span class='comma'>,</span> <span class='int'>1</span><span class='rbracket'>]</span>
-                <span class='id identifier rubyid_access'>access</span> <span class='op'>=</span> <span class='id identifier rubyid_access'>access</span><span class='period'>.</span><span class='id identifier rubyid_downcase'>downcase</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span>
+              <span class='id identifier rubyid_xml_access'>xml_access</span> <span class='op'>=</span> <span class='id identifier rubyid_fetch'>fetch</span> <span class='id identifier rubyid_field'>field</span><span class='period'>.</span><span class='id identifier rubyid_at_xpath'>at_xpath</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>spirit:access</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='comma'>,</span> <span class='label'>get_text:</span> <span class='kw'>true</span>
+              <span class='comment'># Newer IP-XACT standards list access as &lt; read or write&gt;-&lt; descriptor &gt;, such as
+</span>              <span class='comment'># &quot;read-write&quot;, &quot;read-only&quot;, or &quot;read-writeOnce&quot;
+</span>              <span class='kw'>if</span> <span class='id identifier rubyid_xml_access'>xml_access</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>\S+\-\S+</span><span class='regexp_end'>/</span></span> <span class='op'>||</span> <span class='id identifier rubyid_xml_access'>xml_access</span> <span class='op'>==</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>writeOnce</span><span class='tstring_end'>&#39;</span></span>
+                <span class='comment'># This filter alone is not capable of interpreting the 1685-2009 (and 2014).  Therefore
+</span>                <span class='comment'># must reverse-interpret the content of access_hash (see top of file).
+</span>                <span class='comment'>#
+</span>                <span class='comment'># First get the base access type, ie: read-write, read-only, etc.
+</span>                <span class='comment'># base_access = fetch field.at_xpath(&#39;spirit:access&#39;), get_text: true
+</span>                <span class='id identifier rubyid_base_access'>base_access</span> <span class='op'>=</span> <span class='id identifier rubyid_xml_access'>xml_access</span>
+                <span class='comment'># Next grab any modified write values or read actions
+</span>                <span class='id identifier rubyid_mod_write'>mod_write</span> <span class='op'>=</span> <span class='id identifier rubyid_fetch'>fetch</span> <span class='id identifier rubyid_field'>field</span><span class='period'>.</span><span class='id identifier rubyid_at_xpath'>at_xpath</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>spirit:modifiedWriteValue</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='comma'>,</span> <span class='label'>get_text:</span> <span class='kw'>true</span>
+                <span class='id identifier rubyid_read_action'>read_action</span> <span class='op'>=</span> <span class='id identifier rubyid_fetch'>fetch</span> <span class='id identifier rubyid_field'>field</span><span class='period'>.</span><span class='id identifier rubyid_at_xpath'>at_xpath</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>spirit:readAction</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='comma'>,</span> <span class='label'>get_text:</span> <span class='kw'>true</span>
+                <span class='comment'># Using base_access, mod_write, and read_action, look up the corresponding access
+</span>                <span class='comment'># acronym from access_hash, noting it is not possible to differentiate write-only
+</span>                <span class='comment'># from write-only, read zero and read-write from dc.
+</span>                <span class='comment'>#
+</span>                <span class='comment'># Matched needs to be tracked, as there is no way to differentiate :rw and :dc in IP-XACT.
+</span>                <span class='comment'># Everything imported will default to :rw, never :dc.
+</span>                <span class='id identifier rubyid_matched'>matched</span> <span class='op'>=</span> <span class='kw'>false</span>
+                <span class='cvar'>@@access_hash</span><span class='period'>.</span><span class='id identifier rubyid_each_key'>each_key</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_key'>key</span><span class='op'>|</span>
+                  <span class='kw'>if</span> <span class='cvar'>@@access_hash</span><span class='lbracket'>[</span><span class='id identifier rubyid_key'>key</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='symbol'>:base</span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='id identifier rubyid_base_access'>base_access</span> <span class='op'>&amp;&amp;</span> <span class='cvar'>@@access_hash</span><span class='lbracket'>[</span><span class='id identifier rubyid_key'>key</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='symbol'>:write</span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='id identifier rubyid_mod_write'>mod_write</span> <span class='op'>&amp;&amp;</span> <span class='cvar'>@@access_hash</span><span class='lbracket'>[</span><span class='id identifier rubyid_key'>key</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='symbol'>:read</span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='id identifier rubyid_read_action'>read_action</span> <span class='op'>&amp;&amp;</span> <span class='op'>!</span><span class='id identifier rubyid_matched'>matched</span>
+                    <span class='id identifier rubyid_access'>access</span> <span class='op'>=</span> <span class='id identifier rubyid_key'>key</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span>
+                    <span class='id identifier rubyid_matched'>matched</span> <span class='op'>=</span> <span class='kw'>true</span>
+                  <span class='kw'>end</span>
+                <span class='kw'>end</span>
+              <span class='comment'># Older IP-XACT standards appear to also accept short acronyms like &quot;ro&quot;, &quot;w1c&quot;, &quot;rw&quot;,
+</span>              <span class='comment'># etc.
+</span>              <span class='kw'>elsif</span> <span class='id identifier rubyid_xml_access'>xml_access</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>\S+</span><span class='regexp_end'>/</span></span>
+                <span class='id identifier rubyid_access'>access</span> <span class='op'>=</span> <span class='id identifier rubyid_xml_access'>xml_access</span><span class='period'>.</span><span class='id identifier rubyid_downcase'>downcase</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span>
               <span class='kw'>else</span>
                 <span class='comment'># default to read-write if access is not specified
 </span>                <span class='id identifier rubyid_access'>access</span> <span class='op'>=</span> <span class='symbol'>:rw</span>
@@ -520,7 +608,16 @@ fields</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns a string representing the owner object in IP-XACT XML</p>
+<p>Returns a string representing the owner object in IP-XACT XML Usable /
+Available options:</p>
+
+<pre class="code ruby"><code class="ruby">:vendor             = Company name/web address, ex: &#39;nxp.com&#39;
+:library            = IP Library
+:schema             = &#39;1685-2009&#39; or default of Spirit 1.4 (when no :schema option passed)
+:bus_interface      = only &#39;AMBA3&#39; supported at this time
+:mmap_name          = Optionally set the memoryMap name to something other than the module name
+:mmap_ref           = memoryMapRef name, ex: &#39;UserMap&#39;
+</code></pre>
 
 
   </div>
@@ -534,43 +631,6 @@ fields</p>
       <pre class="lines">
 
 
-120
-121
-122
-123
-124
-125
-126
-127
-128
-129
-130
-131
-132
-133
-134
-135
-136
-137
-138
-139
-140
-141
-142
-143
-144
-145
-146
-147
-148
-149
-150
-151
-152
-153
-154
-155
-156
 157
 158
 159
@@ -640,10 +700,197 @@ fields</p>
 223
 224
 225
-226</pre>
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/cross_origen/ip_xact.rb', line 120</span>
+      <pre class="code"><span class="info file"># File 'lib/cross_origen/ip_xact.rb', line 157</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_owner_to_xml'>owner_to_xml</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_require'>require</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>nokogiri</span><span class='tstring_end'>&#39;</span></span>
@@ -654,22 +901,44 @@ fields</p>
 
   <span class='ivar'>@format</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:format</span><span class='rbracket'>]</span>
 
-  <span class='id identifier rubyid_schemas'>schemas</span> <span class='op'>=</span> <span class='lbracket'>[</span>
-    <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>https://www.spiritconsortium.org/XMLSchema/SPIRIT/1.4</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-    <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>https://www.spiritconsortium.org/XMLSchema/SPIRIT/1.4/index.xsd</span><span class='tstring_end'>&#39;</span></span>
-  <span class='rbracket'>]</span>
-  <span class='kw'>if</span> <span class='id identifier rubyid_uvm?'>uvm?</span>
+  <span class='comment'># Compatible schemas: Spirit 1.4, 1685-2009
+</span>  <span class='comment'># Assume Spirit 1.4 if no schema provided
+</span>  <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:schema</span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>1685-2009</span><span class='tstring_end'>&#39;</span></span> <span class='comment'># Magillem tool uses alternate schema
+</span>    <span class='id identifier rubyid_schemas'>schemas</span> <span class='op'>=</span> <span class='lbracket'>[</span>
+      <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>http://www.spiritconsortium.org/XMLSchema/SPIRIT/1685-2009</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+      <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>http://www.spiritconsortium.org/XMLSchema/SPIRIT/1685-2009/index.xsd</span><span class='tstring_end'>&#39;</span></span>
+    <span class='rbracket'>]</span>
+  <span class='kw'>else</span> <span class='comment'># Assume Spirit 1.4 if not
+</span>    <span class='id identifier rubyid_schemas'>schemas</span> <span class='op'>=</span> <span class='lbracket'>[</span>
+      <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>http://www.spiritconsortium.org/XMLSchema/SPIRIT/1.4</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+      <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>http://www.spiritconsortium.org/XMLSchema/SPIRIT/1.4/index.xsd</span><span class='tstring_end'>&#39;</span></span>
+    <span class='rbracket'>]</span>
+  <span class='kw'>end</span>
+
+  <span class='kw'>if</span> <span class='id identifier rubyid_uvm?'>uvm?</span> <span class='op'>&amp;&amp;</span> <span class='op'>!</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:schema</span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>1685-2009</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
     <span class='id identifier rubyid_schemas'>schemas</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>$IREG_GEN/XMLSchema/SPIRIT/VendorExtensions.xsd</span><span class='tstring_end'>&#39;</span></span>
   <span class='kw'>end</span>
 
-  <span class='id identifier rubyid_headers'>headers</span> <span class='op'>=</span> <span class='lbrace'>{</span>
-    <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>xmlns:spirit</span><span class='tstring_end'>&#39;</span></span>       <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>https://www.spiritconsortium.org/XMLSchema/SPIRIT/1.4</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-    <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>xmlns:xsi</span><span class='tstring_end'>&#39;</span></span>          <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>https://www.w3.org/2001/XMLSchema-instance</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-    <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>xsi:schemaLocation</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_schemas'>schemas</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> </span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
-  <span class='rbrace'>}</span>
-  <span class='kw'>if</span> <span class='id identifier rubyid_uvm?'>uvm?</span>
-    <span class='id identifier rubyid_headers'>headers</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>xmlns:vendorExtensions</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>$IREG_GEN/XMLSchema/SPIRIT</span><span class='tstring_end'>&#39;</span></span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:schema</span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>1685-2009</span><span class='tstring_end'>&#39;</span></span> <span class='comment'># Magillem tool uses alternate schema
+</span>    <span class='id identifier rubyid_headers'>headers</span> <span class='op'>=</span> <span class='lbrace'>{</span>
+      <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>xmlns:spirit</span><span class='tstring_end'>&#39;</span></span>       <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>http://www.spiritconsortium.org/XMLSchema/SPIRIT/1685-2009</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+      <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>xmlns:xsi</span><span class='tstring_end'>&#39;</span></span>          <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>http://www.w3.org/2001/XMLSchema-instance</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+      <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>xsi:schemaLocation</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_schemas'>schemas</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> </span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+    <span class='rbrace'>}</span>
+  <span class='kw'>else</span> <span class='comment'># Assume Spirit 1.4 if not
+</span>    <span class='id identifier rubyid_headers'>headers</span> <span class='op'>=</span> <span class='lbrace'>{</span>
+      <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>xmlns:spirit</span><span class='tstring_end'>&#39;</span></span>       <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>http://www.spiritconsortium.org/XMLSchema/SPIRIT/1.4</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+      <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>xmlns:xsi</span><span class='tstring_end'>&#39;</span></span>          <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>http://www.w3.org/2001/XMLSchema-instance</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+      <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>xsi:schemaLocation</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_schemas'>schemas</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> </span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+    <span class='rbrace'>}</span>
   <span class='kw'>end</span>
+
+  <span class='kw'>if</span> <span class='id identifier rubyid_uvm?'>uvm?</span> <span class='op'>&amp;&amp;</span> <span class='op'>!</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:schema</span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>1685-2009</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_headers'>headers</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>xmlns:vendorExtensions</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>$IREG_GEN/XMLSchema/SPIRIT</span><span class='tstring_end'>&#39;</span></span>
+    <span class='comment'># Else:
+</span>    <span class='comment'># Do nothing ?
+</span>    <span class='comment'># headers[&#39;xmlns:vendorExtensions&#39;] = &#39;$UVM_RGM_HOME/builder/ipxact/schema&#39;
+</span>  <span class='kw'>end</span>
 
   <span class='id identifier rubyid_builder'>builder</span> <span class='op'>=</span> <span class='const'>Nokogiri</span><span class='op'>::</span><span class='const'>XML</span><span class='op'>::</span><span class='const'>Builder</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='label'>encoding:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>UTF-8</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_xml'>xml</span><span class='op'>|</span>
     <span class='id identifier rubyid_spirit'>spirit</span> <span class='op'>=</span> <span class='id identifier rubyid_xml'>xml</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>spirit</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
@@ -679,19 +948,44 @@ fields</p>
       <span class='comment'># I guess this should really be the register owner&#39;s owner&#39;s name?
 </span>      <span class='id identifier rubyid_spirit'>spirit</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span> <span class='id identifier rubyid_try'>try</span><span class='lparen'>(</span><span class='symbol'>:ip_name</span><span class='rparen'>)</span> <span class='op'>||</span> <span class='id identifier rubyid_owner'>owner</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>::</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_last'>last</span>
       <span class='id identifier rubyid_spirit'>spirit</span><span class='period'>.</span><span class='id identifier rubyid_version'>version</span> <span class='id identifier rubyid_try'>try</span><span class='lparen'>(</span><span class='symbol'>:ip_version</span><span class='comma'>,</span> <span class='symbol'>:version</span><span class='comma'>,</span> <span class='symbol'>:revision</span><span class='rparen'>)</span>
+      <span class='comment'># The 1685-2009 schema allows for a bus interface.  AMBA3 (slave) supported so far.
+</span>      <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:schema</span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>1685-2009</span><span class='tstring_end'>&#39;</span></span>
+        <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:bus_interface</span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>AMBA3</span><span class='tstring_end'>&#39;</span></span>
+          <span class='id identifier rubyid_spirit'>spirit</span><span class='period'>.</span><span class='id identifier rubyid_busInterfaces'>busInterfaces</span> <span class='kw'>do</span>
+            <span class='id identifier rubyid_spirit'>spirit</span><span class='period'>.</span><span class='id identifier rubyid_busInterface'>busInterface</span> <span class='kw'>do</span>
+              <span class='id identifier rubyid_spirit'>spirit</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Slave</span><span class='tstring_end'>&#39;</span></span>
+              <span class='id identifier rubyid_bustype_header'>bustype_header</span> <span class='op'>=</span> <span class='lbrace'>{</span>
+                <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>spirit:vendor</span><span class='tstring_end'>&#39;</span></span>  <span class='op'>=&gt;</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:vendor</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Origen</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+                <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>spirit:library</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>amba3</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+                <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>spirit:name</span><span class='tstring_end'>&#39;</span></span>    <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>APB3</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+                <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>spirit:version</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>1.0</span><span class='tstring_end'>&#39;</span></span>
+              <span class='rbrace'>}</span>
+              <span class='id identifier rubyid_xml'>xml</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>spirit</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_busType'>busType</span> <span class='id identifier rubyid_bustype_header'>bustype_header</span>
+              <span class='id identifier rubyid_spirit'>spirit</span><span class='period'>.</span><span class='id identifier rubyid_slave'>slave</span> <span class='kw'>do</span>
+                <span class='id identifier rubyid_mmapref_header'>mmapref_header</span> <span class='op'>=</span> <span class='lbrace'>{</span>
+                  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>spirit:memoryMapRef</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:mmap_ref</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>APB</span><span class='tstring_end'>&#39;</span></span>
+                <span class='rbrace'>}</span>
+                <span class='id identifier rubyid_xml'>xml</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>spirit</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_memoryMapRef'>memoryMapRef</span> <span class='id identifier rubyid_mmapref_header'>mmapref_header</span>
+              <span class='kw'>end</span>
+            <span class='kw'>end</span>
+          <span class='kw'>end</span>
+        <span class='kw'>end</span>
+      <span class='kw'>end</span>
       <span class='id identifier rubyid_spirit'>spirit</span><span class='period'>.</span><span class='id identifier rubyid_memoryMaps'>memoryMaps</span> <span class='kw'>do</span>
         <span class='id identifier rubyid_memory_maps'>memory_maps</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_map_name'>map_name</span><span class='comma'>,</span> <span class='id identifier rubyid__map'>_map</span><span class='op'>|</span>
           <span class='id identifier rubyid_spirit'>spirit</span><span class='period'>.</span><span class='id identifier rubyid_memoryMap'>memoryMap</span> <span class='kw'>do</span>
-            <span class='id identifier rubyid_spirit'>spirit</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span> <span class='id identifier rubyid_map_name'>map_name</span>
+            <span class='comment'># Optionally assign memory map name to something other than the module name in Ruby,
+</span>            <span class='comment'># default to &#39;RegisterMap&#39;
+</span>            <span class='id identifier rubyid_spirit'>spirit</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:mmap_name</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>RegisterMap</span><span class='tstring_end'>&#39;</span></span>
             <span class='id identifier rubyid_address_blocks'>address_blocks</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_domain_name'>domain_name</span><span class='comma'>,</span> <span class='id identifier rubyid__domain'>_domain</span><span class='comma'>,</span> <span class='id identifier rubyid_sub_block'>sub_block</span><span class='op'>|</span>
               <span class='id identifier rubyid_spirit'>spirit</span><span class='period'>.</span><span class='id identifier rubyid_addressBlock'>addressBlock</span> <span class='kw'>do</span>
-                <span class='kw'>if</span> <span class='id identifier rubyid_sub_block'>sub_block</span> <span class='op'>==</span> <span class='id identifier rubyid_owner'>owner</span>
+                <span class='comment'># When registers reside at the top level, do not assign an address block name
+</span>                <span class='kw'>if</span> <span class='id identifier rubyid_sub_block'>sub_block</span> <span class='op'>==</span> <span class='id identifier rubyid_owner'>owner</span>
                   <span class='id identifier rubyid_spirit'>spirit</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span> <span class='kw'>nil</span>
-                  <span class='id identifier rubyid_spirit'>spirit</span><span class='period'>.</span><span class='id identifier rubyid_baseAddress'>baseAddress</span> <span class='int'>0</span><span class='period'>.</span><span class='id identifier rubyid_to_hex'>to_hex</span>
                 <span class='kw'>else</span>
                   <span class='id identifier rubyid_spirit'>spirit</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span> <span class='id identifier rubyid_address_block_name'>address_block_name</span><span class='lparen'>(</span><span class='id identifier rubyid_domain_name'>domain_name</span><span class='comma'>,</span> <span class='id identifier rubyid_sub_block'>sub_block</span><span class='rparen'>)</span>
-                  <span class='id identifier rubyid_spirit'>spirit</span><span class='period'>.</span><span class='id identifier rubyid_baseAddress'>baseAddress</span> <span class='id identifier rubyid_sub_block'>sub_block</span><span class='period'>.</span><span class='id identifier rubyid_base_address'>base_address</span><span class='period'>.</span><span class='id identifier rubyid_to_hex'>to_hex</span>
                 <span class='kw'>end</span>
+                <span class='id identifier rubyid_spirit'>spirit</span><span class='period'>.</span><span class='id identifier rubyid_baseAddress'>baseAddress</span> <span class='id identifier rubyid_sub_block'>sub_block</span><span class='period'>.</span><span class='id identifier rubyid_base_address'>base_address</span><span class='period'>.</span><span class='id identifier rubyid_to_hex'>to_hex</span>
                 <span class='id identifier rubyid_spirit'>spirit</span><span class='period'>.</span><span class='id identifier rubyid_range'>range</span> <span class='id identifier rubyid_range'>range</span><span class='lparen'>(</span><span class='id identifier rubyid_sub_block'>sub_block</span><span class='rparen'>)</span>
                 <span class='id identifier rubyid_spirit'>spirit</span><span class='period'>.</span><span class='id identifier rubyid_width'>width</span> <span class='id identifier rubyid_width'>width</span><span class='lparen'>(</span><span class='id identifier rubyid_sub_block'>sub_block</span><span class='rparen'>)</span>
                 <span class='id identifier rubyid_sub_block'>sub_block</span><span class='period'>.</span><span class='id identifier rubyid_regs'>regs</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_reg'>reg</span><span class='op'>|</span>
@@ -717,8 +1011,96 @@ fields</p>
                         <span class='id identifier rubyid_spirit'>spirit</span><span class='period'>.</span><span class='id identifier rubyid_description'>description</span> <span class='id identifier rubyid_try'>try</span><span class='lparen'>(</span><span class='id identifier rubyid_bits'>bits</span><span class='comma'>,</span> <span class='symbol'>:brief_description</span><span class='comma'>,</span> <span class='symbol'>:name_full</span><span class='comma'>,</span> <span class='symbol'>:full_name</span><span class='rparen'>)</span>
                         <span class='id identifier rubyid_spirit'>spirit</span><span class='period'>.</span><span class='id identifier rubyid_bitOffset'>bitOffset</span> <span class='id identifier rubyid_bits'>bits</span><span class='period'>.</span><span class='id identifier rubyid_position'>position</span>
                         <span class='id identifier rubyid_spirit'>spirit</span><span class='period'>.</span><span class='id identifier rubyid_bitWidth'>bitWidth</span> <span class='id identifier rubyid_bits'>bits</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span>
-                        <span class='id identifier rubyid_spirit'>spirit</span><span class='period'>.</span><span class='id identifier rubyid_access'>access</span> <span class='id identifier rubyid_bits'>bits</span><span class='period'>.</span><span class='id identifier rubyid_access'>access</span>
-                        <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:include_bit_field_values</span><span class='rbracket'>]</span>
+                        <span class='comment'># When exporting to 1685-2009 schema, need to handle special cases (writeOnce),
+</span>                        <span class='comment'># modifiedWriteValue, and readAction fields.
+</span>                        <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:schema</span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>1685-2009</span><span class='tstring_end'>&#39;</span></span>
+                          <span class='kw'>if</span> <span class='id identifier rubyid_bits'>bits</span><span class='period'>.</span><span class='id identifier rubyid_writable?'>writable?</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_bits'>bits</span><span class='period'>.</span><span class='id identifier rubyid_readable?'>readable?</span>
+                            <span class='kw'>if</span> <span class='id identifier rubyid_bits'>bits</span><span class='period'>.</span><span class='id identifier rubyid_access'>access</span> <span class='op'>==</span> <span class='symbol'>:w1</span>
+                              <span class='id identifier rubyid_spirit'>spirit</span><span class='period'>.</span><span class='id identifier rubyid_access'>access</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>read-writeOnce</span><span class='tstring_end'>&#39;</span></span>
+                            <span class='kw'>else</span>
+                              <span class='id identifier rubyid_spirit'>spirit</span><span class='period'>.</span><span class='id identifier rubyid_access'>access</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>read-write</span><span class='tstring_end'>&#39;</span></span>
+                            <span class='kw'>end</span>
+                          <span class='kw'>elsif</span> <span class='id identifier rubyid_bits'>bits</span><span class='period'>.</span><span class='id identifier rubyid_writable?'>writable?</span>
+                            <span class='kw'>if</span> <span class='id identifier rubyid_bits'>bits</span><span class='period'>.</span><span class='id identifier rubyid_access'>access</span> <span class='op'>==</span> <span class='symbol'>:wo1</span>
+                              <span class='id identifier rubyid_spirit'>spirit</span><span class='period'>.</span><span class='id identifier rubyid_access'>access</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>writeOnce</span><span class='tstring_end'>&#39;</span></span>
+                            <span class='kw'>else</span>
+                              <span class='id identifier rubyid_spirit'>spirit</span><span class='period'>.</span><span class='id identifier rubyid_access'>access</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>write-only</span><span class='tstring_end'>&#39;</span></span>
+                            <span class='kw'>end</span>
+                          <span class='kw'>elsif</span> <span class='id identifier rubyid_bits'>bits</span><span class='period'>.</span><span class='id identifier rubyid_readable?'>readable?</span>
+                            <span class='id identifier rubyid_spirit'>spirit</span><span class='period'>.</span><span class='id identifier rubyid_access'>access</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>read-only</span><span class='tstring_end'>&#39;</span></span>
+                          <span class='kw'>end</span>
+                          <span class='kw'>if</span> <span class='id identifier rubyid_bits'>bits</span><span class='period'>.</span><span class='id identifier rubyid_readable?'>readable?</span>
+                            <span class='kw'>unless</span> <span class='cvar'>@@access_hash</span><span class='lbracket'>[</span><span class='id identifier rubyid_bits'>bits</span><span class='period'>.</span><span class='id identifier rubyid_access'>access</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='symbol'>:read</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+                              <span class='id identifier rubyid_spirit'>spirit</span><span class='period'>.</span><span class='id identifier rubyid_readAction'>readAction</span> <span class='cvar'>@@access_hash</span><span class='lbracket'>[</span><span class='id identifier rubyid_bits'>bits</span><span class='period'>.</span><span class='id identifier rubyid_access'>access</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='symbol'>:read</span><span class='rbracket'>]</span>
+                            <span class='kw'>end</span>
+                          <span class='kw'>end</span>
+                          <span class='kw'>if</span> <span class='id identifier rubyid_bits'>bits</span><span class='period'>.</span><span class='id identifier rubyid_writable?'>writable?</span>
+                            <span class='kw'>unless</span> <span class='cvar'>@@access_hash</span><span class='lbracket'>[</span><span class='id identifier rubyid_bits'>bits</span><span class='period'>.</span><span class='id identifier rubyid_access'>access</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='symbol'>:write</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+                              <span class='id identifier rubyid_spirit'>spirit</span><span class='period'>.</span><span class='id identifier rubyid_modifiedWriteValue'>modifiedWriteValue</span> <span class='cvar'>@@access_hash</span><span class='lbracket'>[</span><span class='id identifier rubyid_bits'>bits</span><span class='period'>.</span><span class='id identifier rubyid_access'>access</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='symbol'>:write</span><span class='rbracket'>]</span>
+                            <span class='kw'>end</span>
+                          <span class='kw'>end</span>
+                        <span class='kw'>else</span> <span class='comment'># Assume Spirit 1.4 if not
+</span>                          <span class='id identifier rubyid_spirit'>spirit</span><span class='period'>.</span><span class='id identifier rubyid_access'>access</span> <span class='id identifier rubyid_bits'>bits</span><span class='period'>.</span><span class='id identifier rubyid_access'>access</span>
+                        <span class='kw'>end</span>
+                        <span class='comment'># HDL paths provide hooks for a testbench to directly manipulate the
+</span>                        <span class='comment'># registers without having to go through a bus interface or read/write
+</span>                        <span class='comment'># protocol.  Because the hierarchical path to a register block can vary
+</span>                        <span class='comment'># greatly between devices, allow the user to provide an abs_path value
+</span>                        <span class='comment'># and define &quot;full_reg_path&quot; to assist.
+</span>                        <span class='comment'>#
+</span>                        <span class='comment'># When registers reside at the top level of the memory map, assume &quot;top&quot;
+</span>                        <span class='comment'># for the register path name.  (Need to improve this process in the future.)
+</span>                        <span class='kw'>if</span> <span class='id identifier rubyid_reg'>reg</span><span class='period'>.</span><span class='id identifier rubyid_owner'>owner</span><span class='period'>.</span><span class='id identifier rubyid_top_level?'>top_level?</span> <span class='op'>==</span> <span class='kw'>true</span>
+                          <span class='id identifier rubyid_regpath'>regpath</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>top</span><span class='tstring_end'>&#39;</span></span>
+                        <span class='kw'>else</span>
+                          <span class='id identifier rubyid_regpath'>regpath</span> <span class='op'>=</span> <span class='id identifier rubyid_reg'>reg</span><span class='period'>.</span><span class='id identifier rubyid_owner'>owner</span><span class='period'>.</span><span class='id identifier rubyid_path'>path</span>
+                        <span class='kw'>end</span>
+                        <span class='comment'># If :full_reg_path is defined, the :abs_path metadata for a register will
+</span>                        <span class='comment'># be used for regpath.  This can be assigned at an address block (sub-block)
+</span>                        <span class='comment'># level.
+</span>                        <span class='kw'>unless</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:full_reg_path</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='op'>==</span> <span class='kw'>true</span>
+                          <span class='id identifier rubyid_regpath'>regpath</span> <span class='op'>=</span> <span class='id identifier rubyid_reg'>reg</span><span class='period'>.</span><span class='id identifier rubyid_path'>path</span>
+                        <span class='kw'>end</span>
+                        <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:schema</span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>1685-2009</span><span class='tstring_end'>&#39;</span></span>
+                          <span class='id identifier rubyid_spirit'>spirit</span><span class='period'>.</span><span class='id identifier rubyid_parameters'>parameters</span> <span class='kw'>do</span>
+                            <span class='id identifier rubyid_spirit'>spirit</span><span class='period'>.</span><span class='id identifier rubyid_parameter'>parameter</span> <span class='kw'>do</span>
+                              <span class='id identifier rubyid_spirit'>spirit</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>_hdlPath_</span><span class='tstring_end'>&#39;</span></span>
+                              <span class='comment'># HDL path needs to be to the declared bit field name, NOT to the bus slice
+</span>                              <span class='comment'># that Origen&#39;s &quot;abs_path&quot; will yield.  Ex:
+</span>                              <span class='comment'>#
+</span>                              <span class='comment'># ~~~ ruby
+</span>                              <span class='comment'># reg :myreg, 0x0, size: 32 do |reg|
+</span>                              <span class='comment'>#   bits 7..4, :bits_high
+</span>                              <span class='comment'>#   bits 3..0, :bits_low
+</span>                              <span class='comment'># end
+</span>                              <span class='comment'># ~~~
+</span>                              <span class='comment'>#
+</span>                              <span class='comment'># The abs_path to ...regs(:myreg).bits(:bits_low).abs_path will yield
+</span>                              <span class='comment'># &quot;myreg.myreg[3:0]&quot;, not &quot;myreg.bits_low&quot;.  This is not an understood path
+</span>                              <span class='comment'># in Origen (myreg[3:0] does not exist in either myreg&#39;s RegCollection or BitCollection),
+</span>                              <span class='comment'># and does not sync with how RTL would create bits_low[3:0].
+</span>                              <span class='comment'># Therefore, use the path to &quot;myreg&quot;&#39;s owner appended with bits.name (bits_low here).
+</span>                              <span class='comment'>#
+</span>                              <span class='comment'># This can be done in a register or sub_blocks definition by defining register
+</span>                              <span class='comment'># metadata for &quot;abs_path&quot;.  If the reg owner&#39;s path weren&#39;t used, but instead the
+</span>                              <span class='comment'># reg&#39;s path, that would imply each register was a separate hierarchical path in
+</span>                              <span class='comment'># RTL (ex: &quot;top.myblock.regblock.myreg.myreg_bits&quot;), which is normally not the case.
+</span>                              <span class='comment'># The most likely path would be &quot;top.myblock.regblock.myreg_bits.
+</span>                              <span class='id identifier rubyid_spirit'>spirit</span><span class='period'>.</span><span class='id identifier rubyid_value'>value</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_regpath'>regpath</span><span class='embexpr_end'>}</span><span class='tstring_content'>.</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_bits'>bits</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+                            <span class='kw'>end</span>
+                          <span class='kw'>end</span>
+                        <span class='kw'>end</span>
+                        <span class='comment'># C. Hume - Unclear which vendorExtensions should be included by default, if any.
+</span>                        <span class='comment'># Future improvment: Allow passing of vendorExtensions enable &amp; value hash/string
+</span>                        <span class='comment'># if options[:schema] == &#39;1685-2009&#39;
+</span>                        <span class='comment'>#   spirit.vendorExtensions do
+</span>                        <span class='comment'>#     vendorext = { &#39;xmlns:vendorExtensions&#39; =&gt; &#39;$UVM_RGM_HOME/builder/ipxact/schema&#39; }
+</span>                        <span class='comment'>#     xml[&#39;vendorExtensions&#39;].hdl_path vendorext, &quot;#{reg.path}.#{bits.name}&quot;
+</span>                        <span class='comment'>#   end
+</span>                        <span class='comment'># end
+</span>
+                        <span class='comment'># Allow optional inclusion of bit field values and descriptions
+</span>                        <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:include_bit_field_values</span><span class='rbracket'>]</span>
                           <span class='kw'>if</span> <span class='id identifier rubyid_bits'>bits</span><span class='period'>.</span><span class='id identifier rubyid_bit_value_descriptions'>bit_value_descriptions</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span>
                             <span class='id identifier rubyid_bits'>bits</span><span class='period'>.</span><span class='id identifier rubyid_bit_value_descriptions'>bit_value_descriptions</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_val'>val</span><span class='comma'>,</span> <span class='id identifier rubyid_desc'>desc</span><span class='op'>|</span>
                               <span class='id identifier rubyid_spirit'>spirit</span><span class='period'>.</span><span class='id identifier rubyid_values'>values</span> <span class='kw'>do</span>
@@ -729,29 +1111,44 @@ fields</p>
                             <span class='kw'>end</span>
                           <span class='kw'>end</span>
                         <span class='kw'>end</span>
-                        <span class='kw'>if</span> <span class='id identifier rubyid_uvm?'>uvm?</span>
+                        <span class='kw'>if</span> <span class='id identifier rubyid_uvm?'>uvm?</span> <span class='op'>&amp;&amp;</span> <span class='op'>!</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:schema</span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>1685-2009</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
                           <span class='id identifier rubyid_spirit'>spirit</span><span class='period'>.</span><span class='id identifier rubyid_vendorExtensions'>vendorExtensions</span> <span class='kw'>do</span>
-                            <span class='id identifier rubyid_xml'>xml</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>vendorExtensions</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_hdl_path'>hdl_path</span> <span class='id identifier rubyid_bits'>bits</span><span class='period'>.</span><span class='id identifier rubyid_path'>path</span><span class='lparen'>(</span><span class='label'>relative_to:</span> <span class='id identifier rubyid_sub_block'>sub_block</span><span class='rparen'>)</span>
+                            <span class='id identifier rubyid_xml'>xml</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>vendorExtensions</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_hdl_path'>hdl_path</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_regpath'>regpath</span><span class='embexpr_end'>}</span><span class='tstring_content'>.</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_bits'>bits</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
                           <span class='kw'>end</span>
                         <span class='kw'>end</span>
                       <span class='kw'>end</span>
                     <span class='kw'>end</span>
                   <span class='kw'>end</span>
                 <span class='kw'>end</span>
-                <span class='kw'>if</span> <span class='id identifier rubyid_uvm?'>uvm?</span>
-                  <span class='id identifier rubyid_spirit'>spirit</span><span class='period'>.</span><span class='id identifier rubyid_vendorExtensions'>vendorExtensions</span> <span class='kw'>do</span>
-                    <span class='id identifier rubyid_xml'>xml</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>vendorExtensions</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_hdl_path'>hdl_path</span> <span class='id identifier rubyid_sub_block'>sub_block</span><span class='period'>.</span><span class='id identifier rubyid_path'>path</span><span class='lparen'>(</span><span class='label'>relative_to:</span> <span class='id identifier rubyid_owner'>owner</span><span class='rparen'>)</span>
-                  <span class='kw'>end</span>
-                <span class='kw'>end</span>
-              <span class='kw'>end</span>
+                <span class='comment'># Unclear whether addressBlock vendor extensions are supported in Spirit 1.4
+</span>                <span class='comment'># if uvm?
+</span>                <span class='comment'>#  spirit.vendorExtensions do
+</span>                <span class='comment'>#    xml[&#39;vendorExtensions&#39;].hdl_path sub_block.path(relative_to: owner)
+</span>                <span class='comment'>#  end
+</span>                <span class='comment'># end
+</span>              <span class='kw'>end</span>
+            <span class='kw'>end</span>
+            <span class='comment'># Assume byte addressing if not specified
+</span>            <span class='kw'>if</span> <span class='id identifier rubyid_owner'>owner</span><span class='period'>.</span><span class='id identifier rubyid_methods'>methods</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='symbol'>:lau</span><span class='rparen'>)</span> <span class='op'>==</span> <span class='kw'>false</span>
+              <span class='id identifier rubyid_spirit'>spirit</span><span class='period'>.</span><span class='id identifier rubyid_addressUnitBits'>addressUnitBits</span> <span class='int'>8</span>
+            <span class='kw'>else</span>
+              <span class='id identifier rubyid_spirit'>spirit</span><span class='period'>.</span><span class='id identifier rubyid_addressUnitBits'>addressUnitBits</span> <span class='id identifier rubyid_owner'>owner</span><span class='period'>.</span><span class='id identifier rubyid_lau'>lau</span>
             <span class='kw'>end</span>
           <span class='kw'>end</span>
         <span class='kw'>end</span>
       <span class='kw'>end</span>
     <span class='kw'>end</span>
   <span class='kw'>end</span>
-  <span class='id identifier rubyid_builder'>builder</span><span class='period'>.</span><span class='id identifier rubyid_to_xml'>to_xml</span>
-<span class='kw'>end</span></pre>
+  <span class='comment'># When testing with &#39;origen examples&#39;, travis_ci (bash) will end up with empty tags -
+</span>  <span class='comment'># &#39;&lt;spirit:description/&gt;&#39; that do not appear on some user&#39;s tshell environments.  To
+</span>  <span class='comment'># prevent false errors for this issue, force Nokogiri to use self-closing tags
+</span>  <span class='comment'># (&#39;&lt;spirit:description&gt;&lt;/spirit:description&gt;&#39;), but keep the XML formatted for readability.
+</span>  <span class='comment'># All tags with no content will appear as &#39;&lt;spirit:tag_name&gt;&lt;/spirit:tag_name&gt;&#39;.
+</span>  <span class='comment'>#
+</span>  <span class='id identifier rubyid_builder'>builder</span><span class='period'>.</span><span class='id identifier rubyid_to_xml'>to_xml</span><span class='lparen'>(</span><span class='label'>save_with:</span> <span class='const'>Nokogiri</span><span class='op'>::</span><span class='const'>XML</span><span class='op'>::</span><span class='const'>Node</span><span class='op'>::</span><span class='const'>SaveOptions</span><span class='op'>::</span><span class='const'>NO_EMPTY_TAGS</span> <span class='op'>|</span>
+                            <span class='const'>Nokogiri</span><span class='op'>::</span><span class='const'>XML</span><span class='op'>::</span><span class='const'>Node</span><span class='op'>::</span><span class='const'>SaveOptions</span><span class='op'>::</span><span class='const'>FORMAT</span><span class='rparen'>)</span>
+  <span class='comment'># builder.to_xml
+</span><span class='kw'>end</span></pre>
     </td>
   </tr>
 </table>
@@ -762,9 +1159,9 @@ fields</p>
 </div>
 
       <div id="footer">
-  Generated on Fri May 11 06:53:47 2018 by
-  <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.12 (ruby-2.1.5).
+  Generated on Thu Dec 13 03:32:57 2018 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.9.16 (ruby-2.5.1).
 </div>
 
     </div>
