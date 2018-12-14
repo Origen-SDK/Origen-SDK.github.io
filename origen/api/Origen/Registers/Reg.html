@@ -6,7 +6,7 @@
 <title>
   Class: Origen::Registers::Reg
   
-    &mdash; Origen Core 0.40.2
+    &mdash; Origen Core 0.41.0
   
 </title>
 
@@ -1195,7 +1195,7 @@ regs(:fstat).empty_bits   =&gt; [1, 2, 3].</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#expand_range-instance_method" title="#expand_range (instance method)">#<strong>expand_range</strong>(range)  &#x21d2; Object </a>
+      <a href="#expand_range-instance_method" title="#expand_range (instance method)">#<strong>expand_range</strong>(range, wbo = :lsb0)  &#x21d2; Object </a>
     
 
     
@@ -1308,7 +1308,7 @@ register description like this:.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#get_bits_with_constraint-instance_method" title="#get_bits_with_constraint (instance method)">#<strong>get_bits_with_constraint</strong>(number, params)  &#x21d2; Object </a>
+      <a href="#get_bits_with_constraint-instance_method" title="#get_bits_with_constraint (instance method)">#<strong>get_bits_with_constraint</strong>(number, params, options = {})  &#x21d2; Object </a>
     
 
     
@@ -1762,7 +1762,7 @@ application-specific meta data properties.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#to_bit_collection-instance_method" title="#to_bit_collection (instance method)">#<strong>to_bit_collection</strong>  &#x21d2; Object </a>
+      <a href="#to_bit_collection-instance_method" title="#to_bit_collection (instance method)">#<strong>to_bit_collection</strong>(options = {})  &#x21d2; Object </a>
     
 
     
@@ -1901,6 +1901,50 @@ regs(:fstat).used_bits   =&gt; [0, 4, 5, 6, 7].</p>
         <li class="public ">
   <span class="summary_signature">
     
+      <a href="#with_lsb0-instance_method" title="#with_lsb0 (instance method)">#<strong>with_lsb0</strong>  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#with_msb0-instance_method" title="#with_msb0 (instance method)">#<strong>with_msb0</strong>  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#writer-instance_method" title="#writer (instance method)">#<strong>writer</strong>  &#x21d2; Object </a>
     
 
@@ -2004,7 +2048,6 @@ A Hash lookup table for quickly accessing bit objects by name</p>
       <pre class="lines">
 
 
-62
 63
 64
 65
@@ -2037,10 +2080,16 @@ A Hash lookup table for quickly accessing bit objects by name</p>
 92
 93
 94
-95</pre>
+95
+96
+97
+98
+99
+100
+101</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 62</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 63</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_owner'>owner</span><span class='comma'>,</span> <span class='id identifier rubyid_address'>address</span><span class='comma'>,</span> <span class='id identifier rubyid_size'>size</span><span class='comma'>,</span> <span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span> <span class='comment'># :nodoc:
 </span>  <span class='ivar'>@owner</span> <span class='op'>=</span> <span class='id identifier rubyid_owner'>owner</span>
@@ -2074,7 +2123,12 @@ A Hash lookup table for quickly accessing bit objects by name</p>
     <span class='ivar'>@bits</span> <span class='op'>&lt;&lt;</span> <span class='const'><span class='object_link'><a href="Bit.html" title="Origen::Registers::Bit (class)">Bit</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="Bit.html#initialize-instance_method" title="Origen::Registers::Bit#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='kw'>self</span><span class='comma'>,</span> <span class='id identifier rubyid_n'>n</span><span class='comma'>,</span> <span class='label'>writable:</span> <span class='ivar'>@init_as_writable</span><span class='comma'>,</span> <span class='label'>undefined:</span> <span class='kw'>true</span><span class='rparen'>)</span>
   <span class='kw'>end</span>
 
+  <span class='comment'># Internally re-map msb0 register descriptions as lsb0
+</span>  <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='period'>.</span><span class='id identifier rubyid_each_value'>each_value</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_bit_desc'>bit_desc</span><span class='op'>|</span> <span class='id identifier rubyid_bit_desc'>bit_desc</span><span class='lbracket'>[</span><span class='symbol'>:pos</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='ivar'>@size</span> <span class='op'>-</span> <span class='id identifier rubyid_bit_desc'>bit_desc</span><span class='lbracket'>[</span><span class='symbol'>:pos</span><span class='rbracket'>]</span> <span class='op'>-</span> <span class='id identifier rubyid_bit_desc'>bit_desc</span><span class='lbracket'>[</span><span class='symbol'>:bits</span><span class='rbracket'>]</span> <span class='rbrace'>}</span> <span class='kw'>if</span> <span class='id identifier rubyid_bit_order'>bit_order</span> <span class='op'>==</span> <span class='symbol'>:msb0</span>
+
   <span class='id identifier rubyid_add_bits_from_options'>add_bits_from_options</span><span class='lparen'>(</span><span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span>
+
+  <span class='ivar'>@msb0_delegator</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="Msb0Delegator.html" title="Origen::Registers::Msb0Delegator (class)">Msb0Delegator</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="Msb0Delegator.html#initialize-instance_method" title="Origen::Registers::Msb0Delegator#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='kw'>self</span><span class='comma'>,</span> <span class='ivar'>@bits</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -2115,6 +2169,11 @@ A Hash lookup table for quickly accessing bit objects by name</p>
       <pre class="lines">
 
 
+1265
+1266
+1267
+1268
+1269
 1270
 1271
 1272
@@ -2132,18 +2191,23 @@ A Hash lookup table for quickly accessing bit objects by name</p>
 1284</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 1270</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 1265</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_method_missing'>method_missing</span><span class='lparen'>(</span><span class='id identifier rubyid_method'>method</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span> <span class='comment'># :nodoc:
-</span>  <span class='kw'>if</span> <span class='id identifier rubyid_method'>method</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span> <span class='op'>==</span> <span class='symbol'>:to_ary</span> <span class='op'>||</span> <span class='id identifier rubyid_method'>method</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span> <span class='op'>==</span> <span class='symbol'>:to_hash</span>
+</span>  <span class='id identifier rubyid_wbo'>wbo</span> <span class='op'>=</span> <span class='symbol'>:lsb0</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_args'>args</span><span class='period'>.</span><span class='id identifier rubyid_last'>last</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="../../Hash.html" title="Hash (class)">Hash</a></span></span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_wbo'>wbo</span> <span class='op'>=</span> <span class='id identifier rubyid_args'>args</span><span class='period'>.</span><span class='id identifier rubyid_last'>last</span><span class='lbracket'>[</span><span class='symbol'>:with_bit_order</span><span class='rbracket'>]</span> <span class='kw'>if</span> <span class='id identifier rubyid_args'>args</span><span class='period'>.</span><span class='id identifier rubyid_last'>last</span><span class='period'>.</span><span class='id identifier rubyid_key?'>key?</span><span class='lparen'>(</span><span class='symbol'>:with_bit_order</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+
+  <span class='kw'>if</span> <span class='id identifier rubyid_method'>method</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span> <span class='op'>==</span> <span class='symbol'>:to_ary</span> <span class='op'>||</span> <span class='id identifier rubyid_method'>method</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span> <span class='op'>==</span> <span class='symbol'>:to_hash</span>
     <span class='kw'>nil</span>
   <span class='kw'>elsif</span> <span class='id identifier rubyid_meta_data_method?'>meta_data_method?</span><span class='lparen'>(</span><span class='id identifier rubyid_method'>method</span><span class='rparen'>)</span>
     <span class='id identifier rubyid_extract_meta_data'>extract_meta_data</span><span class='lparen'>(</span><span class='id identifier rubyid_method'>method</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
   <span class='kw'>else</span>
     <span class='kw'>if</span> <span class='const'><span class='object_link'><a href="BitCollection.html" title="Origen::Registers::BitCollection (class)">BitCollection</a></span></span><span class='period'>.</span><span class='id identifier rubyid_instance_methods'>instance_methods</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='id identifier rubyid_method'>method</span><span class='rparen'>)</span>
-      <span class='id identifier rubyid_to_bit_collection'>to_bit_collection</span><span class='period'>.</span><span class='id identifier rubyid_send'>send</span><span class='lparen'>(</span><span class='id identifier rubyid_method'>method</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+      <span class='id identifier rubyid_to_bit_collection'>to_bit_collection</span><span class='lparen'>(</span><span class='label'>with_bit_order:</span> <span class='id identifier rubyid_wbo'>wbo</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_send'>send</span><span class='lparen'>(</span><span class='id identifier rubyid_method'>method</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
     <span class='kw'>elsif</span> <span class='id identifier rubyid_has_bits?'>has_bits?</span><span class='lparen'>(</span><span class='id identifier rubyid_method'>method</span><span class='rparen'>)</span>
-      <span class='id identifier rubyid_bits'>bits</span><span class='lparen'>(</span><span class='id identifier rubyid_method'>method</span><span class='rparen'>)</span>
+      <span class='id identifier rubyid_bits'>bits</span><span class='lparen'>(</span><span class='id identifier rubyid_method'>method</span><span class='comma'>,</span> <span class='label'>with_bit_order:</span> <span class='id identifier rubyid_wbo'>wbo</span><span class='rparen'>)</span>
     <span class='kw'>else</span>
       <span class='kw'>super</span>
     <span class='kw'>end</span>
@@ -2234,6 +2298,30 @@ any).</p>
       <pre class="lines">
 
 
+837
+838
+839
+840
+841
+842
+843
+844
+845
+846
+847
+848
+849
+850
+851
+852
+853
+854
+855
+856
+857
+858
+859
+860
 861
 862
 863
@@ -2257,34 +2345,10 @@ any).</p>
 881
 882
 883
-884
-885
-886
-887
-888
-889
-890
-891
-892
-893
-894
-895
-896
-897
-898
-899
-900
-901
-902
-903
-904
-905
-906
-907
-908</pre>
+884</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 861</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 837</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_address'>address</span><span class='lparen'>(</span><span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='lbrace'>{</span>
@@ -2368,12 +2432,12 @@ based on the parent&#39;s base address</p>
       <pre class="lines">
 
 
-33
 34
-35</pre>
+35
+36</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 33</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 34</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_base_address'>base_address</span>
   <span class='ivar'>@base_address</span>
@@ -2411,12 +2475,12 @@ based on the parent&#39;s base address</p>
       <pre class="lines">
 
 
-45
 46
-47</pre>
+47
+48</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 45</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 46</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_define_file'>define_file</span>
   <span class='ivar'>@define_file</span>
@@ -2454,12 +2518,12 @@ based on the parent&#39;s base address</p>
       <pre class="lines">
 
 
-40
 41
-42</pre>
+42
+43</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 40</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 41</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_feature'>feature</span>
   <span class='ivar'>@feature</span>
@@ -2497,12 +2561,12 @@ based on the parent&#39;s base address</p>
       <pre class="lines">
 
 
-42
 43
-44</pre>
+44
+45</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 42</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 43</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_grows_backwards'>grows_backwards</span>
   <span class='ivar'>@grows_backwards</span>
@@ -2540,12 +2604,12 @@ based on the parent&#39;s base address</p>
       <pre class="lines">
 
 
-43
 44
-45</pre>
+45
+46</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 43</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 44</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_lookup'>lookup</span>
   <span class='ivar'>@lookup</span>
@@ -2584,12 +2648,12 @@ address can be recorded in this attribute</p>
       <pre class="lines">
 
 
-52
 53
-54</pre>
+54
+55</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 52</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 53</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_memory'>memory</span>
   <span class='ivar'>@memory</span>
@@ -2631,12 +2695,12 @@ address can be recorded in this attribute</p>
       <pre class="lines">
 
 
-47
 48
-49</pre>
+49
+50</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 47</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 48</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_meta'>meta</span>
   <span class='ivar'>@meta</span>
@@ -2674,12 +2738,12 @@ address can be recorded in this attribute</p>
       <pre class="lines">
 
 
-38
 39
-40</pre>
+40
+41</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 38</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 39</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_name'>name</span>
   <span class='ivar'>@name</span>
@@ -2726,12 +2790,12 @@ address can be recorded in this attribute</p>
       <pre class="lines">
 
 
-29
 30
-31</pre>
+31
+32</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 29</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 30</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_owner'>owner</span>
   <span class='ivar'>@owner</span>
@@ -2769,12 +2833,12 @@ address can be recorded in this attribute</p>
       <pre class="lines">
 
 
-36
 37
-38</pre>
+38
+39</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 36</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 37</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_size'>size</span>
   <span class='ivar'>@size</span>
@@ -2870,12 +2934,12 @@ sometimes be useful to configure an intricate read operation.</p>
       <pre class="lines">
 
 
-567
-568
-569</pre>
+563
+564
+565</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 567</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 563</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_dummy'>dummy</span><span class='lparen'>(</span><span class='id identifier rubyid_size'>size</span> <span class='op'>=</span> <span class='int'>16</span><span class='rparen'>)</span>
   <span class='const'><span class='object_link'><a href="" title="Origen::Registers::Reg (class)">Reg</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="#initialize-instance_method" title="Origen::Registers::Reg#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='kw'>self</span><span class='comma'>,</span> <span class='int'>0</span><span class='comma'>,</span> <span class='id identifier rubyid_size'>size</span><span class='comma'>,</span> <span class='symbol'>:dummy</span><span class='comma'>,</span> <span class='label'>init_as_writable:</span> <span class='kw'>true</span><span class='rparen'>)</span>
@@ -3135,20 +3199,20 @@ registers remains unchanged</p>
       <pre class="lines">
 
 
-984
-985
-986
-987
-988
-989
-990
-991
-992
-993
-994</pre>
+960
+961
+962
+963
+964
+965
+966
+967
+968
+969
+970</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 984</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 960</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_add_bit'>add_bit</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_position'>position</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span> <span class='comment'># :nodoc:
 </span>  <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='lbrace'>{</span> <span class='label'>data:</span> <span class='ivar'>@bits</span><span class='lbracket'>[</span><span class='id identifier rubyid_position'>position</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_data'>data</span><span class='comma'>,</span>  <span class='comment'># If undefined preserve any data/reset value that has
@@ -3194,6 +3258,10 @@ registers remains unchanged</p>
       <pre class="lines">
 
 
+504
+505
+506
+507
 508
 509
 510
@@ -3227,14 +3295,10 @@ registers remains unchanged</p>
 538
 539
 540
-541
-542
-543
-544
-545</pre>
+541</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 508</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 504</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_add_bits_from_options'>add_bits_from_options</span><span class='lparen'>(</span><span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span> <span class='comment'># :nodoc:
 </span>  <span class='comment'># options is now an array for split bit groups or a hash if single bit/range bits
@@ -3305,32 +3369,32 @@ registers remains unchanged</p>
       <pre class="lines">
 
 
-997
-998
-999
-1000
-1001
-1002
-1003
-1004
-1005
-1006
-1007
-1008
-1009
-1010
-1011
-1012
-1013
-1014
-1015
-1016
-1017
-1018
-1019</pre>
+973
+974
+975
+976
+977
+978
+979
+980
+981
+982
+983
+984
+985
+986
+987
+988
+989
+990
+991
+992
+993
+994
+995</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 997</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 973</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_add_bus'>add_bus</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_position'>position</span><span class='comma'>,</span> <span class='id identifier rubyid_size'>size</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span> <span class='comment'># :nodoc:
 </span>  <span class='id identifier rubyid_default_data'>default_data</span> <span class='op'>=</span> <span class='int'>0</span>
@@ -3375,37 +3439,37 @@ registers remains unchanged</p>
       <pre class="lines">
 
 
+997
+998
+999
+1000
+1001
+1002
+1003
+1004
+1005
+1006
+1007
+1008
+1009
+1010
+1011
+1012
+1013
+1014
+1015
+1016
+1017
+1018
+1019
+1020
 1021
 1022
 1023
-1024
-1025
-1026
-1027
-1028
-1029
-1030
-1031
-1032
-1033
-1034
-1035
-1036
-1037
-1038
-1039
-1040
-1041
-1042
-1043
-1044
-1045
-1046
-1047
-1048</pre>
+1024</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 1021</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 997</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_add_bus_scramble'>add_bus_scramble</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_array_of_hashes'>array_of_hashes</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_array_of_hashes'>array_of_hashes</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='op'>|</span>
@@ -3455,16 +3519,16 @@ registers remains unchanged</p>
       <pre class="lines">
 
 
-112
-113
-114
-115
-116
-117
-118</pre>
+126
+127
+128
+129
+130
+131
+132</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 112</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 126</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_bind'>bind</span><span class='lparen'>(</span><span class='id identifier rubyid_bitname'>bitname</span><span class='comma'>,</span> <span class='id identifier rubyid_live_parameter'>live_parameter</span><span class='rparen'>)</span>
   <span class='kw'>unless</span> <span class='id identifier rubyid_live_parameter'>live_parameter</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:is_a_live_parameter?</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_live_parameter'>live_parameter</span><span class='period'>.</span><span class='id identifier rubyid_is_a_live_parameter?'>is_a_live_parameter?</span>
@@ -3526,6 +3590,28 @@ from those positions are returned.</p>
       <pre class="lines">
 
 
+1066
+1067
+1068
+1069
+1070
+1071
+1072
+1073
+1074
+1075
+1076
+1077
+1078
+1079
+1080
+1081
+1082
+1083
+1084
+1085
+1086
+1087
 1088
 1089
 1090
@@ -3573,30 +3659,28 @@ from those positions are returned.</p>
 1132
 1133
 1134
-1135
-1136
-1137
-1138
-1139
-1140
-1141
-1142
-1143
-1144
-1145
-1146</pre>
+1135</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 1088</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 1066</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_bit'>bit</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
+  <span class='comment'># allow msb0 bit numbering if requested
+</span>  <span class='id identifier rubyid_wbo'>wbo</span> <span class='op'>=</span> <span class='symbol'>:lsb0</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_args'>args</span><span class='period'>.</span><span class='id identifier rubyid_last'>last</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="../../Hash.html" title="Hash (class)">Hash</a></span></span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_wbo'>wbo</span> <span class='op'>=</span> <span class='id identifier rubyid_args'>args</span><span class='period'>.</span><span class='id identifier rubyid_last'>last</span><span class='period'>.</span><span class='id identifier rubyid_delete'>delete</span><span class='lparen'>(</span><span class='symbol'>:with_bit_order</span><span class='rparen'>)</span> <span class='op'>||</span> <span class='symbol'>:lsb0</span>
+    <span class='id identifier rubyid_args'>args</span><span class='period'>.</span><span class='id identifier rubyid_pop'>pop</span> <span class='kw'>if</span> <span class='id identifier rubyid_args'>args</span><span class='period'>.</span><span class='id identifier rubyid_last'>last</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span> <span class='op'>==</span> <span class='int'>0</span>
+  <span class='kw'>end</span>
+
   <span class='id identifier rubyid_multi_bit_names'>multi_bit_names</span> <span class='op'>=</span> <span class='kw'>false</span>
   <span class='comment'># return get_bits_with_constraint(nil,:default) if args.size == 0
 </span>  <span class='id identifier rubyid_constraint'>constraint</span> <span class='op'>=</span> <span class='id identifier rubyid_extract_feature_params'>extract_feature_params</span><span class='lparen'>(</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_constraint'>constraint</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
     <span class='id identifier rubyid_constraint'>constraint</span> <span class='op'>=</span> <span class='symbol'>:default</span>
   <span class='kw'>end</span>
-  <span class='id identifier rubyid_collection'>collection</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="BitCollection.html" title="Origen::Registers::BitCollection (class)">BitCollection</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="BitCollection.html#initialize-instance_method" title="Origen::Registers::BitCollection#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='kw'>self</span><span class='comma'>,</span> <span class='symbol'>:unknown</span><span class='rparen'>)</span>
+
+  <span class='id identifier rubyid_collection'>collection</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="BitCollection.html" title="Origen::Registers::BitCollection (class)">BitCollection</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="BitCollection.html#initialize-instance_method" title="Origen::Registers::BitCollection#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='kw'>self</span><span class='comma'>,</span> <span class='symbol'>:unknown</span><span class='comma'>,</span> <span class='lbracket'>[</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='label'>with_bit_order:</span> <span class='id identifier rubyid_wbo'>wbo</span><span class='rparen'>)</span>
+
   <span class='kw'>if</span> <span class='id identifier rubyid_args'>args</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span> <span class='op'>==</span> <span class='int'>0</span>
     <span class='id identifier rubyid_collection'>collection</span><span class='period'>.</span><span class='id identifier rubyid_add_name'>add_name</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
     <span class='ivar'>@bits</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_bit'>bit</span><span class='op'>|</span>
@@ -3605,13 +3689,14 @@ from those positions are returned.</p>
   <span class='kw'>else</span>
     <span class='id identifier rubyid_args'>args</span><span class='period'>.</span><span class='id identifier rubyid_flatten!'>flatten!</span>
     <span class='id identifier rubyid_args'>args</span><span class='period'>.</span><span class='id identifier rubyid_sort!'>sort!</span>
+    <span class='id identifier rubyid_args'>args</span><span class='period'>.</span><span class='id identifier rubyid_reverse!'>reverse!</span> <span class='kw'>if</span> <span class='id identifier rubyid_wbo'>wbo</span> <span class='op'>==</span> <span class='symbol'>:msb0</span>
     <span class='id identifier rubyid_args'>args</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_arg_item'>arg_item</span><span class='op'>|</span>
       <span class='kw'>if</span> <span class='id identifier rubyid_arg_item'>arg_item</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="../../Integer.html" title="Integer (class)">Integer</a></span></span><span class='rparen'>)</span>
-        <span class='id identifier rubyid_b'>b</span> <span class='op'>=</span> <span class='id identifier rubyid_get_bits_with_constraint'>get_bits_with_constraint</span><span class='lparen'>(</span><span class='id identifier rubyid_arg_item'>arg_item</span><span class='comma'>,</span> <span class='id identifier rubyid_constraint'>constraint</span><span class='rparen'>)</span>
+        <span class='id identifier rubyid_b'>b</span> <span class='op'>=</span> <span class='id identifier rubyid_get_bits_with_constraint'>get_bits_with_constraint</span><span class='lparen'>(</span><span class='id identifier rubyid_arg_item'>arg_item</span><span class='comma'>,</span> <span class='id identifier rubyid_constraint'>constraint</span><span class='comma'>,</span> <span class='label'>with_bit_order:</span> <span class='id identifier rubyid_wbo'>wbo</span><span class='rparen'>)</span>
         <span class='id identifier rubyid_collection'>collection</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_b'>b</span> <span class='kw'>if</span> <span class='id identifier rubyid_b'>b</span>
       <span class='kw'>elsif</span> <span class='id identifier rubyid_arg_item'>arg_item</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="../../Range.html" title="Range (class)">Range</a></span></span><span class='rparen'>)</span>
-        <span class='id identifier rubyid_expand_range'>expand_range</span><span class='lparen'>(</span><span class='id identifier rubyid_arg_item'>arg_item</span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_bit_number'>bit_number</span><span class='op'>|</span>
-          <span class='id identifier rubyid_collection'>collection</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_get_bits_with_constraint'>get_bits_with_constraint</span><span class='lparen'>(</span><span class='id identifier rubyid_bit_number'>bit_number</span><span class='comma'>,</span> <span class='id identifier rubyid_constraint'>constraint</span><span class='rparen'>)</span>
+        <span class='id identifier rubyid_expand_range'>expand_range</span><span class='lparen'>(</span><span class='id identifier rubyid_arg_item'>arg_item</span><span class='comma'>,</span> <span class='id identifier rubyid_wbo'>wbo</span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_bit_number'>bit_number</span><span class='op'>|</span>
+          <span class='id identifier rubyid_collection'>collection</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_get_bits_with_constraint'>get_bits_with_constraint</span><span class='lparen'>(</span><span class='id identifier rubyid_bit_number'>bit_number</span><span class='comma'>,</span> <span class='id identifier rubyid_constraint'>constraint</span><span class='comma'>,</span> <span class='label'>with_bit_order:</span> <span class='id identifier rubyid_wbo'>wbo</span><span class='rparen'>)</span>
         <span class='kw'>end</span>
       <span class='kw'>else</span>
         <span class='id identifier rubyid_multi_bit_names'>multi_bit_names</span> <span class='op'>=</span> <span class='id identifier rubyid_args'>args</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span> <span class='op'>&gt;</span> <span class='int'>1</span>
@@ -3644,8 +3729,9 @@ from those positions are returned.</p>
   <span class='kw'>else</span>
     <span class='kw'>if</span> <span class='id identifier rubyid_multi_bit_names'>multi_bit_names</span>
       <span class='id identifier rubyid_collection'>collection</span><span class='period'>.</span><span class='id identifier rubyid_sort_by!'>sort_by!</span><span class='lparen'>(</span><span class='op'>&amp;</span><span class='symbol'>:position</span><span class='rparen'>)</span>
+      <span class='id identifier rubyid_wbo'>wbo</span> <span class='op'>==</span> <span class='symbol'>:msb0</span> <span class='op'>?</span> <span class='id identifier rubyid_collection'>collection</span><span class='period'>.</span><span class='id identifier rubyid_with_msb0'>with_msb0</span> <span class='op'>:</span> <span class='id identifier rubyid_collection'>collection</span><span class='period'>.</span><span class='id identifier rubyid_with_lsb0'>with_lsb0</span>
     <span class='kw'>end</span>
-    <span class='id identifier rubyid_collection'>collection</span>
+    <span class='id identifier rubyid_wbo'>wbo</span> <span class='op'>==</span> <span class='symbol'>:msb0</span> <span class='op'>?</span> <span class='id identifier rubyid_collection'>collection</span><span class='period'>.</span><span class='id identifier rubyid_with_msb0'>with_msb0</span> <span class='op'>:</span> <span class='id identifier rubyid_collection'>collection</span><span class='period'>.</span><span class='id identifier rubyid_with_lsb0'>with_lsb0</span>
   <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -3681,12 +3767,12 @@ parent and will default to :lsb0 at the top-level</p>
       <pre class="lines">
 
 
-100
-101
-102</pre>
+114
+115
+116</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 100</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 114</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_bit_order'>bit_order</span>
   <span class='ivar'>@bit_order</span> <span class='op'>||=</span> <span class='id identifier rubyid_parent'>parent</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:bit_order</span><span class='rparen'>)</span> <span class='op'>?</span> <span class='id identifier rubyid_parent'>parent</span><span class='period'>.</span><span class='id identifier rubyid_bit_order'>bit_order</span> <span class='op'>:</span> <span class='symbol'>:lsb0</span>
@@ -3711,6 +3797,10 @@ parent and will default to :lsb0 at the top-level</p>
       <pre class="lines">
 
 
+387
+388
+389
+390
 391
 392
 393
@@ -3728,14 +3818,10 @@ parent and will default to :lsb0 at the top-level</p>
 405
 406
 407
-408
-409
-410
-411
-412</pre>
+408</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 391</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 387</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_bit_value_descriptions'>bit_value_descriptions</span><span class='lparen'>(</span><span class='id identifier rubyid_bitname'>bitname</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='lbrace'>{</span>
@@ -3801,12 +3887,12 @@ parent and will default to :lsb0 at the top-level</p>
       <pre class="lines">
 
 
-503
-504
-505</pre>
+499
+500
+501</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 503</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 499</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_contains_bits?'>contains_bits?</span>
   <span class='kw'>true</span>
@@ -4021,13 +4107,13 @@ get that.</p>
       <pre class="lines">
 
 
-386
-387
-388
-389</pre>
+382
+383
+384
+385</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 386</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 382</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_default_reg_metadata'>default_reg_metadata</span>
   <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Registers.html" title="Origen::Registers (module)">Registers</a></span></span><span class='period'>.</span><span class='id identifier rubyid_default_reg_metadata'><span class='object_link'><a href="../Registers.html#default_reg_metadata-class_method" title="Origen::Registers.default_reg_metadata (method)">default_reg_metadata</a></span></span><span class='period'>.</span><span class='id identifier rubyid_merge'>merge</span><span class='lparen'>(</span>
@@ -4068,19 +4154,19 @@ get that.</p>
       <pre class="lines">
 
 
-1051
-1052
-1053
-1054
-1055
-1056
-1057
-1058
-1059
-1060</pre>
+1027
+1028
+1029
+1030
+1031
+1032
+1033
+1034
+1035
+1036</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 1051</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 1027</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_delete_bit'>delete_bit</span><span class='lparen'>(</span><span class='id identifier rubyid_collection'>collection</span><span class='rparen'>)</span>
   <span class='lbracket'>[</span><span class='id identifier rubyid_collection'>collection</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_flatten'>flatten</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_name'>name</span><span class='op'>|</span>
@@ -4131,6 +4217,10 @@ comment-driven documentation of a register (ie markdown style comments)</p>
       <pre class="lines">
 
 
+440
+441
+442
+443
 444
 445
 446
@@ -4160,14 +4250,10 @@ comment-driven documentation of a register (ie markdown style comments)</p>
 470
 471
 472
-473
-474
-475
-476
-477</pre>
+473</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 444</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 440</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_description'>description</span><span class='lparen'>(</span><span class='id identifier rubyid_bitname'>bitname</span> <span class='op'>=</span> <span class='symbol'>:_reg</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_bitname'>bitname</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='symbol'>:_reg</span><span class='comma'>,</span> <span class='id identifier rubyid_bitname'>bitname</span> <span class='kw'>if</span> <span class='id identifier rubyid_bitname'>bitname</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="../../Hash.html" title="Hash (class)">Hash</a></span></span><span class='rparen'>)</span>
@@ -4239,12 +4325,12 @@ so far.</p>
       <pre class="lines">
 
 
-378
-379
-380</pre>
+374
+375
+376</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 378</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 374</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_description_lookup'>description_lookup</span>
   <span class='cvar'>@@description_lookup</span> <span class='op'>||=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
@@ -4303,14 +4389,14 @@ regs(:aguahb2).empty_bits
       <pre class="lines">
 
 
-803
-804
-805
-806
-807</pre>
+779
+780
+781
+782
+783</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 803</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 779</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_empty_bits'>empty_bits</span><span class='lparen'>(</span><span class='id identifier rubyid__options'>_options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_array_span'>array_span</span> <span class='op'>=</span> <span class='lparen'>(</span><span class='int'>0</span><span class='op'>..</span><span class='lparen'>(</span><span class='id identifier rubyid_size'>size</span> <span class='op'>-</span> <span class='int'>1</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to_a'>to_a</span>
@@ -4361,12 +4447,12 @@ regs(:aguahb2).empty_bits
       <pre class="lines">
 
 
-810
-811
-812</pre>
+786
+787
+788</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 810</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 786</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_empty_bits?'>empty_bits?</span><span class='lparen'>(</span><span class='id identifier rubyid__options'>_options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_empty_bits'>empty_bits</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span> <span class='op'>&gt;</span> <span class='int'>0</span>
@@ -4662,12 +4748,12 @@ regs(:aguahb2).empty_bits
       <pre class="lines">
 
 
-435
-436
-437</pre>
+431
+432
+433</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 435</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 431</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_escape_special_char'>escape_special_char</span><span class='lparen'>(</span><span class='id identifier rubyid_str'>str</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_str'>str</span><span class='period'>.</span><span class='id identifier rubyid_gsub'>gsub</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>[</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>\[</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_gsub'>gsub</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>]</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>\]</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_gsub'>gsub</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>(</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>\(</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_gsub'>gsub</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>)</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>\)</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_str'>str</span>
@@ -4680,7 +4766,7 @@ regs(:aguahb2).empty_bits
       <div class="method_details ">
   <h3 class="signature " id="expand_range-instance_method">
   
-    #<strong>expand_range</strong>(range)  &#x21d2; <tt><span class='object_link'><a href="../../Object.html" title="Object (class)">Object</a></span></tt> 
+    #<strong>expand_range</strong>(range, wbo = :lsb0)  &#x21d2; <tt><span class='object_link'><a href="../../Object.html" title="Object (class)">Object</a></span></tt> 
   
 
   
@@ -4705,22 +4791,26 @@ regs(:aguahb2).empty_bits
       <pre class="lines">
 
 
-1064
-1065
-1066
-1067
-1068
-1069
-1070
-1071</pre>
+1040
+1041
+1042
+1043
+1044
+1045
+1046
+1047
+1048
+1049</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 1064</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 1040</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_expand_range'>expand_range</span><span class='lparen'>(</span><span class='id identifier rubyid_range'>range</span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_expand_range'>expand_range</span><span class='lparen'>(</span><span class='id identifier rubyid_range'>range</span><span class='comma'>,</span> <span class='id identifier rubyid_wbo'>wbo</span> <span class='op'>=</span> <span class='symbol'>:lsb0</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_range'>range</span><span class='period'>.</span><span class='id identifier rubyid_first'>first</span> <span class='op'>&gt;</span> <span class='id identifier rubyid_range'>range</span><span class='period'>.</span><span class='id identifier rubyid_last'>last</span>
     <span class='id identifier rubyid_range'>range</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="../../Range.html" title="Range (class)">Range</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_range'>range</span><span class='period'>.</span><span class='id identifier rubyid_last'>last</span><span class='comma'>,</span> <span class='id identifier rubyid_range'>range</span><span class='period'>.</span><span class='id identifier rubyid_first'>first</span><span class='rparen'>)</span>
   <span class='kw'>end</span>
+  <span class='id identifier rubyid_range'>range</span> <span class='op'>=</span> <span class='id identifier rubyid_range'>range</span><span class='period'>.</span><span class='id identifier rubyid_to_a'>to_a</span>
+  <span class='id identifier rubyid_range'>range</span><span class='period'>.</span><span class='id identifier rubyid_reverse!'>reverse!</span> <span class='kw'>if</span> <span class='id identifier rubyid_wbo'>wbo</span> <span class='op'>==</span> <span class='symbol'>:msb0</span>
   <span class='id identifier rubyid_range'>range</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_i'>i</span><span class='op'>|</span>
     <span class='kw'>yield</span> <span class='id identifier rubyid_i'>i</span>
   <span class='kw'>end</span>
@@ -4745,6 +4835,11 @@ regs(:aguahb2).empty_bits
       <pre class="lines">
 
 
+1249
+1250
+1251
+1252
+1253
 1254
 1255
 1256
@@ -4753,15 +4848,10 @@ regs(:aguahb2).empty_bits
 1259
 1260
 1261
-1262
-1263
-1264
-1265
-1266
-1267</pre>
+1262</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 1254</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 1249</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_extract_feature_params'>extract_feature_params</span><span class='lparen'>(</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_index'>index</span> <span class='op'>=</span> <span class='id identifier rubyid_args'>args</span><span class='period'>.</span><span class='id identifier rubyid_find_index'>find_index</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_arg'>arg</span><span class='op'>|</span> <span class='id identifier rubyid_arg'>arg</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span> <span class='op'>==</span> <span class='const'><span class='object_link'><a href="../../Hash.html" title="Hash (class)">Hash</a></span></span> <span class='rbrace'>}</span>
@@ -4837,16 +4927,16 @@ regs(:aguahb2).empty_bits
       <pre class="lines">
 
 
-104
-105
-106
-107
-108
-109
-110</pre>
+118
+119
+120
+121
+122
+123
+124</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 104</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 118</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_freeze'>freeze</span>
   <span class='id identifier rubyid_bits'>bits</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span><span class='lparen'>(</span><span class='op'>&amp;</span><span class='symbol'>:freeze</span><span class='rparen'>)</span>
@@ -4896,18 +4986,18 @@ defined in a similar manner in the bit description.</p>
       <pre class="lines">
 
 
+420
+421
+422
+423
 424
 425
 426
 427
-428
-429
-430
-431
-432</pre>
+428</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 424</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 420</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_full_name'>full_name</span><span class='lparen'>(</span><span class='id identifier rubyid_bitname'>bitname</span> <span class='op'>=</span> <span class='symbol'>:_reg</span><span class='comma'>,</span> <span class='id identifier rubyid__options'>_options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_bitname'>bitname</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='symbol'>:_reg</span><span class='comma'>,</span> <span class='id identifier rubyid_bitname'>bitname</span> <span class='kw'>if</span> <span class='id identifier rubyid_bitname'>bitname</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="../../Hash.html" title="Hash (class)">Hash</a></span></span><span class='rparen'>)</span>
@@ -4926,7 +5016,7 @@ defined in a similar manner in the bit description.</p>
       <div class="method_details ">
   <h3 class="signature " id="get_bits_with_constraint-instance_method">
   
-    #<strong>get_bits_with_constraint</strong>(number, params)  &#x21d2; <tt><span class='object_link'><a href="../../Object.html" title="Object (class)">Object</a></span></tt> 
+    #<strong>get_bits_with_constraint</strong>(number, params, options = {})  &#x21d2; <tt><span class='object_link'><a href="../../Object.html" title="Object (class)">Object</a></span></tt> 
   
 
   
@@ -4938,6 +5028,17 @@ defined in a similar manner in the bit description.</p>
       <pre class="lines">
 
 
+1139
+1140
+1141
+1142
+1143
+1144
+1145
+1146
+1147
+1148
+1149
 1150
 1151
 1152
@@ -4953,17 +5054,18 @@ defined in a similar manner in the bit description.</p>
 1162
 1163
 1164
-1165
-1166
-1167
-1168
-1169
-1170</pre>
+1165</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 1150</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 1139</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_get_bits_with_constraint'>get_bits_with_constraint</span><span class='lparen'>(</span><span class='id identifier rubyid_number'>number</span><span class='comma'>,</span> <span class='id identifier rubyid_params'>params</span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_get_bits_with_constraint'>get_bits_with_constraint</span><span class='lparen'>(</span><span class='id identifier rubyid_number'>number</span><span class='comma'>,</span> <span class='id identifier rubyid_params'>params</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='lbrace'>{</span> <span class='label'>with_bit_order:</span> <span class='symbol'>:lsb0</span> <span class='rbrace'>}</span><span class='period'>.</span><span class='id identifier rubyid_merge'>merge</span><span class='lparen'>(</span><span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span>
+  <span class='comment'># remap to lsb0 number to grab correct bit
+</span>  <span class='kw'>if</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='lbracket'>[</span><span class='symbol'>:with_bit_order</span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='symbol'>:msb0</span>
+    <span class='id identifier rubyid_number'>number</span> <span class='op'>=</span> <span class='id identifier rubyid_size'>size</span> <span class='op'>-</span> <span class='id identifier rubyid_number'>number</span> <span class='op'>-</span> <span class='int'>1</span>
+  <span class='kw'>end</span>
+
   <span class='kw'>return</span> <span class='kw'>nil</span> <span class='kw'>unless</span> <span class='ivar'>@bits</span><span class='lbracket'>[</span><span class='id identifier rubyid_number'>number</span><span class='rbracket'>]</span>
   <span class='kw'>if</span> <span class='lparen'>(</span><span class='id identifier rubyid_params'>params</span> <span class='op'>==</span> <span class='symbol'>:default</span> <span class='op'>||</span> <span class='op'>!</span><span class='id identifier rubyid_params'>params</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='ivar'>@bits</span><span class='lbracket'>[</span><span class='id identifier rubyid_number'>number</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_enabled?'>enabled?</span>
     <span class='ivar'>@bits</span><span class='lbracket'>[</span><span class='id identifier rubyid_number'>number</span><span class='rbracket'>]</span>
@@ -5004,6 +5106,11 @@ defined in a similar manner in the bit description.</p>
       <pre class="lines">
 
 
+1167
+1168
+1169
+1170
+1171
 1172
 1173
 1174
@@ -5079,15 +5186,10 @@ defined in a similar manner in the bit description.</p>
 1244
 1245
 1246
-1247
-1248
-1249
-1250
-1251
-1252</pre>
+1247</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 1172</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 1167</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_get_lookup_feature_bits'>get_lookup_feature_bits</span><span class='lparen'>(</span><span class='id identifier rubyid_bit_name'>bit_name</span><span class='comma'>,</span> <span class='id identifier rubyid_params'>params</span><span class='comma'>,</span> <span class='id identifier rubyid_split_group_reg'>split_group_reg</span><span class='rparen'>)</span>
   <span class='comment'>##
@@ -5226,12 +5328,12 @@ defined in a similar manner in the bit description.</p>
       <pre class="lines">
 
 
-976
-977
-978</pre>
+952
+953
+954</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 976</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 952</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_has_bit?'>has_bit?</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
   <span class='ivar'>@lookup</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
@@ -5341,12 +5443,12 @@ with it.</p>
       <pre class="lines">
 
 
-120
-121
-122</pre>
+134
+135
+136</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 120</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 134</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_has_parameter_bound_bits?'>has_parameter_bound_bits?</span>
   <span class='ivar'>@parameter_bound_bits</span> <span class='op'>&amp;&amp;</span> <span class='op'>!</span><span class='ivar'>@parameter_bound_bits</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
@@ -5386,17 +5488,17 @@ register also.</p>
       <pre class="lines">
 
 
+547
+548
+549
+550
 551
 552
 553
-554
-555
-556
-557
-558</pre>
+554</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 551</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 547</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize_copy'>initialize_copy</span><span class='lparen'>(</span><span class='id identifier rubyid_orig'>orig</span><span class='rparen'>)</span> <span class='comment'># :nodoc:
 </span>  <span class='ivar'>@bits</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
@@ -5426,20 +5528,6 @@ register also.</p>
       <pre class="lines">
 
 
-136
-137
-138
-139
-140
-141
-142
-143
-144
-145
-146
-147
-148
-149
 150
 151
 152
@@ -5659,16 +5747,24 @@ register also.</p>
 366
 367
 368
-369
-370
-371
-372
-373</pre>
+369</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 136</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 150</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_inspect'>inspect</span><span class='lparen'>(</span><span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_wbo'>wbo</span> <span class='op'>=</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='lbracket'>[</span><span class='symbol'>:with_bit_order</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='symbol'>:lsb0</span>
+  <span class='id identifier rubyid_domsb0'>domsb0</span> <span class='op'>=</span> <span class='id identifier rubyid_wbo'>wbo</span> <span class='op'>==</span> <span class='symbol'>:msb0</span>
+  <span class='id identifier rubyid_dolsb0'>dolsb0</span> <span class='op'>=</span> <span class='op'>!</span><span class='id identifier rubyid_domsb0'>domsb0</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_wbo'>wbo</span> <span class='op'>!=</span> <span class='id identifier rubyid_bit_order'>bit_order</span>
+    <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_log'><span class='object_link'><a href="../../Origen.html#log-class_method" title="Origen.log (method)">log</a></span></span><span class='period'>.</span><span class='id identifier rubyid_warn'>warn</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Register displayed with </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_wbo'>wbo</span><span class='embexpr_end'>}</span><span class='tstring_content'> numbering, but defined with </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_bit_order'>bit_order</span><span class='embexpr_end'>}</span><span class='tstring_content'> numbering</span><span class='tstring_end'>&quot;</span></span>
+    <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_log'><span class='object_link'><a href="../../Origen.html#log-class_method" title="Origen.log (method)">log</a></span></span><span class='period'>.</span><span class='id identifier rubyid_warn'>warn</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Access (and display) this register with explicit numbering like this:</span><span class='tstring_end'>&#39;</span></span>
+    <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_log'><span class='object_link'><a href="../../Origen.html#log-class_method" title="Origen.log (method)">log</a></span></span><span class='period'>.</span><span class='id identifier rubyid_warn'>warn</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span>
+    <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_log'><span class='object_link'><a href="../../Origen.html#log-class_method" title="Origen.log (method)">log</a></span></span><span class='period'>.</span><span class='id identifier rubyid_warn'>warn</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>   reg(:</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'>).with_msb0        # bit numbering scheme is msb0</span><span class='tstring_end'>&quot;</span></span>
+    <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_log'><span class='object_link'><a href="../../Origen.html#log-class_method" title="Origen.log (method)">log</a></span></span><span class='period'>.</span><span class='id identifier rubyid_warn'>warn</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>   reg(:</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'>).with_lsb0        # bit numbering scheme is lsb0 (default)</span><span class='tstring_end'>&quot;</span></span>
+    <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_log'><span class='object_link'><a href="../../Origen.html#log-class_method" title="Origen.log (method)">log</a></span></span><span class='period'>.</span><span class='id identifier rubyid_warn'>warn</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>   reg(:</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'>)                  # bit numbering scheme is lsb0 (default)</span><span class='tstring_end'>&quot;</span></span>
+  <span class='kw'>end</span>
+
   <span class='comment'># This fancy_output option is passed in via option hash
 </span>  <span class='comment'>#  Even better, the output could auto-detect 7-bit vs 8-bit terminal output and adjust the parameter, but that&#39;s for another day
 </span>  <span class='id identifier rubyid_fancy_output'>fancy_output</span> <span class='op'>=</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='lbracket'>[</span><span class='symbol'>:fancy_output</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='op'>?</span> <span class='kw'>true</span> <span class='op'>:</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='lbracket'>[</span><span class='symbol'>:fancy_output</span><span class='rbracket'>]</span>
@@ -5708,14 +5804,10 @@ register also.</p>
   <span class='id identifier rubyid_bit_width'>bit_width</span> <span class='op'>=</span> <span class='int'>13</span>
   <span class='id identifier rubyid_desc'>desc</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\n0x%X - :</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span> <span class='op'>%</span> <span class='id identifier rubyid_address'>address</span><span class='rbracket'>]</span>
   <span class='id identifier rubyid_r'>r</span> <span class='op'>=</span> <span class='id identifier rubyid_size'>size</span> <span class='op'>%</span> <span class='int'>8</span>
-  <span class='kw'>if</span> <span class='id identifier rubyid_r'>r</span> <span class='op'>==</span> <span class='int'>0</span> <span class='op'>||</span> <span class='lparen'>(</span><span class='id identifier rubyid_size'>size</span> <span class='op'>&gt;</span> <span class='int'>8</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_bit_order'>bit_order</span> <span class='op'>==</span> <span class='symbol'>:msb0</span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_desc'>desc</span> <span class='op'>&lt;&lt;</span> <span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>  </span><span class='tstring_end'>&#39;</span></span> <span class='op'>+</span> <span class='id identifier rubyid_corner_double_up_left'>corner_double_up_left</span> <span class='op'>+</span> <span class='lparen'>(</span><span class='lparen'>(</span><span class='id identifier rubyid_horiz_double_line'>horiz_double_line</span> <span class='op'>*</span> <span class='id identifier rubyid_bit_width'>bit_width</span> <span class='op'>+</span> <span class='id identifier rubyid_horiz_double_tee_down'>horiz_double_tee_down</span><span class='rparen'>)</span> <span class='op'>*</span> <span class='int'>8</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_chop'>chop</span> <span class='op'>+</span> <span class='id identifier rubyid_corner_double_up_right'>corner_double_up_right</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_r'>r</span> <span class='op'>==</span> <span class='int'>0</span> <span class='comment'># || (size &gt; 8 &amp;&amp; domsb0)
+</span>    <span class='id identifier rubyid_desc'>desc</span> <span class='op'>&lt;&lt;</span> <span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>  </span><span class='tstring_end'>&#39;</span></span> <span class='op'>+</span> <span class='id identifier rubyid_corner_double_up_left'>corner_double_up_left</span> <span class='op'>+</span> <span class='lparen'>(</span><span class='lparen'>(</span><span class='id identifier rubyid_horiz_double_line'>horiz_double_line</span> <span class='op'>*</span> <span class='id identifier rubyid_bit_width'>bit_width</span> <span class='op'>+</span> <span class='id identifier rubyid_horiz_double_tee_down'>horiz_double_tee_down</span><span class='rparen'>)</span> <span class='op'>*</span> <span class='int'>8</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_chop'>chop</span> <span class='op'>+</span> <span class='id identifier rubyid_corner_double_up_right'>corner_double_up_right</span>
   <span class='kw'>else</span>
-    <span class='kw'>if</span> <span class='id identifier rubyid_bit_order'>bit_order</span> <span class='op'>==</span> <span class='symbol'>:lsb0</span>
-      <span class='id identifier rubyid_desc'>desc</span> <span class='op'>&lt;&lt;</span> <span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>  </span><span class='tstring_end'>&#39;</span></span> <span class='op'>+</span> <span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> </span><span class='tstring_end'>&#39;</span></span> <span class='op'>*</span> <span class='lparen'>(</span><span class='id identifier rubyid_bit_width'>bit_width</span> <span class='op'>+</span> <span class='int'>1</span><span class='rparen'>)</span> <span class='op'>*</span> <span class='lparen'>(</span><span class='int'>8</span> <span class='op'>-</span> <span class='id identifier rubyid_r'>r</span><span class='rparen'>)</span><span class='rparen'>)</span> <span class='op'>+</span> <span class='id identifier rubyid_corner_double_up_left'>corner_double_up_left</span> <span class='op'>+</span> <span class='lparen'>(</span><span class='lparen'>(</span><span class='id identifier rubyid_horiz_double_line'>horiz_double_line</span> <span class='op'>*</span> <span class='id identifier rubyid_bit_width'>bit_width</span> <span class='op'>+</span> <span class='id identifier rubyid_horiz_double_tee_down'>horiz_double_tee_down</span><span class='rparen'>)</span> <span class='op'>*</span> <span class='id identifier rubyid_r'>r</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_chop'>chop</span> <span class='op'>+</span> <span class='id identifier rubyid_corner_double_up_right'>corner_double_up_right</span>
-    <span class='kw'>else</span>
-      <span class='id identifier rubyid_desc'>desc</span> <span class='op'>&lt;&lt;</span> <span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>  </span><span class='tstring_end'>&#39;</span></span> <span class='op'>+</span> <span class='id identifier rubyid_corner_double_up_left'>corner_double_up_left</span> <span class='op'>+</span> <span class='lparen'>(</span><span class='lparen'>(</span><span class='id identifier rubyid_horiz_double_line'>horiz_double_line</span> <span class='op'>*</span> <span class='id identifier rubyid_bit_width'>bit_width</span> <span class='op'>+</span> <span class='id identifier rubyid_horiz_double_tee_down'>horiz_double_tee_down</span><span class='rparen'>)</span> <span class='op'>*</span> <span class='id identifier rubyid_r'>r</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_chop'>chop</span> <span class='op'>+</span> <span class='id identifier rubyid_corner_double_up_right'>corner_double_up_right</span>
-    <span class='kw'>end</span>
+    <span class='id identifier rubyid_desc'>desc</span> <span class='op'>&lt;&lt;</span> <span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>  </span><span class='tstring_end'>&#39;</span></span> <span class='op'>+</span> <span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> </span><span class='tstring_end'>&#39;</span></span> <span class='op'>*</span> <span class='lparen'>(</span><span class='id identifier rubyid_bit_width'>bit_width</span> <span class='op'>+</span> <span class='int'>1</span><span class='rparen'>)</span> <span class='op'>*</span> <span class='lparen'>(</span><span class='int'>8</span> <span class='op'>-</span> <span class='id identifier rubyid_r'>r</span><span class='rparen'>)</span><span class='rparen'>)</span> <span class='op'>+</span> <span class='id identifier rubyid_corner_double_up_left'>corner_double_up_left</span> <span class='op'>+</span> <span class='lparen'>(</span><span class='lparen'>(</span><span class='id identifier rubyid_horiz_double_line'>horiz_double_line</span> <span class='op'>*</span> <span class='id identifier rubyid_bit_width'>bit_width</span> <span class='op'>+</span> <span class='id identifier rubyid_horiz_double_tee_down'>horiz_double_tee_down</span><span class='rparen'>)</span> <span class='op'>*</span> <span class='id identifier rubyid_r'>r</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_chop'>chop</span> <span class='op'>+</span> <span class='id identifier rubyid_corner_double_up_right'>corner_double_up_right</span>
   <span class='kw'>end</span>
 
   <span class='comment'># &quot;&lt;#{self.class}: #{self.name}&gt;&quot;
@@ -5723,32 +5815,22 @@ register also.</p>
   <span class='id identifier rubyid_num_bytes'>num_bytes</span><span class='period'>.</span><span class='id identifier rubyid_times'>times</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_byte_index'>byte_index</span><span class='op'>|</span>
     <span class='comment'># Need to add support for little endian regs here?
 </span>    <span class='id identifier rubyid_byte_number'>byte_number</span> <span class='op'>=</span> <span class='id identifier rubyid_num_bytes'>num_bytes</span> <span class='op'>-</span> <span class='id identifier rubyid_byte_index'>byte_index</span>
-    <span class='kw'>if</span> <span class='id identifier rubyid_bit_order'>bit_order</span> <span class='op'>==</span> <span class='symbol'>:lsb0</span>
-      <span class='id identifier rubyid_max_bit'>max_bit</span> <span class='op'>=</span> <span class='lparen'>(</span><span class='id identifier rubyid_byte_number'>byte_number</span> <span class='op'>*</span> <span class='int'>8</span><span class='rparen'>)</span> <span class='op'>-</span> <span class='int'>1</span>
-      <span class='id identifier rubyid_min_bit'>min_bit</span> <span class='op'>=</span> <span class='id identifier rubyid_max_bit'>max_bit</span> <span class='op'>-</span> <span class='int'>8</span> <span class='op'>+</span> <span class='int'>1</span>
-    <span class='kw'>else</span>
-      <span class='id identifier rubyid_min_bit'>min_bit</span> <span class='op'>=</span> <span class='lparen'>(</span><span class='id identifier rubyid_byte_index'>byte_index</span> <span class='op'>*</span> <span class='int'>8</span><span class='rparen'>)</span>
-      <span class='id identifier rubyid_max_bit'>max_bit</span> <span class='op'>=</span> <span class='id identifier rubyid_min_bit'>min_bit</span> <span class='op'>+</span> <span class='int'>7</span>
-    <span class='kw'>end</span>
+    <span class='id identifier rubyid_max_bit'>max_bit</span> <span class='op'>=</span> <span class='lparen'>(</span><span class='id identifier rubyid_byte_number'>byte_number</span> <span class='op'>*</span> <span class='int'>8</span><span class='rparen'>)</span> <span class='op'>-</span> <span class='int'>1</span>
+    <span class='id identifier rubyid_min_bit'>min_bit</span> <span class='op'>=</span> <span class='id identifier rubyid_max_bit'>max_bit</span> <span class='op'>-</span> <span class='int'>8</span> <span class='op'>+</span> <span class='int'>1</span>
 
     <span class='comment'># BIT INDEX ROW
 </span>    <span class='id identifier rubyid_line'>line</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>  </span><span class='tstring_end'>&#39;</span></span>
     <span class='id identifier rubyid_line_complete'>line_complete</span> <span class='op'>=</span> <span class='kw'>false</span>
     <span class='int'>8</span><span class='period'>.</span><span class='id identifier rubyid_times'>times</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_i'>i</span><span class='op'>|</span>
-      <span class='kw'>if</span> <span class='id identifier rubyid_bit_order'>bit_order</span> <span class='op'>==</span> <span class='symbol'>:lsb0</span>
-        <span class='id identifier rubyid_bit_num'>bit_num</span> <span class='op'>=</span> <span class='lparen'>(</span><span class='id identifier rubyid_byte_number'>byte_number</span> <span class='op'>*</span> <span class='int'>8</span><span class='rparen'>)</span> <span class='op'>-</span> <span class='id identifier rubyid_i'>i</span> <span class='op'>-</span> <span class='int'>1</span>
-      <span class='kw'>else</span>
-        <span class='id identifier rubyid_bit_num'>bit_num</span> <span class='op'>=</span> <span class='lparen'>(</span><span class='id identifier rubyid_byte_index'>byte_index</span> <span class='op'>*</span> <span class='int'>8</span><span class='rparen'>)</span> <span class='op'>+</span> <span class='id identifier rubyid_i'>i</span>
-      <span class='kw'>end</span>
+      <span class='id identifier rubyid_bit_num'>bit_num</span> <span class='op'>=</span> <span class='lparen'>(</span><span class='id identifier rubyid_byte_number'>byte_number</span> <span class='op'>*</span> <span class='int'>8</span><span class='rparen'>)</span> <span class='op'>-</span> <span class='id identifier rubyid_i'>i</span> <span class='op'>-</span> <span class='int'>1</span>
       <span class='kw'>if</span> <span class='id identifier rubyid_bit_num'>bit_num</span> <span class='op'>&gt;</span> <span class='id identifier rubyid_size'>size</span> <span class='op'>-</span> <span class='int'>1</span>
-        <span class='kw'>if</span> <span class='id identifier rubyid_bit_order'>bit_order</span> <span class='op'>==</span> <span class='symbol'>:msb0</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_bit_num'>bit_num</span> <span class='op'>==</span> <span class='id identifier rubyid_size'>size</span>
-          <span class='id identifier rubyid_line'>line</span> <span class='op'>+=</span> <span class='id identifier rubyid_vert_single_line'>vert_single_line</span>
-          <span class='id identifier rubyid_line_complete'>line_complete</span> <span class='op'>=</span> <span class='kw'>true</span>
-        <span class='kw'>else</span>
-          <span class='id identifier rubyid_line'>line</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> </span><span class='tstring_end'>&#39;</span></span> <span class='op'>+</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='period'>.</span><span class='id identifier rubyid_center'>center</span><span class='lparen'>(</span><span class='id identifier rubyid_bit_width'>bit_width</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='id identifier rubyid_line_complete'>line_complete</span>
-        <span class='kw'>end</span>
+        <span class='id identifier rubyid_line'>line</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> </span><span class='tstring_end'>&#39;</span></span> <span class='op'>+</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='period'>.</span><span class='id identifier rubyid_center'>center</span><span class='lparen'>(</span><span class='id identifier rubyid_bit_width'>bit_width</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='id identifier rubyid_line_complete'>line_complete</span>
       <span class='kw'>else</span>
-        <span class='id identifier rubyid_line'>line</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_vert_single_line'>vert_single_line</span> <span class='op'>+</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_bit_num'>bit_num</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='period'>.</span><span class='id identifier rubyid_center'>center</span><span class='lparen'>(</span><span class='id identifier rubyid_bit_width'>bit_width</span><span class='rparen'>)</span>
+        <span class='kw'>if</span> <span class='id identifier rubyid_dolsb0'>dolsb0</span>
+          <span class='id identifier rubyid_line'>line</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_vert_single_line'>vert_single_line</span> <span class='op'>+</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_bit_num'>bit_num</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='period'>.</span><span class='id identifier rubyid_center'>center</span><span class='lparen'>(</span><span class='id identifier rubyid_bit_width'>bit_width</span><span class='rparen'>)</span>
+        <span class='kw'>else</span>
+          <span class='id identifier rubyid_line'>line</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_vert_single_line'>vert_single_line</span> <span class='op'>+</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_size'>size</span> <span class='op'>-</span> <span class='id identifier rubyid_bit_num'>bit_num</span> <span class='op'>-</span> <span class='int'>1</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='period'>.</span><span class='id identifier rubyid_center'>center</span><span class='lparen'>(</span><span class='id identifier rubyid_bit_width'>bit_width</span><span class='rparen'>)</span>
+        <span class='kw'>end</span>
       <span class='kw'>end</span>
     <span class='kw'>end</span>
     <span class='id identifier rubyid_line'>line</span> <span class='op'>+=</span> <span class='id identifier rubyid_vert_single_line'>vert_single_line</span> <span class='kw'>unless</span> <span class='id identifier rubyid_line_complete'>line_complete</span>
@@ -5760,11 +5842,9 @@ register also.</p>
     <span class='id identifier rubyid_line_complete'>line_complete</span> <span class='op'>=</span> <span class='kw'>false</span>
     <span class='id identifier rubyid_named_bits'>named_bits</span> <span class='label'>include_spacers:</span> <span class='kw'>true</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_bit'>bit</span><span class='comma'>,</span> <span class='id identifier rubyid_bitcounter'>bitcounter</span><span class='op'>|</span>
       <span class='kw'>if</span> <span class='id identifier rubyid__bit_in_range?'>_bit_in_range?</span><span class='lparen'>(</span><span class='id identifier rubyid_bit'>bit</span><span class='comma'>,</span> <span class='id identifier rubyid_max_bit'>max_bit</span><span class='comma'>,</span> <span class='id identifier rubyid_min_bit'>min_bit</span><span class='rparen'>)</span>
-        <span class='kw'>if</span> <span class='id identifier rubyid_bit_order'>bit_order</span> <span class='op'>==</span> <span class='symbol'>:lsb0</span>
-          <span class='kw'>if</span> <span class='id identifier rubyid_max_bit'>max_bit</span> <span class='op'>&gt;</span> <span class='lparen'>(</span><span class='id identifier rubyid_size'>size</span> <span class='op'>-</span> <span class='int'>1</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='op'>!</span><span class='id identifier rubyid_first_done'>first_done</span>
-            <span class='lparen'>(</span><span class='id identifier rubyid_max_bit'>max_bit</span> <span class='op'>-</span> <span class='lparen'>(</span><span class='id identifier rubyid_size'>size</span> <span class='op'>-</span> <span class='int'>1</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_times'>times</span> <span class='kw'>do</span>
-              <span class='id identifier rubyid_line'>line</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> </span><span class='tstring_end'>&#39;</span></span> <span class='op'>*</span> <span class='lparen'>(</span><span class='id identifier rubyid_bit_width'>bit_width</span> <span class='op'>+</span> <span class='int'>1</span><span class='rparen'>)</span>
-            <span class='kw'>end</span>
+        <span class='kw'>if</span> <span class='id identifier rubyid_max_bit'>max_bit</span> <span class='op'>&gt;</span> <span class='lparen'>(</span><span class='id identifier rubyid_size'>size</span> <span class='op'>-</span> <span class='int'>1</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='op'>!</span><span class='id identifier rubyid_first_done'>first_done</span>
+          <span class='lparen'>(</span><span class='id identifier rubyid_max_bit'>max_bit</span> <span class='op'>-</span> <span class='lparen'>(</span><span class='id identifier rubyid_size'>size</span> <span class='op'>-</span> <span class='int'>1</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_times'>times</span> <span class='kw'>do</span>
+            <span class='id identifier rubyid_line'>line</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> </span><span class='tstring_end'>&#39;</span></span> <span class='op'>*</span> <span class='lparen'>(</span><span class='id identifier rubyid_bit_width'>bit_width</span> <span class='op'>+</span> <span class='int'>1</span><span class='rparen'>)</span>
           <span class='kw'>end</span>
         <span class='kw'>end</span>
 
@@ -5772,17 +5852,13 @@ register also.</p>
 
           <span class='kw'>if</span> <span class='id identifier rubyid_name'>name</span>
             <span class='kw'>if</span> <span class='id identifier rubyid_bitcounter'>bitcounter</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
-              <span class='kw'>if</span> <span class='id identifier rubyid_bit_order'>bit_order</span> <span class='op'>==</span> <span class='symbol'>:lsb0</span>
-                <span class='id identifier rubyid_bit_name'>bit_name</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'>[</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid__max_bit_in_range'>_max_bit_in_range</span><span class='lparen'>(</span><span class='id identifier rubyid_bit'>bit</span><span class='comma'>,</span> <span class='id identifier rubyid_max_bit'>max_bit</span><span class='comma'>,</span> <span class='id identifier rubyid_min_bit'>min_bit</span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'>:</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid__min_bit_in_range'>_min_bit_in_range</span><span class='lparen'>(</span><span class='id identifier rubyid_bit'>bit</span><span class='comma'>,</span> <span class='id identifier rubyid_max_bit'>max_bit</span><span class='comma'>,</span> <span class='id identifier rubyid_min_bit'>min_bit</span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'>]</span><span class='tstring_end'>&quot;</span></span>
-              <span class='kw'>else</span>
-                <span class='id identifier rubyid_bit_name'>bit_name</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'>[</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid__min_bit_in_range'>_min_bit_in_range</span><span class='lparen'>(</span><span class='id identifier rubyid_bit'>bit</span><span class='comma'>,</span> <span class='id identifier rubyid_max_bit'>max_bit</span><span class='comma'>,</span> <span class='id identifier rubyid_min_bit'>min_bit</span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'>:</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid__max_bit_in_range'>_max_bit_in_range</span><span class='lparen'>(</span><span class='id identifier rubyid_bit'>bit</span><span class='comma'>,</span> <span class='id identifier rubyid_max_bit'>max_bit</span><span class='comma'>,</span> <span class='id identifier rubyid_min_bit'>min_bit</span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'>]</span><span class='tstring_end'>&quot;</span></span>
-              <span class='kw'>end</span>
+              <span class='id identifier rubyid_bit_name'>bit_name</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'>[</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid__max_bit_in_range'>_max_bit_in_range</span><span class='lparen'>(</span><span class='id identifier rubyid_bit'>bit</span><span class='comma'>,</span> <span class='id identifier rubyid_max_bit'>max_bit</span><span class='comma'>,</span> <span class='id identifier rubyid_min_bit'>min_bit</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'>:</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid__min_bit_in_range'>_min_bit_in_range</span><span class='lparen'>(</span><span class='id identifier rubyid_bit'>bit</span><span class='comma'>,</span> <span class='id identifier rubyid_max_bit'>max_bit</span><span class='comma'>,</span> <span class='id identifier rubyid_min_bit'>min_bit</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'>]</span><span class='tstring_end'>&quot;</span></span>
               <span class='id identifier rubyid_bit_span'>bit_span</span> <span class='op'>=</span> <span class='id identifier rubyid__num_bits_in_range'>_num_bits_in_range</span><span class='lparen'>(</span><span class='id identifier rubyid_bit'>bit</span><span class='comma'>,</span> <span class='id identifier rubyid_max_bit'>max_bit</span><span class='comma'>,</span> <span class='id identifier rubyid_min_bit'>min_bit</span><span class='rparen'>)</span>
 
             <span class='kw'>else</span>
-              <span class='id identifier rubyid_upper'>upper</span> <span class='op'>=</span> <span class='id identifier rubyid__max_bit_in_range'>_max_bit_in_range</span><span class='lparen'>(</span><span class='id identifier rubyid_bit'>bit</span><span class='comma'>,</span> <span class='id identifier rubyid_max_bit'>max_bit</span><span class='comma'>,</span> <span class='id identifier rubyid_min_bit'>min_bit</span><span class='rparen'>)</span> <span class='op'>+</span> <span class='id identifier rubyid_bitcounter'>bitcounter</span> <span class='op'>-</span> <span class='id identifier rubyid_bit'>bit</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span>
-              <span class='id identifier rubyid_lower'>lower</span> <span class='op'>=</span> <span class='id identifier rubyid__min_bit_in_range'>_min_bit_in_range</span><span class='lparen'>(</span><span class='id identifier rubyid_bit'>bit</span><span class='comma'>,</span> <span class='id identifier rubyid_max_bit'>max_bit</span><span class='comma'>,</span> <span class='id identifier rubyid_min_bit'>min_bit</span><span class='rparen'>)</span> <span class='op'>+</span> <span class='id identifier rubyid_bitcounter'>bitcounter</span> <span class='op'>-</span> <span class='id identifier rubyid_bit'>bit</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span>
-              <span class='kw'>if</span> <span class='id identifier rubyid_bit_order'>bit_order</span> <span class='op'>==</span> <span class='symbol'>:lsb0</span>
+              <span class='id identifier rubyid_upper'>upper</span> <span class='op'>=</span> <span class='id identifier rubyid__max_bit_in_range'>_max_bit_in_range</span><span class='lparen'>(</span><span class='id identifier rubyid_bit'>bit</span><span class='comma'>,</span> <span class='id identifier rubyid_max_bit'>max_bit</span><span class='comma'>,</span> <span class='id identifier rubyid_min_bit'>min_bit</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span> <span class='op'>+</span> <span class='id identifier rubyid_bitcounter'>bitcounter</span> <span class='op'>-</span> <span class='id identifier rubyid_bit'>bit</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span>
+              <span class='id identifier rubyid_lower'>lower</span> <span class='op'>=</span> <span class='id identifier rubyid__min_bit_in_range'>_min_bit_in_range</span><span class='lparen'>(</span><span class='id identifier rubyid_bit'>bit</span><span class='comma'>,</span> <span class='id identifier rubyid_max_bit'>max_bit</span><span class='comma'>,</span> <span class='id identifier rubyid_min_bit'>min_bit</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span> <span class='op'>+</span> <span class='id identifier rubyid_bitcounter'>bitcounter</span> <span class='op'>-</span> <span class='id identifier rubyid_bit'>bit</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span>
+              <span class='kw'>if</span> <span class='id identifier rubyid_dolsb0'>dolsb0</span>
                 <span class='id identifier rubyid_bit_name'>bit_name</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'>[</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_upper'>upper</span><span class='embexpr_end'>}</span><span class='tstring_content'>:</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_lower'>lower</span><span class='embexpr_end'>}</span><span class='tstring_content'>]</span><span class='tstring_end'>&quot;</span></span>
               <span class='kw'>else</span>
                 <span class='id identifier rubyid_bit_name'>bit_name</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'>[</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_upper'>upper</span><span class='embexpr_end'>}</span><span class='tstring_content'>:</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_lower'>lower</span><span class='embexpr_end'>}</span><span class='tstring_content'>]</span><span class='tstring_end'>&quot;</span></span>
@@ -5828,11 +5904,9 @@ register also.</p>
     <span class='id identifier rubyid_first_done'>first_done</span> <span class='op'>=</span> <span class='kw'>false</span>
     <span class='id identifier rubyid_named_bits'>named_bits</span> <span class='label'>include_spacers:</span> <span class='kw'>true</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_bit'>bit</span><span class='comma'>,</span> <span class='id identifier rubyid__bitcounter'>_bitcounter</span><span class='op'>|</span>
       <span class='kw'>if</span> <span class='id identifier rubyid__bit_in_range?'>_bit_in_range?</span><span class='lparen'>(</span><span class='id identifier rubyid_bit'>bit</span><span class='comma'>,</span> <span class='id identifier rubyid_max_bit'>max_bit</span><span class='comma'>,</span> <span class='id identifier rubyid_min_bit'>min_bit</span><span class='rparen'>)</span>
-        <span class='kw'>if</span> <span class='id identifier rubyid_bit_order'>bit_order</span> <span class='op'>==</span> <span class='symbol'>:lsb0</span>
-          <span class='kw'>if</span> <span class='id identifier rubyid_max_bit'>max_bit</span> <span class='op'>&gt;</span> <span class='lparen'>(</span><span class='id identifier rubyid_size'>size</span> <span class='op'>-</span> <span class='int'>1</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='op'>!</span><span class='id identifier rubyid_first_done'>first_done</span>
-            <span class='lparen'>(</span><span class='id identifier rubyid_max_bit'>max_bit</span> <span class='op'>-</span> <span class='lparen'>(</span><span class='id identifier rubyid_size'>size</span> <span class='op'>-</span> <span class='int'>1</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_times'>times</span> <span class='kw'>do</span>
-              <span class='id identifier rubyid_line'>line</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> </span><span class='tstring_end'>&#39;</span></span> <span class='op'>*</span> <span class='lparen'>(</span><span class='id identifier rubyid_bit_width'>bit_width</span> <span class='op'>+</span> <span class='int'>1</span><span class='rparen'>)</span>
-            <span class='kw'>end</span>
+        <span class='kw'>if</span> <span class='id identifier rubyid_max_bit'>max_bit</span> <span class='op'>&gt;</span> <span class='lparen'>(</span><span class='id identifier rubyid_size'>size</span> <span class='op'>-</span> <span class='int'>1</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='op'>!</span><span class='id identifier rubyid_first_done'>first_done</span>
+          <span class='lparen'>(</span><span class='id identifier rubyid_max_bit'>max_bit</span> <span class='op'>-</span> <span class='lparen'>(</span><span class='id identifier rubyid_size'>size</span> <span class='op'>-</span> <span class='int'>1</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_times'>times</span> <span class='kw'>do</span>
+            <span class='id identifier rubyid_line'>line</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> </span><span class='tstring_end'>&#39;</span></span> <span class='op'>*</span> <span class='lparen'>(</span><span class='id identifier rubyid_bit_width'>bit_width</span> <span class='op'>+</span> <span class='int'>1</span><span class='rparen'>)</span>
           <span class='kw'>end</span>
         <span class='kw'>end</span>
 
@@ -5883,12 +5957,8 @@ register also.</p>
 
     <span class='kw'>if</span> <span class='id identifier rubyid_size'>size</span> <span class='op'>&gt;=</span> <span class='int'>8</span>
       <span class='id identifier rubyid_r'>r</span> <span class='op'>=</span> <span class='id identifier rubyid_size'>size</span> <span class='op'>%</span> <span class='int'>8</span>
-      <span class='kw'>if</span> <span class='id identifier rubyid_byte_index'>byte_index</span> <span class='op'>==</span> <span class='int'>0</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_r'>r</span> <span class='op'>!=</span> <span class='int'>0</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_bit_order'>bit_order</span> <span class='op'>==</span> <span class='symbol'>:lsb0</span>
+      <span class='kw'>if</span> <span class='id identifier rubyid_byte_index'>byte_index</span> <span class='op'>==</span> <span class='int'>0</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_r'>r</span> <span class='op'>!=</span> <span class='int'>0</span>
         <span class='id identifier rubyid_desc'>desc</span> <span class='op'>&lt;&lt;</span> <span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>  </span><span class='tstring_end'>&#39;</span></span> <span class='op'>+</span> <span class='id identifier rubyid_corner_double_up_left'>corner_double_up_left</span> <span class='op'>+</span> <span class='lparen'>(</span><span class='lparen'>(</span><span class='id identifier rubyid_horiz_double_line'>horiz_double_line</span> <span class='op'>*</span> <span class='id identifier rubyid_bit_width'>bit_width</span> <span class='op'>+</span> <span class='id identifier rubyid_horiz_double_tee_down'>horiz_double_tee_down</span><span class='rparen'>)</span> <span class='op'>*</span> <span class='lparen'>(</span><span class='int'>8</span> <span class='op'>-</span> <span class='id identifier rubyid_r'>r</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_chop'>chop</span> <span class='op'>+</span> <span class='id identifier rubyid_horiz_double_cross'>horiz_double_cross</span> <span class='op'>+</span> <span class='lparen'>(</span><span class='id identifier rubyid_horiz_single_line'>horiz_single_line</span> <span class='op'>*</span> <span class='lparen'>(</span><span class='id identifier rubyid_bit_width'>bit_width</span> <span class='op'>+</span> <span class='int'>1</span><span class='rparen'>)</span> <span class='op'>*</span> <span class='id identifier rubyid_r'>r</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_chop'>chop</span> <span class='op'>+</span> <span class='id identifier rubyid_vert_single_tee_left'>vert_single_tee_left</span>
-      <span class='kw'>elsif</span> <span class='lparen'>(</span><span class='id identifier rubyid_byte_index'>byte_index</span> <span class='op'>==</span> <span class='id identifier rubyid_num_bytes'>num_bytes</span> <span class='op'>-</span> <span class='int'>1</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_r'>r</span> <span class='op'>!=</span> <span class='int'>0</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_bit_order'>bit_order</span> <span class='op'>==</span> <span class='symbol'>:msb0</span>
-        <span class='id identifier rubyid_desc'>desc</span> <span class='op'>&lt;&lt;</span> <span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>  </span><span class='tstring_end'>&#39;</span></span> <span class='op'>+</span> <span class='id identifier rubyid_corner_single_down_left'>corner_single_down_left</span> <span class='op'>+</span> <span class='lparen'>(</span><span class='lparen'>(</span><span class='id identifier rubyid_horiz_single_line'>horiz_single_line</span> <span class='op'>*</span> <span class='id identifier rubyid_bit_width'>bit_width</span> <span class='op'>+</span> <span class='id identifier rubyid_horiz_single_tee_up'>horiz_single_tee_up</span><span class='rparen'>)</span> <span class='op'>*</span> <span class='id identifier rubyid_r'>r</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_chop'>chop</span> <span class='op'>+</span> <span class='id identifier rubyid_corner_single_down_right'>corner_single_down_right</span>
-      <span class='kw'>elsif</span> <span class='lparen'>(</span><span class='id identifier rubyid_byte_index'>byte_index</span> <span class='op'>==</span> <span class='id identifier rubyid_num_bytes'>num_bytes</span> <span class='op'>-</span> <span class='int'>2</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_r'>r</span> <span class='op'>!=</span> <span class='int'>0</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_bit_order'>bit_order</span> <span class='op'>==</span> <span class='symbol'>:msb0</span>
-        <span class='id identifier rubyid_desc'>desc</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>  </span><span class='tstring_end'>&#39;</span></span> <span class='op'>+</span> <span class='id identifier rubyid_vert_single_tee_right'>vert_single_tee_right</span> <span class='op'>+</span> <span class='lparen'>(</span><span class='lparen'>(</span><span class='id identifier rubyid_horiz_single_line'>horiz_single_line</span> <span class='op'>*</span> <span class='id identifier rubyid_bit_width'>bit_width</span> <span class='op'>+</span> <span class='id identifier rubyid_horiz_single_cross'>horiz_single_cross</span><span class='rparen'>)</span> <span class='op'>*</span> <span class='id identifier rubyid_r'>r</span><span class='rparen'>)</span> <span class='op'>+</span> <span class='lparen'>(</span><span class='lparen'>(</span><span class='id identifier rubyid_horiz_single_line'>horiz_single_line</span> <span class='op'>*</span> <span class='id identifier rubyid_bit_width'>bit_width</span> <span class='op'>+</span> <span class='id identifier rubyid_horiz_single_tee_up'>horiz_single_tee_up</span><span class='rparen'>)</span> <span class='op'>*</span> <span class='lparen'>(</span><span class='int'>8</span> <span class='op'>-</span> <span class='id identifier rubyid_r'>r</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_chop'>chop</span> <span class='op'>+</span> <span class='id identifier rubyid_corner_single_down_right'>corner_single_down_right</span>
       <span class='kw'>else</span>
         <span class='kw'>if</span> <span class='id identifier rubyid_byte_index'>byte_index</span> <span class='op'>==</span> <span class='id identifier rubyid_num_bytes'>num_bytes</span> <span class='op'>-</span> <span class='int'>1</span>
           <span class='id identifier rubyid_desc'>desc</span> <span class='op'>&lt;&lt;</span> <span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>  </span><span class='tstring_end'>&#39;</span></span> <span class='op'>+</span> <span class='id identifier rubyid_corner_single_down_left'>corner_single_down_left</span> <span class='op'>+</span> <span class='lparen'>(</span><span class='lparen'>(</span><span class='id identifier rubyid_horiz_single_line'>horiz_single_line</span> <span class='op'>*</span> <span class='id identifier rubyid_bit_width'>bit_width</span> <span class='op'>+</span> <span class='id identifier rubyid_horiz_single_tee_up'>horiz_single_tee_up</span><span class='rparen'>)</span> <span class='op'>*</span> <span class='int'>8</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_chop'>chop</span> <span class='op'>+</span> <span class='id identifier rubyid_corner_single_down_right'>corner_single_down_right</span>
@@ -5897,11 +5967,7 @@ register also.</p>
         <span class='kw'>end</span>
       <span class='kw'>end</span>
     <span class='kw'>else</span>
-      <span class='kw'>if</span> <span class='id identifier rubyid_bit_order'>bit_order</span> <span class='op'>==</span> <span class='symbol'>:lsb0</span>
-        <span class='id identifier rubyid_desc'>desc</span> <span class='op'>&lt;&lt;</span> <span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>  </span><span class='tstring_end'>&#39;</span></span> <span class='op'>+</span> <span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> </span><span class='tstring_end'>&#39;</span></span> <span class='op'>*</span> <span class='lparen'>(</span><span class='id identifier rubyid_bit_width'>bit_width</span> <span class='op'>+</span> <span class='int'>1</span><span class='rparen'>)</span> <span class='op'>*</span> <span class='lparen'>(</span><span class='int'>8</span> <span class='op'>-</span> <span class='id identifier rubyid_size'>size</span><span class='rparen'>)</span><span class='rparen'>)</span> <span class='op'>+</span> <span class='id identifier rubyid_corner_single_down_left'>corner_single_down_left</span> <span class='op'>+</span> <span class='lparen'>(</span><span class='lparen'>(</span><span class='id identifier rubyid_horiz_single_line'>horiz_single_line</span> <span class='op'>*</span> <span class='id identifier rubyid_bit_width'>bit_width</span> <span class='op'>+</span> <span class='id identifier rubyid_horiz_single_tee_up'>horiz_single_tee_up</span><span class='rparen'>)</span> <span class='op'>*</span> <span class='id identifier rubyid_size'>size</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_chop'>chop</span> <span class='op'>+</span> <span class='id identifier rubyid_corner_single_down_right'>corner_single_down_right</span>
-      <span class='kw'>else</span>
-        <span class='id identifier rubyid_desc'>desc</span> <span class='op'>&lt;&lt;</span> <span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>  </span><span class='tstring_end'>&#39;</span></span> <span class='op'>+</span> <span class='id identifier rubyid_corner_single_down_left'>corner_single_down_left</span> <span class='op'>+</span> <span class='lparen'>(</span><span class='lparen'>(</span><span class='id identifier rubyid_horiz_single_line'>horiz_single_line</span> <span class='op'>*</span> <span class='id identifier rubyid_bit_width'>bit_width</span> <span class='op'>+</span> <span class='id identifier rubyid_horiz_single_tee_up'>horiz_single_tee_up</span><span class='rparen'>)</span> <span class='op'>*</span> <span class='id identifier rubyid_size'>size</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_chop'>chop</span> <span class='op'>+</span> <span class='id identifier rubyid_corner_single_down_right'>corner_single_down_right</span>
-      <span class='kw'>end</span>
+      <span class='id identifier rubyid_desc'>desc</span> <span class='op'>&lt;&lt;</span> <span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>  </span><span class='tstring_end'>&#39;</span></span> <span class='op'>+</span> <span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> </span><span class='tstring_end'>&#39;</span></span> <span class='op'>*</span> <span class='lparen'>(</span><span class='id identifier rubyid_bit_width'>bit_width</span> <span class='op'>+</span> <span class='int'>1</span><span class='rparen'>)</span> <span class='op'>*</span> <span class='lparen'>(</span><span class='int'>8</span> <span class='op'>-</span> <span class='id identifier rubyid_size'>size</span><span class='rparen'>)</span><span class='rparen'>)</span> <span class='op'>+</span> <span class='id identifier rubyid_corner_single_down_left'>corner_single_down_left</span> <span class='op'>+</span> <span class='lparen'>(</span><span class='lparen'>(</span><span class='id identifier rubyid_horiz_single_line'>horiz_single_line</span> <span class='op'>*</span> <span class='id identifier rubyid_bit_width'>bit_width</span> <span class='op'>+</span> <span class='id identifier rubyid_horiz_single_tee_up'>horiz_single_tee_up</span><span class='rparen'>)</span> <span class='op'>*</span> <span class='id identifier rubyid_size'>size</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_chop'>chop</span> <span class='op'>+</span> <span class='id identifier rubyid_corner_single_down_right'>corner_single_down_right</span>
     <span class='kw'>end</span>
   <span class='kw'>end</span>
   <span class='id identifier rubyid_desc'>desc</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\n</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
@@ -5939,21 +6005,21 @@ register also.</p>
       <pre class="lines">
 
 
-838
-839
-840
-841
-842
-843
-844
-845
-846
-847
-848
-849</pre>
+814
+815
+816
+817
+818
+819
+820
+821
+822
+823
+824
+825</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 838</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 814</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_lookup_operation_handler'>lookup_operation_handler</span><span class='lparen'>(</span><span class='id identifier rubyid_operation'>operation</span><span class='rparen'>)</span>
   <span class='comment'># Could have made the controller be the owner when assigned above, but may have run
@@ -6072,6 +6138,10 @@ register also.</p>
       <pre class="lines">
 
 
+568
+569
+570
+571
 572
 573
 574
@@ -6212,34 +6282,10 @@ register also.</p>
 709
 710
 711
-712
-713
-714
-715
-716
-717
-718
-719
-720
-721
-722
-723
-724
-725
-726
-727
-728
-729
-730
-731
-732
-733
-734
-735
-736</pre>
+712</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 572</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 568</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_named_bits'>named_bits</span><span class='lparen'>(</span><span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='lbrace'>{</span>
@@ -6256,24 +6302,13 @@ register also.</p>
   <span class='ivar'>@lookup</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid__k'>_k</span><span class='comma'>,</span> <span class='id identifier rubyid_v'>v</span><span class='op'>|</span> <span class='id identifier rubyid_split_bits'>split_bits</span> <span class='op'>=</span> <span class='kw'>true</span> <span class='kw'>if</span> <span class='id identifier rubyid_v'>v</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'><span class='object_link'><a href="../../Array.html" title="Array (class)">Array</a></span></span> <span class='rbrace'>}</span>
 
   <span class='kw'>if</span> <span class='id identifier rubyid_split_bits'>split_bits</span> <span class='op'>==</span> <span class='kw'>false</span>
-    <span class='kw'>if</span> <span class='id identifier rubyid_bit_order'>bit_order</span> <span class='op'>==</span> <span class='symbol'>:lsb0</span>
-      <span class='id identifier rubyid_current_pos'>current_pos</span> <span class='op'>=</span> <span class='id identifier rubyid_size'>size</span>
-    <span class='kw'>else</span>
-      <span class='id identifier rubyid_current_pos'>current_pos</span> <span class='op'>=</span> <span class='int'>0</span>
-    <span class='kw'>end</span>
+    <span class='id identifier rubyid_current_pos'>current_pos</span> <span class='op'>=</span> <span class='id identifier rubyid_size'>size</span>
+
     <span class='comment'># Sort by position
-</span>    <span class='ivar'>@lookup</span><span class='period'>.</span><span class='id identifier rubyid_sort_by'>sort_by</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid__name'>_name</span><span class='comma'>,</span> <span class='id identifier rubyid_details'>details</span><span class='op'>|</span> <span class='id identifier rubyid_bit_order'>bit_order</span> <span class='op'>==</span> <span class='symbol'>:lsb0</span> <span class='op'>?</span> <span class='op'>-</span><span class='id identifier rubyid_details'>details</span><span class='lbracket'>[</span><span class='symbol'>:pos</span><span class='rbracket'>]</span> <span class='op'>:</span> <span class='id identifier rubyid_details'>details</span><span class='lbracket'>[</span><span class='symbol'>:pos</span><span class='rbracket'>]</span> <span class='rbrace'>}</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_details'>details</span><span class='op'>|</span>
-      <span class='kw'>if</span> <span class='id identifier rubyid_bit_order'>bit_order</span> <span class='op'>==</span> <span class='symbol'>:lsb0</span>
-        <span class='id identifier rubyid_pos'>pos</span> <span class='op'>=</span> <span class='id identifier rubyid_details'>details</span><span class='lbracket'>[</span><span class='symbol'>:bits</span><span class='rbracket'>]</span> <span class='op'>+</span> <span class='id identifier rubyid_details'>details</span><span class='lbracket'>[</span><span class='symbol'>:pos</span><span class='rbracket'>]</span>
-      <span class='kw'>else</span>
-        <span class='id identifier rubyid_pos'>pos</span> <span class='op'>=</span> <span class='id identifier rubyid_details'>details</span><span class='lbracket'>[</span><span class='symbol'>:pos</span><span class='rbracket'>]</span>
-      <span class='kw'>end</span>
+</span>    <span class='ivar'>@lookup</span><span class='period'>.</span><span class='id identifier rubyid_sort_by'>sort_by</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid__name'>_name</span><span class='comma'>,</span> <span class='id identifier rubyid_details'>details</span><span class='op'>|</span> <span class='op'>-</span><span class='id identifier rubyid_details'>details</span><span class='lbracket'>[</span><span class='symbol'>:pos</span><span class='rbracket'>]</span> <span class='rbrace'>}</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_details'>details</span><span class='op'>|</span>
+      <span class='id identifier rubyid_pos'>pos</span> <span class='op'>=</span> <span class='id identifier rubyid_details'>details</span><span class='lbracket'>[</span><span class='symbol'>:bits</span><span class='rbracket'>]</span> <span class='op'>+</span> <span class='id identifier rubyid_details'>details</span><span class='lbracket'>[</span><span class='symbol'>:pos</span><span class='rbracket'>]</span>
       <span class='kw'>if</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='lbracket'>[</span><span class='symbol'>:include_spacers</span><span class='rbracket'>]</span> <span class='op'>&amp;&amp;</span> <span class='lparen'>(</span><span class='id identifier rubyid_pos'>pos</span> <span class='op'>!=</span> <span class='id identifier rubyid_current_pos'>current_pos</span><span class='rparen'>)</span>
-        <span class='kw'>if</span> <span class='id identifier rubyid_bit_order'>bit_order</span> <span class='op'>==</span> <span class='symbol'>:lsb0</span>
-          <span class='id identifier rubyid_collection'>collection</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="BitCollection.html" title="Origen::Registers::BitCollection (class)">BitCollection</a></span></span><span class='period'>.</span><span class='id identifier rubyid_dummy'><span class='object_link'><a href="BitCollection.html#dummy-class_method" title="Origen::Registers::BitCollection.dummy (method)">dummy</a></span></span><span class='lparen'>(</span><span class='kw'>self</span><span class='comma'>,</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='label'>size:</span> <span class='id identifier rubyid_current_pos'>current_pos</span> <span class='op'>-</span> <span class='id identifier rubyid_pos'>pos</span><span class='comma'>,</span> <span class='label'>pos:</span> <span class='id identifier rubyid_pos'>pos</span><span class='rparen'>)</span>
-        <span class='kw'>else</span>
-          <span class='id identifier rubyid_collection'>collection</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="BitCollection.html" title="Origen::Registers::BitCollection (class)">BitCollection</a></span></span><span class='period'>.</span><span class='id identifier rubyid_dummy'><span class='object_link'><a href="BitCollection.html#dummy-class_method" title="Origen::Registers::BitCollection.dummy (method)">dummy</a></span></span><span class='lparen'>(</span><span class='kw'>self</span><span class='comma'>,</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='label'>size:</span> <span class='id identifier rubyid_pos'>pos</span> <span class='op'>-</span> <span class='id identifier rubyid_current_pos'>current_pos</span><span class='comma'>,</span> <span class='label'>pos:</span> <span class='id identifier rubyid_current_pos'>current_pos</span><span class='rparen'>)</span>
-        <span class='kw'>end</span>
+        <span class='id identifier rubyid_collection'>collection</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="BitCollection.html" title="Origen::Registers::BitCollection (class)">BitCollection</a></span></span><span class='period'>.</span><span class='id identifier rubyid_dummy'><span class='object_link'><a href="BitCollection.html#dummy-class_method" title="Origen::Registers::BitCollection.dummy (method)">dummy</a></span></span><span class='lparen'>(</span><span class='kw'>self</span><span class='comma'>,</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='label'>size:</span> <span class='id identifier rubyid_current_pos'>current_pos</span> <span class='op'>-</span> <span class='id identifier rubyid_pos'>pos</span><span class='comma'>,</span> <span class='label'>pos:</span> <span class='id identifier rubyid_pos'>pos</span><span class='rparen'>)</span>
         <span class='kw'>unless</span> <span class='id identifier rubyid_collection'>collection</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span> <span class='op'>==</span> <span class='int'>0</span>
           <span class='kw'>if</span> <span class='id identifier rubyid_block_given?'>block_given?</span>
             <span class='kw'>yield</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_collection'>collection</span>
@@ -6293,19 +6328,10 @@ register also.</p>
           <span class='id identifier rubyid_result'>result</span> <span class='op'>&lt;&lt;</span> <span class='lbracket'>[</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_collection'>collection</span><span class='rbracket'>]</span>
         <span class='kw'>end</span>
       <span class='kw'>end</span>
-      <span class='kw'>if</span> <span class='id identifier rubyid_bit_order'>bit_order</span> <span class='op'>==</span> <span class='symbol'>:lsb0</span>
-        <span class='id identifier rubyid_current_pos'>current_pos</span> <span class='op'>=</span> <span class='id identifier rubyid_details'>details</span><span class='lbracket'>[</span><span class='symbol'>:pos</span><span class='rbracket'>]</span>
-      <span class='kw'>else</span>
-        <span class='id identifier rubyid_current_pos'>current_pos</span> <span class='op'>=</span> <span class='id identifier rubyid_details'>details</span><span class='lbracket'>[</span><span class='symbol'>:bits</span><span class='rbracket'>]</span> <span class='op'>+</span> <span class='id identifier rubyid_details'>details</span><span class='lbracket'>[</span><span class='symbol'>:pos</span><span class='rbracket'>]</span>
-      <span class='kw'>end</span>
+      <span class='id identifier rubyid_current_pos'>current_pos</span> <span class='op'>=</span> <span class='id identifier rubyid_details'>details</span><span class='lbracket'>[</span><span class='symbol'>:pos</span><span class='rbracket'>]</span>
     <span class='kw'>end</span>
-    <span class='kw'>if</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='lbracket'>[</span><span class='symbol'>:include_spacers</span><span class='rbracket'>]</span> <span class='op'>&amp;&amp;</span> <span class='lparen'>(</span><span class='lparen'>(</span><span class='id identifier rubyid_bit_order'>bit_order</span> <span class='op'>==</span> <span class='symbol'>:lsb0</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_current_pos'>current_pos</span> <span class='op'>!=</span> <span class='int'>0</span><span class='rparen'>)</span> <span class='op'>||</span>
-                                      <span class='id identifier rubyid_bit_order'>bit_order</span> <span class='op'>==</span> <span class='symbol'>:msb0</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_current_pos'>current_pos</span> <span class='op'>!=</span> <span class='id identifier rubyid_size'>size</span><span class='rparen'>)</span>
-      <span class='kw'>if</span> <span class='id identifier rubyid_bit_order'>bit_order</span> <span class='op'>==</span> <span class='symbol'>:lsb0</span>
-        <span class='id identifier rubyid_collection'>collection</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="BitCollection.html" title="Origen::Registers::BitCollection (class)">BitCollection</a></span></span><span class='period'>.</span><span class='id identifier rubyid_dummy'><span class='object_link'><a href="BitCollection.html#dummy-class_method" title="Origen::Registers::BitCollection.dummy (method)">dummy</a></span></span><span class='lparen'>(</span><span class='kw'>self</span><span class='comma'>,</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='label'>size:</span> <span class='id identifier rubyid_current_pos'>current_pos</span><span class='comma'>,</span> <span class='label'>pos:</span> <span class='int'>0</span><span class='rparen'>)</span>
-      <span class='kw'>else</span>
-        <span class='id identifier rubyid_collection'>collection</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="BitCollection.html" title="Origen::Registers::BitCollection (class)">BitCollection</a></span></span><span class='period'>.</span><span class='id identifier rubyid_dummy'><span class='object_link'><a href="BitCollection.html#dummy-class_method" title="Origen::Registers::BitCollection.dummy (method)">dummy</a></span></span><span class='lparen'>(</span><span class='kw'>self</span><span class='comma'>,</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='label'>size:</span> <span class='id identifier rubyid_size'>size</span> <span class='op'>-</span> <span class='id identifier rubyid_current_pos'>current_pos</span><span class='comma'>,</span> <span class='label'>pos:</span> <span class='id identifier rubyid_current_pos'>current_pos</span><span class='rparen'>)</span>
-      <span class='kw'>end</span>
+    <span class='kw'>if</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='lbracket'>[</span><span class='symbol'>:include_spacers</span><span class='rbracket'>]</span> <span class='op'>&amp;&amp;</span> <span class='lparen'>(</span><span class='id identifier rubyid_current_pos'>current_pos</span> <span class='op'>!=</span> <span class='int'>0</span><span class='rparen'>)</span>
+      <span class='id identifier rubyid_collection'>collection</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="BitCollection.html" title="Origen::Registers::BitCollection (class)">BitCollection</a></span></span><span class='period'>.</span><span class='id identifier rubyid_dummy'><span class='object_link'><a href="BitCollection.html#dummy-class_method" title="Origen::Registers::BitCollection.dummy (method)">dummy</a></span></span><span class='lparen'>(</span><span class='kw'>self</span><span class='comma'>,</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='label'>size:</span> <span class='id identifier rubyid_current_pos'>current_pos</span><span class='comma'>,</span> <span class='label'>pos:</span> <span class='int'>0</span><span class='rparen'>)</span>
       <span class='kw'>unless</span> <span class='id identifier rubyid_collection'>collection</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span> <span class='op'>==</span> <span class='int'>0</span>
         <span class='kw'>if</span> <span class='id identifier rubyid_block_given?'>block_given?</span>
           <span class='kw'>yield</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_collection'>collection</span>
@@ -6438,12 +6464,12 @@ reg.address(:relative =&gt; true)</p>
       <pre class="lines">
 
 
-853
-854
-855</pre>
+829
+830
+831</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 853</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 829</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_offset'>offset</span>
   <span class='id identifier rubyid_address'>address</span><span class='lparen'>(</span><span class='label'>relative:</span> <span class='kw'>true</span><span class='rparen'>)</span>
@@ -6549,20 +6575,20 @@ from the actual class name.</p>
       <pre class="lines">
 
 
-958
-959
-960
-961
-962
-963
-964
-965
-966
-967
-968</pre>
+934
+935
+936
+937
+938
+939
+940
+941
+942
+943
+944</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 958</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 934</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_owned_by?'>owned_by?</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
   <span class='op'>!</span><span class='op'>!</span><span class='lparen'>(</span><span class='id identifier rubyid_owner'>owner</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='regexp_end'>/i</span></span><span class='rparen'>)</span> <span class='op'>||</span> <span class='kw'>begin</span>
@@ -6608,6 +6634,10 @@ from the actual class name.</p>
       <pre class="lines">
 
 
+477
+478
+479
+480
 481
 482
 483
@@ -6624,28 +6654,24 @@ from the actual class name.</p>
 494
 495
 496
-497
-498
-499
-500
-501</pre>
+497</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 481</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 477</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_parse_descriptions'>parse_descriptions</span>
   <span class='id identifier rubyid_desc'>desc</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
   <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_readlines'>readlines</span><span class='lparen'>(</span><span class='id identifier rubyid_define_file'>define_file</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_line'>line</span><span class='op'>|</span>
     <span class='kw'>if</span> <span class='id identifier rubyid_line'>line</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>^\s*#(.*)</span><span class='regexp_end'>/</span></span>
       <span class='id identifier rubyid_desc'>desc</span> <span class='op'>&lt;&lt;</span> <span class='const'><span class='object_link'><a href="../../Regexp.html" title="Regexp (class)">Regexp</a></span></span><span class='period'>.</span><span class='id identifier rubyid_last_match'>last_match</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_strip'>strip</span>
-    <span class='comment'>#              https://rubular.com/r/D8lg2P5kK1                     https://rubular.com/r/XP4ydPV8Fd
+    <span class='comment'>#              http://rubular.com/r/D8lg2P5kK1                     http://rubular.com/r/XP4ydPV8Fd
 </span>    <span class='kw'>elsif</span> <span class='id identifier rubyid_line'>line</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>^\s*reg\(?\s*[:&quot;&#39;](\w+)[&quot;&#39;]?\s*,.*\sdo</span><span class='regexp_end'>/</span></span> <span class='op'>||</span> <span class='id identifier rubyid_line'>line</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>^\s*.*add_reg\(?\s*[:&quot;&#39;](\w+)[&quot;&#39;]?\s*,.*</span><span class='regexp_end'>/</span></span>
       <span class='ivar'>@current_reg_name</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="../../Regexp.html" title="Regexp (class)">Regexp</a></span></span><span class='period'>.</span><span class='id identifier rubyid_last_match'>last_match</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span>
       <span class='id identifier rubyid_description_lookup'>description_lookup</span><span class='lbracket'>[</span><span class='id identifier rubyid_define_file'>define_file</span><span class='rbracket'>]</span> <span class='op'>||=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
       <span class='id identifier rubyid_description_lookup'>description_lookup</span><span class='lbracket'>[</span><span class='id identifier rubyid_define_file'>define_file</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='ivar'>@current_reg_name</span><span class='rbracket'>]</span> <span class='op'>||=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
       <span class='id identifier rubyid_description_lookup'>description_lookup</span><span class='lbracket'>[</span><span class='id identifier rubyid_define_file'>define_file</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='ivar'>@current_reg_name</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='symbol'>:_reg</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_desc'>desc</span><span class='period'>.</span><span class='id identifier rubyid_dup'>dup</span>
       <span class='id identifier rubyid_desc'>desc</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
-    <span class='comment'># https://www.rubular.com/r/7FidbC1JRA
+    <span class='comment'># http://www.rubular.com/r/7FidbC1JRA
 </span>    <span class='kw'>elsif</span> <span class='ivar'>@current_reg_name</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_line'>line</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>^\s*(add_bit|bit|reg\.bit)s?\(?\s*\d+\.?\.?\d*\s*,\s*:(\w+)</span><span class='regexp_end'>/</span></span>
       <span class='id identifier rubyid_description_lookup'>description_lookup</span><span class='lbracket'>[</span><span class='id identifier rubyid_define_file'>define_file</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='ivar'>@current_reg_name</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='const'><span class='object_link'><a href="../../Regexp.html" title="Regexp (class)">Regexp</a></span></span><span class='period'>.</span><span class='id identifier rubyid_last_match'>last_match</span><span class='lbracket'>[</span><span class='int'>2</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_desc'>desc</span><span class='period'>.</span><span class='id identifier rubyid_dup'>dup</span>
       <span class='id identifier rubyid_desc'>desc</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
@@ -6685,12 +6711,12 @@ from the actual class name.</p>
       <pre class="lines">
 
 
-833
-834
-835</pre>
+809
+810
+811</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 833</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 809</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_reader'>reader</span>
   <span class='ivar'>@reader</span> <span class='op'>||=</span> <span class='id identifier rubyid_lookup_operation_handler'>lookup_operation_handler</span><span class='lparen'>(</span><span class='symbol'>:read_register</span><span class='rparen'>)</span>
@@ -6726,20 +6752,20 @@ from the actual class name.</p>
       <pre class="lines">
 
 
-815
-816
-817
-818
-819
-820
-821
-822
-823
-824
-825</pre>
+791
+792
+793
+794
+795
+796
+797
+798
+799
+800
+801</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 815</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 791</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_request'>request</span><span class='lparen'>(</span><span class='id identifier rubyid_operation'>operation</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span> <span class='comment'># :nodoc:
 </span>  <span class='kw'>if</span> <span class='id identifier rubyid_operation'>operation</span> <span class='op'>==</span> <span class='symbol'>:read_register</span>
@@ -6840,16 +6866,16 @@ application-specific meta data properties</p>
       <pre class="lines">
 
 
-739
-740
-741
-742
-743
-744
-745</pre>
+715
+716
+717
+718
+719
+720
+721</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 739</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 715</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_reverse_named_bits'>reverse_named_bits</span><span class='lparen'>(</span><span class='id identifier rubyid__options'>_options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_bits'>bits</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
@@ -6866,7 +6892,7 @@ application-specific meta data properties</p>
       <div class="method_details ">
   <h3 class="signature " id="to_bit_collection-instance_method">
   
-    #<strong>to_bit_collection</strong>  &#x21d2; <tt><span class='object_link'><a href="../../Object.html" title="Object (class)">Object</a></span></tt> 
+    #<strong>to_bit_collection</strong>(options = {})  &#x21d2; <tt><span class='object_link'><a href="../../Object.html" title="Object (class)">Object</a></span></tt> 
   
 
   
@@ -6885,8 +6911,8 @@ application-specific meta data properties</p>
     <td>
       <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 1286</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_to_bit_collection'>to_bit_collection</span>
-  <span class='const'><span class='object_link'><a href="BitCollection.html" title="Origen::Registers::BitCollection (class)">BitCollection</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="BitCollection.html#initialize-instance_method" title="Origen::Registers::BitCollection#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='kw'>self</span><span class='comma'>,</span> <span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='ivar'>@bits</span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_to_bit_collection'>to_bit_collection</span><span class='lparen'>(</span><span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
+  <span class='const'><span class='object_link'><a href="BitCollection.html" title="Origen::Registers::BitCollection (class)">BitCollection</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="BitCollection.html#initialize-instance_method" title="Origen::Registers::BitCollection#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='kw'>self</span><span class='comma'>,</span> <span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='ivar'>@bits</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -6990,16 +7016,16 @@ application-specific meta data properties</p>
       <pre class="lines">
 
 
-124
-125
-126
-127
-128
-129
-130</pre>
+138
+139
+140
+141
+142
+143
+144</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 124</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 138</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_update_bound_bits'>update_bound_bits</span>
   <span class='ivar'>@updating_bound_bits</span> <span class='op'>=</span> <span class='kw'>true</span>
@@ -7050,12 +7076,12 @@ application-specific meta data properties</p>
       <pre class="lines">
 
 
-132
-133
-134</pre>
+146
+147
+148</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 132</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 146</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_updating_bound_bits?'>updating_bound_bits?</span>
   <span class='ivar'>@updating_bound_bits</span>
@@ -7114,21 +7140,21 @@ regs(:aguahb2).used_bits
       <pre class="lines">
 
 
-766
-767
-768
-769
-770
-771
-772
-773
-774
-775
-776
-777</pre>
+742
+743
+744
+745
+746
+747
+748
+749
+750
+751
+752
+753</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 766</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 742</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_used_bits'>used_bits</span><span class='lparen'>(</span><span class='id identifier rubyid__options'>_options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_used_bits'>used_bits</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
@@ -7186,15 +7212,75 @@ regs(:aguahb2).used_bits
       <pre class="lines">
 
 
-780
-781
-782</pre>
+756
+757
+758</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 780</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 756</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_used_bits?'>used_bits?</span><span class='lparen'>(</span><span class='id identifier rubyid__options'>_options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_used_bits'>used_bits</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span> <span class='op'>&gt;</span> <span class='int'>0</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="with_lsb0-instance_method">
+  
+    #<strong>with_lsb0</strong>  &#x21d2; <tt><span class='object_link'><a href="../../Object.html" title="Object (class)">Object</a></span></tt> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+107
+108
+109</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 107</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_with_lsb0'>with_lsb0</span>
+  <span class='kw'>self</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="with_msb0-instance_method">
+  
+    #<strong>with_msb0</strong>  &#x21d2; <tt><span class='object_link'><a href="../../Object.html" title="Object (class)">Object</a></span></tt> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+103
+104
+105</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 103</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_with_msb0'>with_msb0</span>
+  <span class='ivar'>@msb0_delegator</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -7227,12 +7313,12 @@ regs(:aguahb2).used_bits
       <pre class="lines">
 
 
-828
-829
-830</pre>
+804
+805
+806</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 828</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/registers/reg.rb', line 804</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_writer'>writer</span>
   <span class='ivar'>@writer</span> <span class='op'>||=</span> <span class='id identifier rubyid_lookup_operation_handler'>lookup_operation_handler</span><span class='lparen'>(</span><span class='symbol'>:write_register</span><span class='rparen'>)</span>
@@ -7289,8 +7375,8 @@ both registers remains unchanged</p>
 </div>
 
       <div id="footer">
-  Generated on Thu Dec 13 04:41:36 2018 by
-  <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  Generated on Fri Dec 14 09:36:22 2018 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.16 (ruby-2.5.1).
 </div>
 
