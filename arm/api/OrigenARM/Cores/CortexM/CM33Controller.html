@@ -98,7 +98,7 @@
   
   <dl>
     <dt>Defined in:</dt>
-    <dd>lib/origen_arm/cores/cortex-m/cm33/cm33_controller.rb</dd>
+    <dd>lib/origen_arm/cores/cortexm/cm33/cm33_controller.rb</dd>
   </dl>
   
 </div>
@@ -121,7 +121,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#disable_security-instance_method" title="#disable_security (instance method)">#<strong>disable_security</strong>(options = {})  &#x21d2; Object </a>
+      <a href="#enter_debug_mode-instance_method" title="#enter_debug_mode (instance method)">#<strong>enter_debug_mode</strong>(halt_core: true)  &#x21d2; Object </a>
     
 
     
@@ -135,7 +135,9 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>Enters the core&#39;s debug mode.</p>
+</div></span>
   
 </li>
 
@@ -143,7 +145,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#enter_debug_mode-instance_method" title="#enter_debug_mode (instance method)">#<strong>enter_debug_mode</strong>(halt_core: true, **options)  &#x21d2; Object </a>
+      <a href="#exit_debug_mode-instance_method" title="#exit_debug_mode (instance method)">#<strong>exit_debug_mode</strong>(release_core: true)  &#x21d2; Object </a>
     
 
     
@@ -157,29 +159,9 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#exit_debug_mode-instance_method" title="#exit_debug_mode (instance method)">#<strong>exit_debug_mode</strong>(release_core: true, **options)  &#x21d2; Object </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>Exits the core&#39;s debug mode.</p>
+</div></span>
   
 </li>
 
@@ -213,9 +195,11 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#initialize_core-instance_method" title="#initialize_core (instance method)">#<strong>initialize_core</strong>(pc:, sp:, release_core: false, disable_security: false, sp_lower_limit: nil, sp_upper_limit: nil)  &#x21d2; Object </a>
+      <a href="#initialize_core-instance_method" title="#initialize_core (instance method)">#<strong>initialize_core</strong>(pc:, sp:, release_core: false, sp_lower_limit: nil, sp_upper_limit: nil)  &#x21d2; Object </a>
     
 
+    
+      (also: #initialize_for_lre)
     
   </span>
   
@@ -237,7 +221,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#set_pc-instance_method" title="#set_pc (instance method)">#<strong>set_pc</strong>(pc, options = {})  &#x21d2; Object </a>
+      <a href="#set_pc-instance_method" title="#set_pc (instance method)">#<strong>set_pc</strong>(pc)  &#x21d2; Object </a>
     
 
     
@@ -252,7 +236,8 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Sets the program counter.</p>
+<p>Sets the program counter by writing the <code>debug_return_address</code>
+register.</p>
 </div></span>
   
 </li>
@@ -261,7 +246,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#set_sp-instance_method" title="#set_sp (instance method)">#<strong>set_sp</strong>(sp, options = {})  &#x21d2; Object </a>
+      <a href="#set_sp-instance_method" title="#set_sp (instance method)">#<strong>set_sp</strong>(sp)  &#x21d2; Object </a>
     
 
     
@@ -275,29 +260,9 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#set_stack_limits-instance_method" title="#set_stack_limits (instance method)">#<strong>set_stack_limits</strong>(lower_limit, upper_limits, stack: :msp, **options)  &#x21d2; Object </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>Sets the current stack pointer.</p>
+</div></span>
   
 </li>
 
@@ -354,16 +319,14 @@
 
 6
 7
-8
-9</pre>
+8</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_arm/cores/cortex-m/cm33/cm33_controller.rb', line 6</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_arm/cores/cortexm/cm33/cm33_controller.rb', line 6</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='op'>=</span><span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='kw'>super</span>
-  <span class='comment'>#validate_options(options)
-</span><span class='kw'>end</span></pre>
+<span class='kw'>end</span></pre>
     </td>
   </tr>
 </table>
@@ -377,53 +340,53 @@
 
     
       <div class="method_details first">
-  <h3 class="signature first" id="disable_security-instance_method">
+  <h3 class="signature first" id="enter_debug_mode-instance_method">
   
-    #<strong>disable_security</strong>(options = {})  &#x21d2; <tt>Object</tt> 
-  
-
+    #<strong>enter_debug_mode</strong>(halt_core: true)  &#x21d2; <tt>Object</tt> 
   
 
   
-</h3><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
 
-
-82
-83</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_arm/cores/cortex-m/cm33/cm33_controller.rb', line 82</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_disable_security'>disable_security</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='op'>=</span><span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
+  
+</h3><div class="docstring">
+  <div class="discussion">
     
-      <div class="method_details ">
-  <h3 class="signature " id="enter_debug_mode-instance_method">
-  
-    #<strong>enter_debug_mode</strong>(halt_core: true, **options)  &#x21d2; <tt>Object</tt> 
-  
+<p>Enters the core&#39;s debug mode.</p>
 
-  
 
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
   
-</h3><table class="source_code">
+    <li>
+      
+        <span class='name'>halt_core</span>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Indicates whether the core should be held when entering debug mode. Some
+functionality may not work correctly if the core is not halted, but a
+halted core is not a requirement for debug mode.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-26
-27
-28
-29
-30
 31
 32
 33
@@ -435,12 +398,17 @@
 39
 40
 41
-42</pre>
+42
+43
+44
+45
+46
+47</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_arm/cores/cortex-m/cm33/cm33_controller.rb', line 26</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_arm/cores/cortexm/cm33/cm33_controller.rb', line 31</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_enter_debug_mode'>enter_debug_mode</span><span class='lparen'>(</span><span class='label'>halt_core:</span> <span class='kw'>true</span><span class='comma'>,</span> <span class='op'>**</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_enter_debug_mode'>enter_debug_mode</span><span class='lparen'>(</span><span class='label'>halt_core:</span> <span class='kw'>true</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_pp'>pp</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Entering Debug Mode...</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='kw'>do</span>
     <span class='id identifier rubyid_reg'>reg</span><span class='lparen'>(</span><span class='symbol'>:dhcsr</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_bits'>bits</span><span class='lparen'>(</span><span class='symbol'>:dbgkey</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_write'>write</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="../../../OrigenARM.html" title="OrigenARM (module)">OrigenARM</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../Cores.html" title="OrigenARM::Cores (module)">Cores</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../CortexM.html" title="OrigenARM::Cores::CortexM (module)">CortexM</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="CM33.html" title="OrigenARM::Cores::CortexM::CM33 (class)">CM33</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="CM33/Registers.html" title="OrigenARM::Cores::CortexM::CM33::Registers (module)">Registers</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="CM33/Registers.html#DHCSR_DBGKEY-constant" title="OrigenARM::Cores::CortexM::CM33::Registers::DHCSR_DBGKEY (constant)">DHCSR_DBGKEY</a></span></span><span class='rparen'>)</span>
     <span class='id identifier rubyid_reg'>reg</span><span class='lparen'>(</span><span class='symbol'>:dhcsr</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_bits'>bits</span><span class='lparen'>(</span><span class='symbol'>:c_debugen</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_write'>write</span><span class='lparen'>(</span><span class='int'>1</span><span class='rparen'>)</span>
@@ -465,34 +433,65 @@
       <div class="method_details ">
   <h3 class="signature " id="exit_debug_mode-instance_method">
   
-    #<strong>exit_debug_mode</strong>(release_core: true, **options)  &#x21d2; <tt>Object</tt> 
+    #<strong>exit_debug_mode</strong>(release_core: true)  &#x21d2; <tt>Object</tt> 
   
 
   
 
   
-</h3><table class="source_code">
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Exits the core&#39;s debug mode.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>release_core</span>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Indicates whether the core should be held upon exiting debug mode.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-44
-45
-46
-47
-48
-49
-50
 51
 52
 53
-54</pre>
+54
+55
+56
+57
+58
+59
+60
+61</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_arm/cores/cortex-m/cm33/cm33_controller.rb', line 44</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_arm/cores/cortexm/cm33/cm33_controller.rb', line 51</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_exit_debug_mode'>exit_debug_mode</span><span class='lparen'>(</span><span class='label'>release_core:</span> <span class='kw'>true</span><span class='comma'>,</span> <span class='op'>**</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_exit_debug_mode'>exit_debug_mode</span><span class='lparen'>(</span><span class='label'>release_core:</span> <span class='kw'>true</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_pp'>pp</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Exiting Debug Mode...</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='kw'>do</span>
     <span class='id identifier rubyid_reg'>reg</span><span class='lparen'>(</span><span class='symbol'>:dhcsr</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_bits'>bits</span><span class='lparen'>(</span><span class='symbol'>:dbgkey</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_write'>write</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="../../../OrigenARM.html" title="OrigenARM (module)">OrigenARM</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../Cores.html" title="OrigenARM::Cores (module)">Cores</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../CortexM.html" title="OrigenARM::Cores::CortexM (module)">CortexM</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="CM33.html" title="OrigenARM::Cores::CortexM::CM33 (class)">CM33</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="CM33/Registers.html" title="OrigenARM::Cores::CortexM::CM33::Registers (module)">Registers</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="CM33/Registers.html#DHCSR_DBGKEY-constant" title="OrigenARM::Cores::CortexM::CM33::Registers::DHCSR_DBGKEY (constant)">DHCSR_DBGKEY</a></span></span><span class='rparen'>)</span>
     <span class='id identifier rubyid_reg'>reg</span><span class='lparen'>(</span><span class='symbol'>:dhcsr</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_bits'>bits</span><span class='lparen'>(</span><span class='symbol'>:c_halt</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_write'>write</span><span class='lparen'>(</span><span class='int'>0</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_release_core'>release_core</span>
@@ -511,22 +510,120 @@
       <div class="method_details ">
   <h3 class="signature " id="initialize_core-instance_method">
   
-    #<strong>initialize_core</strong>(pc:, sp:, release_core: false, disable_security: false, sp_lower_limit: nil, sp_upper_limit: nil)  &#x21d2; <tt>Object</tt> 
+    #<strong>initialize_core</strong>(pc:, sp:, release_core: false, sp_lower_limit: nil, sp_upper_limit: nil)  &#x21d2; <tt>Object</tt> 
   
 
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='initialize_for_lre-instance_method'>initialize_for_lre</span></span>
+    </span>
   
 
   
 </h3><div class="docstring">
   <div class="discussion">
     
+  <div class="note todo">
+    <strong>TODO:</strong>
+    <div class='inline'>
+<p>Implement lower and upper stack pointer limit setting.</p>
+</div>
+  </div>
+
+
 <p>Initializes the core, specifically geared towards LRE setup.</p>
 
 
   </div>
 </div>
 <div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
   
+    <li>
+      
+        <span class='name'>pc</span>
+      
+      
+        <span class='type'>(<tt>Fixnum</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The absolute address to load into the program counter.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>sp</span>
+      
+      
+        <span class='type'>(<tt>Fixnum</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The absolute address to load into the current stack pointer.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>release_core</span>
+      
+      
+        <span class='type'>(<tt>TrueClass</tt>, <tt>FalseClass</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The core will need to be held in order to initialize. However, this
+parameter can indicate whether or not the core should be released following
+the setup.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>sp_lower_limit</span>
+      
+      
+        <span class='type'>(<tt>Fixnum</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Sets stack pointer&#39;s lower limit.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>sp_upper_limit</span>
+      
+      
+        <span class='type'>(<tt>Fixnum</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Sets stack pointer&#39;s upper limit.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
 
 </div><table class="source_code">
   <tr>
@@ -534,8 +631,6 @@
       <pre class="lines">
 
 
-16
-17
 18
 19
 20
@@ -545,16 +640,14 @@
 24</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_arm/cores/cortex-m/cm33/cm33_controller.rb', line 16</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_arm/cores/cortexm/cm33/cm33_controller.rb', line 18</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_initialize_core'>initialize_core</span><span class='lparen'>(</span><span class='label'>pc:</span><span class='comma'>,</span> <span class='label'>sp:</span><span class='comma'>,</span> <span class='label'>release_core:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>disable_security:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>sp_lower_limit:</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='label'>sp_upper_limit:</span> <span class='kw'>nil</span><span class='rparen'>)</span>
-  <span class='comment'># As cores are added to K4, build up support for them here.
-</span>  <span class='id identifier rubyid_enter_debug_mode'>enter_debug_mode</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_initialize_core'>initialize_core</span><span class='lparen'>(</span><span class='label'>pc:</span><span class='comma'>,</span> <span class='label'>sp:</span><span class='comma'>,</span> <span class='label'>release_core:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>sp_lower_limit:</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='label'>sp_upper_limit:</span> <span class='kw'>nil</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_enter_debug_mode'>enter_debug_mode</span>
   <span class='id identifier rubyid_set_sp'>set_sp</span><span class='lparen'>(</span><span class='id identifier rubyid_sp'>sp</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_set_pc'>set_pc</span><span class='lparen'>(</span><span class='id identifier rubyid_pc'>pc</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_disable_security'>disable_security</span> <span class='kw'>if</span> <span class='id identifier rubyid_disable_security'>disable_security</span>
-  <span class='id identifier rubyid_set_stack_limits'>set_stack_limits</span><span class='lparen'>(</span><span class='id identifier rubyid_sp_lower_limit'>sp_lower_limit</span><span class='comma'>,</span> <span class='id identifier rubyid_sp_upper_limit'>sp_upper_limit</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='lparen'>(</span><span class='id identifier rubyid_sp_lower_limit'>sp_lower_limit</span> <span class='op'>||</span> <span class='id identifier rubyid_sp_upper_limit'>sp_upper_limit</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_exit_debug_mode'>exit_debug_mode</span><span class='lparen'>(</span><span class='label'>release_core:</span> <span class='id identifier rubyid_release_core'>release_core</span><span class='rparen'>)</span>
+  <span class='comment'># set_stack_limits(sp_lower_limit, sp_upper_limit) if (sp_lower_limit || sp_upper_limit)
+</span>  <span class='id identifier rubyid_exit_debug_mode'>exit_debug_mode</span><span class='lparen'>(</span><span class='label'>release_core:</span> <span class='id identifier rubyid_release_core'>release_core</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -564,7 +657,7 @@
       <div class="method_details ">
   <h3 class="signature " id="set_pc-instance_method">
   
-    #<strong>set_pc</strong>(pc, options = {})  &#x21d2; <tt>Object</tt> 
+    #<strong>set_pc</strong>(pc)  &#x21d2; <tt>Object</tt> 
   
 
   
@@ -573,20 +666,51 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Sets the program counter. This involves two steps:</p>
+  <div class="note notetag">
+    <strong>Note:</strong>
+    <div class='inline'>
+<p>This requires the core to be in debug mode, otherwise a bus error will
+occur.</p>
+</div>
+  </div>
 
-<pre class="code ruby"><code class="ruby">1. Writing the THUMB bit to enable core execution.
-2. Writing the debug return address core register.
-</code></pre>
+  <div class="note notetag">
+    <strong>Note:</strong>
+    <div class='inline'>
+<p>This method will also force <code>Thumb</code> mode.</p>
+</div>
+  </div>
 
-<p>On the next instruction,the core will jump to this address upon execution
-start/restart</p>
+
+<p>Sets the program counter by writing the <code>debug_return_address</code>
+register. The <code>debug_return_address</code> will be loaded into the PC
+following debug mode exit, effectively moving the PC.</p>
 
 
   </div>
 </div>
 <div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
   
+    <li>
+      
+        <span class='name'>pc</span>
+      
+      
+        <span class='type'>(<tt>Fixnum</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The new program counter (debug return address).</p>
+</div>
+      
+    </li>
+  
+</ul>
+
 
 </div><table class="source_code">
   <tr>
@@ -594,35 +718,29 @@ start/restart</p>
       <pre class="lines">
 
 
-67
-68
-69
-70
-71
-72
-73
-74
-75
-76
-77
-78
-79
-80</pre>
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_arm/cores/cortex-m/cm33/cm33_controller.rb', line 67</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_arm/cores/cortexm/cm33/cm33_controller.rb', line 80</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_set_pc'>set_pc</span><span class='lparen'>(</span><span class='id identifier rubyid_pc'>pc</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='op'>=</span><span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_set_pc'>set_pc</span><span class='lparen'>(</span><span class='id identifier rubyid_pc'>pc</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_pp'>pp</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Patch the Program Counter</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='kw'>do</span>
     <span class='comment'># Force the thumb bit. Nothing will work otherwise as CM33 only support THUMB
 </span>    <span class='id identifier rubyid_reg'>reg</span><span class='lparen'>(</span><span class='symbol'>:xpsr</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_bits'>bits</span><span class='lparen'>(</span><span class='symbol'>:t</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_write'>write</span><span class='lparen'>(</span><span class='int'>1</span><span class='rparen'>)</span>
-    <span class='comment'>#write_debug_register!(:xpsr, xpsr, options)
-</span>    <span class='id identifier rubyid_reg'>reg</span><span class='lparen'>(</span><span class='symbol'>:xpsr</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_write!'>write!</span>
+    <span class='id identifier rubyid_reg'>reg</span><span class='lparen'>(</span><span class='symbol'>:xpsr</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_write!'>write!</span>
     
     <span class='comment'># Write the debug return address with the new PC
 </span>    <span class='comment'># Add 1 to indicate thumb mode
-</span>    <span class='comment'>#write_debug_register!(:dbg_retn_addr, pc + 1, options)
-</span>    <span class='comment'>#reg(:dbg_retn_addr).write!(pc + 1)
 </span>    <span class='id identifier rubyid_reg'>reg</span><span class='lparen'>(</span><span class='symbol'>:debug_return_address</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_write!'>write!</span><span class='lparen'>(</span><span class='id identifier rubyid_pc'>pc</span> <span class='op'>+</span> <span class='int'>1</span><span class='rparen'>)</span>
   <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
@@ -634,61 +752,79 @@ start/restart</p>
       <div class="method_details ">
   <h3 class="signature " id="set_sp-instance_method">
   
-    #<strong>set_sp</strong>(sp, options = {})  &#x21d2; <tt>Object</tt> 
+    #<strong>set_sp</strong>(sp)  &#x21d2; <tt>Object</tt> 
   
 
   
 
   
-</h3><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-56
-57
-58
-59
-60
-61</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_arm/cores/cortex-m/cm33/cm33_controller.rb', line 56</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_set_sp'>set_sp</span><span class='lparen'>(</span><span class='id identifier rubyid_sp'>sp</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='op'>=</span><span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_pp'>pp</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Patch the Stack Pointer</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='kw'>do</span>
-    <span class='comment'>#write_debug_register!(:sp, sp, options)
-</span>    <span class='id identifier rubyid_reg'>reg</span><span class='lparen'>(</span><span class='symbol'>:sp</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_write!'>write!</span><span class='lparen'>(</span><span class='id identifier rubyid_sp'>sp</span><span class='rparen'>)</span>
-  <span class='kw'>end</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
+</h3><div class="docstring">
+  <div class="discussion">
     
-      <div class="method_details ">
-  <h3 class="signature " id="set_stack_limits-instance_method">
-  
-    #<strong>set_stack_limits</strong>(lower_limit, upper_limits, stack: :msp, **options)  &#x21d2; <tt>Object</tt> 
-  
+  <div class="note notetag">
+    <strong>Note:</strong>
+    <div class='inline'>
+<p>This sets the <strong>current</strong> stack pointer. The stack pointer in
+question depends on the core&#39;s/device&#39;s mode and security settings.</p>
+</div>
+  </div>
 
-  
+  <div class="note notetag">
+    <strong>Note:</strong>
+    <div class='inline'>
+<p>This requires the core to be in debug mode, otherwise a bus error will
+occur.</p>
+</div>
+  </div>
 
+
+<p>Sets the current stack pointer.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
   
-</h3><table class="source_code">
+    <li>
+      
+        <span class='name'>sp</span>
+      
+      
+        <span class='type'>(<tt>Fixnum</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The new stack pointer.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-85
-86</pre>
+68
+69
+70
+71
+72</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_arm/cores/cortex-m/cm33/cm33_controller.rb', line 85</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_arm/cores/cortexm/cm33/cm33_controller.rb', line 68</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_set_stack_limits'>set_stack_limits</span><span class='lparen'>(</span><span class='id identifier rubyid_lower_limit'>lower_limit</span><span class='comma'>,</span> <span class='id identifier rubyid_upper_limits'>upper_limits</span><span class='comma'>,</span> <span class='label'>stack:</span> <span class='symbol'>:msp</span><span class='comma'>,</span> <span class='op'>**</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_set_sp'>set_sp</span><span class='lparen'>(</span><span class='id identifier rubyid_sp'>sp</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_pp'>pp</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Patch the Stack Pointer</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='kw'>do</span>
+    <span class='id identifier rubyid_reg'>reg</span><span class='lparen'>(</span><span class='symbol'>:sp</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_write!'>write!</span><span class='lparen'>(</span><span class='id identifier rubyid_sp'>sp</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -700,8 +836,8 @@ start/restart</p>
 </div>
 
       <div id="footer">
-  Generated on Wed Jan  2 13:05:40 2019 by
-  <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  Generated on Wed Jan  2 19:16:59 2019 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.16 (ruby-2.5.1).
 </div>
 

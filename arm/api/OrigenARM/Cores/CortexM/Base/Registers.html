@@ -83,12 +83,38 @@
   
   <dl>
     <dt>Defined in:</dt>
-    <dd>lib/origen_arm/cores/cortex-m/base_cortexm/cortexm_registers.rb</dd>
+    <dd>lib/origen_arm/cores/cortexm/base_cortexm/cortexm_registers.rb</dd>
   </dl>
   
 </div>
 
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+  <div class="note notetag">
+    <strong>Note:</strong>
+    <div class='inline'>
+<p>The information referenced in this file was taken from the
+readily-available online ARM documentation and is included here as a
+resource for developers. See <a
+href="http://infocenter.arm.com/help/index.jsp">infocenter.arm.com/help/index.jsp</a>
+for the original source. This source can also be downloaded from <a
+href="https://developer.arm.com">developer.arm.com</a>/ and selecting
+&#39;technical support&#39; (login required).</p>
+</div>
+  </div>
 
+
+<p>The CortexM base registers. Ideally, everything here will be applicable to
+all Cortex M-Series cores.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
 
 
 
@@ -144,7 +170,9 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>Instantiates the CortexM base registers.</p>
+</div></span>
   
 </li>
 
@@ -197,11 +225,9 @@ through the <code>DCRDR</code> and <code>DCRSR</code> registers with the
   </div>
 
 
-<p>Instantiates general purpose core registers. These are mostly stable</p>
-
-<pre class="code ruby"><code class="ruby">across all cortexM devices. Larger difference come into play on
-implementation details (e.g., does the core license include the FPU?)
-</code></pre>
+<p>Instantiates general purpose core registers. These are mostly stable across
+all cortexM devices. Larger difference come into play on implementation
+details (e.g., does the core license include the FPU?)</p>
 
 
   </div>
@@ -215,15 +241,6 @@ implementation details (e.g., does the core license include the FPU?)
       <pre class="lines">
 
 
-28
-29
-30
-31
-32
-33
-34
-35
-36
 37
 38
 39
@@ -295,10 +312,19 @@ implementation details (e.g., does the core license include the FPU?)
 105
 106
 107
-108</pre>
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_arm/cores/cortex-m/base_cortexm/cortexm_registers.rb', line 28</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_arm/cores/cortexm/base_cortexm/cortexm_registers.rb', line 37</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_instantiate_core_registers'>instantiate_core_registers</span><span class='lparen'>(</span><span class='id identifier rubyid_dut'>dut</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='op'>=</span><span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_dut'>dut</span><span class='period'>.</span><span class='id identifier rubyid_add_reg'>add_reg</span><span class='lparen'>(</span><span class='symbol'>:reg0</span><span class='comma'>,</span> <span class='int'>0x0</span><span class='comma'>,</span> <span class='label'>size:</span> <span class='int'>32</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>General Purpose Register 0</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
@@ -341,8 +367,8 @@ implementation details (e.g., does the core license include the FPU?)
   <span class='id identifier rubyid_dut'>dut</span><span class='period'>.</span><span class='id identifier rubyid_reg'>reg</span><span class='lparen'>(</span><span class='symbol'>:debug_return_address</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_meta'>meta</span><span class='lbracket'>[</span><span class='symbol'>:special_purpose_register</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='kw'>true</span>
 
   <span class='comment'># XPSR
-</span>  <span class='comment'># @note This register also seems mostly stable across the entire CortexM family, but may need to be revisited as
-</span>  <span class='comment'>#   more cores are added.
+</span>  <span class='comment'># Note: This register also seems mostly stable across the entire
+</span>  <span class='comment'># CortexM family, but may need to be revisited as more cores are added.
 </span>  <span class='id identifier rubyid_dut'>dut</span><span class='period'>.</span><span class='id identifier rubyid_add_reg'>add_reg</span><span class='lparen'>(</span><span class='symbol'>:xpsr</span><span class='comma'>,</span> <span class='int'>0x0</span><span class='comma'>,</span> <span class='label'>size:</span> <span class='int'>32</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Combined Program Status Register. Combination of APSR, EPSR, and IPSR Registers on Other ARM Cores.</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_r'>r</span><span class='op'>|</span>
     <span class='id identifier rubyid_r'>r</span><span class='period'>.</span><span class='id identifier rubyid_bits'>bits</span> <span class='int'>31</span><span class='comma'>,</span> <span class='symbol'>:n</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Negative flag. Reads or writes the current value of APSR.N.</span><span class='tstring_end'>&#39;</span></span>
     <span class='id identifier rubyid_r'>r</span><span class='period'>.</span><span class='id identifier rubyid_bits'>bits</span> <span class='int'>30</span><span class='comma'>,</span> <span class='symbol'>:z</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Zero flag. Reads or writes the current value of APSR.Z.</span><span class='tstring_end'>&#39;</span></span>
@@ -402,10 +428,23 @@ implementation details (e.g., does the core license include the FPU?)
     <strong>Note:</strong>
     <div class='inline'>
 <p>This is purposefully a class method to avoid overwriting the core&#39;s own
-#inititalize_registers method.</p>
+<code>#inititalize_registers</code> method.</p>
 </div>
   </div>
 
+  <div class="note notetag">
+    <strong>Note:</strong>
+    <div class='inline'>
+<p><strong>Extension Note:</strong> The registers instantiated here can be
+post-processed if there are slight differences from core to core, rather
+than adding options here, reimplementing the method, or skipping the method
+entirely.</p>
+</div>
+  </div>
+
+
+<p>Instantiates the CortexM base registers. These registers should be
+applicable to all CortexM cores.</p>
 
 
   </div>
@@ -419,13 +458,13 @@ implementation details (e.g., does the core license include the FPU?)
       <pre class="lines">
 
 
-15
-16
-17
-18</pre>
+23
+24
+25
+26</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_arm/cores/cortex-m/base_cortexm/cortexm_registers.rb', line 15</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_arm/cores/cortexm/base_cortexm/cortexm_registers.rb', line 23</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_instantiate_registers'>instantiate_registers</span><span class='lparen'>(</span><span class='id identifier rubyid_dut'>dut</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='op'>=</span><span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='comment'># Any common registers can go here
@@ -441,8 +480,8 @@ implementation details (e.g., does the core license include the FPU?)
 </div>
 
       <div id="footer">
-  Generated on Wed Jan  2 13:05:39 2019 by
-  <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  Generated on Wed Jan  2 19:16:58 2019 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.16 (ruby-2.5.1).
 </div>
 
