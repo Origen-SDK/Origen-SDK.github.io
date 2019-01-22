@@ -6,7 +6,7 @@
 <title>
   Module: Origen::Model::Exporter
   
-    &mdash; Origen Core 0.41.0
+    &mdash; Origen Core 0.42.0
   
 </title>
 
@@ -115,7 +115,9 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>Export the model.</p>
+</div></span>
   
 </li>
 
@@ -160,22 +162,35 @@
   
 
   
-</h3><table class="source_code">
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Export the model</p>
+
+<p>Options defaults:</p>
+
+<pre class="code ruby"><code class="ruby">include_pins:       true
+include_registers:  true
+include_sub_blocks: true
+include_timestamp:  true
+rm_rb_only:         nil     # delete only .rb files, default is rm -rf * Origen.root/vendor/lib/models/name
+</code></pre>
+
+<p>Use the rm_rb_only option if the export dir is under revision control and
+the dir contains revision control metadata</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
 14
 15
 16
@@ -236,10 +251,26 @@
 71
 72
 73
-74</pre>
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/model/exporter.rb', line 4</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/model/exporter.rb', line 14</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_export'>export</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='lbrace'>{</span>
@@ -254,7 +285,13 @@
 </span>  <span class='id identifier rubyid_file'>file</span> <span class='op'>=</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='lbracket'>[</span><span class='symbol'>:file_path</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='id identifier rubyid_export_path'>export_path</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span>
   <span class='id identifier rubyid_dir'>dir</span> <span class='op'>=</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='lbracket'>[</span><span class='symbol'>:dir_path</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='id identifier rubyid_export_dir'>export_dir</span><span class='lparen'>(</span><span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span>
   <span class='id identifier rubyid_path_to_file'>path_to_file</span> <span class='op'>=</span> <span class='const'>Pathname</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='id identifier rubyid_dir'>dir</span><span class='comma'>,</span> <span class='id identifier rubyid_file'>file</span><span class='rparen'>)</span><span class='rparen'>)</span>
-  <span class='const'>FileUtils</span><span class='period'>.</span><span class='id identifier rubyid_rm_rf'>rm_rf</span><span class='lparen'>(</span><span class='id identifier rubyid_path_to_file'>path_to_file</span><span class='period'>.</span><span class='id identifier rubyid_sub_ext'>sub_ext</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_exist?'>exist?</span><span class='lparen'>(</span><span class='id identifier rubyid_path_to_file'>path_to_file</span><span class='period'>.</span><span class='id identifier rubyid_sub_ext'>sub_ext</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_exist?'>exist?</span><span class='lparen'>(</span><span class='id identifier rubyid_path_to_file'>path_to_file</span><span class='period'>.</span><span class='id identifier rubyid_sub_ext'>sub_ext</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='rparen'>)</span>
+    <span class='kw'>if</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='lbracket'>[</span><span class='symbol'>:rm_rb_only</span><span class='rbracket'>]</span>
+      <span class='const'>Dir</span><span class='period'>.</span><span class='id identifier rubyid_glob'>glob</span><span class='lparen'>(</span><span class='id identifier rubyid_path_to_file'>path_to_file</span><span class='period'>.</span><span class='id identifier rubyid_sub_ext'>sub_ext</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span> <span class='op'>+</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>/**/*.rb</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_f'>f</span><span class='op'>|</span> <span class='const'>FileUtils</span><span class='period'>.</span><span class='id identifier rubyid_rm_f'>rm_f</span><span class='lparen'>(</span><span class='id identifier rubyid_f'>f</span><span class='rparen'>)</span> <span class='rbrace'>}</span>
+    <span class='kw'>else</span>
+      <span class='const'>FileUtils</span><span class='period'>.</span><span class='id identifier rubyid_rm_rf'>rm_rf</span><span class='lparen'>(</span><span class='id identifier rubyid_path_to_file'>path_to_file</span><span class='period'>.</span><span class='id identifier rubyid_sub_ext'>sub_ext</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='rparen'>)</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
   <span class='const'>FileUtils</span><span class='period'>.</span><span class='id identifier rubyid_rm_rf'>rm_rf</span><span class='lparen'>(</span><span class='id identifier rubyid_path_to_file'>path_to_file</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_exist?'>exist?</span><span class='lparen'>(</span><span class='id identifier rubyid_path_to_file'>path_to_file</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='rparen'>)</span>
   <span class='const'>FileUtils</span><span class='period'>.</span><span class='id identifier rubyid_mkdir_p'>mkdir_p</span><span class='lparen'>(</span><span class='id identifier rubyid_path_to_file'>path_to_file</span><span class='period'>.</span><span class='id identifier rubyid_dirname'>dirname</span><span class='rparen'>)</span>
   <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_open'>open</span><span class='lparen'>(</span><span class='id identifier rubyid_path_to_file'>path_to_file</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>w</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_f'>f</span><span class='op'>|</span>
@@ -332,31 +369,31 @@
       <pre class="lines">
 
 
-76
-77
-78
-79
-80
-81
-82
-83
-84
-85
-86
-87
-88
-89
-90
-91
 92
 93
 94
 95
 96
-97</pre>
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/model/exporter.rb', line 76</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/model/exporter.rb', line 92</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_import'>import</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_path'>path</span> <span class='op'>=</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='id identifier rubyid_export_dir'>export_dir</span><span class='lparen'>(</span><span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span><span class='comma'>,</span> <span class='id identifier rubyid_export_path'>export_path</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span><span class='rparen'>)</span>
@@ -390,8 +427,8 @@
 </div>
 
       <div id="footer">
-  Generated on Fri Dec 14 09:36:13 2018 by
-  <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  Generated on Tue Jan 22 15:33:28 2019 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.16 (ruby-2.5.1).
 </div>
 
