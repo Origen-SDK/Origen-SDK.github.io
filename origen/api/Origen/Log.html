@@ -6,7 +6,7 @@
 <title>
   Class: Origen::Log
   
-    &mdash; Origen Core 0.42.2
+    &mdash; Origen Core 0.43.0
   
 </title>
 
@@ -325,7 +325,7 @@ a new logger (mainly for use by the origen save command).</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#deprecate-instance_method" title="#deprecate (instance method)">#<strong>deprecate</strong>(string = &#39;&#39;, msg_type = nil)  &#x21d2; Object </a>
+      <a href="#deprecate-instance_method" title="#deprecate (instance method)">#<strong>deprecate</strong>(string = &#39;&#39;, options = {})  &#x21d2; Object </a>
     
 
     
@@ -349,7 +349,7 @@ a new logger (mainly for use by the origen save command).</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#error-instance_method" title="#error (instance method)">#<strong>error</strong>(string = &#39;&#39;, msg_type = nil)  &#x21d2; Object </a>
+      <a href="#error-instance_method" title="#error (instance method)">#<strong>error</strong>(string = &#39;&#39;, options = {})  &#x21d2; Object </a>
     
 
     
@@ -386,8 +386,7 @@ a new logger (mainly for use by the origen save command).</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Used to force logger to write any buffered output under an earlier
-implementation, now does nothing.</p>
+<p>Force the logger to write any buffered output to the log files.</p>
 </div></span>
   
 </li>
@@ -396,7 +395,7 @@ implementation, now does nothing.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#info-instance_method" title="#info (instance method)">#<strong>info</strong>(string = &#39;&#39;, msg_type = nil)  &#x21d2; Object </a>
+      <a href="#info-instance_method" title="#info (instance method)">#<strong>info</strong>(string = &#39;&#39;, options = {})  &#x21d2; Object </a>
     
 
     
@@ -564,7 +563,51 @@ logging will be done to a new file(s).</p>
         <li class="public ">
   <span class="summary_signature">
     
+      <a href="#start_intercepting-instance_method" title="#start_intercepting (instance method)">#<strong>start_intercepting</strong>(&amp;block)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  <span class="private note title">private</span>
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#start_job-instance_method" title="#start_job (instance method)">#<strong>start_job</strong>(name, type)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  <span class="private note title">private</span>
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#stop_intercepting-instance_method" title="#stop_intercepting (instance method)">#<strong>stop_intercepting</strong>(id)  &#x21d2; Object </a>
     
 
     
@@ -608,7 +651,7 @@ logging will be done to a new file(s).</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#success-instance_method" title="#success (instance method)">#<strong>success</strong>(string = &#39;&#39;, msg_type = nil)  &#x21d2; Object </a>
+      <a href="#success-instance_method" title="#success (instance method)">#<strong>success</strong>(string = &#39;&#39;, options = {})  &#x21d2; Object </a>
     
 
     
@@ -652,7 +695,7 @@ logging will be done to a new file(s).</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#warn-instance_method" title="#warn (instance method)">#<strong>warn</strong>(string = &#39;&#39;, msg_type = nil)  &#x21d2; Object </a>
+      <a href="#warn-instance_method" title="#warn (instance method)">#<strong>warn</strong>(string = &#39;&#39;, options = {})  &#x21d2; Object </a>
     
 
     
@@ -709,7 +752,8 @@ logging will be done to a new file(s).</p>
 17
 18
 19
-20</pre>
+20
+21</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 16</span>
@@ -718,6 +762,7 @@ logging will be done to a new file(s).</p>
   <span class='ivar'>@log_time_0</span> <span class='op'>=</span> <span class='ivar'>@t0</span> <span class='op'>=</span> <span class='const'>Time</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
   <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_level'>level</span> <span class='op'>=</span> <span class='symbol'>:normal</span>
   <span class='ivar'>@custom_logs</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+  <span class='ivar'>@interceptors</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -747,26 +792,26 @@ logging will be done to a new file(s).</p>
       <pre class="lines">
 
 
-201
-202
-203
-204
-205
-206
-207
-208
-209
-210
-211
-212
-213
-214
-215
-216
-217</pre>
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 201</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 256</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_method_missing'>method_missing</span><span class='lparen'>(</span><span class='id identifier rubyid_method'>method</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
   <span class='ivar'>@custom_logs</span><span class='lbracket'>[</span><span class='id identifier rubyid_method'>method</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span><span class='rbracket'>]</span> <span class='op'>||=</span> <span class='kw'>begin</span>
@@ -834,14 +879,14 @@ logging will be done to a new file(s).</p>
       <pre class="lines">
 
 
-38
 39
 40
 41
-42</pre>
+42
+43</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 38</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 39</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_console_only'>console_only</span>
   <span class='ivar'>@console_only</span> <span class='op'>=</span> <span class='kw'>true</span>
@@ -868,12 +913,12 @@ logging will be done to a new file(s).</p>
       <pre class="lines">
 
 
-44
 45
-46</pre>
+46
+47</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 44</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 45</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_console_only='>console_only=</span><span class='lparen'>(</span><span class='id identifier rubyid_val'>val</span><span class='rparen'>)</span>
   <span class='ivar'>@console_only</span> <span class='op'>=</span> <span class='id identifier rubyid_val'>val</span>
@@ -920,12 +965,12 @@ logging will be done to a new file(s).</p>
       <pre class="lines">
 
 
-48
 49
-50</pre>
+50
+51</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 48</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 49</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_console_only?'>console_only?</span>
   <span class='ivar'>@console_only</span>
@@ -962,12 +1007,12 @@ a new logger (mainly for use by the origen save command)</p>
       <pre class="lines">
 
 
-137
-138
-139</pre>
+175
+176
+177</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 137</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 175</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_log_file'>log_file</span>
   <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='id identifier rubyid_log_file_directory'>log_file_directory</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>last.txt</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
@@ -992,16 +1037,16 @@ a new logger (mainly for use by the origen save command)</p>
       <pre class="lines">
 
 
-141
-142
-143
-144
-145
-146
-147</pre>
+179
+180
+181
+182
+183
+184
+185</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 141</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 179</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_log_file_directory'>log_file_directory</span>
   <span class='ivar'>@log_file_directory</span> <span class='op'>||=</span> <span class='kw'>begin</span>
@@ -1058,17 +1103,17 @@ a new logger (mainly for use by the origen save command)</p>
       <pre class="lines">
 
 
-22
 23
 24
 25
 26
 27
 28
-29</pre>
+29
+30</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 22</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 23</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_console_only?'>console_only?</span><span class='lparen'>(</span><span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='period'>.</span><span class='id identifier rubyid_key?'>key?</span><span class='lparen'>(</span><span class='symbol'>:console_only</span><span class='rparen'>)</span>
@@ -1098,23 +1143,27 @@ a new logger (mainly for use by the origen save command)</p>
       <pre class="lines">
 
 
-82
-83
-84
-85
-86
-87
-88</pre>
+108
+109
+110
+111
+112
+113
+114
+115
+116</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 82</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 108</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_debug'>debug</span><span class='lparen'>(</span><span class='id identifier rubyid_string'>string</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_string'>string</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='id identifier rubyid_sanitize_args'>sanitize_args</span><span class='lparen'>(</span><span class='id identifier rubyid_string'>string</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_msg'>msg</span> <span class='op'>=</span> <span class='id identifier rubyid_format_msg'>format_msg</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>DEBUG</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_string'>string</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_log_files'>log_files</span><span class='lparen'>(</span><span class='symbol'>:debug</span><span class='comma'>,</span> <span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='id identifier rubyid_console_only?'>console_only?</span><span class='lparen'>(</span><span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_console'>console</span><span class='period'>.</span><span class='id identifier rubyid_debug'>debug</span> <span class='id identifier rubyid_msg'>msg</span>
-  <span class='kw'>nil</span>
+  <span class='id identifier rubyid_intercept'>intercept</span><span class='lparen'>(</span><span class='id identifier rubyid_string'>string</span><span class='comma'>,</span> <span class='symbol'>:debug</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_msg'>msg</span><span class='comma'>,</span> <span class='id identifier rubyid_type'>type</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='op'>|</span>
+    <span class='id identifier rubyid_msg'>msg</span> <span class='op'>=</span> <span class='id identifier rubyid_format_msg'>format_msg</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>DEBUG</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_log_files'>log_files</span><span class='lparen'>(</span><span class='symbol'>:debug</span><span class='comma'>,</span> <span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='id identifier rubyid_console_only?'>console_only?</span><span class='lparen'>(</span><span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_console'>console</span><span class='period'>.</span><span class='id identifier rubyid_debug'>debug</span> <span class='id identifier rubyid_msg'>msg</span>
+    <span class='kw'>nil</span>
+  <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1124,7 +1173,7 @@ a new logger (mainly for use by the origen save command)</p>
       <div class="method_details ">
   <h3 class="signature " id="deprecate-instance_method">
   
-    #<strong>deprecate</strong>(string = &#39;&#39;, msg_type = nil)  &#x21d2; <tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt> 
+    #<strong>deprecate</strong>(string = &#39;&#39;, options = {})  &#x21d2; <tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt> 
   
 
   
@@ -1140,23 +1189,27 @@ a new logger (mainly for use by the origen save command)</p>
       <pre class="lines">
 
 
-109
-110
-111
-112
-113
-114
-115</pre>
+141
+142
+143
+144
+145
+146
+147
+148
+149</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 109</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 141</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_deprecate'>deprecate</span><span class='lparen'>(</span><span class='id identifier rubyid_string'>string</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_msg_type'>msg_type</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_deprecate'>deprecate</span><span class='lparen'>(</span><span class='id identifier rubyid_string'>string</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_string'>string</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='id identifier rubyid_sanitize_args'>sanitize_args</span><span class='lparen'>(</span><span class='id identifier rubyid_string'>string</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_msg'>msg</span> <span class='op'>=</span> <span class='id identifier rubyid_format_msg'>format_msg</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>DEPRECATED</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_string'>string</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_log_files'>log_files</span><span class='lparen'>(</span><span class='symbol'>:warn</span><span class='comma'>,</span> <span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='id identifier rubyid_console_only?'>console_only?</span><span class='lparen'>(</span><span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_console'>console</span><span class='period'>.</span><span class='id identifier rubyid_warn'>warn</span> <span class='id identifier rubyid_color_unless_remote'>color_unless_remote</span><span class='lparen'>(</span><span class='id identifier rubyid_msg'>msg</span><span class='comma'>,</span> <span class='symbol'>:yellow</span><span class='rparen'>)</span>
-  <span class='kw'>nil</span>
+  <span class='id identifier rubyid_intercept'>intercept</span><span class='lparen'>(</span><span class='id identifier rubyid_string'>string</span><span class='comma'>,</span> <span class='symbol'>:deprecate</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_msg'>msg</span><span class='comma'>,</span> <span class='id identifier rubyid_type'>type</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='op'>|</span>
+    <span class='id identifier rubyid_msg'>msg</span> <span class='op'>=</span> <span class='id identifier rubyid_format_msg'>format_msg</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>DEPRECATED</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_log_files'>log_files</span><span class='lparen'>(</span><span class='symbol'>:warn</span><span class='comma'>,</span> <span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='id identifier rubyid_console_only?'>console_only?</span><span class='lparen'>(</span><span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_console'>console</span><span class='period'>.</span><span class='id identifier rubyid_warn'>warn</span> <span class='id identifier rubyid_color_unless_remote'>color_unless_remote</span><span class='lparen'>(</span><span class='id identifier rubyid_msg'>msg</span><span class='comma'>,</span> <span class='symbol'>:yellow</span><span class='rparen'>)</span>
+    <span class='kw'>nil</span>
+  <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1166,7 +1219,7 @@ a new logger (mainly for use by the origen save command)</p>
       <div class="method_details ">
   <h3 class="signature " id="error-instance_method">
   
-    #<strong>error</strong>(string = &#39;&#39;, msg_type = nil)  &#x21d2; <tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt> 
+    #<strong>error</strong>(string = &#39;&#39;, options = {})  &#x21d2; <tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt> 
   
 
   
@@ -1178,23 +1231,27 @@ a new logger (mainly for use by the origen save command)</p>
       <pre class="lines">
 
 
-127
-128
-129
-130
-131
-132
-133</pre>
+163
+164
+165
+166
+167
+168
+169
+170
+171</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 127</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 163</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_error'>error</span><span class='lparen'>(</span><span class='id identifier rubyid_string'>string</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_msg_type'>msg_type</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_error'>error</span><span class='lparen'>(</span><span class='id identifier rubyid_string'>string</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_string'>string</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='id identifier rubyid_sanitize_args'>sanitize_args</span><span class='lparen'>(</span><span class='id identifier rubyid_string'>string</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_msg'>msg</span> <span class='op'>=</span> <span class='id identifier rubyid_format_msg'>format_msg</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>ERROR</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_string'>string</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_log_files'>log_files</span><span class='lparen'>(</span><span class='symbol'>:error</span><span class='comma'>,</span> <span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='id identifier rubyid_console_only?'>console_only?</span><span class='lparen'>(</span><span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_console'>console</span><span class='period'>.</span><span class='id identifier rubyid_error'>error</span> <span class='id identifier rubyid_color_unless_remote'>color_unless_remote</span><span class='lparen'>(</span><span class='id identifier rubyid_msg'>msg</span><span class='comma'>,</span> <span class='symbol'>:red</span><span class='rparen'>)</span>
-  <span class='kw'>nil</span>
+  <span class='id identifier rubyid_intercept'>intercept</span><span class='lparen'>(</span><span class='id identifier rubyid_string'>string</span><span class='comma'>,</span> <span class='symbol'>:error</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_msg'>msg</span><span class='comma'>,</span> <span class='id identifier rubyid_type'>type</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='op'>|</span>
+    <span class='id identifier rubyid_msg'>msg</span> <span class='op'>=</span> <span class='id identifier rubyid_format_msg'>format_msg</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>ERROR</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_log_files'>log_files</span><span class='lparen'>(</span><span class='symbol'>:error</span><span class='comma'>,</span> <span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='id identifier rubyid_console_only?'>console_only?</span><span class='lparen'>(</span><span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_console'>console</span><span class='period'>.</span><span class='id identifier rubyid_error'>error</span> <span class='id identifier rubyid_color_unless_remote'>color_unless_remote</span><span class='lparen'>(</span><span class='id identifier rubyid_msg'>msg</span><span class='comma'>,</span> <span class='symbol'>:red</span><span class='rparen'>)</span>
+    <span class='kw'>nil</span>
+  <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1213,8 +1270,7 @@ a new logger (mainly for use by the origen save command)</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Used to force logger to write any buffered output under an earlier
-implementation, now does nothing</p>
+<p>Force the logger to write any buffered output to the log files</p>
 
 
   </div>
@@ -1228,18 +1284,22 @@ implementation, now does nothing</p>
       <pre class="lines">
 
 
-158
-159
-160
-161</pre>
+196
+197
+198
+199
+200
+201</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 158</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 196</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_flush'>flush</span>
-  <span class='comment'># No such API provided by the underlying logger, method kept around for compatibility with application
-</span>  <span class='comment'># code which was built for a previous version of this logger where flushing was required
-</span><span class='kw'>end</span></pre>
+  <span class='ivar'>@open_logs</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_logger'>logger</span><span class='comma'>,</span> <span class='id identifier rubyid_file'>file</span><span class='op'>|</span>
+    <span class='id identifier rubyid_file'>file</span><span class='period'>.</span><span class='id identifier rubyid_flush'>flush</span>
+  <span class='kw'>end</span>
+  <span class='kw'>nil</span>
+<span class='kw'>end</span></pre>
     </td>
   </tr>
 </table>
@@ -1248,7 +1308,7 @@ implementation, now does nothing</p>
       <div class="method_details ">
   <h3 class="signature " id="info-instance_method">
   
-    #<strong>info</strong>(string = &#39;&#39;, msg_type = nil)  &#x21d2; <tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt> 
+    #<strong>info</strong>(string = &#39;&#39;, options = {})  &#x21d2; <tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt> 
   
 
   
@@ -1264,23 +1324,27 @@ implementation, now does nothing</p>
       <pre class="lines">
 
 
-90
-91
-92
-93
-94
-95
-96</pre>
+118
+119
+120
+121
+122
+123
+124
+125
+126</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 90</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 118</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_info'>info</span><span class='lparen'>(</span><span class='id identifier rubyid_string'>string</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_msg_type'>msg_type</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_info'>info</span><span class='lparen'>(</span><span class='id identifier rubyid_string'>string</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_string'>string</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='id identifier rubyid_sanitize_args'>sanitize_args</span><span class='lparen'>(</span><span class='id identifier rubyid_string'>string</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_msg'>msg</span> <span class='op'>=</span> <span class='id identifier rubyid_format_msg'>format_msg</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>INFO</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_string'>string</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_log_files'>log_files</span><span class='lparen'>(</span><span class='symbol'>:info</span><span class='comma'>,</span> <span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='id identifier rubyid_console_only?'>console_only?</span><span class='lparen'>(</span><span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_console'>console</span><span class='period'>.</span><span class='id identifier rubyid_info'>info</span> <span class='id identifier rubyid_msg'>msg</span>
-  <span class='kw'>nil</span>
+  <span class='id identifier rubyid_intercept'>intercept</span><span class='lparen'>(</span><span class='id identifier rubyid_string'>string</span><span class='comma'>,</span> <span class='symbol'>:info</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_msg'>msg</span><span class='comma'>,</span> <span class='id identifier rubyid_type'>type</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='op'>|</span>
+    <span class='id identifier rubyid_msg'>msg</span> <span class='op'>=</span> <span class='id identifier rubyid_format_msg'>format_msg</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>INFO</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_log_files'>log_files</span><span class='lparen'>(</span><span class='symbol'>:info</span><span class='comma'>,</span> <span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='id identifier rubyid_console_only?'>console_only?</span><span class='lparen'>(</span><span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_console'>console</span><span class='period'>.</span><span class='id identifier rubyid_info'>info</span> <span class='id identifier rubyid_msg'>msg</span>
+    <span class='kw'>nil</span>
+  <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1313,12 +1377,12 @@ implementation, now does nothing</p>
       <pre class="lines">
 
 
-78
 79
-80</pre>
+80
+81</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 78</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 79</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_level'>level</span>
   <span class='ivar'>@level</span>
@@ -1354,7 +1418,6 @@ implementation, now does nothing</p>
       <pre class="lines">
 
 
-53
 54
 55
 56
@@ -1376,10 +1439,11 @@ implementation, now does nothing</p>
 72
 73
 74
-75</pre>
+75
+76</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 53</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 54</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_level='>level=</span><span class='lparen'>(</span><span class='id identifier rubyid_val'>val</span><span class='rparen'>)</span>
   <span class='kw'>unless</span> <span class='const'><span class='object_link'><a href="#LEVELS-constant" title="Origen::Log::LEVELS (constant)">LEVELS</a></span></span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='id identifier rubyid_val'>val</span><span class='rparen'>)</span>
@@ -1437,29 +1501,31 @@ logging will be done to a new file(s)</p>
       <pre class="lines">
 
 
-165
-166
-167
-168
-169
-170
-171
-172
-173
-174
-175</pre>
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 165</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 205</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_reset'>reset</span>
   <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_level'>level</span> <span class='op'>=</span> <span class='symbol'>:normal</span>
-  <span class='ivar'>@last_file</span><span class='period'>.</span><span class='id identifier rubyid_close'>close</span> <span class='kw'>if</span> <span class='ivar'>@last_file</span>
+  <span class='id identifier rubyid_flush'>flush</span>
+  <span class='id identifier rubyid_close_log'>close_log</span><span class='lparen'>(</span><span class='ivar'>@last_file</span><span class='rparen'>)</span>
   <span class='ivar'>@last_file</span> <span class='op'>=</span> <span class='kw'>nil</span>
-  <span class='ivar'>@job_file</span><span class='period'>.</span><span class='id identifier rubyid_close'>close</span> <span class='kw'>if</span> <span class='ivar'>@job_file</span>
+  <span class='id identifier rubyid_close_log'>close_log</span><span class='lparen'>(</span><span class='ivar'>@job_file</span><span class='rparen'>)</span>
   <span class='ivar'>@job_file</span> <span class='op'>=</span> <span class='kw'>nil</span>
   <span class='ivar'>@custom_logs</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_log'>log</span><span class='op'>|</span>
-    <span class='id identifier rubyid_log'>log</span><span class='period'>.</span><span class='id identifier rubyid_close'>close</span>
+    <span class='id identifier rubyid_close_log'>close_log</span><span class='lparen'>(</span><span class='id identifier rubyid_log'>log</span><span class='rparen'>)</span>
   <span class='kw'>end</span>
   <span class='ivar'>@custom_logs</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
 <span class='kw'>end</span></pre>
@@ -1505,15 +1571,84 @@ logging will be done to a new file(s)</p>
       <pre class="lines">
 
 
-149
-150
-151</pre>
+187
+188
+189</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 149</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 187</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_silent?'>silent?</span>
   <span class='id identifier rubyid_level'>level</span> <span class='op'>==</span> <span class='symbol'>:silent</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="start_intercepting-instance_method">
+  
+    #<strong>start_intercepting</strong>(&amp;block)  &#x21d2; <tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p class="note private">
+  <strong>This method is part of a private API.</strong>
+  You should avoid using this method if possible, as it may be removed or be changed in the future.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  <div class="examples">
+    <p class="tag_title">Examples:</p>
+    
+      
+        <p class="example_title"><div class='inline'>
+<p>of an interceptor:</p>
+</div></p>
+      
+      <pre class="example code"><code>
+<span class='comment'># An interceptor ID is returned, this should be given to stop_intercepting
+</span><span class='ivar'>@log_intercept_id</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_log'><span class='object_link'><a href="../Origen.html#log-class_method" title="Origen.log (method)">log</a></span></span><span class='period'>.</span><span class='id identifier rubyid_start_intercepting'>start_intercepting</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_msg'>msg</span><span class='comma'>,</span> <span class='id identifier rubyid_type'>type</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='comma'>,</span> <span class='id identifier rubyid_original'>original</span><span class='op'>|</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_some_condition_is_true?'>some_condition_is_true?</span>
+    <span class='comment'># Handling it ourselves
+</span>    <span class='id identifier rubyid_my_method'>my_method</span><span class='lparen'>(</span><span class='id identifier rubyid_msg'>msg</span><span class='comma'>,</span> <span class='id identifier rubyid_type'>type</span><span class='rparen'>)</span>
+  <span class='kw'>else</span>
+    <span class='comment'># Call the original Origen.log method (or the next interceptor in line)
+</span>    <span class='id identifier rubyid_original'>original</span><span class='period'>.</span><span class='id identifier rubyid_call'>call</span><span class='lparen'>(</span><span class='id identifier rubyid_msg'>msg</span><span class='comma'>,</span> <span class='id identifier rubyid_type'>type</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></code></pre>
+    
+  </div>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+97
+98
+99
+100
+101</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 97</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_start_intercepting'>start_intercepting</span><span class='lparen'>(</span><span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_id'>id</span> <span class='op'>=</span> <span class='id identifier rubyid_block'>block</span><span class='period'>.</span><span class='id identifier rubyid_object_id'>object_id</span>
+  <span class='ivar'>@interceptors</span><span class='lbracket'>[</span><span class='id identifier rubyid_id'>id</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_block'>block</span>
+  <span class='id identifier rubyid_id'>id</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1548,22 +1683,31 @@ logging will be done to a new file(s)</p>
       <pre class="lines">
 
 
-178
-179
-180
-181
-182
-183
-184
-185
-186
-187
-188
-189
-190</pre>
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 178</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 219</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_start_job'>start_job</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_type'>type</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_dir'>dir</span> <span class='op'>=</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_log_directory'>log_directory</span><span class='comma'>,</span> <span class='id identifier rubyid_type'>type</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='rparen'>)</span>
@@ -1574,9 +1718,61 @@ logging will be done to a new file(s)</p>
     <span class='id identifier rubyid_dir'>dir</span> <span class='op'>=</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='id identifier rubyid_dir'>dir</span><span class='comma'>,</span> <span class='id identifier rubyid_env'>env</span><span class='rparen'>)</span>
   <span class='kw'>end</span>
   <span class='const'>FileUtils</span><span class='period'>.</span><span class='id identifier rubyid_mkdir_p'>mkdir_p</span> <span class='id identifier rubyid_dir'>dir</span> <span class='kw'>unless</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_exist?'>exist?</span><span class='lparen'>(</span><span class='id identifier rubyid_dir'>dir</span><span class='rparen'>)</span>
-  <span class='ivar'>@job_file_path</span> <span class='op'>=</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='id identifier rubyid_dir'>dir</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'>.txt</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+  <span class='cvar'>@@job_file_paths</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span> <span class='kw'>unless</span> <span class='kw'>defined?</span><span class='lparen'>(</span><span class='cvar'>@@job_file_paths</span><span class='rparen'>)</span>
+  <span class='comment'># Make sure the log name is unique in this run, duplication and overwrite can occur in cases where
+</span>  <span class='comment'># a pattern is run multiple times during a simulation
+</span>  <span class='ivar'>@job_file_path</span> <span class='op'>=</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='id identifier rubyid_dir'>dir</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'>.txt</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_n'>n</span> <span class='op'>=</span> <span class='cvar'>@@job_file_paths</span><span class='lbracket'>[</span><span class='ivar'>@job_file_path</span><span class='rbracket'>]</span>
+    <span class='cvar'>@@job_file_paths</span><span class='lbracket'>[</span><span class='ivar'>@job_file_path</span><span class='rbracket'>]</span> <span class='op'>+=</span> <span class='int'>1</span>
+    <span class='ivar'>@job_file_path</span> <span class='op'>=</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='id identifier rubyid_dir'>dir</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'>_</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_n'>n</span><span class='embexpr_end'>}</span><span class='tstring_content'>.txt</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+  <span class='kw'>else</span>
+    <span class='cvar'>@@job_file_paths</span><span class='lbracket'>[</span><span class='ivar'>@job_file_path</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='int'>1</span>
+  <span class='kw'>end</span>
   <span class='const'>FileUtils</span><span class='period'>.</span><span class='id identifier rubyid_rm_f'>rm_f</span><span class='lparen'>(</span><span class='ivar'>@job_file_path</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_exist?'>exist?</span><span class='lparen'>(</span><span class='ivar'>@job_file_path</span><span class='rparen'>)</span>
   <span class='ivar'>@job_file</span> <span class='op'>=</span> <span class='id identifier rubyid_open_log'>open_log</span><span class='lparen'>(</span><span class='ivar'>@job_file_path</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="stop_intercepting-instance_method">
+  
+    #<strong>stop_intercepting</strong>(id)  &#x21d2; <tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p class="note private">
+  <strong>This method is part of a private API.</strong>
+  You should avoid using this method if possible, as it may be removed or be changed in the future.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+104
+105
+106</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 104</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_stop_intercepting'>stop_intercepting</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='rparen'>)</span>
+  <span class='ivar'>@interceptors</span><span class='period'>.</span><span class='id identifier rubyid_delete'>delete</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1611,21 +1807,31 @@ logging will be done to a new file(s)</p>
       <pre class="lines">
 
 
-193
-194
-195
-196
-197
-198
-199</pre>
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 193</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 243</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_stop_job'>stop_job</span>
   <span class='kw'>if</span> <span class='ivar'>@job_file</span>
-    <span class='const'><span class='object_link'><a href="../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_log'><span class='object_link'><a href="../Origen.html#log-class_method" title="Origen.log (method)">log</a></span></span><span class='period'>.</span><span class='id identifier rubyid_info'>info</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Log file written to: </span><span class='embexpr_beg'>#{</span><span class='ivar'>@job_file_path</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
-    <span class='ivar'>@job_file</span><span class='period'>.</span><span class='id identifier rubyid_close'>close</span>
+    <span class='kw'>if</span> <span class='id identifier rubyid_tester'><span class='object_link'><a href="GlobalMethods.html#tester-instance_method" title="Origen::GlobalMethods#tester (method)">tester</a></span></span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_tester'><span class='object_link'><a href="GlobalMethods.html#tester-instance_method" title="Origen::GlobalMethods#tester (method)">tester</a></span></span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:log_file_written</span><span class='rparen'>)</span>
+      <span class='id identifier rubyid_tester'><span class='object_link'><a href="GlobalMethods.html#tester-instance_method" title="Origen::GlobalMethods#tester (method)">tester</a></span></span><span class='period'>.</span><span class='id identifier rubyid_log_file_written'>log_file_written</span> <span class='ivar'>@job_file_path</span>
+    <span class='kw'>else</span>
+      <span class='const'><span class='object_link'><a href="../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_log'><span class='object_link'><a href="../Origen.html#log-class_method" title="Origen.log (method)">log</a></span></span><span class='period'>.</span><span class='id identifier rubyid_info'>info</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Log file written to: </span><span class='embexpr_beg'>#{</span><span class='ivar'>@job_file_path</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+    <span class='kw'>end</span>
+    <span class='id identifier rubyid_flush'>flush</span>
+    <span class='id identifier rubyid_close_log'>close_log</span><span class='lparen'>(</span><span class='ivar'>@job_file</span><span class='rparen'>)</span>
     <span class='ivar'>@job_file</span> <span class='op'>=</span> <span class='kw'>nil</span>
   <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
@@ -1637,7 +1843,7 @@ logging will be done to a new file(s)</p>
       <div class="method_details ">
   <h3 class="signature " id="success-instance_method">
   
-    #<strong>success</strong>(string = &#39;&#39;, msg_type = nil)  &#x21d2; <tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt> 
+    #<strong>success</strong>(string = &#39;&#39;, options = {})  &#x21d2; <tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt> 
   
 
   
@@ -1649,23 +1855,27 @@ logging will be done to a new file(s)</p>
       <pre class="lines">
 
 
-101
-102
-103
-104
-105
-106
-107</pre>
+131
+132
+133
+134
+135
+136
+137
+138
+139</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 101</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 131</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_success'>success</span><span class='lparen'>(</span><span class='id identifier rubyid_string'>string</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_msg_type'>msg_type</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_success'>success</span><span class='lparen'>(</span><span class='id identifier rubyid_string'>string</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_string'>string</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='id identifier rubyid_sanitize_args'>sanitize_args</span><span class='lparen'>(</span><span class='id identifier rubyid_string'>string</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_msg'>msg</span> <span class='op'>=</span> <span class='id identifier rubyid_format_msg'>format_msg</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>SUCCESS</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_string'>string</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_log_files'>log_files</span><span class='lparen'>(</span><span class='symbol'>:info</span><span class='comma'>,</span> <span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='id identifier rubyid_console_only?'>console_only?</span><span class='lparen'>(</span><span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_console'>console</span><span class='period'>.</span><span class='id identifier rubyid_info'>info</span> <span class='id identifier rubyid_color_unless_remote'>color_unless_remote</span><span class='lparen'>(</span><span class='id identifier rubyid_msg'>msg</span><span class='comma'>,</span> <span class='symbol'>:green</span><span class='rparen'>)</span>
-  <span class='kw'>nil</span>
+  <span class='id identifier rubyid_intercept'>intercept</span><span class='lparen'>(</span><span class='id identifier rubyid_string'>string</span><span class='comma'>,</span> <span class='symbol'>:success</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_msg'>msg</span><span class='comma'>,</span> <span class='id identifier rubyid_type'>type</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='op'>|</span>
+    <span class='id identifier rubyid_msg'>msg</span> <span class='op'>=</span> <span class='id identifier rubyid_format_msg'>format_msg</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>SUCCESS</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_log_files'>log_files</span><span class='lparen'>(</span><span class='symbol'>:info</span><span class='comma'>,</span> <span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='id identifier rubyid_console_only?'>console_only?</span><span class='lparen'>(</span><span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_console'>console</span><span class='period'>.</span><span class='id identifier rubyid_info'>info</span> <span class='id identifier rubyid_color_unless_remote'>color_unless_remote</span><span class='lparen'>(</span><span class='id identifier rubyid_msg'>msg</span><span class='comma'>,</span> <span class='symbol'>:green</span><span class='rparen'>)</span>
+    <span class='kw'>nil</span>
+  <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1709,12 +1919,12 @@ logging will be done to a new file(s)</p>
       <pre class="lines">
 
 
-153
-154
-155</pre>
+191
+192
+193</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 153</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 191</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_verbose?'>verbose?</span>
   <span class='id identifier rubyid_level'>level</span> <span class='op'>==</span> <span class='symbol'>:verbose</span>
@@ -1727,7 +1937,7 @@ logging will be done to a new file(s)</p>
       <div class="method_details ">
   <h3 class="signature " id="warn-instance_method">
   
-    #<strong>warn</strong>(string = &#39;&#39;, msg_type = nil)  &#x21d2; <tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt> 
+    #<strong>warn</strong>(string = &#39;&#39;, options = {})  &#x21d2; <tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt> 
   
 
   
@@ -1743,23 +1953,27 @@ logging will be done to a new file(s)</p>
       <pre class="lines">
 
 
-118
-119
-120
-121
-122
-123
-124</pre>
+152
+153
+154
+155
+156
+157
+158
+159
+160</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 118</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/log.rb', line 152</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_warn'>warn</span><span class='lparen'>(</span><span class='id identifier rubyid_string'>string</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_msg_type'>msg_type</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_warn'>warn</span><span class='lparen'>(</span><span class='id identifier rubyid_string'>string</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_string'>string</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='id identifier rubyid_sanitize_args'>sanitize_args</span><span class='lparen'>(</span><span class='id identifier rubyid_string'>string</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_msg'>msg</span> <span class='op'>=</span> <span class='id identifier rubyid_format_msg'>format_msg</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>WARNING</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_string'>string</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_log_files'>log_files</span><span class='lparen'>(</span><span class='symbol'>:warn</span><span class='comma'>,</span> <span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='id identifier rubyid_console_only?'>console_only?</span><span class='lparen'>(</span><span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_console'>console</span><span class='period'>.</span><span class='id identifier rubyid_warn'>warn</span> <span class='id identifier rubyid_color_unless_remote'>color_unless_remote</span><span class='lparen'>(</span><span class='id identifier rubyid_msg'>msg</span><span class='comma'>,</span> <span class='symbol'>:yellow</span><span class='rparen'>)</span>
-  <span class='kw'>nil</span>
+  <span class='id identifier rubyid_intercept'>intercept</span><span class='lparen'>(</span><span class='id identifier rubyid_string'>string</span><span class='comma'>,</span> <span class='symbol'>:warn</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_msg'>msg</span><span class='comma'>,</span> <span class='id identifier rubyid_type'>type</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='op'>|</span>
+    <span class='id identifier rubyid_msg'>msg</span> <span class='op'>=</span> <span class='id identifier rubyid_format_msg'>format_msg</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>WARNING</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_log_files'>log_files</span><span class='lparen'>(</span><span class='symbol'>:warn</span><span class='comma'>,</span> <span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='id identifier rubyid_console_only?'>console_only?</span><span class='lparen'>(</span><span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_console'>console</span><span class='period'>.</span><span class='id identifier rubyid_warn'>warn</span> <span class='id identifier rubyid_color_unless_remote'>color_unless_remote</span><span class='lparen'>(</span><span class='id identifier rubyid_msg'>msg</span><span class='comma'>,</span> <span class='symbol'>:yellow</span><span class='rparen'>)</span>
+    <span class='kw'>nil</span>
+  <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1771,8 +1985,8 @@ logging will be done to a new file(s)</p>
 </div>
 
       <div id="footer">
-  Generated on Fri Mar  1 11:42:23 2019 by
-  <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  Generated on Fri Mar  8 02:10:14 2019 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.18 (ruby-2.5.1).
 </div>
 
