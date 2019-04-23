@@ -6,7 +6,7 @@
 <title>
   Class: OrigenJTAG::Driver
   
-    &mdash; Origen JTAG 0.20.0
+    &mdash; Origen JTAG 0.21.0
   
 </title>
 
@@ -116,7 +116,7 @@ state machine via the TAPController module.</p>
 <p>To use this driver the parent model must define the following pins (an
 alias is fine):</p>
 
-<pre class="code ruby"><code class="ruby"><span class='symbol'>:tclk</span>
+<pre class="code ruby"><code class="ruby"><span class='symbol'>:tck</span>
 <span class='symbol'>:tdi</span>
 <span class='symbol'>:tdo</span>
 <span class='symbol'>:tms</span>
@@ -140,7 +140,7 @@ alias is fine):</p>
         <dt id="REQUIRED_PINS-constant" class="">REQUIRED_PINS =
           
         </dt>
-        <dd><pre class="code"><span class='lbracket'>[</span><span class='symbol'>:tclk</span><span class='comma'>,</span> <span class='symbol'>:tdi</span><span class='comma'>,</span> <span class='symbol'>:tdo</span><span class='comma'>,</span> <span class='symbol'>:tms</span><span class='rbracket'>]</span></pre></dd>
+        <dd><pre class="code"><span class='lbracket'>[</span><span class='symbol'>:tck</span><span class='comma'>,</span> <span class='symbol'>:tdi</span><span class='comma'>,</span> <span class='symbol'>:tdo</span><span class='comma'>,</span> <span class='symbol'>:tms</span><span class='rbracket'>]</span></pre></dd>
       
     </dl>
   
@@ -245,9 +245,11 @@ alias is fine):</p>
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#tclk_format-instance_method" title="#tclk_format (instance method)">#<strong>tclk_format</strong>  &#x21d2; Object </a>
+      <a href="#tck_format-instance_method" title="#tck_format (instance method)">#<strong>tck_format</strong>  &#x21d2; Object </a>
     
 
+    
+      (also: #tclk_format)
     
   </span>
   
@@ -263,7 +265,8 @@ alias is fine):</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Returns the value of attribute tclk_format.</p>
+<p>Wave/timing format of the JTAG clock:  :rh (ReturnHigh) or :rl (ReturnLo),
+:rh is the default.</p>
 </div></span>
   
 </li>
@@ -272,16 +275,16 @@ alias is fine):</p>
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#tclk_multiple-instance_method" title="#tclk_multiple (instance method)">#<strong>tclk_multiple</strong>  &#x21d2; Object </a>
+      <a href="#tck_multiple-instance_method" title="#tck_multiple (instance method)">#<strong>tck_multiple</strong>  &#x21d2; Object </a>
     
 
+    
+      (also: #tclk_multiple)
     
   </span>
   
   
   
-    
-      <span class="note title readonly">readonly</span>
     
     
   
@@ -292,7 +295,34 @@ alias is fine):</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Returns the tclk multiple.</p>
+<p>The number of cycles for one clock pulse, assumes 50% duty cycle.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#tdo_strobe-instance_method" title="#tdo_strobe (instance method)">#<strong>tdo_strobe</strong>  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the value of attribute tdo_strobe.</p>
 </div></span>
   
 </li>
@@ -344,6 +374,53 @@ alias is fine):</p>
     </h2>
 
     <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#apply_action-instance_method" title="#apply_action (instance method)">#<strong>apply_action</strong>(pin, actions)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#cycle_callback%3F-instance_method" title="#cycle_callback? (instance method)">#<strong>cycle_callback?</strong>  &#x21d2; Boolean </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>When true it means that the application is dealing with how to handle the 4
+JTAG signals for each JTAG cycle.</p>
+</div></span>
+  
+</li>
+
       
         <li class="public ">
   <span class="summary_signature">
@@ -447,7 +524,7 @@ register.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#tclk_cycle-instance_method" title="#tclk_cycle (instance method)">#<strong>tclk_cycle</strong>  &#x21d2; Object </a>
+      <a href="#tck_cycle-instance_method" title="#tck_cycle (instance method)">#<strong>tck_cycle</strong>  &#x21d2; Object </a>
     
 
     
@@ -462,7 +539,7 @@ register.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Cycles the tester through one TCLK cycle Adjusts for the TCLK format and
+<p>Cycles the tester through one TCK cycle Adjusts for the TCK format and
 cycle span Assumes caller will drive pattern to tester via .drive or
 similar.</p>
 </div></span>
@@ -489,7 +566,7 @@ similar.</p>
   
     <span class="summary_desc"><div class='inline'>
 <p>Applies the given value to the TMS pin and then cycles the tester for one
-TCLK.</p>
+TCK.</p>
 </div></span>
   
 </li>
@@ -588,16 +665,6 @@ register.</p>
       <pre class="lines">
 
 
-37
-38
-39
-40
-41
-42
-43
-44
-45
-46
 47
 48
 49
@@ -634,10 +701,16 @@ register.</p>
 80
 81
 82
-83</pre>
+83
+84
+85
+86
+87
+88
+89</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 37</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 47</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_owner'>owner</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_owner'>owner</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'>Hash</span><span class='rparen'>)</span>
@@ -646,25 +719,18 @@ register.</p>
   <span class='kw'>else</span>
     <span class='ivar'>@owner</span> <span class='op'>=</span> <span class='id identifier rubyid_owner'>owner</span>
   <span class='kw'>end</span>
-  <span class='id identifier rubyid_validate_pins'>validate_pins</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
-
   <span class='comment'># The parent can configure JTAG settings by defining this constant
 </span>  <span class='kw'>if</span> <span class='kw'>defined?</span><span class='lparen'>(</span><span class='id identifier rubyid_owner'>owner</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='op'>::</span><span class='const'>JTAG_CONFIG</span><span class='rparen'>)</span>
     <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='id identifier rubyid_owner'>owner</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='op'>::</span><span class='const'>JTAG_CONFIG</span><span class='period'>.</span><span class='id identifier rubyid_merge'>merge</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
   <span class='kw'>end</span>
 
+  <span class='ivar'>@cycle_callback</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:cycle_callback</span><span class='rbracket'>]</span>
+  <span class='id identifier rubyid_validate_pins'>validate_pins</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='ivar'>@cycle_callback</span>
+
   <span class='comment'># Fallback defaults
 </span>  <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span>
     <span class='label'>verbose:</span>         <span class='kw'>false</span><span class='comma'>,</span>
-    <span class='label'>tclk_format:</span>     <span class='symbol'>:rh</span><span class='comma'>,</span>                <span class='comment'># format of JTAG clock used:  ReturnHigh (:rh), ReturnLo (:rl)
-</span>    <span class='label'>tclk_multiple:</span>   <span class='int'>1</span><span class='comma'>,</span>                  <span class='comment'># number of cycles for one clock pulse, assumes 50% duty cycle. Uses tester non-return format to spread TCK across multiple cycles.
-</span>    <span class='comment'>#    e.g. @tclk_multiple = 2, @tclk_format = :rh, means one cycle with Tck low (non-return), one with Tck high (NR)
-</span>    <span class='comment'>#         @tclk_multiple = 4, @tclk_format = :rl, means 2 cycles with Tck high (NR), 2 with Tck low (NR)
-</span>    <span class='label'>tdo_strobe:</span>      <span class='symbol'>:tclk_high</span><span class='comma'>,</span>            <span class='comment'># when using multiple cycles for TCK, when to strobe for TDO, options include:
-</span>    <span class='comment'>#     :tclk_high   - strobe TDO only when TCK is high
-</span>    <span class='comment'>#     :tclk_low    - strobe TDO only when TCK is low
-</span>    <span class='comment'>#     :tclk_all    - strobe TDO throughout TCK cycle
-</span>    <span class='label'>tdo_store_cycle:</span> <span class='int'>0</span><span class='comma'>,</span>                <span class='comment'># store vector cycle within TCK (i.e. when to indicate to tester to store vector within TCK cycle.  0 is first vector, 1 is second, etc.)
+    <span class='label'>tdo_store_cycle:</span> <span class='int'>0</span><span class='comma'>,</span>                <span class='comment'># store vector cycle within TCK (i.e. when to indicate to tester to store vector within TCK cycle.  0 is first vector, 1 is second, etc.)
 </span>    <span class='comment'># NOTE: only when user indicates to store TDO, which will mean we don&#39;t care the 1 or 0 value on TDO (overriding effectively :tdo_strobe option above)
 </span>    <span class='label'>init_state:</span>      <span class='symbol'>:unknown</span>
   <span class='rbrace'>}</span><span class='period'>.</span><span class='id identifier rubyid_merge'>merge</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
@@ -673,17 +739,20 @@ register.</p>
 
   <span class='ivar'>@verbose</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:verbose</span><span class='rbracket'>]</span>
   <span class='ivar'>@ir_value</span> <span class='op'>=</span> <span class='symbol'>:unknown</span>
-  <span class='ivar'>@tclk_format</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:tclk_format</span><span class='rbracket'>]</span>
-  <span class='ivar'>@tclk_multiple</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:tclk_multiple</span><span class='rbracket'>]</span>
-  <span class='ivar'>@tdo_strobe</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:tdo_strobe</span><span class='rbracket'>]</span>
+  <span class='ivar'>@tck_format</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:tck_format</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:tclk_format</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='symbol'>:rh</span>
+  <span class='ivar'>@tck_multiple</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:tck_multiple</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:tclk_multiple</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='int'>1</span>
+  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_tdo_strobe'>tdo_strobe</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:tdo_strobe</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='symbol'>:tck_high</span>
   <span class='ivar'>@tdo_store_cycle</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:tdo_store_cycle</span><span class='rbracket'>]</span>
   <span class='ivar'>@state</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:init_state</span><span class='rbracket'>]</span>
   <span class='ivar'>@log_state_changes</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:log_state_changes</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='kw'>false</span>
-  <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:tclk_vals</span><span class='rbracket'>]</span>
-    <span class='ivar'>@tclk_vals</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:tclk_vals</span><span class='rbracket'>]</span>
-    <span class='kw'>unless</span> <span class='ivar'>@tclk_vals</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'>Hash</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='ivar'>@tclk_vals</span><span class='period'>.</span><span class='id identifier rubyid_key?'>key?</span><span class='lparen'>(</span><span class='symbol'>:on</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='ivar'>@tclk_vals</span><span class='period'>.</span><span class='id identifier rubyid_key?'>key?</span><span class='lparen'>(</span><span class='symbol'>:off</span><span class='rparen'>)</span>
-      <span class='id identifier rubyid_fail'>fail</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>When specifying TCLK values, you must supply a hash with both :on and :off keys, e.g. tclk_vals: { on: &#39;P&#39;, off: 0 }</span><span class='tstring_end'>&quot;</span></span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:tck_vals</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:tclk_vals</span><span class='rbracket'>]</span>
+    <span class='ivar'>@tck_vals</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:tck_vals</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:tclk_vals</span><span class='rbracket'>]</span>
+    <span class='kw'>unless</span> <span class='ivar'>@tck_vals</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'>Hash</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='ivar'>@tck_vals</span><span class='period'>.</span><span class='id identifier rubyid_key?'>key?</span><span class='lparen'>(</span><span class='symbol'>:on</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='ivar'>@tck_vals</span><span class='period'>.</span><span class='id identifier rubyid_key?'>key?</span><span class='lparen'>(</span><span class='symbol'>:off</span><span class='rparen'>)</span>
+      <span class='id identifier rubyid_fail'>fail</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>When specifying TCK values, you must supply a hash with both :on and :off keys, e.g. tck_vals: { on: &#39;P&#39;, off: 0 }</span><span class='tstring_end'>&quot;</span></span>
     <span class='kw'>end</span>
+  <span class='kw'>end</span>
+  <span class='kw'>if</span> <span class='ivar'>@cycle_callback</span> <span class='op'>&amp;&amp;</span> <span class='ivar'>@tck_multiple</span> <span class='op'>!=</span> <span class='int'>1</span>
+    <span class='id identifier rubyid_fail'>fail</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>A cycle_callback can only be used with a tck_multiple setting of 1</span><span class='tstring_end'>&#39;</span></span>
   <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -767,12 +836,12 @@ register.</p>
       <pre class="lines">
 
 
-35
-36
-37</pre>
+45
+46
+47</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 35</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 45</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_log_state_changes'>log_state_changes</span>
   <span class='ivar'>@log_state_changes</span>
@@ -826,20 +895,77 @@ register.</p>
 </div>
     
       
-      <span id="tclk_format=-instance_method"></span>
+      <span id="tck_format=-instance_method"></span>
       <div class="method_details ">
-  <h3 class="signature " id="tclk_format-instance_method">
+  <h3 class="signature " id="tck_format-instance_method">
   
-    #<strong>tclk_format</strong>  &#x21d2; <tt>Object</tt> 
+    #<strong>tck_format</strong>  &#x21d2; <tt>Object</tt> 
   
 
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='tclk_format-instance_method'>tclk_format</span></span>
+    </span>
   
 
   
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns the value of attribute tclk_format</p>
+<p>Wave/timing format of the JTAG clock:  :rh (ReturnHigh) or :rl (ReturnLo),
+:rh is the default</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+34
+35
+36</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 34</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_tck_format'>tck_format</span>
+  <span class='ivar'>@tck_format</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id="tck_multiple=-instance_method"></span>
+      <div class="method_details ">
+  <h3 class="signature " id="tck_multiple-instance_method">
+  
+    #<strong>tck_multiple</strong>  &#x21d2; <tt>Object</tt> 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='tclk_multiple-instance_method'>tclk_multiple</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>The number of cycles for one clock pulse, assumes 50% duty cycle. Uses
+tester non-return format to spread TCK across multiple cycles.</p>
+
+<pre class="code ruby"><code class="ruby">e.g. @tck_multiple = 2, @tck_format = :rh, means one cycle with Tck low (non-return), one with Tck high (NR)
+     @tck_multiple = 4, @tck_format = :rl, means 2 cycles with Tck high (NR), 2 with Tck low (NR)
+</code></pre>
 
 
   </div>
@@ -860,8 +986,8 @@ register.</p>
     <td>
       <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 29</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_tclk_format'>tclk_format</span>
-  <span class='ivar'>@tclk_format</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_tck_multiple'>tck_multiple</span>
+  <span class='ivar'>@tck_multiple</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -869,11 +995,11 @@ register.</p>
 </div>
     
       
-      <span id=""></span>
+      <span id="tdo_strobe=-instance_method"></span>
       <div class="method_details ">
-  <h3 class="signature " id="tclk_multiple-instance_method">
+  <h3 class="signature " id="tdo_strobe-instance_method">
   
-    #<strong>tclk_multiple</strong>  &#x21d2; <tt>Object</tt>  <span class="extras">(readonly)</span>
+    #<strong>tdo_strobe</strong>  &#x21d2; <tt>Object</tt> 
   
 
   
@@ -882,7 +1008,7 @@ register.</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns the tclk multiple</p>
+<p>Returns the value of attribute tdo_strobe</p>
 
 
   </div>
@@ -896,15 +1022,15 @@ register.</p>
       <pre class="lines">
 
 
-27
-28
-29</pre>
+38
+39
+40</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 27</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 38</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_tclk_multiple'>tclk_multiple</span>
-  <span class='ivar'>@tclk_multiple</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_tdo_strobe'>tdo_strobe</span>
+  <span class='ivar'>@tdo_strobe</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -943,12 +1069,12 @@ register.</p>
       <pre class="lines">
 
 
-31
-32
-33</pre>
+41
+42
+43</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 31</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 41</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_verbose'>verbose</span>
   <span class='ivar'>@verbose</span>
@@ -966,7 +1092,101 @@ register.</p>
 
     
       <div class="method_details first">
-  <h3 class="signature first" id="read_dr-instance_method">
+  <h3 class="signature first" id="apply_action-instance_method">
+  
+    #<strong>apply_action</strong>(pin, actions)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+526
+527
+528
+529
+530
+531</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 526</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_apply_action'>apply_action</span><span class='lparen'>(</span><span class='id identifier rubyid_pin'>pin</span><span class='comma'>,</span> <span class='id identifier rubyid_actions'>actions</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_actions'>actions</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_operation'>operation</span><span class='op'>|</span>
+    <span class='id identifier rubyid_method'>method</span> <span class='op'>=</span> <span class='id identifier rubyid_operation'>operation</span><span class='period'>.</span><span class='id identifier rubyid_shift'>shift</span>
+    <span class='id identifier rubyid_pin'>pin</span><span class='period'>.</span><span class='id identifier rubyid_send'>send</span><span class='lparen'>(</span><span class='id identifier rubyid_method'>method</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_operation'>operation</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_method'>method</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="cycle_callback?-instance_method">
+  
+    #<strong>cycle_callback?</strong>  &#x21d2; <tt>Boolean</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>When true it means that the application is dealing with how to handle the 4
+JTAG signals for each JTAG cycle. In that case this driver calculates what
+state the 4 pins should be in each signal and then calls back to the
+application with that information and it is up to the application to decide
+what to do with that information and when/if to generate tester cycles.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+112
+113
+114</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 112</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_cycle_callback?'>cycle_callback?</span>
+  <span class='op'>!</span><span class='op'>!</span><span class='ivar'>@cycle_callback</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="read_dr-instance_method">
   
     #<strong>read_dr</strong>(reg_or_val, options = {})  &#x21d2; <tt>Object</tt> 
   
@@ -1077,24 +1297,24 @@ written out prior to shifting data.</p>
       <pre class="lines">
 
 
-410
-411
-412
-413
-414
-415
-416
-417
-418
-419
-420
-421
-422
-423
-424</pre>
+440
+441
+442
+443
+444
+445
+446
+447
+448
+449
+450
+451
+452
+453
+454</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 410</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 440</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_read_dr'>read_dr</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_tester'>tester</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:read_dr</span><span class='rparen'>)</span>
@@ -1229,24 +1449,24 @@ written out prior to shifting data.</p>
       <pre class="lines">
 
 
-480
-481
-482
-483
-484
-485
-486
-487
-488
-489
-490
-491
-492
-493
-494</pre>
+510
+511
+512
+513
+514
+515
+516
+517
+518
+519
+520
+521
+522
+523
+524</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 480</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 510</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_read_ir'>read_ir</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_tester'>tester</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:read_ir</span><span class='rparen'>)</span>
@@ -1431,37 +1651,6 @@ of a shift operation.</p>
       <pre class="lines">
 
 
-119
-120
-121
-122
-123
-124
-125
-126
-127
-128
-129
-130
-131
-132
-133
-134
-135
-136
-137
-138
-139
-140
-141
-142
-143
-144
-145
-146
-147
-148
-149
 150
 151
 152
@@ -1577,10 +1766,41 @@ of a shift operation.</p>
 262
 263
 264
-265</pre>
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 119</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 150</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_shift'>shift</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span>
@@ -1621,32 +1841,32 @@ of a shift operation.</p>
   <span class='comment'># loop through each data bit
 </span>  <span class='id identifier rubyid_last_overlay_label'>last_overlay_label</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span>
   <span class='id identifier rubyid_size'>size</span><span class='period'>.</span><span class='id identifier rubyid_times'>times</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_i'>i</span><span class='op'>|</span>
-    <span class='id identifier rubyid_store_tdo_this_tclk'>store_tdo_this_tclk</span> <span class='op'>=</span> <span class='kw'>false</span>
+    <span class='id identifier rubyid_store_tdo_this_tck'>store_tdo_this_tck</span> <span class='op'>=</span> <span class='kw'>false</span>
 
-    <span class='comment'># Set up pin actions for bit transaction (tclk cycle)
+    <span class='comment'># Set up pin actions for bit transaction (tck cycle)
 </span>
     <span class='comment'># TDI
-</span>    <span class='ivar'>@tdi_pin</span><span class='period'>.</span><span class='id identifier rubyid_drive'>drive</span><span class='lparen'>(</span><span class='id identifier rubyid_tdi_reg'>tdi_reg</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+</span>    <span class='id identifier rubyid_action'>action</span> <span class='symbol'>:tdi</span><span class='comma'>,</span> <span class='symbol'>:drive</span><span class='comma'>,</span> <span class='id identifier rubyid_tdi_reg'>tdi_reg</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span>
 
     <span class='comment'># TDO
-</span>    <span class='ivar'>@tdo_pin</span><span class='period'>.</span><span class='id identifier rubyid_dont_care'>dont_care</span>                               <span class='comment'># default setting
+</span>    <span class='id identifier rubyid_action'>action</span> <span class='symbol'>:tdo</span><span class='comma'>,</span> <span class='symbol'>:dont_care</span>                                 <span class='comment'># default setting
 </span>    <span class='kw'>if</span> <span class='id identifier rubyid_tdo_reg'>tdo_reg</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span>
       <span class='kw'>if</span> <span class='id identifier rubyid_tdo_reg'>tdo_reg</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_is_to_be_stored?'>is_to_be_stored?</span>                        <span class='comment'># store
-</span>        <span class='id identifier rubyid_store_tdo_this_tclk'>store_tdo_this_tclk</span> <span class='op'>=</span> <span class='kw'>true</span>
-        <span class='ivar'>@tdo_pin</span><span class='period'>.</span><span class='id identifier rubyid_dont_care'>dont_care</span> <span class='kw'>if</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_tester'>tester</span><span class='period'>.</span><span class='id identifier rubyid_j750?'>j750?</span>
+</span>        <span class='id identifier rubyid_store_tdo_this_tck'>store_tdo_this_tck</span> <span class='op'>=</span> <span class='kw'>true</span>
+        <span class='id identifier rubyid_action'>action</span> <span class='symbol'>:tdo</span><span class='comma'>,</span> <span class='symbol'>:dont_care</span> <span class='kw'>if</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_tester'>tester</span><span class='period'>.</span><span class='id identifier rubyid_j750?'>j750?</span>
       <span class='kw'>elsif</span> <span class='id identifier rubyid_tdo_reg'>tdo_reg</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_is_to_be_read?'>is_to_be_read?</span>                       <span class='comment'># compare/assert
-</span>        <span class='ivar'>@tdo_pin</span><span class='period'>.</span><span class='id identifier rubyid_assert'>assert</span><span class='lparen'>(</span><span class='id identifier rubyid_tdo_reg'>tdo_reg</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='label'>meta:</span> <span class='lbrace'>{</span> <span class='label'>position:</span> <span class='id identifier rubyid_i'>i</span> <span class='rbrace'>}</span><span class='rparen'>)</span>
+</span>        <span class='id identifier rubyid_action'>action</span> <span class='symbol'>:tdo</span><span class='comma'>,</span> <span class='symbol'>:assert</span><span class='comma'>,</span> <span class='id identifier rubyid_tdo_reg'>tdo_reg</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='label'>meta:</span> <span class='lbrace'>{</span> <span class='label'>position:</span> <span class='id identifier rubyid_i'>i</span> <span class='rbrace'>}</span>
       <span class='kw'>end</span>
     <span class='kw'>end</span>
 
     <span class='comment'># TMS
-</span>    <span class='ivar'>@tms_pin</span><span class='period'>.</span><span class='id identifier rubyid_drive'>drive</span><span class='lparen'>(</span><span class='int'>0</span><span class='rparen'>)</span>
+</span>    <span class='id identifier rubyid_action'>action</span> <span class='symbol'>:tms</span><span class='comma'>,</span> <span class='symbol'>:drive</span><span class='comma'>,</span> <span class='int'>0</span>
 
     <span class='comment'># let tester handle overlay if implemented
 </span>    <span class='id identifier rubyid_overlay_options'>overlay_options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
-    <span class='kw'>if</span> <span class='id identifier rubyid_tester'>tester</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:source_memory</span><span class='rparen'>)</span>
+    <span class='kw'>if</span> <span class='id identifier rubyid_tester'>tester</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:source_memory</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='op'>!</span><span class='id identifier rubyid_cycle_callback?'>cycle_callback?</span>
       <span class='kw'>if</span> <span class='id identifier rubyid_ovl_reg'>ovl_reg</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_ovl_reg'>ovl_reg</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_has_overlay?'>has_overlay?</span> <span class='op'>&amp;&amp;</span> <span class='op'>!</span><span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_mode'>mode</span><span class='period'>.</span><span class='id identifier rubyid_simulation?'>simulation?</span>
-        <span class='id identifier rubyid_overlay_options'>overlay_options</span><span class='lbracket'>[</span><span class='symbol'>:pins</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='ivar'>@tdi_pin</span>
+        <span class='id identifier rubyid_overlay_options'>overlay_options</span><span class='lbracket'>[</span><span class='symbol'>:pins</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='ivar'>@pins</span><span class='lbracket'>[</span><span class='symbol'>:tdi</span><span class='rbracket'>]</span>
         <span class='kw'>if</span> <span class='id identifier rubyid_global_ovl'>global_ovl</span>
           <span class='id identifier rubyid_overlay_options'>overlay_options</span><span class='lbracket'>[</span><span class='symbol'>:overlay_str</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_global_ovl'>global_ovl</span>
         <span class='kw'>else</span>
@@ -1660,8 +1880,8 @@ of a shift operation.</p>
           <span class='kw'>end</span>
         <span class='kw'>end</span>
         <span class='id identifier rubyid_tester_subr_overlay'>tester_subr_overlay</span> <span class='op'>=</span> <span class='op'>!</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:no_subr</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='id identifier rubyid_global_ovl'>global_ovl</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_tester'>tester</span><span class='period'>.</span><span class='id identifier rubyid_overlay_style'>overlay_style</span> <span class='op'>==</span> <span class='symbol'>:subroutine</span>
-        <span class='ivar'>@tdi_pin</span><span class='period'>.</span><span class='id identifier rubyid_drive'>drive</span><span class='lparen'>(</span><span class='int'>0</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_tester_subr_overlay'>tester_subr_overlay</span>
-        <span class='ivar'>@tdo_pin</span><span class='period'>.</span><span class='id identifier rubyid_assert'>assert</span><span class='lparen'>(</span><span class='id identifier rubyid_tdo_reg'>tdo_reg</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='label'>meta:</span> <span class='lbrace'>{</span> <span class='label'>position:</span> <span class='id identifier rubyid_i'>i</span> <span class='rbrace'>}</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:read</span><span class='rbracket'>]</span> <span class='kw'>unless</span> <span class='id identifier rubyid_tester_subr_overlay'>tester_subr_overlay</span>
+        <span class='id identifier rubyid_action'>action</span> <span class='symbol'>:tdi</span><span class='comma'>,</span> <span class='symbol'>:drive</span><span class='comma'>,</span> <span class='int'>0</span> <span class='kw'>if</span> <span class='id identifier rubyid_tester_subr_overlay'>tester_subr_overlay</span>
+        <span class='id identifier rubyid_action'>action</span> <span class='symbol'>:tdo</span><span class='comma'>,</span> <span class='symbol'>:assert</span><span class='comma'>,</span> <span class='id identifier rubyid_tdo_reg'>tdo_reg</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='label'>meta:</span> <span class='lbrace'>{</span> <span class='label'>position:</span> <span class='id identifier rubyid_i'>i</span> <span class='rbrace'>}</span> <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:read</span><span class='rbracket'>]</span> <span class='kw'>unless</span> <span class='id identifier rubyid_tester_subr_overlay'>tester_subr_overlay</span>
         <span class='comment'># Force the last bit to be shifted from this method if overlay requested on the last bit
 </span>        <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:cycle_last</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='kw'>true</span> <span class='kw'>if</span> <span class='id identifier rubyid_i'>i</span> <span class='op'>==</span> <span class='id identifier rubyid_size'>size</span> <span class='op'>-</span> <span class='int'>1</span>
       <span class='kw'>end</span>
@@ -1674,18 +1894,18 @@ of a shift operation.</p>
             <span class='gvar'>$tester</span><span class='period'>.</span><span class='id identifier rubyid_label'>label</span><span class='lparen'>(</span><span class='id identifier rubyid_ovl_reg'>ovl_reg</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_overlay_str'>overlay_str</span><span class='rparen'>)</span>
             <span class='id identifier rubyid_last_overlay_label'>last_overlay_label</span> <span class='op'>=</span> <span class='id identifier rubyid_ovl_reg'>ovl_reg</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_overlay_str'>overlay_str</span>
           <span class='kw'>end</span>
-          <span class='ivar'>@tdo_pin</span><span class='period'>.</span><span class='id identifier rubyid_assert'>assert</span><span class='lparen'>(</span><span class='id identifier rubyid_tdo_reg'>tdo_reg</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='label'>meta:</span> <span class='lbrace'>{</span> <span class='label'>position:</span> <span class='id identifier rubyid_i'>i</span> <span class='rbrace'>}</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:read</span><span class='rbracket'>]</span>
+          <span class='id identifier rubyid_action'>action</span> <span class='symbol'>:tdo</span><span class='comma'>,</span> <span class='symbol'>:assert</span><span class='comma'>,</span> <span class='id identifier rubyid_tdo_reg'>tdo_reg</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='label'>meta:</span> <span class='lbrace'>{</span> <span class='label'>position:</span> <span class='id identifier rubyid_i'>i</span> <span class='rbrace'>}</span> <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:read</span><span class='rbracket'>]</span>
         <span class='kw'>else</span>
-          <span class='ivar'>@tdi_pin</span><span class='period'>.</span><span class='id identifier rubyid_drive'>drive</span><span class='lparen'>(</span><span class='int'>0</span><span class='rparen'>)</span>
+          <span class='id identifier rubyid_action'>action</span> <span class='symbol'>:tdi</span><span class='comma'>,</span> <span class='symbol'>:drive</span><span class='comma'>,</span> <span class='int'>0</span>
           <span class='id identifier rubyid_call_subroutine'>call_subroutine</span> <span class='op'>=</span> <span class='id identifier rubyid_ovl_reg'>ovl_reg</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_overlay_str'>overlay_str</span>
         <span class='kw'>end</span>
       <span class='kw'>end</span>
     <span class='kw'>end</span> <span class='comment'># of let tester handle overlay
 </span>
-    <span class='comment'># With JTAG pin actions queued up, use block call to tclk_cycle to
-</span>    <span class='comment'>#   execute a single TCLK period.  Special handling of subroutines,
+    <span class='comment'># With JTAG pin actions queued up, use block call to tck_cycle to
+</span>    <span class='comment'>#   execute a single TCK period.  Special handling of subroutines,
 </span>    <span class='comment'>#   case of last bit in shift, and store vector (within a multi-cycle
-</span>    <span class='comment'>#   tclk config).
+</span>    <span class='comment'>#   tck config).
 </span>    <span class='kw'>if</span> <span class='id identifier rubyid_call_subroutine'>call_subroutine</span> <span class='op'>||</span> <span class='id identifier rubyid_tester_subr_overlay'>tester_subr_overlay</span>
       <span class='ivar'>@last_data_vector_shifted</span> <span class='op'>=</span> <span class='kw'>true</span>
     <span class='kw'>else</span>
@@ -1700,25 +1920,25 @@ of a shift operation.</p>
 </span>      <span class='kw'>if</span> <span class='id identifier rubyid_i'>i</span> <span class='op'>!=</span> <span class='id identifier rubyid_size'>size</span> <span class='op'>-</span> <span class='int'>1</span> <span class='op'>||</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:cycle_last</span><span class='rbracket'>]</span>
         <span class='kw'>if</span> <span class='id identifier rubyid_i'>i</span> <span class='op'>==</span> <span class='id identifier rubyid_size'>size</span> <span class='op'>-</span> <span class='int'>1</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:includes_last_bit</span><span class='rbracket'>]</span>
           <span class='kw'>unless</span> <span class='id identifier rubyid_tester_subr_overlay'>tester_subr_overlay</span>
-            <span class='ivar'>@tms_pin</span><span class='period'>.</span><span class='id identifier rubyid_drive'>drive</span><span class='lparen'>(</span><span class='int'>1</span><span class='rparen'>)</span>
+            <span class='id identifier rubyid_action'>action</span> <span class='symbol'>:tms</span><span class='comma'>,</span> <span class='symbol'>:drive</span><span class='comma'>,</span> <span class='int'>1</span>
             <span class='ivar'>@last_data_vector_shifted</span> <span class='op'>=</span> <span class='kw'>true</span>
           <span class='kw'>end</span>
         <span class='kw'>end</span>
-        <span class='id identifier rubyid_tclk_cycle'>tclk_cycle</span> <span class='kw'>do</span>
-          <span class='kw'>if</span> <span class='id identifier rubyid_store_tdo_this_tclk'>store_tdo_this_tclk</span> <span class='op'>&amp;&amp;</span> <span class='ivar'>@next_data_vector_to_be_stored</span>
-            <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_tester'>tester</span><span class='period'>.</span><span class='id identifier rubyid_store_next_cycle'>store_next_cycle</span><span class='lparen'>(</span><span class='ivar'>@tdo_pin</span><span class='rparen'>)</span>
+        <span class='id identifier rubyid_tck_cycle'>tck_cycle</span> <span class='kw'>do</span>
+          <span class='kw'>if</span> <span class='id identifier rubyid_store_tdo_this_tck'>store_tdo_this_tck</span> <span class='op'>&amp;&amp;</span> <span class='ivar'>@next_data_vector_to_be_stored</span>
+            <span class='id identifier rubyid_action'>action</span> <span class='symbol'>:store</span>
           <span class='kw'>end</span>
-          <span class='kw'>if</span> <span class='id identifier rubyid_overlay_options'>overlay_options</span><span class='lbracket'>[</span><span class='symbol'>:pins</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
-            <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_tester'>tester</span><span class='period'>.</span><span class='id identifier rubyid_cycle'>cycle</span>
+          <span class='kw'>if</span> <span class='id identifier rubyid_overlay_options'>overlay_options</span><span class='lbracket'>[</span><span class='symbol'>:pins</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='op'>||</span> <span class='id identifier rubyid_cycle_callback?'>cycle_callback?</span>
+            <span class='id identifier rubyid_cycle'>cycle</span>
           <span class='kw'>else</span>
-            <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_tester'>tester</span><span class='period'>.</span><span class='id identifier rubyid_cycle'>cycle</span> <span class='label'>overlay:</span> <span class='id identifier rubyid_overlay_options'>overlay_options</span>
+            <span class='id identifier rubyid_cycle'>cycle</span> <span class='label'>overlay:</span> <span class='id identifier rubyid_overlay_options'>overlay_options</span>
             <span class='id identifier rubyid_overlay_options'>overlay_options</span><span class='lbracket'>[</span><span class='symbol'>:change_data</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='kw'>false</span>			<span class='comment'># data change only on first cycle if overlay
 </span>          <span class='kw'>end</span>
         <span class='kw'>end</span>
-        <span class='ivar'>@tdo_pin</span><span class='period'>.</span><span class='id identifier rubyid_dont_care'>dont_care</span>
+        <span class='ivar'>@pins</span><span class='lbracket'>[</span><span class='symbol'>:tdo</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_dont_care'>dont_care</span> <span class='kw'>unless</span> <span class='id identifier rubyid_cycle_callback?'>cycle_callback?</span>
       <span class='kw'>else</span>
         <span class='ivar'>@deferred_compare</span> <span class='op'>=</span> <span class='kw'>true</span>
-        <span class='ivar'>@deferred_store</span> <span class='op'>=</span> <span class='kw'>true</span> <span class='kw'>if</span> <span class='id identifier rubyid_store_tdo_this_tclk'>store_tdo_this_tclk</span>
+        <span class='ivar'>@deferred_store</span> <span class='op'>=</span> <span class='kw'>true</span> <span class='kw'>if</span> <span class='id identifier rubyid_store_tdo_this_tck'>store_tdo_this_tck</span>
       <span class='kw'>end</span>
     <span class='kw'>end</span>
   <span class='kw'>end</span>
@@ -1735,9 +1955,9 @@ of a shift operation.</p>
 </div>
     
       <div class="method_details ">
-  <h3 class="signature " id="tclk_cycle-instance_method">
+  <h3 class="signature " id="tck_cycle-instance_method">
   
-    #<strong>tclk_cycle</strong>  &#x21d2; <tt>Object</tt> 
+    #<strong>tck_cycle</strong>  &#x21d2; <tt>Object</tt> 
   
 
   
@@ -1746,7 +1966,7 @@ of a shift operation.</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Cycles the tester through one TCLK cycle Adjusts for the TCLK format and
+<p>Cycles the tester through one TCK cycle Adjusts for the TCK format and
 cycle span Assumes caller will drive pattern to tester via .drive or
 similar</p>
 
@@ -1762,37 +1982,6 @@ similar</p>
       <pre class="lines">
 
 
-271
-272
-273
-274
-275
-276
-277
-278
-279
-280
-281
-282
-283
-284
-285
-286
-287
-288
-289
-290
-291
-292
-293
-294
-295
-296
-297
-298
-299
-300
-301
 302
 303
 304
@@ -1827,75 +2016,102 @@ similar</p>
 333
 334
 335
-336</pre>
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 271</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 302</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_tclk_cycle'>tclk_cycle</span>
-  <span class='kw'>case</span> <span class='ivar'>@tclk_format</span>
-    <span class='kw'>when</span> <span class='symbol'>:rh</span>
-      <span class='id identifier rubyid_tclk_val'>tclk_val</span> <span class='op'>=</span> <span class='int'>0</span>
-    <span class='kw'>when</span> <span class='symbol'>:rl</span>
-      <span class='id identifier rubyid_tclk_val'>tclk_val</span> <span class='op'>=</span> <span class='int'>1</span>
-    <span class='kw'>else</span>
-      <span class='id identifier rubyid_fail'>fail</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>ERROR: Invalid Tclk timing format!</span><span class='tstring_end'>&#39;</span></span>
-  <span class='kw'>end</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_tck_cycle'>tck_cycle</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_cycle_callback?'>cycle_callback?</span>
+    <span class='ivar'>@next_data_vector_to_be_stored</span> <span class='op'>=</span> <span class='ivar'>@tdo_store_cycle</span>
+    <span class='kw'>yield</span>
+  <span class='kw'>else</span>
+    <span class='kw'>case</span> <span class='ivar'>@tck_format</span>
+      <span class='kw'>when</span> <span class='symbol'>:rh</span>
+        <span class='id identifier rubyid_tck_val'>tck_val</span> <span class='op'>=</span> <span class='int'>0</span>
+      <span class='kw'>when</span> <span class='symbol'>:rl</span>
+        <span class='id identifier rubyid_tck_val'>tck_val</span> <span class='op'>=</span> <span class='int'>1</span>
+      <span class='kw'>else</span>
+        <span class='id identifier rubyid_fail'>fail</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>ERROR: Invalid Tclk timing format!</span><span class='tstring_end'>&#39;</span></span>
+    <span class='kw'>end</span>
 
-  <span class='comment'># determine whether to mask TDO on first half cycle
-</span>  <span class='id identifier rubyid_mask_tdo_half0'>mask_tdo_half0</span> <span class='op'>=</span>  <span class='lparen'>(</span><span class='lparen'>(</span><span class='ivar'>@tclk_format</span> <span class='op'>==</span> <span class='symbol'>:rl</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='lparen'>(</span><span class='ivar'>@tdo_strobe</span> <span class='op'>==</span> <span class='symbol'>:tclk_low</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='lparen'>(</span><span class='ivar'>@tclk_multiple</span> <span class='op'>&gt;</span> <span class='int'>1</span><span class='rparen'>)</span><span class='rparen'>)</span> <span class='op'>||</span>
-                    <span class='lparen'>(</span><span class='lparen'>(</span><span class='ivar'>@tclk_format</span> <span class='op'>==</span> <span class='symbol'>:rh</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='lparen'>(</span><span class='ivar'>@tdo_strobe</span> <span class='op'>==</span> <span class='symbol'>:tclk_high</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='lparen'>(</span><span class='ivar'>@tclk_multiple</span> <span class='op'>&gt;</span> <span class='int'>1</span><span class='rparen'>)</span><span class='rparen'>)</span>
+    <span class='comment'># determine whether to mask TDO on first half cycle
+</span>    <span class='id identifier rubyid_mask_tdo_half0'>mask_tdo_half0</span> <span class='op'>=</span>  <span class='lparen'>(</span><span class='lparen'>(</span><span class='ivar'>@tck_format</span> <span class='op'>==</span> <span class='symbol'>:rl</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='lparen'>(</span><span class='ivar'>@tdo_strobe</span> <span class='op'>==</span> <span class='symbol'>:tck_low</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='lparen'>(</span><span class='ivar'>@tck_multiple</span> <span class='op'>&gt;</span> <span class='int'>1</span><span class='rparen'>)</span><span class='rparen'>)</span> <span class='op'>||</span>
+                      <span class='lparen'>(</span><span class='lparen'>(</span><span class='ivar'>@tck_format</span> <span class='op'>==</span> <span class='symbol'>:rh</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='lparen'>(</span><span class='ivar'>@tdo_strobe</span> <span class='op'>==</span> <span class='symbol'>:tck_high</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='lparen'>(</span><span class='ivar'>@tck_multiple</span> <span class='op'>&gt;</span> <span class='int'>1</span><span class='rparen'>)</span><span class='rparen'>)</span>
 
-  <span class='comment'># determine whether to mask TDO on second half cycle
-</span>  <span class='id identifier rubyid_mask_tdo_half1'>mask_tdo_half1</span> <span class='op'>=</span>  <span class='lparen'>(</span><span class='lparen'>(</span><span class='ivar'>@tclk_format</span> <span class='op'>==</span> <span class='symbol'>:rl</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='lparen'>(</span><span class='ivar'>@tdo_strobe</span> <span class='op'>==</span> <span class='symbol'>:tclk_high</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='lparen'>(</span><span class='ivar'>@tclk_multiple</span> <span class='op'>&gt;</span> <span class='int'>1</span><span class='rparen'>)</span><span class='rparen'>)</span> <span class='op'>||</span>
-                    <span class='lparen'>(</span><span class='lparen'>(</span><span class='ivar'>@tclk_format</span> <span class='op'>==</span> <span class='symbol'>:rh</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='lparen'>(</span><span class='ivar'>@tdo_strobe</span> <span class='op'>==</span> <span class='symbol'>:tclk_low</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='lparen'>(</span><span class='ivar'>@tclk_multiple</span> <span class='op'>&gt;</span> <span class='int'>1</span><span class='rparen'>)</span><span class='rparen'>)</span>
+    <span class='comment'># determine whether to mask TDO on second half cycle
+</span>    <span class='id identifier rubyid_mask_tdo_half1'>mask_tdo_half1</span> <span class='op'>=</span>  <span class='lparen'>(</span><span class='lparen'>(</span><span class='ivar'>@tck_format</span> <span class='op'>==</span> <span class='symbol'>:rl</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='lparen'>(</span><span class='ivar'>@tdo_strobe</span> <span class='op'>==</span> <span class='symbol'>:tck_high</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='lparen'>(</span><span class='ivar'>@tck_multiple</span> <span class='op'>&gt;</span> <span class='int'>1</span><span class='rparen'>)</span><span class='rparen'>)</span> <span class='op'>||</span>
+                      <span class='lparen'>(</span><span class='lparen'>(</span><span class='ivar'>@tck_format</span> <span class='op'>==</span> <span class='symbol'>:rh</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='lparen'>(</span><span class='ivar'>@tdo_strobe</span> <span class='op'>==</span> <span class='symbol'>:tck_low</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='lparen'>(</span><span class='ivar'>@tck_multiple</span> <span class='op'>&gt;</span> <span class='int'>1</span><span class='rparen'>)</span><span class='rparen'>)</span>
 
-  <span class='comment'># determine whether TDO is set to capture for this TCLK cycle
-</span>  <span class='id identifier rubyid_tdo_to_be_captured'>tdo_to_be_captured</span> <span class='op'>=</span> <span class='ivar'>@tdo_pin</span><span class='period'>.</span><span class='id identifier rubyid_to_be_captured?'>to_be_captured?</span>
+    <span class='comment'># If TDO is already suspended (by an application) then don&#39;t do the
+</span>    <span class='comment'># suspends below since the resume will clear the application&#39;s suspend
+</span>    <span class='id identifier rubyid_tdo_already_suspended'>tdo_already_suspended</span> <span class='op'>=</span> <span class='op'>!</span><span class='id identifier rubyid_cycle_callback?'>cycle_callback?</span> <span class='op'>&amp;&amp;</span> <span class='ivar'>@pins</span><span class='lbracket'>[</span><span class='symbol'>:tdo</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_suspended?'>suspended?</span> <span class='op'>&amp;&amp;</span> <span class='op'>!</span><span class='ivar'>@tdo_suspended_by_driver</span>
 
-  <span class='comment'># If TDO is already suspended (by an application) then don&#39;t do the
-</span>  <span class='comment'># suspends below since the resume will clear the application&#39;s suspend
-</span>  <span class='id identifier rubyid_tdo_already_suspended'>tdo_already_suspended</span> <span class='op'>=</span> <span class='ivar'>@tdo_pin</span><span class='period'>.</span><span class='id identifier rubyid_suspended?'>suspended?</span> <span class='op'>&amp;&amp;</span> <span class='op'>!</span><span class='ivar'>@tdo_suspended_by_driver</span>
-
-  <span class='ivar'>@tclk_multiple</span><span class='period'>.</span><span class='id identifier rubyid_times'>times</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_i'>i</span><span class='op'>|</span>
-    <span class='comment'># 50% duty cycle if @tclk_multiple is even, otherwise slightly off
+    <span class='ivar'>@tck_multiple</span><span class='period'>.</span><span class='id identifier rubyid_times'>times</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_i'>i</span><span class='op'>|</span>
+      <span class='comment'># 50% duty cycle if @tck_multiple is even, otherwise slightly off
 </span>
-    <span class='ivar'>@next_data_vector_to_be_stored</span> <span class='op'>=</span> <span class='ivar'>@tdo_store_cycle</span> <span class='op'>==</span> <span class='id identifier rubyid_i'>i</span> <span class='op'>?</span> <span class='kw'>true</span> <span class='op'>:</span> <span class='kw'>false</span>
+      <span class='ivar'>@next_data_vector_to_be_stored</span> <span class='op'>=</span> <span class='ivar'>@tdo_store_cycle</span> <span class='op'>==</span> <span class='id identifier rubyid_i'>i</span> <span class='op'>?</span> <span class='kw'>true</span> <span class='op'>:</span> <span class='kw'>false</span>
 
-    <span class='kw'>if</span> <span class='id identifier rubyid_i'>i</span> <span class='op'>&lt;</span> <span class='lparen'>(</span><span class='ivar'>@tclk_multiple</span> <span class='op'>+</span> <span class='int'>1</span><span class='rparen'>)</span> <span class='op'>/</span> <span class='int'>2</span>
-      <span class='comment'># first half of cycle
-</span>      <span class='ivar'>@tck_pin</span><span class='period'>.</span><span class='id identifier rubyid_drive'>drive</span><span class='lparen'>(</span><span class='ivar'>@tclk_vals</span> <span class='op'>?</span> <span class='ivar'>@tclk_vals</span><span class='lbracket'>[</span><span class='symbol'>:on</span><span class='rbracket'>]</span> <span class='op'>:</span> <span class='id identifier rubyid_tclk_val'>tclk_val</span><span class='rparen'>)</span>
-      <span class='kw'>unless</span> <span class='id identifier rubyid_tdo_already_suspended'>tdo_already_suspended</span>
-        <span class='kw'>unless</span> <span class='id identifier rubyid_tdo_to_be_captured'>tdo_to_be_captured</span>
+      <span class='kw'>if</span> <span class='id identifier rubyid_i'>i</span> <span class='op'>&lt;</span> <span class='lparen'>(</span><span class='ivar'>@tck_multiple</span> <span class='op'>+</span> <span class='int'>1</span><span class='rparen'>)</span> <span class='op'>/</span> <span class='int'>2</span>
+        <span class='comment'># first half of cycle
+</span>        <span class='ivar'>@pins</span><span class='lbracket'>[</span><span class='symbol'>:tck</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_drive'>drive</span><span class='lparen'>(</span><span class='ivar'>@tck_vals</span> <span class='op'>?</span> <span class='ivar'>@tck_vals</span><span class='lbracket'>[</span><span class='symbol'>:on</span><span class='rbracket'>]</span> <span class='op'>:</span> <span class='id identifier rubyid_tck_val'>tck_val</span><span class='rparen'>)</span>
+        <span class='kw'>unless</span> <span class='id identifier rubyid_tdo_already_suspended'>tdo_already_suspended</span>
           <span class='kw'>if</span> <span class='id identifier rubyid_mask_tdo_half0'>mask_tdo_half0</span>
             <span class='ivar'>@tdo_suspended_by_driver</span> <span class='op'>=</span> <span class='kw'>true</span>
-            <span class='ivar'>@tdo_pin</span><span class='period'>.</span><span class='id identifier rubyid_suspend'>suspend</span>
+            <span class='ivar'>@pins</span><span class='lbracket'>[</span><span class='symbol'>:tdo</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_suspend'>suspend</span>
           <span class='kw'>else</span>
             <span class='ivar'>@tdo_suspended_by_driver</span> <span class='op'>=</span> <span class='kw'>false</span>
-            <span class='ivar'>@tdo_pin</span><span class='period'>.</span><span class='id identifier rubyid_resume'>resume</span>
+            <span class='ivar'>@pins</span><span class='lbracket'>[</span><span class='symbol'>:tdo</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_resume'>resume</span>
           <span class='kw'>end</span>
         <span class='kw'>end</span>
-      <span class='kw'>end</span>
-    <span class='kw'>else</span>
-      <span class='comment'># second half of cycle
-</span>      <span class='ivar'>@tck_pin</span><span class='period'>.</span><span class='id identifier rubyid_drive'>drive</span><span class='lparen'>(</span><span class='ivar'>@tclk_vals</span> <span class='op'>?</span> <span class='ivar'>@tclk_vals</span><span class='lbracket'>[</span><span class='symbol'>:off</span><span class='rbracket'>]</span> <span class='op'>:</span> <span class='lparen'>(</span><span class='int'>1</span> <span class='op'>-</span> <span class='id identifier rubyid_tclk_val'>tclk_val</span><span class='rparen'>)</span><span class='rparen'>)</span>
-      <span class='kw'>unless</span> <span class='id identifier rubyid_tdo_already_suspended'>tdo_already_suspended</span>
-        <span class='kw'>unless</span> <span class='id identifier rubyid_tdo_to_be_captured'>tdo_to_be_captured</span>
+      <span class='kw'>else</span>
+        <span class='comment'># second half of cycle
+</span>        <span class='ivar'>@pins</span><span class='lbracket'>[</span><span class='symbol'>:tck</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_drive'>drive</span><span class='lparen'>(</span><span class='ivar'>@tck_vals</span> <span class='op'>?</span> <span class='ivar'>@tck_vals</span><span class='lbracket'>[</span><span class='symbol'>:off</span><span class='rbracket'>]</span> <span class='op'>:</span> <span class='lparen'>(</span><span class='int'>1</span> <span class='op'>-</span> <span class='id identifier rubyid_tck_val'>tck_val</span><span class='rparen'>)</span><span class='rparen'>)</span>
+        <span class='kw'>unless</span> <span class='id identifier rubyid_tdo_already_suspended'>tdo_already_suspended</span>
           <span class='kw'>if</span> <span class='id identifier rubyid_mask_tdo_half1'>mask_tdo_half1</span>
             <span class='ivar'>@tdo_suspended_by_driver</span> <span class='op'>=</span> <span class='kw'>true</span>
-            <span class='ivar'>@tdo_pin</span><span class='period'>.</span><span class='id identifier rubyid_suspend'>suspend</span>
+            <span class='ivar'>@pins</span><span class='lbracket'>[</span><span class='symbol'>:tdo</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_suspend'>suspend</span>
           <span class='kw'>else</span>
             <span class='ivar'>@tdo_suspended_by_driver</span> <span class='op'>=</span> <span class='kw'>false</span>
-            <span class='ivar'>@tdo_pin</span><span class='period'>.</span><span class='id identifier rubyid_resume'>resume</span>
+            <span class='ivar'>@pins</span><span class='lbracket'>[</span><span class='symbol'>:tdo</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_resume'>resume</span>
           <span class='kw'>end</span>
         <span class='kw'>end</span>
       <span class='kw'>end</span>
+      <span class='kw'>yield</span>
     <span class='kw'>end</span>
-    <span class='kw'>yield</span>
-  <span class='kw'>end</span>
-  <span class='kw'>if</span> <span class='ivar'>@tdo_suspended_by_driver</span>
-    <span class='ivar'>@tdo_pin</span><span class='period'>.</span><span class='id identifier rubyid_resume'>resume</span>
-    <span class='ivar'>@tdo_suspended_by_driver</span> <span class='op'>=</span> <span class='kw'>false</span>
+    <span class='kw'>if</span> <span class='ivar'>@tdo_suspended_by_driver</span>
+      <span class='ivar'>@tdo_suspended_by_driver</span> <span class='op'>=</span> <span class='kw'>false</span>
+      <span class='ivar'>@pins</span><span class='lbracket'>[</span><span class='symbol'>:tdo</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_resume'>resume</span>
+    <span class='kw'>end</span>
   <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -1916,7 +2132,7 @@ similar</p>
   <div class="discussion">
     
 <p>Applies the given value to the TMS pin and then cycles the tester for one
-TCLK</p>
+TCK</p>
 
 
   </div>
@@ -1950,52 +2166,54 @@ TCLK</p>
       <pre class="lines">
 
 
-342
-343
-344
-345
-346
-347
-348
-349
-350
-351
-352
-353
-354
-355
-356
-357
-358
-359
-360
-361
-362
-363</pre>
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 342</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 371</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_tms!'>tms!</span><span class='lparen'>(</span><span class='id identifier rubyid_val'>val</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='ivar'>@deferred_compare</span>
     <span class='ivar'>@deferred_compare</span> <span class='op'>=</span> <span class='kw'>nil</span>
   <span class='kw'>else</span>
-    <span class='ivar'>@tdo_pin</span><span class='period'>.</span><span class='id identifier rubyid_dont_care'>dont_care</span>
+    <span class='id identifier rubyid_action'>action</span> <span class='symbol'>:tdo</span><span class='comma'>,</span> <span class='symbol'>:dont_care</span>
   <span class='kw'>end</span>
 
   <span class='kw'>if</span> <span class='ivar'>@deferred_store</span>
     <span class='ivar'>@deferred_store</span> <span class='op'>=</span> <span class='kw'>nil</span>
-    <span class='id identifier rubyid_store_tdo_this_tclk'>store_tdo_this_tclk</span> <span class='op'>=</span> <span class='kw'>true</span>
+    <span class='id identifier rubyid_store_tdo_this_tck'>store_tdo_this_tck</span> <span class='op'>=</span> <span class='kw'>true</span>
   <span class='kw'>else</span>
-    <span class='id identifier rubyid_store_tdo_this_tclk'>store_tdo_this_tclk</span> <span class='op'>=</span> <span class='kw'>false</span>
+    <span class='id identifier rubyid_store_tdo_this_tck'>store_tdo_this_tck</span> <span class='op'>=</span> <span class='kw'>false</span>
   <span class='kw'>end</span>
   <span class='ivar'>@next_data_vector_to_be_stored</span> <span class='op'>=</span> <span class='kw'>false</span>
 
-  <span class='id identifier rubyid_tclk_cycle'>tclk_cycle</span> <span class='kw'>do</span>
-    <span class='kw'>if</span> <span class='id identifier rubyid_store_tdo_this_tclk'>store_tdo_this_tclk</span> <span class='op'>&amp;&amp;</span> <span class='ivar'>@next_data_vector_to_be_stored</span>
-      <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_tester'>tester</span><span class='period'>.</span><span class='id identifier rubyid_store_next_cycle'>store_next_cycle</span><span class='lparen'>(</span><span class='ivar'>@tdo_pin</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_tck_cycle'>tck_cycle</span> <span class='kw'>do</span>
+    <span class='kw'>if</span> <span class='id identifier rubyid_store_tdo_this_tck'>store_tdo_this_tck</span> <span class='op'>&amp;&amp;</span> <span class='ivar'>@next_data_vector_to_be_stored</span>
+      <span class='id identifier rubyid_action'>action</span> <span class='symbol'>:store</span>
     <span class='kw'>end</span>
-    <span class='ivar'>@tms_pin</span><span class='period'>.</span><span class='id identifier rubyid_drive!'>drive!</span><span class='lparen'>(</span><span class='id identifier rubyid_val'>val</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_action'>action</span> <span class='symbol'>:tms</span><span class='comma'>,</span> <span class='symbol'>:drive</span><span class='comma'>,</span> <span class='id identifier rubyid_val'>val</span>
+    <span class='id identifier rubyid_cycle'>cycle</span>
   <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -2112,22 +2330,22 @@ written out prior to shifting data.</p>
       <pre class="lines">
 
 
-379
-380
-381
-382
-383
-384
-385
-386
-387
-388
-389
-390
-391</pre>
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 379</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 409</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_write_dr'>write_dr</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_tester'>tester</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:write_dr</span><span class='rparen'>)</span>
@@ -2275,25 +2493,25 @@ write occurs.</p>
       <pre class="lines">
 
 
-446
-447
-448
-449
-450
-451
-452
-453
-454
-455
-456
-457
-458
-459
-460
-461</pre>
+476
+477
+478
+479
+480
+481
+482
+483
+484
+485
+486
+487
+488
+489
+490
+491</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 446</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_jtag/driver.rb', line 476</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_write_ir'>write_ir</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='const'>Origen</span><span class='period'>.</span><span class='id identifier rubyid_tester'>tester</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:write_ir</span><span class='rparen'>)</span>
@@ -2321,8 +2539,8 @@ write occurs.</p>
 </div>
 
       <div id="footer">
-  Generated on Thu Mar  7 10:43:24 2019 by
-  <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  Generated on Tue Apr 23 11:57:17 2019 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.18 (ruby-2.5.1).
 </div>
 
