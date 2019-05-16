@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta property="og:locale" content="en_US">
+    <meta name="content-language" content="en_US">
+
+    
+    <title>Origen - Guides</title>
+    <meta property="og:title" content="Origen - Guides">
+    <meta name="twitter:title" content="Origen - Guides">
+    <meta itemprop="name" content="Origen - Guides">
+      
+  
+  
+    <link rel="author" href="https://plus.google.com/u/1/b/106463981272125989995/106463981272125989">
+  
+  
+    <meta property="og:url" content="http://origen-sdk.org/origen/guides/pattern/concurrent">
+    <meta name="twitter:url" content="http://origen-sdk.org/origen/guides/pattern/concurrent">
+  
+  
+    <meta property="og:image" content="http://origen-sdk.org/favicon-260x260.png">
+    <meta name="twitter:image" content="http://origen-sdk.org/favicon-260x260.png">
+    <meta itemprop="image" content="http://origen-sdk.org/favicon-260x260.png">
+    <meta name="twitter:card" content="summary">
+  
+    <meta property="og:site_name" content="Origen - The Semiconductor Developer's Kit">
+  
+  
+    <meta property="fb:admins" content="origensdk">
+  
+  
+    <meta name="twitter:site" content="@origensdk">
+  
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="http://origen-sdk.org/css/bootstrap_custom.css"></script>
+    <!-- Load this up top to allow pages to execute JQuery snippets -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    
+      <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      
+        ga('create', 'UA-64455560-1', 'auto');
+        ga('send', 'pageview');
+      </script>
+    
+
+    <!-- Fav and touch icons -->
+    <link rel="apple-touch-icon" sizes="57x57" href="http://origen-sdk.org/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="http://origen-sdk.org/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="http://origen-sdk.org/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="http://origen-sdk.org/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="http://origen-sdk.org/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="http://origen-sdk.org/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="http://origen-sdk.org/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="http://origen-sdk.org/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="http://origen-sdk.org/apple-touch-icon-180x180.png">
+    <link rel="icon" type="image/png" href="http://origen-sdk.org/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="http://origen-sdk.org/android-chrome-192x192.png" sizes="192x192">
+    <link rel="icon" type="image/png" href="http://origen-sdk.org/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="http://origen-sdk.org/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="http://origen-sdk.org/manifest.json">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-TileImage" content="/mstile-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+  </head>
+
+  <body>
+    
+      <div class="container">
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <a href="/" class="navbar-brand" style="margin-top: -4px;">
+        <img src="http://origen-sdk.org/img/origen-device.png" style="height:30px; margin-right: 2px; display: inline; margin-top: -2px;">
+        <img src="http://origen-sdk.org/img/origen-text.png" style="height:15px; display: inline;">
+      </a>
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div id="navbar" class="collapse navbar-collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown ">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="tour">Tour <span class="caret"></span></a>
+          <ul class="dropdown-menu" aria-labelledby="tour">
+            <li><a href="/origen/tour/basics">Basics</a></li>
+            <li class="divider">
+            </li>
+<li><a href="/origen/tour/test-engineering">Test Engineers</a></li>
+            <li><a href="/origen/tour/design-engineering">Design Engineers</a></li>
+          </ul>
+        </li>
+        <li class="active"><a href="/origen/guides/starting/introduction">Guides</a></li>
+        <li class=""><a href="/origen/videos/1-pattern-in-20-minutes">Videos</a></li>
+        <li class=""><a href="/origen/publications">Publications</a></li>
+        <li class=""><a href="/origen/api">API</a></li>
+        <li class=""><a href="https://github.com/Origen-SDK">Github</a></li>
+        <li class=""><a href="/origen/community">Community</a></li>
+        <li class=""><a href="/origen/release_notes">Release Notes</a></li>
+        <li class=""><a href="/origen/plugins">Plugins</a></li>
+      </ul>
+    </div>
+<!--/.nav-collapse -->
+  </div>
+</nav>
+
+<div class="row">
+  <div class="col-md-3 sidebar-nav-container">
+    <div class="well sidebar-nav" style="margin-top: 20px;">
+        <div id="search">
+          <form style="margin-bottom: 15px;">
+            <div class="input-group">
+              <input class="form-control" type="search" placeholder="Search the guides...">
+              <span class="input-group-btn">
+                <button type="submit" class="btn btn-search">GO!</button>
+              </span>
+            </div>
+          </form>
+        </div>
+        <div class="panel-group" id="sidebar-accordion">
+
+          <div class="panel panel-default">
+            <div class="panel-heading clickable" data-toggle="collapse" data-parent="#sidebar-accordion" href="#sidebar-collapse-0">
+              <a class="no-underline">
+                Getting Started with Origen
+              </a>
+            </div>
+            <div id="sidebar-collapse-0" class="panel-collapse collapse ">
+              <div class="panel-body">
+                <ul class="nav nav-list">
+<li class=""><a href="/origen/guides/starting/introduction">Introduction</a></li>
+<li class=""><a href="/origen/guides/starting/core">Core concepts</a></li>
+<li class=""><a href="/origen/guides/starting/installing">How to Install</a></li>
+<li class=""><a href="/origen/guides/starting/installwin">How to Install (Windows)</a></li>
+<li class=""><a href="/origen/guides/starting/company">Company Customization</a></li>
+<li class=""><a href="/origen/guides/starting/gems">Understanding Gems</a></li>
+<li class=""><a href="/origen/guides/starting/app">Creating a New App</a></li>
+<li class=""><a href="/origen/guides/starting/invoking">Invoking Considerations</a></li>
+<li class=""><a href="/origen/guides/starting/commit">The Initial Commit</a></li>
+<li class=""><a href="/origen/guides/starting/workspace">Workspace Management</a></li>
+<li class=""><a href="/origen/guides/starting/architecture">Application Architecture</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading clickable" data-toggle="collapse" data-parent="#sidebar-accordion" href="#sidebar-collapse-1">
+              <a class="no-underline">
+                Runtime Environment
+              </a>
+            </div>
+            <div id="sidebar-collapse-1" class="panel-collapse collapse ">
+              <div class="panel-body">
+                <ul class="nav nav-list">
+<li class=""><a href="/origen/guides/runtime/introduction">Introduction</a></li>
+<li class=""><a href="/origen/guides/runtime/mode">Mode</a></li>
+<li class=""><a href="/origen/guides/runtime/environment">Environment</a></li>
+<li class=""><a href="/origen/guides/runtime/target">Target</a></li>
+<li class=""><a href="/origen/guides/runtime/production">Production Targets</a></li>
+<li class=""><a href="/origen/guides/runtime/global">Global Setup</a></li>
+<li class=""><a href="/origen/guides/runtime/loadorder">Load Order</a></li>
+<li class=""><a href="/origen/guides/runtime/programming">Programming</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading clickable" data-toggle="collapse" data-parent="#sidebar-accordion" href="#sidebar-collapse-2">
+              <a class="no-underline">
+                Models
+              </a>
+            </div>
+            <div id="sidebar-collapse-2" class="panel-collapse collapse ">
+              <div class="panel-body">
+                <ul class="nav nav-list">
+<li class=""><a href="/origen/guides/models/introduction">Introduction</a></li>
+<li class=""><a href="/origen/guides/models/naming">Naming</a></li>
+<li class=""><a href="/origen/guides/models/defining">Definition &amp; Hierarchy</a></li>
+<li class=""><a href="/origen/guides/models/attributes">Adding Attributes</a></li>
+<li class=""><a href="/origen/guides/models/versioning">Versioning</a></li>
+<li class=""><a href="/origen/guides/models/bugs">Bugs &amp; Features</a></li>
+<li class=""><a href="/origen/guides/models/modes">Package, Mode &amp; Configuration</a></li>
+<li class=""><a href="/origen/guides/models/registers">Registers</a></li>
+<li class=""><a href="/origen/guides/models/pins">Pins</a></li>
+<li class=""><a href="/origen/guides/models/power">Power Domains</a></li>
+<li class=""><a href="/origen/guides/models/hw">Hardware Attributes</a></li>
+<li class=""><a href="/origen/guides/models/parameters">Parameters</a></li>
+<li class=""><a href="/origen/guides/models/specs">Specifications</a></li>
+<li class=""><a href="/origen/guides/models/fuses">Fuses</a></li>
+<li class=""><a href="/origen/guides/models/components">Generic Components</a></li>
+<li class=""><a href="/origen/guides/models/componentable">Creating Your Own Components</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading clickable" data-toggle="collapse" data-parent="#sidebar-accordion" href="#sidebar-collapse-3">
+              <a class="no-underline">
+                Compiler (Views)
+              </a>
+            </div>
+            <div id="sidebar-collapse-3" class="panel-collapse collapse ">
+              <div class="panel-body">
+                <ul class="nav nav-list">
+<li class=""><a href="/origen/guides/compiler/introduction">Introduction</a></li>
+<li class=""><a href="/origen/guides/compiler/creating">Creating Templates</a></li>
+<li class=""><a href="/origen/guides/compiler/subtemplates">Using Sub-Templates</a></li>
+<li class=""><a href="/origen/guides/compiler/helpers">Helpers</a></li>
+<li class=""><a href="/origen/guides/compiler/running">Running The Compiler</a></li>
+<li class=""><a href="/origen/guides/compiler/inline">Inline Compiler</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading clickable" data-toggle="collapse" data-parent="#sidebar-accordion" href="#sidebar-collapse-4">
+              <a class="no-underline">
+                Controllers
+              </a>
+            </div>
+            <div id="sidebar-collapse-4" class="panel-collapse collapse ">
+              <div class="panel-body">
+                <ul class="nav nav-list">
+<li class=""><a href="/origen/guides/controllers/introduction">Introduction</a></li>
+<li class=""><a href="/origen/guides/controllers/shadow">Shadow Controllers</a></li>
+<li class=""><a href="/origen/guides/controllers/direct">Direct Controllers</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading clickable" data-toggle="collapse" data-parent="#sidebar-accordion" href="#sidebar-collapse-5">
+              <a class="no-underline">
+                Pattern Generator
+              </a>
+            </div>
+            <div id="sidebar-collapse-5" class="panel-collapse collapse in">
+              <div class="panel-body">
+                <ul class="nav nav-list">
+<li class=""><a href="/origen/guides/pattern/introduction">Introduction</a></li>
+<li class=""><a href="/origen/guides/pattern/creating">Creating Patterns</a></li>
+<li class=""><a href="/origen/guides/pattern/pins">Pins</a></li>
+<li class=""><a href="/origen/guides/pattern/timing">Timing and Waiting</a></li>
+<li class=""><a href="/origen/guides/pattern/registers">Registers</a></li>
+<li class=""><a href="/origen/guides/pattern/documenting">Documenting Patterns</a></li>
+<li class=""><a href="/origen/guides/pattern/name">Generating by Name</a></li>
+<li class=""><a href="/origen/guides/pattern/common">Common API</a></li>
+<li class=""><a href="/origen/guides/pattern/j750">J750 API</a></li>
+<li class=""><a href="/origen/guides/pattern/v93k">V93K API</a></li>
+<li class=""><a href="/origen/guides/pattern/ultraflex">UltraFlex API</a></li>
+<li class=""><a href="/origen/guides/pattern/custom">Custom Testers</a></li>
+<li class=""><a href="/origen/guides/pattern/running">Running The PatGen</a></li>
+<li class="active"><a href="/origen/guides/pattern/concurrent">Concurrent Patterns</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading clickable" data-toggle="collapse" data-parent="#sidebar-accordion" href="#sidebar-collapse-6">
+              <a class="no-underline">
+                Test Program Generator
+              </a>
+            </div>
+            <div id="sidebar-collapse-6" class="panel-collapse collapse ">
+              <div class="panel-body">
+                <ul class="nav nav-list">
+<li class=""><a href="/origen/guides/program/introduction">Introduction</a></li>
+<li class=""><a href="/origen/guides/program/philosophy">Philosophy</a></li>
+<li class=""><a href="/origen/guides/program/flows">Creating Flows</a></li>
+<li class=""><a href="/origen/guides/program/flowapi">Managing Flow Control</a></li>
+<li class=""><a href="/origen/guides/program/interface">Creating an Interface</a></li>
+<li class=""><a href="/origen/guides/program/resources">Additional Resources</a></li>
+<li class=""><a href="/origen/guides/program/code">Dynamic Custom Code</a></li>
+<li class=""><a href="/origen/guides/program/j750">J750 API</a></li>
+<li class=""><a href="/origen/guides/program/v93k">V93K API</a></li>
+<li class=""><a href="/origen/guides/program/ultraflex">UltraFLEX API</a></li>
+<li class=""><a href="/origen/guides/program/doc">Documenting the Program</a></li>
+<li class=""><a href="/origen/guides/program/custom">Creating Custom Testers</a></li>
+<li class=""><a href="/origen/guides/program/generating">Running the ProgGen</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading clickable" data-toggle="collapse" data-parent="#sidebar-accordion" href="#sidebar-collapse-7">
+              <a class="no-underline">
+                Simulation
+              </a>
+            </div>
+            <div id="sidebar-collapse-7" class="panel-collapse collapse ">
+              <div class="panel-body">
+                <ul class="nav nav-list">
+<li class=""><a href="/origen/guides/simulation/introduction">Introduction</a></li>
+<li class=""><a href="/origen/guides/simulation/howitworks">How It Works</a></li>
+<li class=""><a href="/origen/guides/simulation/compiling">Compiling the DUT</a></li>
+<li class=""><a href="/origen/guides/simulation/environment">Environment Setup</a></li>
+<li class=""><a href="/origen/guides/simulation/app">Application Setup</a></li>
+<li class=""><a href="/origen/guides/simulation/patterns">Simulating Patterns</a></li>
+<li class=""><a href="/origen/guides/simulation/flows">Simulating Flows</a></li>
+<li class=""><a href="/origen/guides/simulation/log">Simulator Log Output</a></li>
+<li class=""><a href="/origen/guides/simulation/artifacts">Artifacts</a></li>
+<li class=""><a href="/origen/guides/simulation/debugging">Debugging</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading clickable" data-toggle="collapse" data-parent="#sidebar-accordion" href="#sidebar-collapse-8">
+              <a class="no-underline">
+                Documentation Generator
+              </a>
+            </div>
+            <div id="sidebar-collapse-8" class="panel-collapse collapse ">
+              <div class="panel-body">
+                <ul class="nav nav-list">
+<li class=""><a href="/origen/guides/documentation/introduction">Introduction</a></li>
+<li class=""><a href="/origen/guides/documentation/markdown">Markdown</a></li>
+<li class=""><a href="/origen/guides/documentation/linking">Linking</a></li>
+<li class=""><a href="/origen/guides/documentation/styling">Styling</a></li>
+<li class=""><a href="/origen/guides/documentation/testing">Testing</a></li>
+<li class=""><a href="/origen/guides/documentation/api">API Generation</a></li>
+<li class=""><a href="/origen/guides/documentation/deploying">Deploying</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading clickable" data-toggle="collapse" data-parent="#sidebar-accordion" href="#sidebar-collapse-9">
+              <a class="no-underline">
+                Plugins
+              </a>
+            </div>
+            <div id="sidebar-collapse-9" class="panel-collapse collapse ">
+              <div class="panel-body">
+                <ul class="nav nav-list">
+<li class=""><a href="/origen/guides/plugins/introduction">Introduction</a></li>
+<li class=""><a href="/origen/guides/plugins/importing">Using a Plugin</a></li>
+<li class=""><a href="/origen/guides/plugins/creating">Creating a Plugin</a></li>
+<li class=""><a href="/origen/guides/plugins/current">Current Plugin</a></li>
+<li class=""><a href="/origen/guides/plugins/environment">Dev Environment</a></li>
+<li class=""><a href="/origen/guides/plugins/development">Dev Considerations</a></li>
+<li class=""><a href="/origen/guides/plugins/paths">Paths &amp; Origen.root</a></li>
+<li class=""><a href="/origen/guides/plugins/app">Config &amp; Origen.app</a></li>
+<li class=""><a href="/origen/guides/plugins/misc">Miscellaneous Topics</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading clickable" data-toggle="collapse" data-parent="#sidebar-accordion" href="#sidebar-collapse-10">
+              <a class="no-underline">
+                Miscellaneous
+              </a>
+            </div>
+            <div id="sidebar-collapse-10" class="panel-collapse collapse ">
+              <div class="panel-body">
+                <ul class="nav nav-list">
+<li class=""><a href="/origen/guides/misc/revisioncontrol">Revision Control</a></li>
+<li class=""><a href="/origen/guides/misc/remotes">Origen Remotes</a></li>
+<li class=""><a href="/origen/guides/misc/lint">Lint Testing</a></li>
+<li class=""><a href="/origen/guides/misc/session">Session Store</a></li>
+<li class=""><a href="/origen/guides/misc/lsf">LSF API</a></li>
+<li class=""><a href="/origen/guides/misc/users">Users, Emails &amp; Maillists</a></li>
+<li class=""><a href="/origen/guides/misc/utilities">Utilities &amp; Helpers</a></li>
+<li class=""><a href="/origen/guides/misc/coreext">Ruby Extensions</a></li>
+<li class=""><a href="/origen/guides/misc/logger">Logger</a></li>
+<li class=""><a href="/origen/guides/misc/commands">Adding Commands</a></li>
+<li class=""><a href="/origen/guides/misc/commandsov">Overriding Commands</a></li>
+<li class=""><a href="/origen/guides/misc/callbacks">Callbacks</a></li>
+<li class=""><a href="/origen/guides/misc/appcallbacks">Application Callbacks</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading clickable" data-toggle="collapse" data-parent="#sidebar-accordion" href="#sidebar-collapse-11">
+              <a class="no-underline">
+                Advanced Topics
+              </a>
+            </div>
+            <div id="sidebar-collapse-11" class="panel-collapse collapse ">
+              <div class="panel-body">
+                <ul class="nav nav-list">
+<li class=""><a href="/origen/guides/advanced/introduction">Introduction</a></li>
+<li class=""><a href="/origen/guides/advanced/invocations">Invocation Customization</a></li>
+<li class=""><a href="/origen/guides/advanced/newapps">Custom App Generators</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+      
+
+        </div>
+
+    </div>
+  </div>
+
+  <div class="col-md-9 nav-page-container">
+    <article class="search-results">
+
+      <h3 class="topic-title">Pattern Generator</h3>
+
+      <h2 class="topic-subtitle">Concurrent Patterns</h2>
+
+      <hr>
+
+      <p>Concurrent patterns are those which test multiple IPs on a DUT at the same time,
+therefore saving test time vs. the conventional approach of sequentially testing each IP
+in turn.</p>
+
+      <p>Testing multiple instances of the same IP at the same time is usually easy enough as long
+as the DUT’s design-for-test (DFT) provides some sort of broadcast mode to allow the
+same sequence of instructions to be applied to all of the IPs at the same time.</p>
+
+      <p>However, what if the DFT to do that is not in place, or if the IPs each require a slightly
+different instruction sequence, or in fact if the IPs to be tested in parallel are completely
+different and not related at all?
+In that case, the creation of concurrent test patterns is usually quite difficult to say
+the least!</p>
+
+      <p>ATE vendors attempt to solve this problem in the only way they can, by telling test
+engineers to provide patterns which test each IP via a unique port (i.e. using different
+pins) and the ATE will provide the ability to execute both patterns at the same time.
+Origen provides no special features to support this case since such patterns are just regular
+patterns and all of the smarts to make them execute concurrently is provided by the ATE.</p>
+
+      <p>However, such an approach is usually not very attractive since additional tester channels
+are required to communicate over multiple ports, and therefore DUT parallelism is sacrificed
+for IP parallelism - often with the net effect that not much test time is saved overall.
+This approach also requires significant upfront DFT planning to ensure that the IPs to be
+tested concurrently are accessible over unique ports.</p>
+
+      <p>What would be more useful would be if IPs could be concurrently tested over the same
+shared port that would normally be used when testing them sequentially. Such an approach
+provides an optimum test time since the same amount of tester channels are used as per a
+sequential test approach, but now we are saving time from having IPs perform operations
+in parallel.
+The downside though, is that such patterns are normally very hard to create and it is not
+feasible for engineers to manually think through and implement how register transactions
+which target multiple IPs should be sequenced down a single communications port.</p>
+
+      <p>The goal of an effective concurrent pattern creation tool therefore is to enable test engineers to
+write IP-level test patterns exactly as they do today,
+without any thought to concurrency, and then the tool will take care of sequencing operations
+for two or more IPs into a single concurrent test pattern.</p>
+
+      <p>This is where Origen’s pattern concurrency feature and APIs come in and these make the creation
+of single/shared-port concurrent test patterns easily accessible to test engineers.</p>
+
+      <div>    
+  <a class="anchor" name="Principles_of_Operation"></a>          
+  <h3><a href="#Principles_of_Operation">Principles of Operation</a></h3>          
+</div>
+
+      <p>When working with the concurrency APIs it will help to have a basic understanding of how the
+system works, though it is not the intention of this document to go into too much detail about
+the underlying implementation.</p>
+
+      <p>When generating a conventional test pattern with Origen, a single DUT model is instantiated
+and a single Ruby thread executes the pattern source to be generated.</p>
+
+      <p>When generating a concurrent test pattern, a single DUT model is also instantiated, however
+multiple Ruby threads are then created to generate the sequence for each branch of concurrency.
+A branch of concurrency means a sequence of operations that should be executed sequentially
+but which can be run in parallel with other such sequences.</p>
+
+      <p>In the simplest terms, if you have two existing patterns and you want to generate a concurrent
+pattern that runs them in parallel, then each source pattern is considered to be a branch of
+concurrency and two threads will be created when generating the concurrent pattern.</p>
+
+      <p>As you will see later, APIs also exist to create threads on the fly and to fully control and define what
+happens in each one, so they don’t always correspond directly to an existing conventional
+pattern sequence/source.</p>
+
+      <p>Ruby threads share global and instance variables, which means that each thread is accessing
+and manipulating the same DUT (and tester) model during generation.</p>
+
+      <p>During concurrent generation, the threads are not simply allowed to run asynchronously and as
+allocated by Ruby’s thread sequencer.
+Instead, Origen tightly controls when each one is allowed to run in a deterministic sequence
+which guarantees that the output will be exactly the same each time the generator is run.
+The execution sequence can be summarized by this code snippet:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#777"># Keep going until all threads are finished (pattern is complete)</span>
+<span style="color:#080;font-weight:bold">until</span> active_threads.empty?
+  <span style="color:#777"># Allow each thread to advance until it is ready for the next cycle</span>
+  active_threads.each <span style="color:#080;font-weight:bold">do</span> |thread|
+    thread.run_until_next_cycle
+  <span style="color:#080;font-weight:bold">end</span>
+  <span style="color:#777"># All threads are now ready to cycle</span>
+  tester.cycle
+  <span style="color:#777"># Remove any threads that have now completed</span>
+  active_threads.reject! { |thread| thread.completed? }
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>It is important to understand that clobbering can occur because
+all threads are sharing access to a single DUT. For example, if
+thread A sets pin TDI to drive 1 and then thread B immediately sets pin TDI to drive 0 while
+preparing for the same cycle, then the last value applied wins and the generated pattern
+will not be functionally valid.</p>
+
+      <p>Fortunately, dealing with this is a lot simpler than it sounds because each thread will normally
+be targeting a different IP and therefore they will naturally be dealing with resources and
+state that the other threads don’t care about.
+Therefore, the main points of contention will normally be at the pins involved in creating register
+transactions and as will be discussed in the next section, Origen makes it very easy to serialize
+access to such shared resources during multi-threaded concurrent pattern generation.</p>
+
+      <p>In the case of something like JTAG pins for example, a serialization wrapper can be placed around
+the transaction methods and this will block threads from starting a transaction if another thread
+currently has a transaction in progress.
+The net result is a pattern which serializes the transactions of multiple threads through the shared
+port.</p>
+
+      <p>Note that it is also possible to reserve access to serialized resources, meaning that when a thread
+gains access it keeps a hold of it until it decides to release it.
+In the shared transaction port example, this can be useful if you have multiple transactions which
+must be guaranteed to run back-back. See <a href="#Reserving_Serial_Resources">Reserving Serial Resources</a>
+for more information.</p>
+
+      <div>    
+  <a class="anchor" name="Serializing_Access_to_Shared_Resources"></a>          
+  <h3><a href="#Serializing_Access_to_Shared_Resources">Serializing Access to Shared Resources</a></h3>          
+</div>
+
+      <p>Normally, no changes are required within your IP-level models, controllers or test pattern source
+files in order to enable them to be combined with each other into a concurrent test pattern.
+Origen application architecture should naturally isolate these from each other such that they
+each have their own independent register models and methods which can be safely invoked concurrently.</p>
+
+      <p>However, some thought should be given as to what top-level resources
+of the device will be shared when testing the desired IPs in parallel. Such resources will
+have to be managed by Origen to prevent collisions when multiple concurrent pattern threads
+try to access the same resources at the same time.
+The most common of these as discussed above will be the communications port, but on-chip
+parametric measurement systems and pins over which external references are supplied
+could be other common considerations.</p>
+
+      <p>Once these resources have been identified, some minor markup should be added to your application
+to make Origen aware of the places that it must serialize thread access.</p>
+
+      <p>For example, consider that we have the following register transaction methods implemented in
+our top-level controller:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">read_register</span>(reg, options={})
+  arm_debug.mem_ap.read_register(reg, options)
+<span style="color:#080;font-weight:bold">end</span>
+
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">write_register</span>(reg, options={})
+  arm_debug.mem_ap.write_register(reg, options)
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>Here we have a single ARM debug system and physical port and only one transaction at a time
+can be handled.
+Our transaction methods should be modified like this to make them concurrent-ready:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">read_register</span>(reg, options={})
+  <span style="color:#777"># This will block concurrent threads, allowing only one at a time to execute this (while being ignored when</span>
+  <span style="color:#777"># generating a regular pattern).</span>
+  <span style="color:#777"># :arm_debug is just an identifier for this resource and the same ID should be used to block off access to the</span>
+  <span style="color:#777"># same resource in other places.</span>
+  <span style="color:#036;font-weight:bold">PatSeq</span>.serialize <span style="color:#A60">:arm_debug</span> <span style="color:#080;font-weight:bold">do</span>
+    arm_debug.mem_ap.read_register(reg, options)
+  <span style="color:#080;font-weight:bold">end</span>
+<span style="color:#080;font-weight:bold">end</span>
+
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">write_register</span>(reg, options={})
+  <span style="color:#777"># Here we use the same resource identifier, :arm_debug, to link this with the read serialize wrapper - meaning</span>
+  <span style="color:#777"># that if a thread is wanting to write, it will have to wait if another thread is currently performing a read.</span>
+  <span style="color:#036;font-weight:bold">PatSeq</span>.serialize <span style="color:#A60">:arm_debug</span> <span style="color:#080;font-weight:bold">do</span>
+    arm_debug.mem_ap.write_register(reg, options)
+  <span style="color:#080;font-weight:bold">end</span>
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>Note that Origen does not automatically serialize access to the read/write register methods
+since some applications may choose to use different ports/protocols depending on what register/IP is being
+targeted and therefore enforcing serialization at the read/write-register-method-level may not be
+desired in all cases.</p>
+
+      <p>Exactly the same <code>PatSeq.serialize</code> wrapper should be added to any other methods which 
+utilize a single silicon resource which may be used by multiple concurrent threads. Here is another
+example of where a method exists to use an on-chip ADC to perform an embedded measurement:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">measure_voltage</span>
+  <span style="color:#777"># This will block concurrent threads, allowing only one at a time to execute this, while being ignored when</span>
+  <span style="color:#777"># generating a regular pattern. Again, :adc is just an identifier for this resource, and the same ID should</span>
+  <span style="color:#777"># to this same resource in other places where it is used.</span>
+  <span style="color:#036;font-weight:bold">PatSeq</span>.serialize <span style="color:#A60">:adc</span> <span style="color:#080;font-weight:bold">do</span>
+    dut.adc.do_something
+  <span style="color:#080;font-weight:bold">end</span>
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+      </div>
+
+      <div>    
+  <a class="anchor" name="Creating_Concurrent_Sequences"></a>          
+  <h3><a href="#Creating_Concurrent_Sequences">Creating Concurrent Sequences</a></h3>          
+</div>
+
+      <p>Once your application has been made concurrent-ready by adding the necessary serialization points, the
+simplest way to create a concurrent pattern is to generate two or more existing patterns into a
+combined concurrent pattern.</p>
+
+      <p>For example, say that we have two existing patterns called <code>ip1_test.rb</code> and <code>ip2_test.rb</code>, these
+could be generated as two separate patterns like this:</p>
+
+      <div class="language-text highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>origen g ip1_test ip2_test
+</pre></div>
+</div>
+      </div>
+
+      <p>To generate them as a concurrent pattern, what Origen calls a pattern sequence, then simply add the
+<code>--seq(uence)</code> option and give a name for the concurrent output pattern:</p>
+
+      <div class="language-text highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>origen g ip1_test ip2_test --seq my_concurrent_pattern
+</pre></div>
+</div>
+      </div>
+
+      <p>This approach to concurrency provides the key benefit that IP-level tests can be
+developed and validated on silicon as standalone patterns, and then once everything is working they can be
+re-generated into a concurrent version for production test time saving.</p>
+
+      <p>After the concurrent sequence has been generated, Origen will provide a concurrency execution
+profile like the one shown below to give an indication of how efficient the combined pattern is.
+This shows the execution time profile of the final pattern on the ATE, so in this example we have a pattern
+which will take just over 40ms to execute, and we can see that the overall test time is driven by the
+test on IP1 and that the testing we are doing on IP2 comfortably fits within that.</p>
+
+      <p>In this diagram an empty time interval means that no activity was taking place - which could mean that
+either the thread was finished or it was completely blocked while waiting to access a serialized resource.
+A half-block means that it was active for &lt; 50% of that time interval and a full block means that it
+was active for &gt; 50% of the given interval.</p>
+
+      <div class="language-text highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>      |-------------------------|-------------------------|-------------------------|-------------------------|----
+      0                         10.0ms                    20.0ms                    30.0ms                    40.0m
+
+main: ▄____________________________________________________________________________________________________________
+
+ip1:  █████████████████████████████████████████████████████████████████████████████████████████████████████████████
+
+ip2:  ▄███████████████████████████████████████████████████████████████████████████████▄____________________________
+</pre></div>
+</div>
+      </div>
+
+      <p>All patterns always have a main thread and when generating a concurrent pattern like this it never
+does very much. Most of the activity will occur in the threads that have been created to generate
+each of the individual patterns that are included in the sequence.</p>
+
+      <p>Note that any arguments passed to <code>Pattern.create</code> by the individual patterns will be ignored
+when generating a concurrent sequence like this. If your application uses
+<a href="/origen/guides/misc/callbacks/#Pattern_Generation">startup and shutdown callbacks</a>
+then those will be called only once and any activity from those will be in the main thread as
+shown at the start of the above example.</p>
+
+      <p>If you need more control over this then a dedicated source file should be setup for the concurrent
+pattern as discussed in the next section.</p>
+
+      <div>    
+  <a class="anchor" name="Programming_Concurrent_Sequences"></a>          
+  <h3><a href="#Programming_Concurrent_Sequences">Programming Concurrent Sequences</a></h3>          
+</div>
+
+      <p>To have more control over the options that you would like to pass to your startup/shutdown methods or
+to create dedicated concurrent patterns which don’t have conventional pattern equivalents, then
+it is possible to create pattern sources files which define a concurrent test sequence.</p>
+
+      <p>Test sequence source files should be created in the conventional pattern directory, but internally
+they should call <code>Pattern.sequence</code> instead of <code>Pattern.create</code> as shown below:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#036;font-weight:bold">Pattern</span>.sequence <span style="color:#080;font-weight:bold">do</span> |seq|
+
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>Any options passed into <code>Pattern.sequence</code> will be passed into your startup/shutdown in the same
+way as per conventional patterns.</p>
+
+      <p>In fact, conventional patterns can be written as pattern sequences if you want to, these will
+generate identical output patterns:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#036;font-weight:bold">Pattern</span>.create <span style="color:#080;font-weight:bold">do</span>
+  dut.ip1.do_something
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>is equivalent to:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#036;font-weight:bold">Pattern</span>.sequence <span style="color:#080;font-weight:bold">do</span> |seq|
+  dut.ip1.do_something
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>The sequencer object that is passed into the main block allows other pattern sources to be run. This
+next example will look for pattern sources called <code>ip1_test</code> and <code>ip2_test</code> and generate them to
+run sequentially within a single pattern. So aside from concurrency, pattern sequences can also be
+used to compose sequential patterns which are comprised of multiple conventional patterns.</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#036;font-weight:bold">Pattern</span>.sequence <span style="color:#080;font-weight:bold">do</span> |seq|
+  seq.run <span style="color:#A60">:ip1_test</span>
+  seq.run <span style="color:#A60">:ip2_test</span>
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>To make these run concurrently we need to create parallel threads to run them in, and in fact
+this is exactly equivalent to what Origen will do when generating multiple patterns with the
+<code>--sequence</code> option:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#036;font-weight:bold">Pattern</span>.sequence <span style="color:#080;font-weight:bold">do</span> |seq|
+  <span style="color:#777"># Start a concurrent thread, :ip1 is just a name here to identify this thread, it can be called anything</span>
+  seq.thread <span style="color:#A60">:ip1</span> <span style="color:#080;font-weight:bold">do</span>
+    seq.run <span style="color:#A60">:ip1_test</span>
+  <span style="color:#080;font-weight:bold">end</span>
+
+  <span style="color:#777"># Start another parallel thread, note that since the above has created a parallel thread,</span>
+  <span style="color:#777"># it will not block the main thread's execution of this sequence, meaning that both of these</span>
+  <span style="color:#777"># threads are effectively launched at the same time</span>
+  seq.thread <span style="color:#A60">:ip2</span> <span style="color:#080;font-weight:bold">do</span>
+    seq.run <span style="color:#A60">:ip2_test</span>
+  <span style="color:#080;font-weight:bold">end</span>
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>There is no requirement for a parallel thread to be associated with another pattern source, and
+you can program any operations that you like within the parallel blocks:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#036;font-weight:bold">Pattern</span>.sequence <span style="color:#080;font-weight:bold">do</span> |seq|
+  <span style="color:#777"># Since this is in the main thread it will block and this will fully generate before proceeding</span>
+  dut.do_something
+
+  <span style="color:#777"># Start a concurrent thread, this will not block which means that it will generate concurrently</span>
+  <span style="color:#777"># with anything that follows it</span>
+  seq.thread <span style="color:#A60">:th1</span> <span style="color:#080;font-weight:bold">do</span>
+    dut.do_something_else
+  <span style="color:#080;font-weight:bold">end</span>
+
+  <span style="color:#777"># Another concurrent thread, there is no limit to the amount of these you can create, though there</span>
+  <span style="color:#777"># will be a sweet spot for efficiency if you have too many all competing for finite shared resources</span>
+  seq.thread <span style="color:#A60">:th2</span> <span style="color:#080;font-weight:bold">do</span>
+    dut.and_another_thing
+  <span style="color:#080;font-weight:bold">end</span>
+
+  <span style="color:#777"># Let's do something else in the main thread for the sake of it, since the above two operations</span>
+  <span style="color:#777"># are in parallel threads we now have 3 operations running concurrentl</span>
+  dut.one_more_for_fun
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>To try and illustrate the above point, lets replicate it with some fixed delays:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#036;font-weight:bold">Pattern</span>.sequence <span style="color:#080;font-weight:bold">do</span> |seq|
+  <span style="color:#00D">10</span>.ms!
+
+  seq.thread <span style="color:#A60">:th1</span> <span style="color:#080;font-weight:bold">do</span>
+    <span style="color:#00D">10</span>.ms!
+  <span style="color:#080;font-weight:bold">end</span>
+
+  seq.thread <span style="color:#A60">:th2</span> <span style="color:#080;font-weight:bold">do</span>
+    <span style="color:#00D">20</span>.ms!
+  <span style="color:#080;font-weight:bold">end</span>
+
+  <span style="color:#00D">5</span>.ms!
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>How long should that pattern take to run?</p>
+
+      <p>Answer: 30ms. The 10ms up front in the main thread blocks everything else, then the long pole is the
+20ms in thread 2:</p>
+
+      <div class="language-text highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>      |-------------------------|-------------------------|-------------------------|
+      0                         10.0ms                    20.0ms                    30.0ms
+
+main: ████████████████████████████████████████_______________________________________
+
+th1:  __________________________███████████████████████████__________________________
+
+th2:  __________________________█████████████████████████████████████████████████████
+</pre></div>
+</div>
+      </div>
+
+      <p>Note that the <code>5.ms!</code> from the main thread is running in parallel to the <code>10.ms!</code> and <code>20.ms!</code> from
+threads 1 and 2, respectively.</p>
+
+      <div>    
+  <a class="anchor" name="Syncing_Up_With_Parallel_Threads"></a>          
+  <h3><a href="#Syncing_Up_With_Parallel_Threads">Syncing Up With Parallel Threads</a></h3>          
+</div>
+
+      <p>Sometimes you may want to wait until threads have completed, a common example could be to wait at the
+end of a pattern for everything to finish before checking for a result.
+This can be done by making the following method call to block the thread from which it is called
+until all other threads complete:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>seq.wait_for_threads
+</pre></div>
+</div>
+      </div>
+
+      <p>or to wait for a specific thread(s):</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>seq.wait_for_thread <span style="color:#A60">:th1</span>
+seq.wait_for_threads <span style="color:#A60">:th1</span>, <span style="color:#A60">:th2</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>If we add that to our previous example, how long will it take to run now?</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#036;font-weight:bold">Pattern</span>.sequence <span style="color:#080;font-weight:bold">do</span> |seq|
+  <span style="color:#00D">10</span>.ms!
+
+  seq.thread <span style="color:#A60">:th1</span> <span style="color:#080;font-weight:bold">do</span>
+    <span style="color:#00D">10</span>.ms!
+  <span style="color:#080;font-weight:bold">end</span>
+
+  seq.thread <span style="color:#A60">:th2</span> <span style="color:#080;font-weight:bold">do</span>
+    <span style="color:#00D">20</span>.ms!
+  <span style="color:#080;font-weight:bold">end</span>
+
+  seq.wait_for_threads
+
+  <span style="color:#00D">5</span>.ms!
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>The answer is 35ms, since the <code>5.ms!</code> in the main thread is now blocked until threads 1 and 2
+complete:</p>
+
+      <div class="language-text highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>      |-------------------------|-------------------------|-------------------------|-------------
+      0                         10.0ms                    20.0ms                    30.0ms
+
+main: ██████████████████████████____________________________________________________██████████████
+
+th1:  __________________________███████████████████████████_______________________________________
+
+th2:  __________________________████████████████████████████████████████████████████______________
+</pre></div>
+</div>
+      </div>
+
+      <div>    
+  <a class="anchor" name="Reserving_Serial_Resources"></a>          
+  <h3><a href="#Reserving_Serial_Resources">Reserving Serial Resources</a></h3>          
+</div>
+
+      <p>Access to serialized resources can be reserved by wrapping application logic in the following
+code:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#777"># This means that when a thread that executes this gets access to the ARM debug port, it won't release</span>
+<span style="color:#777"># it until the end of the block</span>
+<span style="color:#036;font-weight:bold">PatSeq</span>.reserve <span style="color:#A60">:arm_debug</span> <span style="color:#080;font-weight:bold">do</span>
+
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>An example may be if you have multiple transactions and you want to be guaranteed that they occur
+within the time specified and/or that they do not separated by transactions from other threads:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#777"># When launching a command we want to verify that it started, so let's guarantee that the verify transaction</span>
+<span style="color:#777"># will occur after the specified 10 cycles, otherwise we risk the command starting and completing before</span>
+<span style="color:#777"># we check if it got underway</span>
+<span style="color:#036;font-weight:bold">PatSeq</span>.reserve <span style="color:#A60">:arm_debug</span> <span style="color:#080;font-weight:bold">do</span>
+  <span style="color:#777"># Launch some command operation</span>
+  cmd.write!(code)
+
+  <span style="color:#00D">10</span>.cycles
+
+  <span style="color:#777"># Verify the command started correctly</span>
+  status.busy.read!(<span style="color:#00D">1</span>)
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+      </div>
+
+      <div style="position: relative">
+  <hr>
+  <div>    
+  <a class="anchor" name="Comments"></a>          
+  <h4><a href="#Comments">Comments</a></h4>          
+</div>
+</div>
+      <div id="disqus_thread"></div>
+      <script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = 'origen-sdk';
+    var disqus_title;
+    var disqus_url = 'http://' + window.location.hostname + window.location.pathname;
+
+    disqus_title = $("h1").text();
+    if (disqus_title.length == 0) {
+      disqus_title = $("h2").text();
+    }
+    if (disqus_title.length == 0) {
+      disqus_title = $("h3").text();
+    }
+    if (disqus_title.length == 0) {
+      disqus_title = $("title").text();
+    } else {
+      disqus_title = disqus_title + ' (' + $("title").text() + ')';
+    }
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+      <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+
+    </article>
+  </div>
+</div>
+
+<script src="/origen/search.js"></script>
+
+
+      </div><!-- /.container -->
+    
+
+    <footer class="footer">
+      <div class="container">
+        <p class="pull-left text-muted">
+          Generated with the <a href="http://origen-sdk.org">Origen Semiconductor Developer's Kit</a>
+        </p>
+        <p class="pull-right text-muted">Origen is released under the terms of the <a href="https://choosealicense.com/licenses/mit/">MIT license</a></p>
+      </div>
+    </footer>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="http://origen-sdk.org/js/lunr.min.js"></script>
+    <script src="http://origen-sdk.org/js/highlight.js"></script>
+    <script src="http://origen-sdk.org/js/custom.js"></script>
+    
+      <script>
+        ((window.gitter = {}).chat = {}).options = {
+          room: 'Origen-SDK/users'
+        };
+      </script>
+      <script src="https://sidecar.gitter.im/dist/sidecar.v1.js" async defer></script>
+    
+  </body>
+</html>
