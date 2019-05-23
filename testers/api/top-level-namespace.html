@@ -6,7 +6,7 @@
 <title>
   Top Level Namespace
   
-    &mdash; Origen Testers 0.20.0
+    &mdash; Origen Testers 0.21.0
   
 </title>
 
@@ -89,6 +89,25 @@
   
 </p>
 
+  
+    <h2>
+      Constant Summary
+      <small><a href="#" class="constants_summary_toggle">collapse</a></small>
+    </h2>
+
+    <dl class="constants">
+      
+        <dt id="ENVIRONMENTS-constant" class="">ENVIRONMENTS =
+          
+        </dt>
+        <dd><pre class="code"><span class='lbrace'>{</span>
+  <span class='label'>j750:</span>      <span class='const'><span class='object_link'><a href="OrigenTesters.html" title="OrigenTesters (module)">OrigenTesters</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="OrigenTesters.html#J750-constant" title="OrigenTesters::J750 (constant)">J750</a></span></span><span class='comma'>,</span>
+  <span class='label'>uflex:</span>     <span class='const'><span class='object_link'><a href="OrigenTesters.html" title="OrigenTesters (module)">OrigenTesters</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="OrigenTesters.html#UltraFLEX-constant" title="OrigenTesters::UltraFLEX (constant)">UltraFLEX</a></span></span><span class='comma'>,</span>
+  <span class='label'>v93k_smt7:</span> <span class='const'><span class='object_link'><a href="OrigenTesters.html" title="OrigenTesters (module)">OrigenTesters</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="OrigenTesters.html#V93K-constant" title="OrigenTesters::V93K (constant)">V93K</a></span></span>
+<span class='rbrace'>}</span><span class='period'>.</span><span class='id identifier rubyid_with_indifferent_access'>with_indifferent_access</span></pre></dd>
+      
+    </dl>
+  
 
 
 
@@ -96,13 +115,109 @@
 
 
 
+  
+    <h2>
+      Instance Method Summary
+      <small><a href="#" class="summary_toggle">collapse</a></small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="top-level-namespace.html#converter-instance_method" title="#converter (instance method)">#<strong>converter</strong>(file, options = {})  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="converter-instance_method">
+  
+    #<strong>converter</strong>(file, options = {})  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/commands/convert.rb', line 69</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_converter'>converter</span><span class='lparen'>(</span><span class='id identifier rubyid_file'>file</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_snippet'>snippet</span> <span class='op'>=</span> <span class='const'>IO</span><span class='period'>.</span><span class='id identifier rubyid_read'>read</span><span class='lparen'>(</span><span class='id identifier rubyid_file'>file</span><span class='comma'>,</span> <span class='int'>2000</span><span class='rparen'>)</span>  <span class='comment'># Read first 2000 characters
+</span>  <span class='kw'>case</span> <span class='id identifier rubyid_snippet'>snippet</span>
+  <span class='kw'>when</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>STIL \d+\.\d+</span><span class='regexp_end'>/</span></span>
+    <span class='id identifier rubyid_lambda'>lambda</span> <span class='kw'>do</span>
+      <span class='const'>STIL</span><span class='period'>.</span><span class='id identifier rubyid_add_pins'>add_pins</span><span class='lparen'>(</span><span class='id identifier rubyid_file'>file</span><span class='rparen'>)</span>
+      <span class='comment'># Use raw pin names in the output pattern and not the ALL pin group or similar, maybe
+</span>      <span class='comment'># make this an option in future though
+</span>      <span class='id identifier rubyid_dut'>dut</span><span class='period'>.</span><span class='id identifier rubyid_pin_pattern_order'>pin_pattern_order</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_dut'>dut</span><span class='period'>.</span><span class='id identifier rubyid_pins'>pins</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_pin'>pin</span><span class='op'>|</span> <span class='id identifier rubyid_id'>id</span> <span class='rbrace'>}</span><span class='rparen'>)</span>
+      <span class='const'>STIL</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='id identifier rubyid_file'>file</span><span class='comma'>,</span> <span class='label'>set_timesets:</span> <span class='kw'>true</span><span class='rparen'>)</span>
+    <span class='kw'>end</span>
+  <span class='kw'>else</span>
+    <span class='const'><span class='object_link'><a href="Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_log'>log</span><span class='period'>.</span><span class='id identifier rubyid_error'>error</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Unknown input format for file: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_file'>file</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+    <span class='kw'>nil</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
 
 </div>
 
       <div id="footer">
-  Generated on Wed Feb  6 10:18:31 2019 by
-  <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.16 (ruby-2.5.1).
+  Generated on Thu May 23 08:30:05 2019 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.9.19 (ruby-2.5.1).
 </div>
 
     </div>
