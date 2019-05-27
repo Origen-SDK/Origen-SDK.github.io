@@ -6,7 +6,7 @@
 <title>
   Class: Origen::SubBlocks::Placeholder
   
-    &mdash; Origen Core 0.44.0
+    &mdash; Origen Core 0.50.0
   
 </title>
 
@@ -600,12 +600,12 @@
       <pre class="lines">
 
 
-418
-419
-420</pre>
+423
+424
+425</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/sub_blocks.rb', line 418</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/sub_blocks.rb', line 423</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_method_missing'>method_missing</span><span class='lparen'>(</span><span class='id identifier rubyid_method'>method</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_materialize'>materialize</span><span class='period'>.</span><span class='id identifier rubyid_send'>send</span><span class='lparen'>(</span><span class='id identifier rubyid_method'>method</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
@@ -775,16 +775,16 @@
       <pre class="lines">
 
 
-438
-439
-440
-441
-442
-443
-444</pre>
+446
+447
+448
+449
+450
+451
+452</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/sub_blocks.rb', line 438</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/sub_blocks.rb', line 446</span>
 
 <span class='kw'>def</span> <span class='op'>==</span><span class='lparen'>(</span><span class='id identifier rubyid_obj'>obj</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_obj'>obj</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="" title="Origen::SubBlocks::Placeholder (class)">Placeholder</a></span></span><span class='rparen'>)</span>
@@ -884,12 +884,12 @@
       <pre class="lines">
 
 
-451
-452
-453</pre>
+459
+460
+461</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/sub_blocks.rb', line 451</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/sub_blocks.rb', line 459</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_clone'>clone</span>
   <span class='id identifier rubyid_materialize'>materialize</span><span class='period'>.</span><span class='id identifier rubyid_clone'>clone</span>
@@ -914,12 +914,12 @@
       <pre class="lines">
 
 
-455
-456
-457</pre>
+463
+464
+465</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/sub_blocks.rb', line 455</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/sub_blocks.rb', line 463</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_dup'>dup</span>
   <span class='id identifier rubyid_materialize'>materialize</span><span class='period'>.</span><span class='id identifier rubyid_dup'>dup</span>
@@ -944,12 +944,12 @@
       <pre class="lines">
 
 
-447
-448
-449</pre>
+455
+456
+457</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/sub_blocks.rb', line 447</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/sub_blocks.rb', line 455</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_freeze'>freeze</span>
   <span class='id identifier rubyid_materialize'>materialize</span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span>
@@ -985,12 +985,12 @@
       <pre class="lines">
 
 
-414
-415
-416</pre>
+419
+420
+421</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/sub_blocks.rb', line 414</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/sub_blocks.rb', line 419</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_inspect'>inspect</span>
   <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>&lt;SubBlock: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'>&gt;</span><span class='tstring_end'>&quot;</span></span>
@@ -1041,12 +1041,22 @@
 
 409
 410
-411</pre>
+411
+412
+413
+414
+415
+416</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/origen/sub_blocks.rb', line 409</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='id identifier rubyid_klass'>klass</span><span class='rparen'>)</span>
+  <span class='comment'># Because sub_blocks are stored in a hash.with_indifferent_access, the value is tested
+</span>  <span class='comment'># against being a Hash or Array when it is added to the hash. This prevents the class being
+</span>  <span class='comment'># looking up and loaded by the autoload system straight away, especially if the sub-block
+</span>  <span class='comment'># has been specified to lazy load
+</span>  <span class='kw'>return</span> <span class='kw'>false</span> <span class='kw'>if</span> <span class='id identifier rubyid_klass'>klass</span> <span class='op'>==</span> <span class='const'><span class='object_link'><a href="../../Hash.html" title="Hash (class)">Hash</a></span></span> <span class='op'>||</span> <span class='id identifier rubyid_klass'>klass</span> <span class='op'>==</span> <span class='const'><span class='object_link'><a href="../../Array.html" title="Array (class)">Array</a></span></span>
   <span class='id identifier rubyid_klass'>klass</span> <span class='op'>==</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_klass'>klass</span> <span class='op'>||</span> <span class='id identifier rubyid_klass'>klass</span> <span class='op'>==</span> <span class='const'><span class='object_link'><a href="" title="Origen::SubBlocks::Placeholder (class)">Placeholder</a></span></span>
 <span class='kw'>end</span></pre>
     </td>
@@ -1069,14 +1079,6 @@
       <pre class="lines">
 
 
-463
-464
-465
-466
-467
-468
-469
-470
 471
 472
 473
@@ -1100,26 +1102,34 @@
 491
 492
 493
-494</pre>
+494
+495
+496
+497
+498
+499
+500
+501
+502</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/sub_blocks.rb', line 463</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/sub_blocks.rb', line 471</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_klass'>klass</span>
   <span class='ivar'>@klass</span> <span class='op'>||=</span> <span class='kw'>begin</span>
     <span class='id identifier rubyid_class_name'>class_name</span> <span class='op'>=</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='period'>.</span><span class='id identifier rubyid_delete'>delete</span><span class='lparen'>(</span><span class='symbol'>:class_name</span><span class='rparen'>)</span>
     <span class='kw'>if</span> <span class='id identifier rubyid_class_name'>class_name</span>
-      <span class='kw'>if</span> <span class='id identifier rubyid_eval'>eval</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>defined? ::</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_owner'>owner</span><span class='period'>.</span><span class='id identifier rubyid_namespace'>namespace</span><span class='embexpr_end'>}</span><span class='tstring_content'>::</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_class_name'>class_name</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+      <span class='kw'>begin</span>
         <span class='id identifier rubyid_klass'>klass</span> <span class='op'>=</span> <span class='id identifier rubyid_eval'>eval</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>::</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_owner'>owner</span><span class='period'>.</span><span class='id identifier rubyid_namespace'>namespace</span><span class='embexpr_end'>}</span><span class='tstring_content'>::</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_class_name'>class_name</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
-      <span class='kw'>else</span>
-        <span class='kw'>if</span> <span class='id identifier rubyid_eval'>eval</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>defined? </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_class_name'>class_name</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+      <span class='kw'>rescue</span> <span class='const'>NameError</span>
+        <span class='kw'>begin</span>
           <span class='id identifier rubyid_klass'>klass</span> <span class='op'>=</span> <span class='id identifier rubyid_eval'>eval</span><span class='lparen'>(</span><span class='id identifier rubyid_class_name'>class_name</span><span class='rparen'>)</span>
-        <span class='kw'>else</span>
-          <span class='kw'>if</span> <span class='id identifier rubyid_eval'>eval</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>defined? </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_owner'>owner</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='embexpr_end'>}</span><span class='tstring_content'>::</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_class_name'>class_name</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+        <span class='kw'>rescue</span> <span class='const'>NameError</span>
+          <span class='kw'>begin</span>
             <span class='id identifier rubyid_klass'>klass</span> <span class='op'>=</span> <span class='id identifier rubyid_eval'>eval</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_owner'>owner</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='embexpr_end'>}</span><span class='tstring_content'>::</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_class_name'>class_name</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
-          <span class='kw'>else</span>
+          <span class='kw'>rescue</span> <span class='const'>NameError</span>
             <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Could not find class: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_class_name'>class_name</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
-            <span class='id identifier rubyid_fail'>fail</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Unknown sub block class!</span><span class='tstring_end'>&#39;</span></span>
+            <span class='id identifier rubyid_raise'>raise</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Unknown sub block class!</span><span class='tstring_end'>&#39;</span></span>
           <span class='kw'>end</span>
         <span class='kw'>end</span>
       <span class='kw'>end</span>
@@ -1157,29 +1167,35 @@
       <pre class="lines">
 
 
-426
-427
-428
-429
-430
 431
 432
 433
 434
 435
-436</pre>
+436
+437
+438
+439
+440
+441
+442
+443
+444</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/sub_blocks.rb', line 426</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/sub_blocks.rb', line 431</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_materialize'>materialize</span>
+  <span class='id identifier rubyid_block'>block</span> <span class='op'>=</span> <span class='kw'>nil</span>
   <span class='id identifier rubyid_file'>file</span> <span class='op'>=</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='period'>.</span><span class='id identifier rubyid_delete'>delete</span><span class='lparen'>(</span><span class='symbol'>:file</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_load_block'>load_block</span> <span class='op'>=</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='period'>.</span><span class='id identifier rubyid_delete'>delete</span><span class='lparen'>(</span><span class='symbol'>:load_block</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_dir'>dir</span> <span class='op'>=</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='period'>.</span><span class='id identifier rubyid_delete'>delete</span><span class='lparen'>(</span><span class='symbol'>:dir</span><span class='rparen'>)</span> <span class='op'>||</span> <span class='id identifier rubyid_owner'>owner</span><span class='period'>.</span><span class='id identifier rubyid_send'>send</span><span class='lparen'>(</span><span class='symbol'>:export_dir</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_block'>block</span> <span class='op'>=</span> <span class='id identifier rubyid_owner'>owner</span><span class='period'>.</span><span class='id identifier rubyid_send'>send</span><span class='lparen'>(</span><span class='symbol'>:instantiate_sub_block</span><span class='comma'>,</span> <span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_klass'>klass</span><span class='comma'>,</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_file'>file</span>
     <span class='id identifier rubyid_require'>require</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='id identifier rubyid_dir'>dir</span><span class='comma'>,</span> <span class='id identifier rubyid_file'>file</span><span class='rparen'>)</span>
     <span class='id identifier rubyid_block'>block</span><span class='period'>.</span><span class='id identifier rubyid_extend'>extend</span> <span class='id identifier rubyid_owner'>owner</span><span class='period'>.</span><span class='id identifier rubyid_send'>send</span><span class='lparen'>(</span><span class='symbol'>:export_module_names_from_path</span><span class='comma'>,</span> <span class='id identifier rubyid_file'>file</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>::</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_constantize'>constantize</span>
   <span class='kw'>end</span>
+  <span class='id identifier rubyid_block'>block</span><span class='period'>.</span><span class='id identifier rubyid_load_block'>load_block</span><span class='lparen'>(</span><span class='id identifier rubyid_load_block'>load_block</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_load_block'>load_block</span>
   <span class='id identifier rubyid_block'>block</span><span class='period'>.</span><span class='id identifier rubyid_owner'>owner</span> <span class='op'>=</span> <span class='id identifier rubyid_owner'>owner</span>
   <span class='id identifier rubyid_block'>block</span>
 <span class='kw'>end</span></pre>
@@ -1225,12 +1241,12 @@
       <pre class="lines">
 
 
-422
-423
-424</pre>
+427
+428
+429</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/sub_blocks.rb', line 422</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/sub_blocks.rb', line 427</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='id identifier rubyid_method'>method</span><span class='comma'>,</span> <span class='id identifier rubyid_include_private'>include_private</span> <span class='op'>=</span> <span class='kw'>false</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_materialize'>materialize</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='id identifier rubyid_method'>method</span><span class='comma'>,</span> <span class='id identifier rubyid_include_private'>include_private</span><span class='rparen'>)</span>
@@ -1255,12 +1271,12 @@
       <pre class="lines">
 
 
-459
-460
-461</pre>
+467
+468
+469</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/sub_blocks.rb', line 459</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/sub_blocks.rb', line 467</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_to_json'>to_json</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_materialize'>materialize</span><span class='period'>.</span><span class='id identifier rubyid_to_json'>to_json</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
@@ -1275,8 +1291,8 @@
 </div>
 
       <div id="footer">
-  Generated on Thu May 16 16:37:16 2019 by
-  <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  Generated on Mon May 27 08:51:59 2019 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.19 (ruby-2.5.1).
 </div>
 
