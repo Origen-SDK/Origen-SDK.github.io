@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>
+  Class: OrigenTesters::ATP::Processors::FlagOptimizer
+  
+    &mdash; Origen Testers 0.30.0
+  
+</title>
+
+  <link rel="stylesheet" href="../../../css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="../../../css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  pathId = "OrigenTesters::ATP::Processors::FlagOptimizer";
+  relpath = '../../../';
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="../../../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../../../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div class="nav_wrap">
+      <iframe id="nav" src="../../../class_list.html?1"></iframe>
+      <div id="resizer"></div>
+    </div>
+
+    <div id="main" tabindex="-1">
+      <div id="header">
+        <div id="menu">
+  
+    <a href="../../../_index.html">Index (F)</a> &raquo;
+    <span class='title'><span class='object_link'><a href="../../../OrigenTesters.html" title="OrigenTesters (module)">OrigenTesters</a></span></span> &raquo; <span class='title'><span class='object_link'><a href="../../ATP.html" title="OrigenTesters::ATP (module)">ATP</a></span></span> &raquo; <span class='title'><span class='object_link'><a href="../Processors.html" title="OrigenTesters::ATP::Processors (module)">Processors</a></span></span>
+     &raquo; 
+    <span class="title">FlagOptimizer</span>
+  
+</div>
+
+        <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="../../../class_list.html">
+
+        <svg width="24" height="24">
+          <rect x="0" y="4" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="12" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="20" width="24" height="4" rx="1" ry="1"></rect>
+        </svg>
+    </a>
+  
+</div>
+        <div class="clear"></div>
+      </div>
+
+      <div id="content"><h1>Class: OrigenTesters::ATP::Processors::FlagOptimizer
+  
+  
+  
+</h1>
+<div class="box_info">
+  
+  <dl>
+    <dt>Inherits:</dt>
+    <dd>
+      <span class="inheritName"><span class='object_link'><a href="../Processor.html" title="OrigenTesters::ATP::Processor (class)">OrigenTesters::ATP::Processor</a></span></span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next"><span class='object_link'><a href="../Processor.html" title="OrigenTesters::ATP::Processor (class)">OrigenTesters::ATP::Processor</a></span></li>
+          
+            <li class="next">OrigenTesters::ATP::Processors::FlagOptimizer</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+    </dd>
+  </dl>
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+  <dl>
+    <dt>Defined in:</dt>
+    <dd>lib/origen_testers/atp/processors/flag_optimizer.rb</dd>
+  </dl>
+  
+</div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>This processor eliminates the use of run flags between adjacent tests:</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_s'>s</span><span class='lparen'>(</span><span class='symbol'>:flow</span><span class='comma'>,</span>
+  <span class='id identifier rubyid_s'>s</span><span class='lparen'>(</span><span class='symbol'>:name</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>prb1</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='comma'>,</span>
+  <span class='id identifier rubyid_s'>s</span><span class='lparen'>(</span><span class='symbol'>:test</span><span class='comma'>,</span>
+    <span class='id identifier rubyid_s'>s</span><span class='lparen'>(</span><span class='symbol'>:name</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>test1</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='comma'>,</span>
+    <span class='id identifier rubyid_s'>s</span><span class='lparen'>(</span><span class='symbol'>:id</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>t1</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='comma'>,</span>
+    <span class='id identifier rubyid_s'>s</span><span class='lparen'>(</span><span class='symbol'>:on_fail</span><span class='comma'>,</span>
+      <span class='id identifier rubyid_s'>s</span><span class='lparen'>(</span><span class='symbol'>:set_flag</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>t1_FAILED</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>auto_generated</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='comma'>,</span>
+      <span class='id identifier rubyid_s'>s</span><span class='lparen'>(</span><span class='symbol'>:continue</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='comma'>,</span>
+  <span class='id identifier rubyid_s'>s</span><span class='lparen'>(</span><span class='symbol'>:if_flag</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>t1_FAILED</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
+    <span class='id identifier rubyid_s'>s</span><span class='lparen'>(</span><span class='symbol'>:test</span><span class='comma'>,</span>
+      <span class='id identifier rubyid_s'>s</span><span class='lparen'>(</span><span class='symbol'>:name</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>test2</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='rparen'>)</span>
+
+<span class='id identifier rubyid_s'>s</span><span class='lparen'>(</span><span class='symbol'>:flow</span><span class='comma'>,</span>
+  <span class='id identifier rubyid_s'>s</span><span class='lparen'>(</span><span class='symbol'>:name</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>prb1</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='comma'>,</span>
+  <span class='id identifier rubyid_s'>s</span><span class='lparen'>(</span><span class='symbol'>:test</span><span class='comma'>,</span>
+    <span class='id identifier rubyid_s'>s</span><span class='lparen'>(</span><span class='symbol'>:name</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>test1</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='comma'>,</span>
+    <span class='id identifier rubyid_s'>s</span><span class='lparen'>(</span><span class='symbol'>:id</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>t1</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='comma'>,</span>
+    <span class='id identifier rubyid_s'>s</span><span class='lparen'>(</span><span class='symbol'>:on_fail</span><span class='comma'>,</span>
+      <span class='id identifier rubyid_s'>s</span><span class='lparen'>(</span><span class='symbol'>:test</span><span class='comma'>,</span>
+        <span class='id identifier rubyid_s'>s</span><span class='lparen'>(</span><span class='symbol'>:name</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>test2</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='rparen'>)</span>
+</code></pre>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><h2>Defined Under Namespace</h2>
+<p class="children">
+  
+    
+  
+    
+      <strong class="classes">Classes:</strong> <span class='object_link'><a href="FlagOptimizer/ExtractRunFlagTable.html" title="OrigenTesters::ATP::Processors::FlagOptimizer::ExtractRunFlagTable (class)">ExtractRunFlagTable</a></span>
+    
+  
+</p>
+
+
+
+
+  <h2>Instance Attribute Summary <small><a href="#" class="summary_toggle">collapse</a></small></h2>
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#optimize_when_continue-instance_method" title="#optimize_when_continue (instance method)">#<strong>optimize_when_continue</strong>  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the value of attribute optimize_when_continue.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#run_flag_table-instance_method" title="#run_flag_table (instance method)">#<strong>run_flag_table</strong>  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the value of attribute run_flag_table.</p>
+</div></span>
+  
+</li>
+
+    
+  </ul>
+
+
+
+
+  
+    <h2>
+      Instance Method Summary
+      <small><a href="#" class="summary_toggle">collapse</a></small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#can_be_combined%3F-instance_method" title="#can_be_combined? (instance method)">#<strong>can_be_combined?</strong>(node1, node2)  &#x21d2; Boolean </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#combine-instance_method" title="#combine (instance method)">#<strong>combine</strong>(node1, node2)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#gated_by_set%3F-instance_method" title="#gated_by_set? (instance method)">#<strong>gated_by_set?</strong>(flag, node)  &#x21d2; Boolean </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>node will always be an if_flag or unless_flag type node, guaranteed by the
+caller.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#if_run_flag_to_remove-instance_method" title="#if_run_flag_to_remove (instance method)">#<strong>if_run_flag_to_remove</strong>  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#nodes_to_inline_on_pass_or_fail-instance_method" title="#nodes_to_inline_on_pass_or_fail (instance method)">#<strong>nodes_to_inline_on_pass_or_fail</strong>  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#on_if_flag-instance_method" title="#on_if_flag (instance method)">#<strong>on_if_flag</strong>(node)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#on_named_collection-instance_method" title="#on_named_collection (instance method)">#<strong>on_named_collection</strong>(node)  &#x21d2; Object </a>
+    
+
+    
+      (also: #on_flow, #on_group, #on_unless_flag, #on_sub_flow)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#on_on_fail-instance_method" title="#on_on_fail (instance method)">#<strong>on_on_fail</strong>(node)  &#x21d2; Object </a>
+    
+
+    
+      (also: #on_on_pass)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#on_unnamed_collection-instance_method" title="#on_unnamed_collection (instance method)">#<strong>on_unnamed_collection</strong>(node)  &#x21d2; Object </a>
+    
+
+    
+      (also: #on_else)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#on_whenever-instance_method" title="#on_whenever (instance method)">#<strong>on_whenever</strong>(node)  &#x21d2; Object </a>
+    
+
+    
+      (also: #on_whenever_all, #on_whenever_any)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#optimize-instance_method" title="#optimize (instance method)">#<strong>optimize</strong>(nodes)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#reorder_nested_run_flags-instance_method" title="#reorder_nested_run_flags (instance method)">#<strong>reorder_nested_run_flags</strong>(flag, node)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the node with the run_flag clauses re-ordered to have the given
+flag of interest at the top.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#run-instance_method" title="#run (instance method)">#<strong>run</strong>(node, options = {})  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods inherited from <span class='object_link'><a href="../Processor.html" title="OrigenTesters::ATP::Processor (class)">OrigenTesters::ATP::Processor</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="../Processor.html#clean_flag-instance_method" title="OrigenTesters::ATP::Processor#clean_flag (method)">#clean_flag</a></span>, <span class='object_link'><a href="../Processor.html#extract_volatiles-instance_method" title="OrigenTesters::ATP::Processor#extract_volatiles (method)">#extract_volatiles</a></span>, <span class='object_link'><a href="../Processor.html#handler_missing-instance_method" title="OrigenTesters::ATP::Processor#handler_missing (method)">#handler_missing</a></span>, <span class='object_link'><a href="../Processor.html#process-instance_method" title="OrigenTesters::ATP::Processor#process (method)">#process</a></span>, <span class='object_link'><a href="../Processor.html#process_all-instance_method" title="OrigenTesters::ATP::Processor#process_all (method)">#process_all</a></span>, <span class='object_link'><a href="../Processor.html#volatile%3F-instance_method" title="OrigenTesters::ATP::Processor#volatile? (method)">#volatile?</a></span>, <span class='object_link'><a href="../Processor.html#volatile_flags-instance_method" title="OrigenTesters::ATP::Processor#volatile_flags (method)">#volatile_flags</a></span></p>
+
+  
+  <div id="instance_attr_details" class="attr_details">
+    <h2>Instance Attribute Details</h2>
+    
+      
+      <span id=""></span>
+      <div class="method_details first">
+  <h3 class="signature first" id="optimize_when_continue-instance_method">
+  
+    #<strong>optimize_when_continue</strong>  &#x21d2; <tt>Object</tt>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the value of attribute optimize_when_continue</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+28
+29
+30</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/atp/processors/flag_optimizer.rb', line 28</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_optimize_when_continue'>optimize_when_continue</span>
+  <span class='ivar'>@optimize_when_continue</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="run_flag_table-instance_method">
+  
+    #<strong>run_flag_table</strong>  &#x21d2; <tt>Object</tt>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the value of attribute run_flag_table</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+28
+29
+30</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/atp/processors/flag_optimizer.rb', line 28</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_run_flag_table'>run_flag_table</span>
+  <span class='ivar'>@run_flag_table</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="can_be_combined?-instance_method">
+  
+    #<strong>can_be_combined?</strong>(node1, node2)  &#x21d2; <tt>Boolean</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/atp/processors/flag_optimizer.rb', line 143</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_can_be_combined?'>can_be_combined?</span><span class='lparen'>(</span><span class='id identifier rubyid_node1'>node1</span><span class='comma'>,</span> <span class='id identifier rubyid_node2'>node2</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='lparen'>(</span><span class='id identifier rubyid_node1'>node1</span><span class='period'>.</span><span class='id identifier rubyid_type'>type</span> <span class='op'>==</span> <span class='symbol'>:test</span> <span class='op'>||</span> <span class='id identifier rubyid_node1'>node1</span><span class='period'>.</span><span class='id identifier rubyid_type'>type</span> <span class='op'>==</span> <span class='symbol'>:sub_flow</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='lparen'>(</span><span class='id identifier rubyid_node2'>node2</span><span class='period'>.</span><span class='id identifier rubyid_type'>type</span> <span class='op'>==</span> <span class='symbol'>:if_flag</span> <span class='op'>||</span> <span class='id identifier rubyid_node2'>node2</span><span class='period'>.</span><span class='id identifier rubyid_type'>type</span> <span class='op'>==</span> <span class='symbol'>:unless_flag</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span>
+     <span class='comment'># Don&#39;t optimize tests which are marked as continue if told not to
+</span>     <span class='op'>!</span><span class='lparen'>(</span><span class='id identifier rubyid_node1'>node1</span><span class='period'>.</span><span class='id identifier rubyid_find'>find</span><span class='lparen'>(</span><span class='symbol'>:on_fail</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_node1'>node1</span><span class='period'>.</span><span class='id identifier rubyid_find'>find</span><span class='lparen'>(</span><span class='symbol'>:on_fail</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_find'>find</span><span class='lparen'>(</span><span class='symbol'>:continue</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='op'>!</span><span class='id identifier rubyid_optimize_when_continue'>optimize_when_continue</span><span class='rparen'>)</span>
+
+    <span class='kw'>if</span> <span class='id identifier rubyid_node1'>node1</span><span class='period'>.</span><span class='id identifier rubyid_find_all'>find_all</span><span class='lparen'>(</span><span class='symbol'>:on_fail</span><span class='comma'>,</span> <span class='symbol'>:on_pass</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_any?'>any?</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_node'>node</span><span class='op'>|</span>
+      <span class='kw'>if</span> <span class='id identifier rubyid_n'>n</span> <span class='op'>=</span> <span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_find'>find</span><span class='lparen'>(</span><span class='symbol'>:set_flag</span><span class='rparen'>)</span>
+        <span class='comment'># Inline instead of setting a flag if...
+</span>        <span class='id identifier rubyid_gated_by_set?'>gated_by_set?</span><span class='lparen'>(</span><span class='id identifier rubyid_n'>n</span><span class='period'>.</span><span class='id identifier rubyid_to_a'>to_a</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_node2'>node2</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='comment'># The flag set by node1 is gating node2
+</span>        <span class='id identifier rubyid_n'>n</span><span class='period'>.</span><span class='id identifier rubyid_to_a'>to_a</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>auto_generated</span><span class='tstring_end'>&#39;</span></span> <span class='op'>&amp;&amp;</span> <span class='comment'># The flag has been generated and not specified by the user
+</span>        <span class='id identifier rubyid_n'>n</span><span class='period'>.</span><span class='id identifier rubyid_to_a'>to_a</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span> <span class='op'>!~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>_RAN$</span><span class='regexp_end'>/</span></span> <span class='op'>&amp;&amp;</span> <span class='comment'># And don&#39;t compress RAN flags because they can be set by both on_fail and on_pass
+</span>        <span class='op'>!</span><span class='id identifier rubyid_volatile?'>volatile?</span><span class='lparen'>(</span><span class='id identifier rubyid_n'>n</span><span class='period'>.</span><span class='id identifier rubyid_to_a'>to_a</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='rparen'>)</span> <span class='comment'># And make sure the flag has not been marked as volatile
+</span>      <span class='kw'>end</span>
+    <span class='kw'>end</span>
+      <span class='kw'>return</span> <span class='kw'>true</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+  <span class='kw'>false</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="combine-instance_method">
+  
+    #<strong>combine</strong>(node1, node2)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+163
+164
+165
+166
+167
+168</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/atp/processors/flag_optimizer.rb', line 163</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_combine'>combine</span><span class='lparen'>(</span><span class='id identifier rubyid_node1'>node1</span><span class='comma'>,</span> <span class='id identifier rubyid_node2'>node2</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_nodes_to_inline_on_pass_or_fail'>nodes_to_inline_on_pass_or_fail</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_node2'>node2</span> <span class='comment'># .updated(nil, process_all(node2.children))
+</span>  <span class='id identifier rubyid_node1'>node1</span> <span class='op'>=</span> <span class='id identifier rubyid_node1'>node1</span><span class='period'>.</span><span class='id identifier rubyid_updated'>updated</span><span class='lparen'>(</span><span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_process_all'>process_all</span><span class='lparen'>(</span><span class='id identifier rubyid_node1'>node1</span><span class='period'>.</span><span class='id identifier rubyid_children'>children</span><span class='rparen'>)</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_nodes_to_inline_on_pass_or_fail'>nodes_to_inline_on_pass_or_fail</span><span class='period'>.</span><span class='id identifier rubyid_pop'>pop</span>
+  <span class='id identifier rubyid_node1'>node1</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="gated_by_set?-instance_method">
+  
+    #<strong>gated_by_set?</strong>(flag, node)  &#x21d2; <tt>Boolean</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>node will always be an if_flag or unless_flag type node, guaranteed by the
+caller</p>
+
+<p>Returns true if flag matches the one supplied</p>
+
+<pre class="code ruby"><code class="ruby">s(:if_flag, flag,
+  s(:test, ...
+</code></pre>
+
+<p>Also returns true if flag matches the one supplied, but it is nested within
+other flag conditions:</p>
+
+<pre class="code ruby"><code class="ruby">s(:unless_flag, other_flag,
+  s(:if_flag, other_flag2,
+    s(:if_flag, flag,
+      s(:test, ...
+</code></pre>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+183
+184
+185
+186</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/atp/processors/flag_optimizer.rb', line 183</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_gated_by_set?'>gated_by_set?</span><span class='lparen'>(</span><span class='id identifier rubyid_flag'>flag</span><span class='comma'>,</span> <span class='id identifier rubyid_node'>node</span><span class='rparen'>)</span>
+  <span class='lparen'>(</span><span class='id identifier rubyid_flag'>flag</span> <span class='op'>==</span> <span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_to_a'>to_a</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_type'>type</span> <span class='op'>==</span> <span class='symbol'>:if_flag</span><span class='rparen'>)</span> <span class='op'>||</span>
+    <span class='lparen'>(</span><span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_to_a'>to_a</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span> <span class='op'>==</span> <span class='int'>2</span> <span class='op'>&amp;&amp;</span> <span class='lparen'>(</span><span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_to_a'>to_a</span><span class='period'>.</span><span class='id identifier rubyid_last'>last</span><span class='period'>.</span><span class='id identifier rubyid_type'>type</span> <span class='op'>==</span> <span class='symbol'>:if_flag</span> <span class='op'>||</span> <span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_to_a'>to_a</span><span class='period'>.</span><span class='id identifier rubyid_last'>last</span><span class='period'>.</span><span class='id identifier rubyid_type'>type</span> <span class='op'>==</span> <span class='symbol'>:unless_flag</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_gated_by_set?'>gated_by_set?</span><span class='lparen'>(</span><span class='id identifier rubyid_flag'>flag</span><span class='comma'>,</span> <span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_to_a'>to_a</span><span class='period'>.</span><span class='id identifier rubyid_last'>last</span><span class='rparen'>)</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="if_run_flag_to_remove-instance_method">
+  
+    #<strong>if_run_flag_to_remove</strong>  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+225
+226
+227</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/atp/processors/flag_optimizer.rb', line 225</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_if_run_flag_to_remove'>if_run_flag_to_remove</span>
+  <span class='ivar'>@if_run_flag_to_remove</span> <span class='op'>||=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="nodes_to_inline_on_pass_or_fail-instance_method">
+  
+    #<strong>nodes_to_inline_on_pass_or_fail</strong>  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+229
+230
+231</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/atp/processors/flag_optimizer.rb', line 229</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_nodes_to_inline_on_pass_or_fail'>nodes_to_inline_on_pass_or_fail</span>
+  <span class='ivar'>@nodes_to_inline_on_pass_or_fail</span> <span class='op'>||=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="on_if_flag-instance_method">
+  
+    #<strong>on_if_flag</strong>(node)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+90
+91
+92
+93
+94
+95
+96
+97
+98</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/atp/processors/flag_optimizer.rb', line 90</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_on_if_flag'>on_if_flag</span><span class='lparen'>(</span><span class='id identifier rubyid_node'>node</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_nodes'>nodes</span> <span class='op'>=</span> <span class='op'>*</span><span class='id identifier rubyid_node'>node</span>
+  <span class='comment'># Remove this node and return its children if required
+</span>  <span class='kw'>if</span> <span class='id identifier rubyid_if_run_flag_to_remove'>if_run_flag_to_remove</span><span class='period'>.</span><span class='id identifier rubyid_last'>last</span> <span class='op'>==</span> <span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_to_a'>to_a</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span>
+    <span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_updated'>updated</span><span class='lparen'>(</span><span class='symbol'>:inline</span><span class='comma'>,</span> <span class='id identifier rubyid_optimize'>optimize</span><span class='lparen'>(</span><span class='id identifier rubyid_process_all'>process_all</span><span class='lparen'>(</span><span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_to_a'>to_a</span><span class='lbracket'>[</span><span class='int'>1</span><span class='op'>..</span><span class='op'>-</span><span class='int'>1</span><span class='rbracket'>]</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='rparen'>)</span>
+  <span class='kw'>else</span>
+    <span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_updated'>updated</span><span class='lparen'>(</span><span class='kw'>nil</span><span class='comma'>,</span> <span class='lbracket'>[</span><span class='id identifier rubyid_name'>name</span><span class='rbracket'>]</span> <span class='op'>+</span> <span class='id identifier rubyid_optimize'>optimize</span><span class='lparen'>(</span><span class='id identifier rubyid_process_all'>process_all</span><span class='lparen'>(</span><span class='id identifier rubyid_nodes'>nodes</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="on_named_collection-instance_method">
+  
+    #<strong>on_named_collection</strong>(node)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='on_flow-instance_method'>on_flow</span>, <span id='on_group-instance_method'>on_group</span>, <span id='on_unless_flag-instance_method'>on_unless_flag</span>, <span id='on_sub_flow-instance_method'>on_sub_flow</span></span>
+    </span>
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+69
+70
+71
+72</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/atp/processors/flag_optimizer.rb', line 69</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_on_named_collection'>on_named_collection</span><span class='lparen'>(</span><span class='id identifier rubyid_node'>node</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_nodes'>nodes</span> <span class='op'>=</span> <span class='op'>*</span><span class='id identifier rubyid_node'>node</span>
+  <span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_updated'>updated</span><span class='lparen'>(</span><span class='kw'>nil</span><span class='comma'>,</span> <span class='lbracket'>[</span><span class='id identifier rubyid_name'>name</span><span class='rbracket'>]</span> <span class='op'>+</span> <span class='id identifier rubyid_optimize'>optimize</span><span class='lparen'>(</span><span class='id identifier rubyid_process_all'>process_all</span><span class='lparen'>(</span><span class='id identifier rubyid_nodes'>nodes</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="on_on_fail-instance_method">
+  
+    #<strong>on_on_fail</strong>(node)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='on_on_pass-instance_method'>on_on_pass</span></span>
+    </span>
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/atp/processors/flag_optimizer.rb', line 100</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_on_on_fail'>on_on_fail</span><span class='lparen'>(</span><span class='id identifier rubyid_node'>node</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_to_inline'>to_inline</span> <span class='op'>=</span> <span class='id identifier rubyid_nodes_to_inline_on_pass_or_fail'>nodes_to_inline_on_pass_or_fail</span><span class='period'>.</span><span class='id identifier rubyid_last'>last</span>
+    <span class='comment'># If this node sets the flag that gates the node to be inlined
+</span>    <span class='id identifier rubyid_set_flag'>set_flag</span> <span class='op'>=</span> <span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_find'>find</span><span class='lparen'>(</span><span class='symbol'>:set_flag</span><span class='rparen'>)</span>
+    <span class='kw'>if</span> <span class='id identifier rubyid_set_flag'>set_flag</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_gated_by_set?'>gated_by_set?</span><span class='lparen'>(</span><span class='id identifier rubyid_set_flag'>set_flag</span><span class='period'>.</span><span class='id identifier rubyid_to_a'>to_a</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_to_inline'>to_inline</span><span class='rparen'>)</span>
+      <span class='comment'># Remove the sub-node that sets the flag if there are no further references to it
+</span>
+      <span class='kw'>if</span> <span class='ivar'>@run_flag_table</span><span class='lbracket'>[</span><span class='id identifier rubyid_set_flag'>set_flag</span><span class='period'>.</span><span class='id identifier rubyid_to_a'>to_a</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='int'>1</span> <span class='op'>||</span> <span class='op'>!</span><span class='ivar'>@run_flag_table</span><span class='lbracket'>[</span><span class='id identifier rubyid_set_flag'>set_flag</span><span class='period'>.</span><span class='id identifier rubyid_to_a'>to_a</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='rbracket'>]</span>
+        <span class='id identifier rubyid_node'>node</span> <span class='op'>=</span> <span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_updated'>updated</span><span class='lparen'>(</span><span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_children'>children</span> <span class='op'>-</span> <span class='lbracket'>[</span><span class='id identifier rubyid_set_flag'>set_flag</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+      <span class='kw'>end</span>
+
+      <span class='comment'># And append the content of the node to be in_lined at the end of this on pass/fail node
+</span>      <span class='id identifier rubyid_append'>append</span> <span class='op'>=</span> <span class='id identifier rubyid_reorder_nested_run_flags'>reorder_nested_run_flags</span><span class='lparen'>(</span><span class='id identifier rubyid_set_flag'>set_flag</span><span class='period'>.</span><span class='id identifier rubyid_to_a'>to_a</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_to_inline'>to_inline</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to_a'>to_a</span><span class='lbracket'>[</span><span class='int'>1</span><span class='op'>..</span><span class='op'>-</span><span class='int'>1</span><span class='rbracket'>]</span>
+
+      <span class='comment'># Belt and braces approach to make sure this node to be inlined does
+</span>      <span class='comment'># not get picked up anywhere else
+</span>      <span class='id identifier rubyid_nodes_to_inline_on_pass_or_fail'>nodes_to_inline_on_pass_or_fail</span><span class='period'>.</span><span class='id identifier rubyid_pop'>pop</span>
+      <span class='id identifier rubyid_nodes_to_inline_on_pass_or_fail'>nodes_to_inline_on_pass_or_fail</span> <span class='op'>&lt;&lt;</span> <span class='kw'>nil</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+  <span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_updated'>updated</span><span class='lparen'>(</span><span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_optimize'>optimize</span><span class='lparen'>(</span><span class='id identifier rubyid_process_all'>process_all</span><span class='lparen'>(</span><span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_children'>children</span> <span class='op'>+</span> <span class='const'>Array</span><span class='lparen'>(</span><span class='id identifier rubyid_append'>append</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="on_unnamed_collection-instance_method">
+  
+    #<strong>on_unnamed_collection</strong>(node)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='on_else-instance_method'>on_else</span></span>
+    </span>
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+78
+79
+80</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/atp/processors/flag_optimizer.rb', line 78</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_on_unnamed_collection'>on_unnamed_collection</span><span class='lparen'>(</span><span class='id identifier rubyid_node'>node</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_updated'>updated</span><span class='lparen'>(</span><span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_optimize'>optimize</span><span class='lparen'>(</span><span class='id identifier rubyid_process_all'>process_all</span><span class='lparen'>(</span><span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_children'>children</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="on_whenever-instance_method">
+  
+    #<strong>on_whenever</strong>(node)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='on_whenever_all-instance_method'>on_whenever_all</span>, <span id='on_whenever_any-instance_method'>on_whenever_any</span></span>
+    </span>
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+83
+84
+85
+86</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/atp/processors/flag_optimizer.rb', line 83</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_on_whenever'>on_whenever</span><span class='lparen'>(</span><span class='id identifier rubyid_node'>node</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_nodes'>nodes</span> <span class='op'>=</span> <span class='op'>*</span><span class='id identifier rubyid_node'>node</span>
+  <span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_updated'>updated</span><span class='lparen'>(</span><span class='kw'>nil</span><span class='comma'>,</span> <span class='lbracket'>[</span><span class='id identifier rubyid_name'>name</span><span class='rbracket'>]</span> <span class='op'>+</span> <span class='id identifier rubyid_optimize'>optimize</span><span class='lparen'>(</span><span class='id identifier rubyid_process_all'>process_all</span><span class='lparen'>(</span><span class='id identifier rubyid_nodes'>nodes</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="optimize-instance_method">
+  
+    #<strong>optimize</strong>(nodes)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/atp/processors/flag_optimizer.rb', line 124</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_optimize'>optimize</span><span class='lparen'>(</span><span class='id identifier rubyid_nodes'>nodes</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_results'>results</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
+  <span class='id identifier rubyid_node1'>node1</span> <span class='op'>=</span> <span class='kw'>nil</span>
+  <span class='id identifier rubyid_nodes'>nodes</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_node2'>node2</span><span class='op'>|</span>
+    <span class='kw'>if</span> <span class='id identifier rubyid_node1'>node1</span>
+      <span class='kw'>if</span> <span class='id identifier rubyid_can_be_combined?'>can_be_combined?</span><span class='lparen'>(</span><span class='id identifier rubyid_node1'>node1</span><span class='comma'>,</span> <span class='id identifier rubyid_node2'>node2</span><span class='rparen'>)</span>
+        <span class='id identifier rubyid_node1'>node1</span> <span class='op'>=</span> <span class='id identifier rubyid_combine'>combine</span><span class='lparen'>(</span><span class='id identifier rubyid_node1'>node1</span><span class='comma'>,</span> <span class='id identifier rubyid_node2'>node2</span><span class='rparen'>)</span>
+      <span class='kw'>else</span>
+        <span class='id identifier rubyid_results'>results</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_node1'>node1</span>
+        <span class='id identifier rubyid_node1'>node1</span> <span class='op'>=</span> <span class='id identifier rubyid_node2'>node2</span>
+      <span class='kw'>end</span>
+    <span class='kw'>else</span>
+      <span class='id identifier rubyid_node1'>node1</span> <span class='op'>=</span> <span class='id identifier rubyid_node2'>node2</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+  <span class='id identifier rubyid_results'>results</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_node1'>node1</span> <span class='kw'>if</span> <span class='id identifier rubyid_node1'>node1</span>
+  <span class='id identifier rubyid_results'>results</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="reorder_nested_run_flags-instance_method">
+  
+    #<strong>reorder_nested_run_flags</strong>(flag, node)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the node with the run_flag clauses re-ordered to have the given
+flag of interest at the top.</p>
+
+<p>The caller guarantees the run_flag clause containing the given flag is
+present.</p>
+
+<p>For example, given this node:</p>
+
+<pre class="code ruby"><code class="ruby">s(:unless_flag, &quot;flag1&quot;,
+  s(:if_flag, &quot;ot_BEA7F3B_FAILED&quot;,
+    s(:test,
+      s(:object, &lt;TestSuite: inner_test1_BEA7F3B&gt;),
+      s(:name, &quot;inner_test1_BEA7F3B&quot;),
+      s(:number, 0),
+      s(:id, &quot;it1_BEA7F3B&quot;),
+      s(:on_fail,
+        s(:render, &quot;multi_bin;&quot;)))))
+</code></pre>
+
+<p>Then this node would be returned when the flag of interest is
+ot_BEA7F3B_FAILED:</p>
+
+<pre class="code ruby"><code class="ruby">s(:if_flag, &quot;ot_BEA7F3B_FAILED&quot;,
+  s(:unless_flag, &quot;flag1&quot;,
+    s(:test,
+      s(:object, &lt;TestSuite: inner_test1_BEA7F3B&gt;),
+      s(:name, &quot;inner_test1_BEA7F3B&quot;),
+      s(:number, 0),
+      s(:id, &quot;it1_BEA7F3B&quot;),
+      s(:on_fail,
+        s(:render, &quot;multi_bin;&quot;)))))
+</code></pre>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+215
+216
+217
+218
+219
+220
+221
+222
+223</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/atp/processors/flag_optimizer.rb', line 215</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_reorder_nested_run_flags'>reorder_nested_run_flags</span><span class='lparen'>(</span><span class='id identifier rubyid_flag'>flag</span><span class='comma'>,</span> <span class='id identifier rubyid_node'>node</span><span class='rparen'>)</span>
+  <span class='comment'># If the run_flag we care about is already at the top, just return node
+</span>  <span class='kw'>unless</span> <span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_to_a'>to_a</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='id identifier rubyid_flag'>flag</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_type'>type</span> <span class='op'>==</span> <span class='symbol'>:if_flag</span>
+    <span class='id identifier rubyid_if_run_flag_to_remove'>if_run_flag_to_remove</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_flag'>flag</span>
+    <span class='id identifier rubyid_node'>node</span> <span class='op'>=</span> <span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_updated'>updated</span><span class='lparen'>(</span><span class='symbol'>:if_flag</span><span class='comma'>,</span> <span class='lbracket'>[</span><span class='id identifier rubyid_flag'>flag</span><span class='rbracket'>]</span> <span class='op'>+</span> <span class='lbracket'>[</span><span class='id identifier rubyid_process'>process</span><span class='lparen'>(</span><span class='id identifier rubyid_node'>node</span><span class='rparen'>)</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_if_run_flag_to_remove'>if_run_flag_to_remove</span><span class='period'>.</span><span class='id identifier rubyid_pop'>pop</span>
+  <span class='kw'>end</span>
+  <span class='id identifier rubyid_node'>node</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="run-instance_method">
+  
+    #<strong>run</strong>(node, options = {})  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/atp/processors/flag_optimizer.rb', line 56</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_run'>run</span><span class='lparen'>(</span><span class='id identifier rubyid_node'>node</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span>
+    <span class='label'>optimize_when_continue:</span> <span class='kw'>true</span>
+  <span class='rbrace'>}</span><span class='period'>.</span><span class='id identifier rubyid_merge'>merge</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
+  <span class='ivar'>@optimize_when_continue</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:optimize_when_continue</span><span class='rbracket'>]</span>
+  <span class='comment'># Pre-process the AST for # of occurrences of each run-flag used
+</span>  <span class='id identifier rubyid_t'>t</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="FlagOptimizer/ExtractRunFlagTable.html" title="OrigenTesters::ATP::Processors::FlagOptimizer::ExtractRunFlagTable (class)">ExtractRunFlagTable</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="FlagOptimizer/ExtractRunFlagTable.html#initialize-instance_method" title="OrigenTesters::ATP::Processors::FlagOptimizer::ExtractRunFlagTable#initialize (method)">new</a></span></span>
+  <span class='id identifier rubyid_t'>t</span><span class='period'>.</span><span class='id identifier rubyid_process'>process</span><span class='lparen'>(</span><span class='id identifier rubyid_node'>node</span><span class='rparen'>)</span>
+  <span class='ivar'>@run_flag_table</span> <span class='op'>=</span> <span class='id identifier rubyid_t'>t</span><span class='period'>.</span><span class='id identifier rubyid_run_flag_table'>run_flag_table</span>
+  <span class='id identifier rubyid_extract_volatiles'>extract_volatiles</span><span class='lparen'>(</span><span class='id identifier rubyid_node'>node</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_process'>process</span><span class='lparen'>(</span><span class='id identifier rubyid_node'>node</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+
+      <div id="footer">
+  Generated on Thu Jun 20 03:23:22 2019 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.9.19 (ruby-2.5.1).
+</div>
+
+    </div>
+  </body>
+</html>
