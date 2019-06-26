@@ -6,7 +6,7 @@
 <title>
   Module: OrigenDebuggers::JLink::Common_API
   
-    &mdash; Origen Debuggers 0.6.0
+    &mdash; Origen Debuggers 0.6.1
   
 </title>
 
@@ -473,16 +473,16 @@
       <pre class="lines">
 
 
-317
-318
-319
-320
-321
-322
-323</pre>
+323
+324
+325
+326
+327
+328
+329</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_debuggers/j_link.rb', line 317</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_debuggers/j_link.rb', line 323</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_extract_address'>extract_address</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_addr'>addr</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:addr</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:address</span><span class='rbracket'>]</span>
@@ -524,14 +524,14 @@
       <pre class="lines">
 
 
-310
-311
-312
-313
-314</pre>
+316
+317
+318
+319
+320</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_debuggers/j_link.rb', line 310</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_debuggers/j_link.rb', line 316</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_extract_data'>extract_data</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='kw'>return</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:data</span><span class='rbracket'>]</span> <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:data</span><span class='rbracket'>]</span>
@@ -571,22 +571,22 @@
       <pre class="lines">
 
 
-295
-296
-297
-298
-299
-300
 301
 302
 303
 304
 305
 306
-307</pre>
+307
+308
+309
+310
+311
+312
+313</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_debuggers/j_link.rb', line 295</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_debuggers/j_link.rb', line 301</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_extract_size'>extract_size</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_size'>size</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:size</span><span class='rbracket'>]</span> <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:size</span><span class='rbracket'>]</span>
@@ -625,14 +625,20 @@
       <pre class="lines">
 
 
-221
-222
-223</pre>
+224
+225
+226
+227
+228
+229</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_debuggers/j_link.rb', line 221</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_debuggers/j_link.rb', line 224</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_read'>read</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:data</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_cc'>cc</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>[JLink] Read </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='period'>.</span><span class='id identifier rubyid_upcase'>upcase</span><span class='embexpr_end'>}</span><span class='tstring_content'> register, address: 0x%06X, expect value: 0x%08X</span><span class='tstring_end'>&quot;</span></span> <span class='op'>%</span> <span class='lbracket'>[</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='period'>.</span><span class='id identifier rubyid_address'>address</span><span class='comma'>,</span> <span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='period'>.</span><span class='id identifier rubyid_data'>data</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
   <span class='id identifier rubyid_send'>send</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>read</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_extract_size'>extract_size</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span><span class='comma'>,</span> <span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -670,12 +676,12 @@
       <pre class="lines">
 
 
-234
-235
-236</pre>
+240
+241
+242</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_debuggers/j_link.rb', line 234</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_debuggers/j_link.rb', line 240</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_read16'>read16</span><span class='lparen'>(</span><span class='id identifier rubyid_data'>data</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_read_memory'>read_memory</span><span class='lparen'>(</span><span class='id identifier rubyid_extract_address'>extract_address</span><span class='lparen'>(</span><span class='id identifier rubyid_data'>data</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span><span class='comma'>,</span> <span class='label'>number:</span> <span class='int'>2</span><span class='rparen'>)</span>
@@ -718,12 +724,6 @@ address</p>
       <pre class="lines">
 
 
-243
-244
-245
-246
-247
-248
 249
 250
 251
@@ -744,10 +744,16 @@ address</p>
 266
 267
 268
-269</pre>
+269
+270
+271
+272
+273
+274
+275</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_debuggers/j_link.rb', line 243</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_debuggers/j_link.rb', line 249</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_read32'>read32</span><span class='lparen'>(</span><span class='id identifier rubyid_data'>data</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span> <span class='label'>optimize:</span> <span class='kw'>false</span><span class='comma'>,</span>   <span class='comment'># whether to use a single command to do the read
@@ -811,12 +817,12 @@ address</p>
       <pre class="lines">
 
 
-227
-228
-229</pre>
+233
+234
+235</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_debuggers/j_link.rb', line 227</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_debuggers/j_link.rb', line 233</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_read8'>read8</span><span class='lparen'>(</span><span class='id identifier rubyid_data'>data</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_read_memory'>read_memory</span><span class='lparen'>(</span><span class='id identifier rubyid_extract_address'>extract_address</span><span class='lparen'>(</span><span class='id identifier rubyid_data'>data</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span><span class='comma'>,</span> <span class='label'>number:</span> <span class='int'>1</span><span class='rparen'>)</span>
@@ -847,12 +853,18 @@ address</p>
 
 216
 217
-218</pre>
+218
+219
+220
+221</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/origen_debuggers/j_link.rb', line 216</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_write'>write</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:data</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_cc'>cc</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>[JLink] Write </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='period'>.</span><span class='id identifier rubyid_upcase'>upcase</span><span class='embexpr_end'>}</span><span class='tstring_content'> register, address: 0x%06X with value: 0x%08X</span><span class='tstring_end'>&quot;</span></span> <span class='op'>%</span> <span class='lbracket'>[</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='period'>.</span><span class='id identifier rubyid_address'>address</span><span class='comma'>,</span> <span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='period'>.</span><span class='id identifier rubyid_data'>data</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
   <span class='id identifier rubyid_send'>send</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>write</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_extract_size'>extract_size</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span><span class='comma'>,</span> <span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -890,12 +902,12 @@ address</p>
       <pre class="lines">
 
 
-281
-282
-283</pre>
+287
+288
+289</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_debuggers/j_link.rb', line 281</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_debuggers/j_link.rb', line 287</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_write16'>write16</span><span class='lparen'>(</span><span class='id identifier rubyid_data'>data</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_dw'>dw</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>w2 0x</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_extract_address'>extract_address</span><span class='lparen'>(</span><span class='id identifier rubyid_data'>data</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='lparen'>(</span><span class='int'>16</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_upcase'>upcase</span><span class='embexpr_end'>}</span><span class='tstring_content'>, 0x</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_extract_data'>extract_data</span><span class='lparen'>(</span><span class='id identifier rubyid_data'>data</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='lparen'>(</span><span class='int'>16</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_upcase'>upcase</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
@@ -935,12 +947,12 @@ address</p>
       <pre class="lines">
 
 
-288
-289
-290</pre>
+294
+295
+296</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_debuggers/j_link.rb', line 288</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_debuggers/j_link.rb', line 294</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_write32'>write32</span><span class='lparen'>(</span><span class='id identifier rubyid_data'>data</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_dw'>dw</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>w4 0x</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_extract_address'>extract_address</span><span class='lparen'>(</span><span class='id identifier rubyid_data'>data</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='lparen'>(</span><span class='int'>16</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_upcase'>upcase</span><span class='embexpr_end'>}</span><span class='tstring_content'>, 0x</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_extract_data'>extract_data</span><span class='lparen'>(</span><span class='id identifier rubyid_data'>data</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='lparen'>(</span><span class='int'>16</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_upcase'>upcase</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
@@ -980,12 +992,12 @@ address</p>
       <pre class="lines">
 
 
-274
-275
-276</pre>
+280
+281
+282</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_debuggers/j_link.rb', line 274</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_debuggers/j_link.rb', line 280</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_write8'>write8</span><span class='lparen'>(</span><span class='id identifier rubyid_data'>data</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_dw'>dw</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>w1 0x</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_extract_address'>extract_address</span><span class='lparen'>(</span><span class='id identifier rubyid_data'>data</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='lparen'>(</span><span class='int'>16</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_upcase'>upcase</span><span class='embexpr_end'>}</span><span class='tstring_content'>, 0x</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_extract_data'>extract_data</span><span class='lparen'>(</span><span class='id identifier rubyid_data'>data</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='lparen'>(</span><span class='int'>16</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_upcase'>upcase</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
@@ -1000,9 +1012,9 @@ address</p>
 </div>
 
       <div id="footer">
-  Generated on Thu Feb  8 06:22:52 2018 by
-  <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.12 (ruby-2.3.0).
+  Generated on Wed Jun 26 09:31:05 2019 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.9.12 (ruby-2.5.1).
 </div>
 
     </div>

@@ -6,7 +6,7 @@
 <title>
   Module: OrigenDebuggers::PEmicro::Common_API
   
-    &mdash; Origen Debuggers 0.6.0
+    &mdash; Origen Debuggers 0.6.1
   
 </title>
 
@@ -477,16 +477,16 @@
       <pre class="lines">
 
 
-217
-218
-219
-220
-221
-222
-223</pre>
+223
+224
+225
+226
+227
+228
+229</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_debuggers/p_and_e.rb', line 217</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_debuggers/p_and_e.rb', line 223</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_extract_address'>extract_address</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_addr'>addr</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:addr</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:address</span><span class='rbracket'>]</span>
@@ -528,14 +528,14 @@
       <pre class="lines">
 
 
-210
-211
-212
-213
-214</pre>
+216
+217
+218
+219
+220</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_debuggers/p_and_e.rb', line 210</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_debuggers/p_and_e.rb', line 216</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_extract_data'>extract_data</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='kw'>return</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:data</span><span class='rbracket'>]</span> <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:data</span><span class='rbracket'>]</span>
@@ -575,22 +575,22 @@
       <pre class="lines">
 
 
-195
-196
-197
-198
-199
-200
 201
 202
 203
 204
 205
 206
-207</pre>
+207
+208
+209
+210
+211
+212
+213</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_debuggers/p_and_e.rb', line 195</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_debuggers/p_and_e.rb', line 201</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_extract_size'>extract_size</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_size'>size</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:size</span><span class='rbracket'>]</span> <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:size</span><span class='rbracket'>]</span>
@@ -629,18 +629,24 @@
       <pre class="lines">
 
 
-133
-134
-135
 136
-137</pre>
+137
+138
+139
+140
+141
+142
+143</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_debuggers/p_and_e.rb', line 133</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_debuggers/p_and_e.rb', line 136</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_read'>read</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_dw'>dw</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>jtag_end</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>if</span> <span class='ivar'>@in_jtag</span>
   <span class='ivar'>@in_jtag</span> <span class='op'>=</span> <span class='kw'>false</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:data</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_cc'>cc</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>[P&amp;E] Read </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='period'>.</span><span class='id identifier rubyid_upcase'>upcase</span><span class='embexpr_end'>}</span><span class='tstring_content'> register, address: 0x%06X, expect value: 0x%08X</span><span class='tstring_end'>&quot;</span></span> <span class='op'>%</span> <span class='lbracket'>[</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='period'>.</span><span class='id identifier rubyid_address'>address</span><span class='comma'>,</span> <span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='period'>.</span><span class='id identifier rubyid_data'>data</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
   <span class='id identifier rubyid_send'>send</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>read</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_extract_size'>extract_size</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span><span class='comma'>,</span> <span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -678,14 +684,14 @@
       <pre class="lines">
 
 
-150
-151
-152
-153
-154</pre>
+156
+157
+158
+159
+160</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_debuggers/p_and_e.rb', line 150</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_debuggers/p_and_e.rb', line 156</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_read16'>read16</span><span class='lparen'>(</span><span class='id identifier rubyid_data'>data</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_dw'>dw</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>jtag_end</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>if</span> <span class='ivar'>@in_jtag</span>
@@ -727,14 +733,14 @@
       <pre class="lines">
 
 
-159
-160
-161
-162
-163</pre>
+165
+166
+167
+168
+169</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_debuggers/p_and_e.rb', line 159</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_debuggers/p_and_e.rb', line 165</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_read32'>read32</span><span class='lparen'>(</span><span class='id identifier rubyid_data'>data</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_dw'>dw</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>jtag_end</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>if</span> <span class='ivar'>@in_jtag</span>
@@ -776,14 +782,14 @@
       <pre class="lines">
 
 
-141
-142
-143
-144
-145</pre>
+147
+148
+149
+150
+151</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_debuggers/p_and_e.rb', line 141</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_debuggers/p_and_e.rb', line 147</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_read8'>read8</span><span class='lparen'>(</span><span class='id identifier rubyid_data'>data</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_dw'>dw</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>jtag_end</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>if</span> <span class='ivar'>@in_jtag</span>
@@ -818,7 +824,10 @@
 127
 128
 129
-130</pre>
+130
+131
+132
+133</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/origen_debuggers/p_and_e.rb', line 126</span>
@@ -826,6 +835,9 @@
 <span class='kw'>def</span> <span class='id identifier rubyid_write'>write</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_dw'>dw</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>jtag_end</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>if</span> <span class='ivar'>@in_jtag</span>
   <span class='ivar'>@in_jtag</span> <span class='op'>=</span> <span class='kw'>false</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:data</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_cc'>cc</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>[P&amp;E] Write </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='period'>.</span><span class='id identifier rubyid_upcase'>upcase</span><span class='embexpr_end'>}</span><span class='tstring_content'> register, address: 0x%06X with value: 0x%08X</span><span class='tstring_end'>&quot;</span></span> <span class='op'>%</span> <span class='lbracket'>[</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='period'>.</span><span class='id identifier rubyid_address'>address</span><span class='comma'>,</span> <span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='period'>.</span><span class='id identifier rubyid_data'>data</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
   <span class='id identifier rubyid_send'>send</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>write</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_extract_size'>extract_size</span><span class='lparen'>(</span><span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span><span class='comma'>,</span> <span class='id identifier rubyid_reg_or_val'>reg_or_val</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -863,14 +875,14 @@
       <pre class="lines">
 
 
-177
-178
-179
-180
-181</pre>
+183
+184
+185
+186
+187</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_debuggers/p_and_e.rb', line 177</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_debuggers/p_and_e.rb', line 183</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_write16'>write16</span><span class='lparen'>(</span><span class='id identifier rubyid_data'>data</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_dw'>dw</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>jtag_end</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>if</span> <span class='ivar'>@in_jtag</span>
@@ -912,14 +924,14 @@
       <pre class="lines">
 
 
-186
-187
-188
-189
-190</pre>
+192
+193
+194
+195
+196</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_debuggers/p_and_e.rb', line 186</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_debuggers/p_and_e.rb', line 192</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_write32'>write32</span><span class='lparen'>(</span><span class='id identifier rubyid_data'>data</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_dw'>dw</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>jtag_end</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>if</span> <span class='ivar'>@in_jtag</span>
@@ -961,14 +973,14 @@
       <pre class="lines">
 
 
-168
-169
-170
-171
-172</pre>
+174
+175
+176
+177
+178</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_debuggers/p_and_e.rb', line 168</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_debuggers/p_and_e.rb', line 174</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_write8'>write8</span><span class='lparen'>(</span><span class='id identifier rubyid_data'>data</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_dw'>dw</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>jtag_end</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>if</span> <span class='ivar'>@in_jtag</span>
@@ -985,9 +997,9 @@
 </div>
 
       <div id="footer">
-  Generated on Thu Feb  8 06:22:52 2018 by
-  <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.12 (ruby-2.3.0).
+  Generated on Wed Jun 26 09:31:05 2019 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.9.12 (ruby-2.5.1).
 </div>
 
     </div>
