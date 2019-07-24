@@ -6,7 +6,7 @@
 <title>
   Class: Origen::Generator::Flow
   
-    &mdash; Origen Testers 0.31.0
+    &mdash; Origen Testers 0.40.0
   
 </title>
 
@@ -117,6 +117,28 @@
         <li class="public ">
   <span class="summary_signature">
     
+      <a href="#_create-instance_method" title="#_create (instance method)">#<strong>_create</strong>(options = {}, &amp;block)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  <span class="private note title">private</span>
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#_extract_comments-instance_method" title="#_extract_comments (instance method)">#<strong>_extract_comments</strong>(file, flow_line)  &#x21d2; Object </a>
     
 
@@ -129,6 +151,28 @@
   
   
   
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#_sub_flow-instance_method" title="#_sub_flow (instance method)">#<strong>_sub_flow</strong>(name, options, &amp;block)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  <span class="private note title">private</span>
 
   
     <span class="summary_desc"><div class='inline'></div></span>
@@ -164,7 +208,29 @@ ATP AST originated from.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#orig_create-instance_method" title="#orig_create (instance method)">#<strong>orig_create</strong>  &#x21d2; Object </a>
+      <a href="#job-instance_method" title="#job (instance method)">#<strong>job</strong>  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#reset-instance_method" title="#reset (instance method)">#<strong>reset</strong>  &#x21d2; Object </a>
     
 
     
@@ -193,7 +259,138 @@ ATP AST originated from.</p>
 
     
       <div class="method_details first">
-  <h3 class="signature first" id="_extract_comments-instance_method">
+  <h3 class="signature first" id="_create-instance_method">
+  
+    #<strong>_create</strong>(options = {}, &amp;block)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p class="note private">
+  <strong>This method is part of a private API.</strong>
+  You should avoid using this method if possible, as it may be removed or be changed in the future.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/origen_ext/generator/flow.rb', line 91</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid__create'>_create</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+  <span class='comment'># Refresh the target to start all settings from scratch each time
+</span>  <span class='comment'># This is an easy way to reset all registered values
+</span>  <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_app'>app</span><span class='period'>.</span><span class='id identifier rubyid_reload_target!'>reload_target!</span>
+  <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_tester'>tester</span><span class='period'>.</span><span class='id identifier rubyid_generating'>generating</span> <span class='op'>=</span> <span class='symbol'>:program</span>
+  <span class='comment'># Make the top level flow globally available, this helps to assign test descriptions
+</span>  <span class='comment'># to the correct flow whenever tests are instantiated from sub-flows
+</span>  <span class='kw'>if</span> <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_interface_loaded?'>interface_loaded?</span> <span class='op'>&amp;&amp;</span> <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_top_level_flow'>top_level_flow</span>
+    <span class='id identifier rubyid_sub_flow'>sub_flow</span> <span class='op'>=</span> <span class='kw'>true</span>
+    <span class='kw'>if</span> <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_tester'>tester</span><span class='period'>.</span><span class='id identifier rubyid_doc?'>doc?</span>
+      <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_flow'>flow</span><span class='period'>.</span><span class='id identifier rubyid_start_section'>start_section</span>
+    <span class='kw'>end</span>
+  <span class='kw'>else</span>
+    <span class='id identifier rubyid_sub_flow'>sub_flow</span> <span class='op'>=</span> <span class='kw'>false</span>
+  <span class='kw'>end</span>
+  <span class='id identifier rubyid_job'>job</span><span class='period'>.</span><span class='id identifier rubyid_output_file_body'>output_file_body</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_delete'>delete</span><span class='lparen'>(</span><span class='symbol'>:name</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span> <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:name</span><span class='rbracket'>]</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_sub_flow'>sub_flow</span>
+    <span class='id identifier rubyid_interface'>interface</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_interface'>interface</span>
+    <span class='id identifier rubyid_opts'>opts</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_generator'>generator</span><span class='period'>.</span><span class='id identifier rubyid_option_pipeline'>option_pipeline</span><span class='period'>.</span><span class='id identifier rubyid_pop'>pop</span> <span class='op'>||</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+    <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_startup'>startup</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:startup</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_instance_exec'>instance_exec</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+    <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_shutdown'>shutdown</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:shutdown</span><span class='rparen'>)</span>
+    <span class='kw'>if</span> <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_tester'>tester</span><span class='period'>.</span><span class='id identifier rubyid_doc?'>doc?</span>
+      <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_flow'>flow</span><span class='period'>.</span><span class='id identifier rubyid_stop_section'>stop_section</span>
+    <span class='kw'>end</span>
+    <span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_close'>close</span><span class='lparen'>(</span><span class='label'>flow:</span> <span class='kw'>true</span><span class='comma'>,</span> <span class='label'>sub_flow:</span> <span class='kw'>true</span><span class='rparen'>)</span>
+  <span class='kw'>else</span>
+    <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_log'>log</span><span class='period'>.</span><span class='id identifier rubyid_info'>info</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Generating... </span><span class='embexpr_beg'>#{</span><span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_file_handler'>file_handler</span><span class='period'>.</span><span class='id identifier rubyid_current_file'>current_file</span><span class='period'>.</span><span class='id identifier rubyid_basename'>basename</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+    <span class='id identifier rubyid_interface'>interface</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_reset_interface'>reset_interface</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
+    <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_set_top_level_flow'>set_top_level_flow</span>
+    <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_flow_generator'>flow_generator</span><span class='period'>.</span><span class='id identifier rubyid_set_flow_description'>set_flow_description</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_consume_comments'>consume_comments</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:top_level</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='kw'>true</span>
+    <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_flow'>flow</span><span class='period'>.</span><span class='id identifier rubyid_instance_variable_set'>instance_variable_set</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>@top_level</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_flow'>flow</span><span class='rparen'>)</span>
+    <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_flow'>flow</span><span class='period'>.</span><span class='id identifier rubyid_on_top_level_set'>on_top_level_set</span> <span class='kw'>if</span> <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_flow'>flow</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:on_top_level_set</span><span class='rparen'>)</span>
+    <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_app'>app</span><span class='period'>.</span><span class='id identifier rubyid_listeners_for'>listeners_for</span><span class='lparen'>(</span><span class='symbol'>:on_flow_start</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_listener'>listener</span><span class='op'>|</span>
+      <span class='id identifier rubyid_listener'>listener</span><span class='period'>.</span><span class='id identifier rubyid_on_flow_start'>on_flow_start</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
+    <span class='kw'>end</span>
+    <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_startup'>startup</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:startup</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_instance_eval'>instance_eval</span><span class='lparen'>(</span><span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+    <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_shutdown'>shutdown</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:shutdown</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_at_flow_end'>at_flow_end</span> <span class='kw'>if</span> <span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:at_flow_end</span><span class='rparen'>)</span>
+    <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_app'>app</span><span class='period'>.</span><span class='id identifier rubyid_listeners_for'>listeners_for</span><span class='lparen'>(</span><span class='symbol'>:on_flow_end</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_listener'>listener</span><span class='op'>|</span>
+      <span class='id identifier rubyid_listener'>listener</span><span class='period'>.</span><span class='id identifier rubyid_on_flow_end'>on_flow_end</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
+    <span class='kw'>end</span>
+    <span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_close'>close</span><span class='lparen'>(</span><span class='label'>flow:</span> <span class='kw'>true</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="_extract_comments-instance_method">
   
     #<strong>_extract_comments</strong>(file, flow_line)  &#x21d2; <tt>Object</tt> 
   
@@ -207,36 +404,36 @@ ATP AST originated from.</p>
       <pre class="lines">
 
 
-53
-54
-55
-56
-57
-58
-59
-60
-61
-62
-63
-64
-65
-66
-67
-68
-69
-70
-71
-72
-73
-74
-75
-76
-77
-78
-79</pre>
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/origen_ext/generator/flow.rb', line 53</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/origen_ext/generator/flow.rb', line 147</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid__extract_comments'>_extract_comments</span><span class='lparen'>(</span><span class='id identifier rubyid_file'>file</span><span class='comma'>,</span> <span class='id identifier rubyid_flow_line'>flow_line</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_flow_comments'>flow_comments</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
@@ -271,6 +468,101 @@ ATP AST originated from.</p>
 </div>
     
       <div class="method_details ">
+  <h3 class="signature " id="_sub_flow-instance_method">
+  
+    #<strong>_sub_flow</strong>(name, options, &amp;block)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p class="note private">
+  <strong>This method is part of a private API.</strong>
+  You should avoid using this method if possible, as it may be removed or be changed in the future.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/origen_ext/generator/flow.rb', line 60</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid__sub_flow'>_sub_flow</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+  <span class='ivar'>@top_level_flow</span> <span class='op'>||=</span> <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_flow'>flow</span>
+  <span class='id identifier rubyid_parent'>parent</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_flow'>flow</span>
+  <span class='comment'># If the parent flow already has a child flow of this name then we need to generate a
+</span>  <span class='comment'># new unique name/id
+</span>  <span class='comment'># Also generate a new name when the child flow name matches the parent flow name, SMT8.2
+</span>  <span class='comment'># onwards does not allow this
+</span>  <span class='kw'>if</span> <span class='id identifier rubyid_parent'>parent</span><span class='period'>.</span><span class='id identifier rubyid_children'>children</span><span class='lbracket'>[</span><span class='id identifier rubyid_name'>name</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='id identifier rubyid_parent'>parent</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span> <span class='op'>==</span> <span class='id identifier rubyid_name'>name</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span>
+    <span class='id identifier rubyid_i'>i</span> <span class='op'>=</span> <span class='int'>0</span>
+    <span class='id identifier rubyid_tempname'>tempname</span> <span class='op'>=</span> <span class='id identifier rubyid_name'>name</span>
+    <span class='kw'>while</span> <span class='id identifier rubyid_parent'>parent</span><span class='period'>.</span><span class='id identifier rubyid_children'>children</span><span class='lbracket'>[</span><span class='id identifier rubyid_tempname'>tempname</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='id identifier rubyid_parent'>parent</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span> <span class='op'>==</span> <span class='id identifier rubyid_tempname'>tempname</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span>
+      <span class='id identifier rubyid_i'>i</span> <span class='op'>+=</span> <span class='int'>1</span>
+      <span class='id identifier rubyid_tempname'>tempname</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'>_</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_i'>i</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+    <span class='kw'>end</span>
+    <span class='id identifier rubyid_name'>name</span> <span class='op'>=</span> <span class='id identifier rubyid_tempname'>tempname</span>
+  <span class='kw'>end</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_parent'>parent</span>
+    <span class='id identifier rubyid_id'>id</span> <span class='op'>=</span> <span class='id identifier rubyid_parent'>parent</span><span class='period'>.</span><span class='id identifier rubyid_path'>path</span> <span class='op'>+</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>.</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+  <span class='kw'>else</span>
+    <span class='id identifier rubyid_id'>id</span> <span class='op'>=</span> <span class='id identifier rubyid_name'>name</span>
+  <span class='kw'>end</span>
+  <span class='id identifier rubyid_sub_flow'>sub_flow</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_with_flow'>with_flow</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='rparen'>)</span> <span class='kw'>do</span>
+    <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_flow'>flow</span><span class='period'>.</span><span class='id identifier rubyid_instance_variable_set'>instance_variable_set</span><span class='lparen'>(</span><span class='symbol'>:@top_level</span><span class='comma'>,</span> <span class='ivar'>@top_level_flow</span><span class='rparen'>)</span>
+    <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_flow'>flow</span><span class='period'>.</span><span class='id identifier rubyid_instance_variable_set'>instance_variable_set</span><span class='lparen'>(</span><span class='symbol'>:@parent</span><span class='comma'>,</span> <span class='id identifier rubyid_parent'>parent</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid__create'>_create</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+  <span class='id identifier rubyid_parent'>parent</span><span class='period'>.</span><span class='id identifier rubyid_children'>children</span><span class='lbracket'>[</span><span class='id identifier rubyid_name'>name</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_sub_flow'>sub_flow</span>
+  <span class='lbracket'>[</span><span class='id identifier rubyid_parent'>parent</span><span class='comma'>,</span> <span class='id identifier rubyid_sub_flow'>sub_flow</span><span class='rbracket'>]</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
   <h3 class="signature " id="create-instance_method">
   
     #<strong>create</strong>(options = {}, &amp;block)  &#x21d2; <tt>Object</tt> 
@@ -297,6 +589,8 @@ ATP AST originated from</p>
       <pre class="lines">
 
 
+13
+14
 15
 16
 17
@@ -333,10 +627,16 @@ ATP AST originated from</p>
 48
 49
 50
-51</pre>
+51
+52
+53
+54
+55
+56
+57</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/origen_ext/generator/flow.rb', line 15</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/origen_ext/generator/flow.rb', line 13</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_create'>create</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
   <span class='comment'># Patch for Windows operation since the path can start with something like &quot;C:/&quot;
@@ -358,10 +658,18 @@ ATP AST originated from</p>
   <span class='kw'>if</span> <span class='const'><span class='object_link'><a href="../../OrigenTesters.html" title="OrigenTesters (module)">OrigenTesters</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../OrigenTesters/Flow.html" title="OrigenTesters::Flow (module)">Flow</a></span></span><span class='period'>.</span><span class='id identifier rubyid_flow_comments'><span class='object_link'><a href="../../OrigenTesters/Flow.html#flow_comments-class_method" title="OrigenTesters::Flow.flow_comments (method)">flow_comments</a></span></span>
     <span class='id identifier rubyid_top'>top</span> <span class='op'>=</span> <span class='kw'>false</span>
     <span class='id identifier rubyid_name'>name</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:name</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='const'>Pathname</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_file'>file</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_basename'>basename</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>.rb</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='period'>.</span><span class='id identifier rubyid_sub'>sub</span><span class='lparen'>(</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>^_</span><span class='regexp_end'>/</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
-    <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_flow'>flow</span><span class='period'>.</span><span class='id identifier rubyid_group'>group</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='id identifier rubyid_flow_comments'>flow_comments</span><span class='rparen'>)</span> <span class='kw'>do</span>
-      <span class='id identifier rubyid_orig_create'>orig_create</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+    <span class='comment'># Generate imports as separate sub-flow files on this platform
+</span>    <span class='kw'>if</span> <span class='id identifier rubyid_tester'>tester</span><span class='period'>.</span><span class='id identifier rubyid_v93k?'>v93k?</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_tester'>tester</span><span class='period'>.</span><span class='id identifier rubyid_smt8?'>smt8?</span>
+      <span class='id identifier rubyid_parent'>parent</span><span class='comma'>,</span> <span class='id identifier rubyid_sub_flow'>sub_flow</span> <span class='op'>=</span> <span class='op'>*</span><span class='id identifier rubyid__sub_flow'>_sub_flow</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+      <span class='id identifier rubyid_path'>path</span> <span class='op'>=</span> <span class='id identifier rubyid_sub_flow'>sub_flow</span><span class='period'>.</span><span class='id identifier rubyid_output_file'>output_file</span><span class='period'>.</span><span class='id identifier rubyid_relative_path_from'>relative_path_from</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_file_handler'>file_handler</span><span class='period'>.</span><span class='id identifier rubyid_output_directory'>output_directory</span><span class='rparen'>)</span>
+      <span class='id identifier rubyid_parent'>parent</span><span class='period'>.</span><span class='id identifier rubyid_atp'>atp</span><span class='period'>.</span><span class='id identifier rubyid_sub_flow'>sub_flow</span><span class='lparen'>(</span><span class='id identifier rubyid_sub_flow'>sub_flow</span><span class='period'>.</span><span class='id identifier rubyid_atp'>atp</span><span class='period'>.</span><span class='id identifier rubyid_raw'>raw</span><span class='comma'>,</span> <span class='label'>path:</span> <span class='id identifier rubyid_path'>path</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='rparen'>)</span>
+    <span class='kw'>else</span>
+      <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_flow'>flow</span><span class='period'>.</span><span class='id identifier rubyid_group'>group</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='id identifier rubyid_flow_comments'>flow_comments</span><span class='rparen'>)</span> <span class='kw'>do</span>
+        <span class='id identifier rubyid__create'>_create</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+      <span class='kw'>end</span>
     <span class='kw'>end</span>
   <span class='kw'>else</span>
+    <span class='ivar'>@top_level_flow</span> <span class='op'>=</span> <span class='kw'>nil</span>
     <span class='const'><span class='object_link'><a href="../../OrigenTesters.html" title="OrigenTesters (module)">OrigenTesters</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../OrigenTesters/Flow.html" title="OrigenTesters::Flow (module)">Flow</a></span></span><span class='period'>.</span><span class='id identifier rubyid_flow_comments'><span class='object_link'><a href="../../OrigenTesters/Flow.html#flow_comments-class_method" title="OrigenTesters::Flow.flow_comments (method)">flow_comments</a></span></span> <span class='op'>=</span> <span class='id identifier rubyid_flow_comments'>flow_comments</span>
     <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_key?'>key?</span><span class='lparen'>(</span><span class='symbol'>:unique_ids</span><span class='rparen'>)</span>
       <span class='const'><span class='object_link'><a href="../../OrigenTesters.html" title="OrigenTesters (module)">OrigenTesters</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../OrigenTesters/Flow.html" title="OrigenTesters::Flow (module)">Flow</a></span></span><span class='period'>.</span><span class='id identifier rubyid_unique_ids'><span class='object_link'><a href="../../OrigenTesters/Flow.html#unique_ids-class_method" title="OrigenTesters::Flow.unique_ids (method)">unique_ids</a></span></span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_delete'>delete</span><span class='lparen'>(</span><span class='symbol'>:unique_ids</span><span class='rparen'>)</span>
@@ -369,7 +677,7 @@ ATP AST originated from</p>
       <span class='const'><span class='object_link'><a href="../../OrigenTesters.html" title="OrigenTesters (module)">OrigenTesters</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../OrigenTesters/Flow.html" title="OrigenTesters::Flow (module)">Flow</a></span></span><span class='period'>.</span><span class='id identifier rubyid_unique_ids'><span class='object_link'><a href="../../OrigenTesters/Flow.html#unique_ids-class_method" title="OrigenTesters::Flow.unique_ids (method)">unique_ids</a></span></span> <span class='op'>=</span> <span class='kw'>true</span>
     <span class='kw'>end</span>
     <span class='id identifier rubyid_top'>top</span> <span class='op'>=</span> <span class='kw'>true</span>
-    <span class='id identifier rubyid_orig_create'>orig_create</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid__create'>_create</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
   <span class='kw'>end</span>
   <span class='const'><span class='object_link'><a href="../../OrigenTesters.html" title="OrigenTesters (module)">OrigenTesters</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../OrigenTesters/Flow.html" title="OrigenTesters::Flow (module)">Flow</a></span></span><span class='period'>.</span><span class='id identifier rubyid_callstack'><span class='object_link'><a href="../../OrigenTesters/Flow.html#callstack-class_method" title="OrigenTesters::Flow.callstack (method)">callstack</a></span></span><span class='period'>.</span><span class='id identifier rubyid_pop'>pop</span>
   <span class='const'><span class='object_link'><a href="../../OrigenTesters.html" title="OrigenTesters (module)">OrigenTesters</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../../OrigenTesters/Flow.html" title="OrigenTesters::Flow (module)">Flow</a></span></span><span class='period'>.</span><span class='id identifier rubyid_comment_stack'><span class='object_link'><a href="../../OrigenTesters/Flow.html#comment_stack-class_method" title="OrigenTesters::Flow.comment_stack (method)">comment_stack</a></span></span><span class='period'>.</span><span class='id identifier rubyid_pop'>pop</span>
@@ -381,9 +689,9 @@ ATP AST originated from</p>
 </div>
     
       <div class="method_details ">
-  <h3 class="signature " id="orig_create-instance_method">
+  <h3 class="signature " id="job-instance_method">
   
-    #<strong>orig_create</strong>  &#x21d2; <tt>Object</tt> 
+    #<strong>job</strong>  &#x21d2; <tt>Object</tt> 
   
 
   
@@ -395,12 +703,46 @@ ATP AST originated from</p>
       <pre class="lines">
 
 
-11</pre>
+143
+144
+145</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/origen_ext/generator/flow.rb', line 11</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/origen_ext/generator/flow.rb', line 143</span>
 
-<span class='id identifier rubyid_alias_method'>alias_method</span> <span class='symbol'>:orig_create</span><span class='comma'>,</span> <span class='symbol'>:create</span></pre>
+<span class='kw'>def</span> <span class='id identifier rubyid_job'>job</span>
+  <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_app'>app</span><span class='period'>.</span><span class='id identifier rubyid_current_job'>current_job</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="reset-instance_method">
+  
+    #<strong>reset</strong>  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+139
+140
+141</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/origen_ext/generator/flow.rb', line 139</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_reset'>reset</span>
+  <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_interface'>interface</span><span class='period'>.</span><span class='id identifier rubyid_clear_top_level_flow'>clear_top_level_flow</span> <span class='kw'>if</span> <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_interface_loaded?'>interface_loaded?</span>
+<span class='kw'>end</span></pre>
     </td>
   </tr>
 </table>
@@ -411,8 +753,8 @@ ATP AST originated from</p>
 </div>
 
       <div id="footer">
-  Generated on Wed Jun 26 06:42:07 2019 by
-  <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  Generated on Wed Jul 24 02:42:41 2019 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.19 (ruby-2.5.1).
 </div>
 
