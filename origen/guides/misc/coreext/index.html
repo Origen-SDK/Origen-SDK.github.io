@@ -369,12 +369,11 @@
 <li class=""><a href="/origen/guides/plugins/introduction">Introduction</a></li>
 <li class=""><a href="/origen/guides/plugins/importing">Using a Plugin</a></li>
 <li class=""><a href="/origen/guides/plugins/creating">Creating a Plugin</a></li>
-<li class=""><a href="/origen/guides/plugins/current">Current Plugin</a></li>
+<li class=""><a href="/origen/guides/plugins/current">Current &amp; Default Plugins</a></li>
 <li class=""><a href="/origen/guides/plugins/environment">Dev Environment</a></li>
 <li class=""><a href="/origen/guides/plugins/development">Dev Considerations</a></li>
 <li class=""><a href="/origen/guides/plugins/paths">Paths &amp; Origen.root</a></li>
 <li class=""><a href="/origen/guides/plugins/app">Config &amp; Origen.app</a></li>
-<li class=""><a href="/origen/guides/plugins/misc">Miscellaneous Topics</a></li>
                 </ul>
               </div>
             </div>
@@ -401,6 +400,7 @@
 <li class=""><a href="/origen/guides/misc/commandsov">Overriding Commands</a></li>
 <li class=""><a href="/origen/guides/misc/callbacks">Callbacks</a></li>
 <li class=""><a href="/origen/guides/misc/appcallbacks">Application Callbacks</a></li>
+<li class=""><a href="/origen/guides/misc/misc">Miscellaneous Topics</a></li>
                 </ul>
               </div>
             </div>
@@ -530,6 +530,42 @@ things such as memory addresses, bit size, etc. that need to be modeled as numbe
 </div>
       </div>
 
+      <h5 id="integer-width">Integer Width</h5>
+
+      <p>Origen adds an attribute to the <code>Integer</code> class: <code>width</code>. This width can be
+used throughout for various conversion or logical operators which require a
+known width of the input. By default, this is <strong>32-bits</strong>, but can be adjusted
+per Origen thread using <code>Integer.width=</code> and can always be retrieved from <code>Integer.width</code>.</p>
+
+      <h5 id="twos-complement">Twos Complement</h5>
+
+      <p><code>Integer</code> instances can be converted to their twos-complement representations:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#00D">-1</span>.twos_complement
+  <span style="color:#777">#=&gt; 11111111111111111111111111111111</span>
+
+<span style="color:#00D">-2</span>.twos_complement
+  <span style="color:#777">#=&gt; 11111111111111111111111111111110</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>The default width is the value of <code>Integer.width</code>. Changes there will be reflected
+here as well. Alternatively, the width parameter can be provided directly:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#00D">-1</span>.twos_complement(<span style="color:#00D">8</span>)
+  <span style="color:#777">#=&gt; 11111111</span>
+
+<span style="color:#00D">-2</span>.twos_complement(<span style="color:#00D">16</span>)
+  <span style="color:#777">#=&gt; 1111111111111110</span>
+</pre></div>
+</div>
+      </div>
+
       <div>    
   <a class="anchor" name="Part_Select"></a>          
   <h4><a href="#Part_Select">Part Select</a></h4>          
@@ -612,7 +648,7 @@ this feature.</p>
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = 'origen-sdk';
     var disqus_title;
-    var disqus_url = 'https://' + window.location.hostname + window.location.pathname;
+    var disqus_url = 'http://' + window.location.hostname + window.location.pathname;
 
     disqus_title = $("h1").text();
     if (disqus_title.length == 0) {

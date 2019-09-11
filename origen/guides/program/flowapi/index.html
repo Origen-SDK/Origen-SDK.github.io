@@ -19,8 +19,8 @@
     <link rel="author" href="https://plus.google.com/u/1/b/106463981272125989995/106463981272125989">
   
   
-    <meta property="og:url" content="https://origen-sdk.org/origen/home/info-rchitect/">
-    <meta name="twitter:url" content="https://origen-sdk.org/origen/home/info-rchitect/">
+    <meta property="og:url" content="https://origen-sdk.org/origen/home/nxa13790/">
+    <meta name="twitter:url" content="https://origen-sdk.org/origen/home/nxa13790/">
   
   
     <meta property="og:image" content="https://origen-sdk.org/favicon-260x260.png">
@@ -369,12 +369,11 @@
 <li class=""><a href="/origen/guides/plugins/introduction">Introduction</a></li>
 <li class=""><a href="/origen/guides/plugins/importing">Using a Plugin</a></li>
 <li class=""><a href="/origen/guides/plugins/creating">Creating a Plugin</a></li>
-<li class=""><a href="/origen/guides/plugins/current">Current Plugin</a></li>
+<li class=""><a href="/origen/guides/plugins/current">Current &amp; Default Plugins</a></li>
 <li class=""><a href="/origen/guides/plugins/environment">Dev Environment</a></li>
 <li class=""><a href="/origen/guides/plugins/development">Dev Considerations</a></li>
 <li class=""><a href="/origen/guides/plugins/paths">Paths &amp; Origen.root</a></li>
 <li class=""><a href="/origen/guides/plugins/app">Config &amp; Origen.app</a></li>
-<li class=""><a href="/origen/guides/plugins/misc">Miscellaneous Topics</a></li>
                 </ul>
               </div>
             </div>
@@ -401,6 +400,7 @@
 <li class=""><a href="/origen/guides/misc/commandsov">Overriding Commands</a></li>
 <li class=""><a href="/origen/guides/misc/callbacks">Callbacks</a></li>
 <li class=""><a href="/origen/guides/misc/appcallbacks">Application Callbacks</a></li>
+<li class=""><a href="/origen/guides/misc/misc">Miscellaneous Topics</a></li>
                 </ul>
               </div>
             </div>
@@ -518,6 +518,87 @@ if_enable <span style="color:#A60">:word1</span> <span style="color:#080;font-we
     <span style="color:#606">func</span>: <span style="color:#A60">:test1</span>
     <span style="color:#606">func</span>: <span style="color:#A60">:test2</span>
   <span style="color:#080;font-weight:bold">end</span>
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+      </div>
+
+      <div>    
+  <a class="anchor" name="Execution_Based_on_Relational_Expressions"></a>          
+  <h4><a href="#Execution_Based_on_Relational_Expressions">Execution Based on Relational Expressions</a></h4>          
+</div>
+
+      <p>The following methods are available to describe these cases:</p>
+
+      <ul>
+        <li>
+<strong>whenever</strong> - Run the test(s) if the relational expression evaluates to TRUE</li>
+        <li>
+<strong>whenever_all</strong> - Run the test(s) if ALL of the relational expressions evaluate to TRUE</li>
+        <li>
+<strong>whenever_any</strong> - Run the test(s) if ANY of the relational expressions evaluate to TRUE</li>
+      </ul>
+
+      <p>The following relational operators are available for use with the above methods:</p>
+
+      <ul>
+        <li>
+<strong>eq</strong> - equal to</li>
+        <li>
+<strong>ne</strong> - not equal to</li>
+        <li>
+<strong>gt</strong> - greater than</li>
+        <li>
+<strong>ge</strong> - greater than or equal to</li>
+        <li>
+<strong>lt</strong> - less than</li>
+        <li>
+<strong>le</strong> - less than or equal to</li>
+      </ul>
+
+      <p>Here are some examples of how to apply these methods:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#777"># Run these tests if VAR1 is greater than 2</span>
+whenever gt(<span style="color:#A60">:var1</span>, <span style="color:#00D">2</span>) <span style="color:#080;font-weight:bold">do</span>
+  <span style="color:#606">func</span>: <span style="color:#A60">:test1</span>
+  <span style="color:#606">func</span>: <span style="color:#A60">:test2</span>
+<span style="color:#080;font-weight:bold">end</span>
+
+<span style="color:#777"># Run these tests if VAR1 is greater than 2 AND VAR2 is less than VAR3</span>
+whenever_all gt(<span style="color:#A60">:var1</span>, <span style="color:#00D">2</span>), lt(<span style="color:#A60">:var2</span>, <span style="color:#A60">:var3</span>) <span style="color:#080;font-weight:bold">do</span>
+  <span style="color:#606">func</span>: <span style="color:#A60">:test1</span>
+  <span style="color:#606">func</span>: <span style="color:#A60">:test2</span>
+<span style="color:#080;font-weight:bold">end</span>
+
+<span style="color:#777"># Run these tests if VAR1 is greater than 2 OR VAR2 is less than VAR3</span>
+whenever_any gt(<span style="color:#A60">:var1</span>, <span style="color:#00D">2</span>), lt(<span style="color:#A60">:var2</span>, <span style="color:#A60">:var3</span>) <span style="color:#080;font-weight:bold">do</span>
+  <span style="color:#606">func</span>: <span style="color:#A60">:test1</span>
+  <span style="color:#606">func</span>: <span style="color:#A60">:test2</span>
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>Additionally, these variables can be set in the flow using the <strong>set</strong> method as shown in here:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#777"># Set the VAR1 = 1</span>
+set <span style="color:#A60">:var1</span>, <span style="color:#00D">1</span>
+set <span style="color:#A60">:var2</span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">OFF</span><span style="color:#710">'</span></span>
+set <span style="color:#A60">:var3</span>, <span style="color:#60E">3.14</span>
+
+<span style="color:#777"># Update VAR1 value based on some runtime condition</span>
+if_enable <span style="color:#A60">:some_other_variable</span> <span style="color:#080;font-weight:bold">do</span>
+  set <span style="color:#A60">:var1</span>, <span style="color:#00D">3</span>
+<span style="color:#080;font-weight:bold">end</span>
+
+<span style="color:#777"># Run these tests if VAR1 is greater than 2</span>
+whenever gt(<span style="color:#A60">:var1</span>, <span style="color:#00D">2</span>) <span style="color:#080;font-weight:bold">do</span>
+  <span style="color:#606">func</span>: <span style="color:#A60">:test1</span>
+  <span style="color:#606">func</span>: <span style="color:#A60">:test2</span>
 <span style="color:#080;font-weight:bold">end</span>
 </pre></div>
 </div>
@@ -759,7 +840,7 @@ unless_enable <span style="background-color:hsla(0,100%,50%,0.05)"><span style="
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = 'origen-sdk';
     var disqus_title;
-    var disqus_url = 'https://' + window.location.hostname + window.location.pathname;
+    var disqus_url = 'http://' + window.location.hostname + window.location.pathname;
 
     disqus_title = $("h1").text();
     if (disqus_title.length == 0) {

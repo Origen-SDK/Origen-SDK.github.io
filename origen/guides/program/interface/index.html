@@ -19,8 +19,8 @@
     <link rel="author" href="https://plus.google.com/u/1/b/106463981272125989995/106463981272125989">
   
   
-    <meta property="og:url" content="https://origen-sdk.org/origen/home/info-rchitect/">
-    <meta name="twitter:url" content="https://origen-sdk.org/origen/home/info-rchitect/">
+    <meta property="og:url" content="https://origen-sdk.org/origen/home/nxa13790/">
+    <meta name="twitter:url" content="https://origen-sdk.org/origen/home/nxa13790/">
   
   
     <meta property="og:image" content="https://origen-sdk.org/favicon-260x260.png">
@@ -369,12 +369,11 @@
 <li class=""><a href="/origen/guides/plugins/introduction">Introduction</a></li>
 <li class=""><a href="/origen/guides/plugins/importing">Using a Plugin</a></li>
 <li class=""><a href="/origen/guides/plugins/creating">Creating a Plugin</a></li>
-<li class=""><a href="/origen/guides/plugins/current">Current Plugin</a></li>
+<li class=""><a href="/origen/guides/plugins/current">Current &amp; Default Plugins</a></li>
 <li class=""><a href="/origen/guides/plugins/environment">Dev Environment</a></li>
 <li class=""><a href="/origen/guides/plugins/development">Dev Considerations</a></li>
 <li class=""><a href="/origen/guides/plugins/paths">Paths &amp; Origen.root</a></li>
 <li class=""><a href="/origen/guides/plugins/app">Config &amp; Origen.app</a></li>
-<li class=""><a href="/origen/guides/plugins/misc">Miscellaneous Topics</a></li>
                 </ul>
               </div>
             </div>
@@ -401,6 +400,7 @@
 <li class=""><a href="/origen/guides/misc/commandsov">Overriding Commands</a></li>
 <li class=""><a href="/origen/guides/misc/callbacks">Callbacks</a></li>
 <li class=""><a href="/origen/guides/misc/appcallbacks">Application Callbacks</a></li>
+<li class=""><a href="/origen/guides/misc/misc">Miscellaneous Topics</a></li>
                 </ul>
               </div>
             </div>
@@ -712,13 +712,56 @@ it could be easily handled like this:</p>
 </div>
       </div>
 
-      <p>Finally, a convenience method exists that will trigger if either the context or one of your
+      <p>Also, a convenience method exists that will trigger if either the context or one of your
 specified parameters changes:</p>
 
       <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#080;font-weight:bold">if</span> context_or_parameter_changed?(<span style="color:#A60">:vdde</span>, <span style="color:#A60">:vddc</span>, options)
   <span style="color:#777"># ...</span>
+</pre></div>
+</div>
+      </div>
+
+      <div>    
+  <a class="anchor" name="Reloading_of_the_Target"></a>          
+  <h4><a href="#Reloading_of_the_Target">Reloading of the Target</a></h4>          
+</div>
+
+      <p>By default, Origen reloads the target whenever a new flow file (top level or sub-flow) is encountered.  This can lead to
+increased flow generation time if the flow is large and calls many sub-flows.  To turn off reloading of the target, configure
+the test interface to set the attribute <code>reload_target</code> to <code>false</code>.  Here is an example from the origen_testers spec tests:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MyInterface</span>
+  include <span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">ProgramGenerators</span>
+
+  attr_accessor <span style="color:#A60">:reload_target</span>
+
+  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options = {})
+    <span style="color:#33B">@reload_target</span> = <span style="color:#069">false</span>
+  <span style="color:#080;font-weight:bold">end</span>
+<span style="color:#080;font-weight:bold">end</span>
+
+<span style="color:#036;font-weight:bold">This</span> feature also exists at the flow file level, however the test interface will take precendence.  For example, the following flow file option
+will <span style="color:#080;font-weight:bold">not</span> have any effect <span style="color:#080;font-weight:bold">if</span> the test interface has the <span style="background-color:hsla(120,100%,50%,0.06)"><span style="color:#161">`</span><span style="color:#2B2">reload_target</span><span style="color:#161">`</span></span> attribute set to <span style="background-color:hsla(120,100%,50%,0.06)"><span style="color:#161">`</span><span style="color:#2B2">false</span><span style="color:#161">`</span></span>.
+
+~~~ruby
+<span style="color:#036;font-weight:bold">Flow</span>.create <span style="color:#606">interface</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">MyInterface</span><span style="color:#710">'</span></span>, <span style="color:#606">reload_target</span>: <span style="color:#069">true</span> <span style="color:#080;font-weight:bold">do</span>
+  <span style="color:#777"># Tests inserted here</span>
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>If the test interface does not set the <code>reload_target</code> attribute to <code>false</code>, then a flow file may do so to prevent reloading of the target.</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#036;font-weight:bold">Flow</span>.create <span style="color:#606">interface</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">MyInterface</span><span style="color:#710">'</span></span>, <span style="color:#606">reload_target</span>: <span style="color:#069">false</span> <span style="color:#080;font-weight:bold">do</span>
+  <span style="color:#777"># Tests inserted here</span>
+<span style="color:#080;font-weight:bold">end</span>
 </pre></div>
 </div>
       </div>
@@ -735,7 +778,7 @@ specified parameters changes:</p>
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = 'origen-sdk';
     var disqus_title;
-    var disqus_url = 'https://' + window.location.hostname + window.location.pathname;
+    var disqus_url = 'http://' + window.location.hostname + window.location.pathname;
 
     disqus_title = $("h1").text();
     if (disqus_title.length == 0) {

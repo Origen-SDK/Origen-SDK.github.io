@@ -19,8 +19,8 @@
     <link rel="author" href="https://plus.google.com/u/1/b/106463981272125989995/106463981272125989">
   
   
-    <meta property="og:url" content="https://origen-sdk.org/origen/home/nxa13790/">
-    <meta name="twitter:url" content="https://origen-sdk.org/origen/home/nxa13790/">
+    <meta property="og:url" content="https://origen-sdk.org/origen/guides/misc/misc">
+    <meta name="twitter:url" content="https://origen-sdk.org/origen/guides/misc/misc">
   
   
     <meta property="og:image" content="https://origen-sdk.org/favicon-260x260.png">
@@ -290,7 +290,7 @@
                 Test Program Generator
               </a>
             </div>
-            <div id="sidebar-collapse-7" class="panel-collapse collapse in">
+            <div id="sidebar-collapse-7" class="panel-collapse collapse ">
               <div class="panel-body">
                 <ul class="nav nav-list">
 <li class=""><a href="/origen/guides/program/introduction">Introduction</a></li>
@@ -303,7 +303,7 @@
 <li class=""><a href="/origen/guides/program/j750">J750 API</a></li>
 <li class=""><a href="/origen/guides/program/v93k">V93K Common API</a></li>
 <li class=""><a href="/origen/guides/program/v93ksmt7">V93K SMT7 API</a></li>
-<li class="active"><a href="/origen/guides/program/v93ksmt8">V93K SMT8 API</a></li>
+<li class=""><a href="/origen/guides/program/v93ksmt8">V93K SMT8 API</a></li>
 <li class=""><a href="/origen/guides/program/ultraflex">UltraFLEX API</a></li>
 <li class=""><a href="/origen/guides/program/doc">Documenting the Program</a></li>
 <li class=""><a href="/origen/guides/program/custom">Creating Custom Testers</a></li>
@@ -384,7 +384,7 @@
                 Miscellaneous
               </a>
             </div>
-            <div id="sidebar-collapse-11" class="panel-collapse collapse ">
+            <div id="sidebar-collapse-11" class="panel-collapse collapse in">
               <div class="panel-body">
                 <ul class="nav nav-list">
 <li class=""><a href="/origen/guides/misc/revisioncontrol">Revision Control</a></li>
@@ -400,7 +400,7 @@
 <li class=""><a href="/origen/guides/misc/commandsov">Overriding Commands</a></li>
 <li class=""><a href="/origen/guides/misc/callbacks">Callbacks</a></li>
 <li class=""><a href="/origen/guides/misc/appcallbacks">Application Callbacks</a></li>
-<li class=""><a href="/origen/guides/misc/misc">Miscellaneous Topics</a></li>
+<li class="active"><a href="/origen/guides/misc/misc">Miscellaneous Topics</a></li>
                 </ul>
               </div>
             </div>
@@ -431,133 +431,123 @@
   <div class="col-md-9 nav-page-container">
     <article class="search-results">
 
-      <h3 class="topic-title">Test Program Generator</h3>
+      <h3 class="topic-title">Miscellaneous</h3>
 
-      <h2 class="topic-subtitle">V93K SMT8 API</h2>
+      <h2 class="topic-subtitle">Miscellaneous Topics</h2>
 
       <hr>
 
-      <p>This guide covers aspects of the V93K program generator API that are unique to SmarTest 8.</p>
+      <p>Topics on this page relate to plugins in general but do not fit into any of the previous topics and are too minor in scope and content to warrant their own pages.</p>
 
-      <p>Be sure to also consult the <a href="/origen/guides/program/v93k">V93K Common API guide</a> which is also applicable
-to SMT8.</p>
+      <div class="list-group">
+  <li class="list-group-item"><a href="#Failing_the_Application">Failing the Application</a></li>
+</div>
 
-      <p>The SMT8 API is enabled by adding <code>smt_version: 8</code> when instantiating a V93K test environment:</p>
+      <div>    
+  <a class="anchor" name="Failing_the_Application"></a>          
+  <h3><a href="#Failing_the_Application">Failing the Application</a></h3>          
+</div>
+
+      <p>Sometimes, the usage of your application or plugin is not correct, certain conditions are not met, or some other circumstance arises in which the application or
+plugin cannot continue. In these instances, the best course of action is to print the error message and exit the current process.</p>
+
+      <p>Ruby provides a few methods to do this. Most commonly:</p>
+
+      <ul>
+        <li>
+<code>throw</code>: raises an exception.</li>
+        <li>
+<code>fail/raise</code>: raises a runtime error.</li>
+        <li>
+<code>exit</code>: raises a <code>SystemExit</code> error but still runs <code>ensure</code> blocks and can be rescued.</li>
+        <li>
+<code>exit!</code>: kills the process immediately.</li>
+      </ul>
+
+      <p>Each of these has their place, but their usefulness is based primarily on the information you, as the developer, provide. For example, using <code>exit!</code> without any error message
+just kills the process, without any information going back to the user. <code>fail</code> can be used to dump a stack trace, but for those that aren’t power users, and
+especially for those who are newer to programming, this can be almost as bad as providing no details, with the exception of sending the stack trace to someone else.</p>
+
+      <p>Information on the <i>what, where, when, and why</i> for failing and exiting the process is readily available online, both for Ruby and for programming in 
+general. Discussions on those matters get into <i>best practices</i>, <i>use cases</i>, <i>coding styles</i>, etc., and are way out of the scope of this guide. What
+will be covered is <i>how</i> Origen can help you when you choose to exit the process and/or raise an exception.</p>
+
+      <p>Origen provides two methods to help with this: <code>Origen.app.fail</code>, and <code>Origen.app.fail!</code>. The former behaves almost identically to the standard
+<code>fail</code> method, with the exception of accepting a hash instead of string, and prepending the current application that is calling
+<code>Origen.app.fail</code>.</p>
+
+      <p>Note that these are <code>Origen::Application</code> instance methods, and <code>Origen.app</code> will always reference the application. For usage in plugins,
+<code>Origen.app!</code> should be used instead. See <a href="/origen/guides/plugins/app/#Am_I_the_Current_Application_or_Plugin?">here</a> 
+for additional information.</p>
 
       <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># environment/v93k_smt8.rb</span>
-<span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">V93K</span>.new <span style="color:#606">smt_version</span>: <span style="color:#00D">8</span>
+  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.app!.name
+  <span style="color:#777">#=&gt; my_app</span>
+
+fail
+  <span style="color:#777">#=&gt; RuntimeError with no message</span>
+
+<span style="color:#777"># Just fail the application, without adding details:</span>
+<span style="color:#036;font-weight:bold">Origen</span>.app!.fail
+  <span style="color:#777">#=&gt; RuntimeError with message: 'Fail in my_app'</span>
+
+<span style="color:#777"># Fail the application with some context:</span>
+<span style="color:#036;font-weight:bold">Origen</span>.app!.fail(<span style="color:#606">message</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">An unknown condition occured!</span><span style="color:#710">'</span></span>)
+  <span style="color:#777">#=&gt; RuntimeError with message: 'Fail in my_app: An unknown condition occured!'</span>
+
+<span style="color:#777"># Fail the application with some context and a custom exception:</span>
+<span style="color:#036;font-weight:bold">Origen</span>.app!.fail(<span style="color:#606">message</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">An unknown condition occured!</span><span style="color:#710">'</span></span>, <span style="color:#606">exception_class</span>: <span style="color:#036;font-weight:bold">StandardError</span>)
+  <span style="color:#777">#=&gt; StandardError with message: 'Fail in my_app: An unknown condition occured!'</span>
 </pre></div>
 </div>
       </div>
 
-      <div>    
-  <a class="anchor" name="Package_Structure"></a>          
-  <h3><a href="#Package_Structure">Package Structure</a></h3>          
-</div>
+      <p>Note that <code>exception_class</code> should be a <code>class object</code> (of type <code>class</code>), <b>not</b> an instance of the class.</p>
 
-      <p>The V93K SMT8 test program generator will create a package with the following structure:</p>
+      <p><code>Origen.app.fail!</code> performs the same function as <code>Origen.app.fail</code> but raises a <code>SystemExit</code> and quits the process cleanly
+(no stack trace). It also prints the message using <a href="/origen/guides/misc/logger/">Origen’s Logger</a>,
+instead of using the exception message to convey information.</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>MyAppNamespace/
-├── common/    
-│   └── limits.ods
-├── flows/        
-│   ├── my_flow_1/              
-│   │   └── MY_SUB_FLOW.flow
-│   ├── MY_FLOW_2.flow
-│   └── MY_FLOW_1.flow
-└── limits/
-    ├── Main.MY_FLOW_2_TESTS.csv
-    └── Main.MY_FLOW_1_TESTS.csv
-</pre></div>
-</div>
-      </div>
-
-      <p>Here is a description of each component:</p>
-
-      <h5 id="myappnamespace">MyAppNamespace/</h5>
-
-      <p>This is the name of this test program package, it should be unique and the entire directory is intended to be
-dropped directly into your test program’s <code>src/</code> directory.
-By default, your Origen application’s namespace is used, though this can be overridden within your V93K environment
-file:</p>
+      <p>The key difference, however, is if the current process is run with <code>debug enabled</code> (using the <code>-d</code> or <code>--debug</code> command line options)
+then <code>Origen.app.fail!</code> behaves identically to <code>Origen.app.fail</code>. The intention is give a user-facing API a clean exit while displaying in the
+familiar Origen-logger format, while allowing users to generate more useful bug reports, or just for the curious user themselves to get more information.</p>
 
       <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># environment/v93k_smt8.rb</span>
-<span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">V93K</span>.new <span style="color:#606">smt_version</span>: <span style="color:#00D">8</span>,
-                        <span style="color:#606">package_namespace</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">something_else</span><span style="color:#710">'</span></span>
+  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.debugger_enabled?
+  <span style="color:#777">#=&gt; false</span>
+
+<span style="color:#036;font-weight:bold">Origen</span>.app!.name
+  <span style="color:#777">#=&gt; :my_app</span>
+
+<span style="color:#036;font-weight:bold">Origen</span>.app.fail!(<span style="color:#606">message</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">An unknown condition occured!</span><span style="color:#710">'</span></span>)
+  <span style="color:#777">#=&gt; [ERROR]      0.009[0.009]    || Fail in my_app: An unknown condition occured!</span>
+  <span style="color:#777">#=&gt; *Process Terminates*</span>
 </pre></div>
 </div>
       </div>
 
-      <h5 id="commonlimitsods">common/limits.ods</h5>
-
-      <p>Contains the limits tables for all flows.</p>
-
-      <h5 id="flows">flows/</h5>
-
-      <p>A top-level test program flow file in Origen will generate a correspondingly named file in the <code>flows/</code> directory,
-where the name of the generated file is the upper-cased version of the source file name.
-If the flow imports sub-flows or contains groups, then those will be contained in a directory named after the
-lower-cased version of the flow name.</p>
-
-      <h5 id="limits">limits/</h5>
-
-      <p>Origen generates the limts into CSV files before combining them into <code>common/limits.ods</code>. These intermediate files
-will not be used by the test program but they are kept around in case they are useful.</p>
-
-      <div>    
-  <a class="anchor" name="Flow_Integration"></a>          
-  <h3><a href="#Flow_Integration">Flow Integration</a></h3>          
-</div>
-
-      <p>The generated flow(s) should be integrated into a top-level (Main) flow like this:</p>
-
-      <div class="language-java highlighter-coderay">
+      <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre>flow Main {
-    setup {
-        flow MY_FLOW_1 calls MyAppNamespace.flows.MY_FLOW_1 {}
-        flow MY_FLOW_2 calls MyAppNamespace.flows.MY_FLOW_2 {}
-    }
+  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.debugger_enabled?
+  <span style="color:#777">#=&gt; true</span>
 
-    execute {
-        MY_FLOW_1.execute();
-        MY_FLOW_2.execute();
-    }
-}
+<span style="color:#036;font-weight:bold">Origen</span>.app!.name
+  <span style="color:#777">#=&gt; :my_app</span>
+
+<span style="color:#036;font-weight:bold">Origen</span>.app.fail!(<span style="color:#606">message</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">An unknown condition occured!</span><span style="color:#710">'</span></span>)
+  <span style="color:#777">#=&gt; RuntimeError with message: Fail in my_app: An unknown condition occured!</span>
+  <span style="color:#777">#=&gt; *Process terminates with #raise instead of #exit*</span>
+  <span style="color:#777">#=&gt; *Exception and stack trace printed to console*</span>
 </pre></div>
 </div>
       </div>
 
-      <p>The <code>add_flow_enable:</code> tester option <a href="/origen/guides/program/v93ksmt7/#Flow_Considerations">as described in the SMT7 guide</a>
-is also supported by the SMT8 generator, though it may not make as much sense to use it in that case.
-It generates an <code>ENABLE</code> flow parameter which could be used something like this:</p>
+      <p>By default, the <code>status</code> of a process exited with <code>Origen.app.fail!</code> will be <code>1</code>. You can provide an option <code>exit_status</code>
+to exit with that status instead.</p>
 
-      <div class="language-java highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>flow Main {
-    setup {
-        flow MY_FLOW_1 calls MyAppNamespace.flows.MY_FLOW_1 {}
-        flow MY_FLOW_2 calls MyAppNamespace.flows.MY_FLOW_2 {}
-    }
-
-    execute {
-        <span style="color:#777">// Skip FLOW_1 and run only FLOW_2</span>
-        MY_FLOW_1.ENABLE = <span style="color:#00D">0</span>;
-        MY_FLOW_2.ENABLE = <span style="color:#00D">1</span>;
-
-        MY_FLOW_1.execute();
-        MY_FLOW_2.execute();
-    }
-}
-</pre></div>
-</div>
-      </div>
+      <p>Full API documentation is available on the <a href="/origen/api/Origen/Application.html#fail-instance_method">API</a></p>
 
       <div style="position: relative">
   <hr>

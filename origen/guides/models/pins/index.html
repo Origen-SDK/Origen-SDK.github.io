@@ -369,12 +369,11 @@
 <li class=""><a href="/origen/guides/plugins/introduction">Introduction</a></li>
 <li class=""><a href="/origen/guides/plugins/importing">Using a Plugin</a></li>
 <li class=""><a href="/origen/guides/plugins/creating">Creating a Plugin</a></li>
-<li class=""><a href="/origen/guides/plugins/current">Current Plugin</a></li>
+<li class=""><a href="/origen/guides/plugins/current">Current &amp; Default Plugins</a></li>
 <li class=""><a href="/origen/guides/plugins/environment">Dev Environment</a></li>
 <li class=""><a href="/origen/guides/plugins/development">Dev Considerations</a></li>
 <li class=""><a href="/origen/guides/plugins/paths">Paths &amp; Origen.root</a></li>
 <li class=""><a href="/origen/guides/plugins/app">Config &amp; Origen.app</a></li>
-<li class=""><a href="/origen/guides/plugins/misc">Miscellaneous Topics</a></li>
                 </ul>
               </div>
             </div>
@@ -401,6 +400,7 @@
 <li class=""><a href="/origen/guides/misc/commandsov">Overriding Commands</a></li>
 <li class=""><a href="/origen/guides/misc/callbacks">Callbacks</a></li>
 <li class=""><a href="/origen/guides/misc/appcallbacks">Application Callbacks</a></li>
+<li class=""><a href="/origen/guides/misc/misc">Miscellaneous Topics</a></li>
                 </ul>
               </div>
             </div>
@@ -506,7 +506,13 @@ option.</li>
 
       <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:tdi</span>)     <span style="color:#777"># =&gt; &lt;pin object&gt;</span>
+  <div class="code"><pre><span style="color:#777"># Select a single pin</span>
+<span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:tdi</span>)
+  <span style="color:#777">#=&gt; &lt;pin object&gt;</span>
+
+<span style="color:#777"># Select multiple pins</span>
+<span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:tdi</span>, <span style="color:#A60">:tdo</span>, <span style="color:#A60">:tclk</span>)
+  <span style="color:#777">#=&gt; [&lt;pin object&gt;, &lt;pin object&gt;, &lt;pin object&gt;]</span>
 </pre></div>
 </div>
       </div>
@@ -543,6 +549,46 @@ pin(<span style="color:#A60">:bisti</span>) == pin(<span style="color:#A60">:tdi
       <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>pin(<span style="color:#A60">:tdi</span>).add_alias(<span style="color:#A60">:bisti</span>)
+</pre></div>
+</div>
+      </div>
+
+      <p>For applications which have many, many pins <code>pin groups</code> (discussed below) can
+help organize them logically. However, multiple pins can also be selected
+by providing either a block and one or more <code>Regexp</code>s:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#777"># Find all pins matching /porta/</span>
+dut.pins(<span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#808">porta</span><span style="color:#404">/</span></span>)
+  <span style="color:#777">#=&gt; [&lt;pin object&gt;, ...]</span>
+dut.pins(<span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#808">porta</span><span style="color:#404">/</span></span>).map(&amp;<span style="color:#A60">:name</span>)
+  <span style="color:#777">#=&gt; [:porta31, :porta30, ...]</span>
+
+<span style="color:#777"># Find all pins matching /porta/ or /portc/</span>
+dut.pins(<span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#808">porta</span><span style="color:#404">/</span></span>, <span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#808">clk</span><span style="color:#404">/</span></span>)
+  <span style="color:#777">#=&gt; [&lt;pin object&gt;, ...]</span>
+dut.pins(<span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#808">porta</span><span style="color:#404">/</span></span>, <span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#808">clk</span><span style="color:#404">/</span></span>).map(&amp;<span style="color:#A60">:name</span>)
+  <span style="color:#777">#=&gt; [:porta31, :porta30, ..., :tclk]</span>
+
+<span style="color:#777"># Retrieve all pins matching /porta/ and :tdi, :tdo</span>
+dut.pins(<span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#808">porta</span><span style="color:#404">/</span></span>, <span style="color:#A60">:tdi</span>, <span style="color:#A60">:tdo</span>)
+  <span style="color:#777">#=&gt; [&lt;pin object&gt;, ...]</span>
+dut.pins(<span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#808">porta</span><span style="color:#404">/</span></span>, <span style="color:#A60">:tdi</span>, <span style="color:#A60">:tdo</span>).map(&amp;<span style="color:#A60">:name</span>)
+  <span style="color:#777">#=&gt; [:porta31, :porta30, ..., :tdi, :tdo]</span>
+
+<span style="color:#777"># Retrieve all pins for which the block is true</span>
+<span style="color:#777"># (Find all even-indexed pins for porta)</span>
+dut.pins { |n, p| n.to_s.start_with?(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">porta</span><span style="color:#710">'</span></span>) &amp;&amp; (n.to_s.gsub(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">porta</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#710">'</span></span>).to_i % <span style="color:#00D">2</span> == <span style="color:#00D">0</span>) }
+  <span style="color:#777">#=&gt; [&lt;pin object&gt;, ...]</span>
+dut.pins { |n, p| n.to_s.start_with?(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">porta</span><span style="color:#710">'</span></span>) &amp;&amp; (n.to_s.gsub(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">porta</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#710">'</span></span>).to_i % <span style="color:#00D">2</span> == <span style="color:#00D">0</span>) }.map(&amp;<span style="color:#A60">:name</span>)
+  <span style="color:#777">#=&gt; [:porta30, :porta28, :porta26, ...]</span>
+
+<span style="color:#777"># Retrieve all pins for which /clk/ matches OR the block is true</span>
+dut.pins(<span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#808">clk</span><span style="color:#404">/</span></span>) { |n, p| n.to_s.start_with?(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">porta</span><span style="color:#710">'</span></span>) &amp;&amp; (n.to_s.gsub(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">porta</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#710">'</span></span>).to_i % <span style="color:#00D">2</span> == <span style="color:#00D">0</span>) }
+  <span style="color:#777">#=&gt; [&lt;pin object&gt;, ...]</span>
+dut.pins(<span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#808">clk</span><span style="color:#404">/</span></span>) { |n, p| n.to_s.start_with?(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">porta</span><span style="color:#710">'</span></span>) &amp;&amp; (n.to_s.gsub(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">porta</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#710">'</span></span>).to_i % <span style="color:#00D">2</span> == <span style="color:#00D">0</span>) }.map(&amp;<span style="color:#A60">:name</span>)
+  <span style="color:#777">#=&gt; [:porta30, :porta28, :porta26, ..., :tclk]</span>
 </pre></div>
 </div>
       </div>
@@ -618,6 +664,33 @@ pins(<span style="color:#A60">:porta</span>).each <span style="color:#080;font-w
 </div>
       </div>
 
+      <p>The reverse is achieved using the <code>index</code> method and providing a <code>context</code> option:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>pins(<span style="color:#A60">:porta0</span>).index(<span style="color:#606">context</span>: <span style="color:#A60">:porta</span>)
+  <span style="color:#777">#=&gt; 0</span>
+
+pins(<span style="color:#A60">:porta1</span>).index(<span style="color:#606">context</span>: <span style="color:#A60">:porta</span>)
+  <span style="color:#777">#=&gt; 1</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>If no context is given, Origen attempts to discern any implicit indexing, using
+the appendix of the pin, if it ends in a numeral.</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>pins(<span style="color:#A60">:porta7</span>).index
+  <span style="color:#777">#=&gt; 7</span>
+  
+pin(<span style="color:#A60">:tclk</span>).index
+  <span style="color:#777">#=&gt; nil</span>
+</pre></div>
+</div>
+      </div>
+
       <p>Anonymous pin groups can be composed from a range of indexes at runtime:</p>
 
       <div class="language-ruby highlighter-coderay">
@@ -674,6 +747,45 @@ pass in a range or an array of pin indexes to <code>add_pin_group_alias</code>:<
 add_pin_group_alias <span style="color:#A60">:data_byte_1</span>, <span style="color:#A60">:porta</span>, <span style="color:#606">pins</span>: [<span style="color:#00D">8</span>,<span style="color:#00D">9</span>,<span style="color:#00D">10</span>,<span style="color:#00D">11</span>,<span style="color:#00D">12</span>,<span style="color:#00D">13</span>,<span style="color:#00D">14</span>,<span style="color:#00D">15</span>]
 
 pins(<span style="color:#A60">:data_byte_0</span>).dont_care  <span style="color:#777"># Can now be used as if it were a regular first class pin group</span>
+</pre></div>
+</div>
+      </div>
+
+      <div>    
+  <a class="anchor" name="Mask_Generation"></a>          
+  <h4><a href="#Mask_Generation">Mask Generation</a></h4>          
+</div>
+
+      <p>For GPIOs, PORTs, etc., situations in which you want to set or clear a single
+pin may arise. Origen can help here by generating masks to set or clear a pin
+within a given context. The context works the same here as when using <code>index</code>:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#777"># Generate a mask which sets only :porta4 in the context of :porta</span>
+dut.pin(<span style="color:#A60">:porta4</span>).mask(<span style="color:#606">context</span>: <span style="color:#A60">:porta</span>)
+  <span style="color:#777">#=&gt; 0b10000</span>
+
+dut.pin(<span style="color:#A60">:porta4</span>).clr_mask(<span style="color:#606">context</span>: <span style="color:#A60">:porta</span>)
+  <span style="color:#777">#=&gt; 0b1111_1111_1111_1111_1111_1111_1110_1111</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>Implicit masks work similarly, but the size of the <code>clear mask</code> is not known.
+A <code>:size</code> option can be given to set the size of the generated mask:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>dut.pin(<span style="color:#A60">:porta4</span>).mask
+  <span style="color:#777">#=&gt; 0b10000</span>
+
+dut.pin(<span style="color:#A60">:porta4</span>).clr_mask
+  <span style="color:#777">#=&gt; 0b1111</span>
+  <span style="color:#777">#=&gt; (0b0_1111)</span>
+
+dut.pin(<span style="color:#A60">:porta4</span>).clr_mask(<span style="color:#606">size</span>: <span style="color:#00D">32</span>)
+  <span style="color:#777">#=&gt; 0b1111_1111_1111_1111_1111_1111_1110_1111</span>
 </pre></div>
 </div>
       </div>
@@ -1187,7 +1299,7 @@ its internally tracked parameters.  Clock can be specified in cycles, time, or f
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = 'origen-sdk';
     var disqus_title;
-    var disqus_url = 'https://' + window.location.hostname + window.location.pathname;
+    var disqus_url = 'http://' + window.location.hostname + window.location.pathname;
 
     disqus_title = $("h1").text();
     if (disqus_title.length == 0) {
