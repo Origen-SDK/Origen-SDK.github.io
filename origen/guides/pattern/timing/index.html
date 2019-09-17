@@ -19,8 +19,8 @@
     <link rel="author" href="https://plus.google.com/u/1/b/106463981272125989995/106463981272125989">
   
   
-    <meta property="og:url" content="https://origen-sdk.org/origen/home/nxa13790/">
-    <meta name="twitter:url" content="https://origen-sdk.org/origen/home/nxa13790/">
+    <meta property="og:url" content="https://origen-sdk.org/origen/home/stephen/">
+    <meta name="twitter:url" content="https://origen-sdk.org/origen/home/stephen/">
   
   
     <meta property="og:image" content="https://origen-sdk.org/favicon-260x260.png">
@@ -315,10 +315,27 @@
           <div class="panel panel-default">
             <div class="panel-heading clickable" data-toggle="collapse" data-parent="#sidebar-accordion" href="#sidebar-collapse-8">
               <a class="no-underline">
-                Simulation
+                Decompilation
               </a>
             </div>
             <div id="sidebar-collapse-8" class="panel-collapse collapse ">
+              <div class="panel-body">
+                <ul class="nav nav-list">
+<li class=""><a href="/origen/guides/decompilation/overview">Overview &amp; Example</a></li>
+<li class=""><a href="/origen/guides/decompilation/decompilerapi">Decompiling, Adding Pins, &amp; Executing</a></li>
+<li class=""><a href="/origen/guides/decompilation/universalapi">Working with Decompiled Patterns</a></li>
+<li class=""><a href="/origen/guides/decompilation/platformspecifics">Platform Specifics</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading clickable" data-toggle="collapse" data-parent="#sidebar-accordion" href="#sidebar-collapse-9">
+              <a class="no-underline">
+                Simulation
+              </a>
+            </div>
+            <div id="sidebar-collapse-9" class="panel-collapse collapse ">
               <div class="panel-body">
                 <ul class="nav nav-list">
 <li class=""><a href="/origen/guides/simulation/introduction">Introduction</a></li>
@@ -338,12 +355,12 @@
             </div>
           </div>
           <div class="panel panel-default">
-            <div class="panel-heading clickable" data-toggle="collapse" data-parent="#sidebar-accordion" href="#sidebar-collapse-9">
+            <div class="panel-heading clickable" data-toggle="collapse" data-parent="#sidebar-accordion" href="#sidebar-collapse-10">
               <a class="no-underline">
                 Documentation Generator
               </a>
             </div>
-            <div id="sidebar-collapse-9" class="panel-collapse collapse ">
+            <div id="sidebar-collapse-10" class="panel-collapse collapse ">
               <div class="panel-body">
                 <ul class="nav nav-list">
 <li class=""><a href="/origen/guides/documentation/introduction">Introduction</a></li>
@@ -358,12 +375,12 @@
             </div>
           </div>
           <div class="panel panel-default">
-            <div class="panel-heading clickable" data-toggle="collapse" data-parent="#sidebar-accordion" href="#sidebar-collapse-10">
+            <div class="panel-heading clickable" data-toggle="collapse" data-parent="#sidebar-accordion" href="#sidebar-collapse-11">
               <a class="no-underline">
                 Plugins
               </a>
             </div>
-            <div id="sidebar-collapse-10" class="panel-collapse collapse ">
+            <div id="sidebar-collapse-11" class="panel-collapse collapse ">
               <div class="panel-body">
                 <ul class="nav nav-list">
 <li class=""><a href="/origen/guides/plugins/introduction">Introduction</a></li>
@@ -379,12 +396,12 @@
             </div>
           </div>
           <div class="panel panel-default">
-            <div class="panel-heading clickable" data-toggle="collapse" data-parent="#sidebar-accordion" href="#sidebar-collapse-11">
+            <div class="panel-heading clickable" data-toggle="collapse" data-parent="#sidebar-accordion" href="#sidebar-collapse-12">
               <a class="no-underline">
                 Miscellaneous
               </a>
             </div>
-            <div id="sidebar-collapse-11" class="panel-collapse collapse ">
+            <div id="sidebar-collapse-12" class="panel-collapse collapse ">
               <div class="panel-body">
                 <ul class="nav nav-list">
 <li class=""><a href="/origen/guides/misc/revisioncontrol">Revision Control</a></li>
@@ -406,12 +423,12 @@
             </div>
           </div>
           <div class="panel panel-default">
-            <div class="panel-heading clickable" data-toggle="collapse" data-parent="#sidebar-accordion" href="#sidebar-collapse-12">
+            <div class="panel-heading clickable" data-toggle="collapse" data-parent="#sidebar-accordion" href="#sidebar-collapse-13">
               <a class="no-underline">
                 Advanced Topics
               </a>
             </div>
-            <div id="sidebar-collapse-12" class="panel-collapse collapse ">
+            <div id="sidebar-collapse-13" class="panel-collapse collapse ">
               <div class="panel-body">
                 <ul class="nav nav-list">
 <li class=""><a href="/origen/guides/advanced/introduction">Introduction</a></li>
@@ -452,7 +469,7 @@ can be defined and mastered in Origen source code. That is discussed later on in
 
       <p>This guide gives an overview of some of the most common timing related
 methods, but to get a complete overview of what is available consult
-the <a href="https://origen-sdk.org/testers/api/OrigenTesters/Timing.html">OrigenTesters::Timing API</a>.</p>
+the <a href="http://origen-sdk.org/testers/api/OrigenTesters/Timing.html">OrigenTesters::Timing API</a>.</p>
 
       <p>A timeset declaration is used to provide information to Origen about what
 timeset to use for future test cycles and what period of time each
@@ -707,20 +724,78 @@ is drive to <code>T</code>:</p>
 </div>
       </div>
 
+      <p>Complex waveforms also support an initial, or default, <code>period_in_ns</code>, allowing
+<code>set_timeset</code> to be used without providing a <code>period_in_ns</code>:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>dut.timeset <span style="color:#A60">:func</span> <span style="color:#080;font-weight:bold">do</span> |t|
+  t.period_in_ns = <span style="color:#00D">10</span>
+<span style="color:#080;font-weight:bold">end</span>
+  
+tester.set_timeset(<span style="color:#A60">:func</span>)
+tester.timeset.period_in_ns
+  <span style="color:#777">#=&gt; 10</span>
+
+dut.timesets[<span style="color:#A60">:func</span>].period_in_ns = <span style="color:#00D">11</span>
+tester.timeset.period_in_ns
+  <span style="color:#777">#=&gt; 11</span>
+</pre></div>
+</div>
+      </div>
+
+      <!-- This was originally planned, but causes some examples in Origen to fail.
+This `period_in_ns` can still changed prior to pattern execution, but the defining
+timeset can lock this value, disallowing other parts of the application or
+plugins to change the `period_in_ns`:
+
+~~~ruby
+timeset :func do |t|
+  t.period_in_ns = 10
+  t.lock!
+end
+  
+tester.set_timeset(:func)
+tester.timeset.period_in_ns
+  #=> 10
+
+timesets[:func].period_in_ns = 11
+  #=> OrigenTester::Timing::InvalidModification
+~~~
+-->
+
       <div>    
   <a class="anchor" name="Consuming_Timeset_Data"></a>          
   <h4><a href="#Consuming_Timeset_Data">Consuming Timeset Data</a></h4>          
 </div>
 
+      <h5 id="waveform-details">Waveform Details</h5>
+
       <p>The currently selected timeset can be retrieved via the following methods which are aliases:</p>
 
       <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre>dut.timeset               <span style="color:#777"># =&gt; instance of Origen::Pins::Timing::Timeset</span>
+  <div class="code"><pre>dut.timeset               <span style="color:#777"># =&gt; instance of OrigenTesters::Timing::Timeset</span>
 dut.current_timeset
 </pre></div>
 </div>
       </div>
+
+      <p>Even though this returns a <code>OrigenTesters::Timing::Timeset</code> object, its linked
+back to the corresponding <code>Origen::Pins::Timing::Timeset</code> object underneath. To
+access it directly:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>dut.timeset.dut_timeset    <span style="color:#777">#=&gt; instance of Origen::Pins::Timing::Timeset</span>
+
+tester.timeset.dut_timeset <span style="color:#777">#=&gt; instance of Origen::Pins::Timing::Timeset</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>However, this is generally not needed, as anything that the <code>OrigenTesters::Timing::Timeset</code>
+cannot do is given to the corresponding <code>Origen::Pins::Timing::Timeset</code> instance.</p>
 
       <p>Using the plural returns a hash containing all timesets, thereby allowing access to specific timesets
 regardless of the current selection:</p>
@@ -794,6 +869,158 @@ dut.pin(<span style="color:#A60">:clk</span>).drive_wave(<span style="background
 </div>
       </div>
 
+      <h5 id="timeset-details">Timeset Details</h5>
+
+      <p>You can retrieve the same <code>current period</code> information from this scope as from
+the <code>tester.timeset</code> scope:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>tester.set_timeset(<span style="color:#A60">:test</span>, <span style="color:#00D">10</span>)
+
+tester.current_period
+  <span style="color:#777">#=&gt; 10</span>
+
+dut.current_timeset_period
+  <span style="color:#777">#=&gt; 10</span>
+  
+dut.current_period_in_ns
+  <span style="color:#777">#=&gt; 10</span>
+
+dut.current_period_in_seconds
+  <span style="color:#777">#=&gt; 1/100000000</span>
+</pre></div>
+</div>
+      </div>
+
+      <div>    
+  <a class="anchor" name="Timing_During_Execution"></a>          
+  <h3><a href="#Timing_During_Execution">Timing During Execution</a></h3>          
+</div>
+
+      <p>You can freely swap between timesets during pattern execution. For example,
+a sequence resembling below is perfectly valid:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#777"># Start with an initial timeset for pattern startup</span>
+tester.set_timeset(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">timing_for_startup</span><span style="color:#710">"</span></span>, <span style="color:#00D">100</span>)
+tester.cycle
+<span style="color:#777"># ...</span>
+
+<span style="color:#777"># Switch to a timeset for ramloading</span>
+tester.set_timeset(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">timing_for_ramload</span><span style="color:#710">"</span></span>, <span style="color:#00D">200</span>)
+tester.cycle
+<span style="color:#777"># ...</span>
+
+<span style="color:#777"># Switch to a timeset for actual execution</span>
+tester.set_timeset(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">timing_for_execution</span><span style="color:#710">"</span></span>, <span style="color:#00D">100</span>)
+tester.cycle
+<span style="color:#777"># ...</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>The period for that timeset will be remembered, allowing simpler timeset switches
+back to existing ones:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#777"># Execute using timing for SWD</span>
+tester.set_timeset(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">timing_for_swd</span><span style="color:#710">"</span></span>, <span style="color:#00D">40</span>)
+tester.timeset.period_in_ns
+  <span style="color:#777">#=&gt; 40</span>
+<span style="color:#777"># ...</span>
+
+<span style="color:#777"># Execute using timing for an APB protocol</span>
+tester.set_timeset(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">timing_for_apb</span><span style="color:#710">"</span></span>, <span style="color:#00D">80</span>)
+tester.timeset.period_in_ns
+  <span style="color:#777">#=&gt; 80</span>
+<span style="color:#777"># ...</span>
+
+<span style="color:#777"># Switch back to using SWD</span>
+tester.set_timeset(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">timing_for_swd</span><span style="color:#710">"</span></span>)
+tester.timeset.period_in_ns
+  <span style="color:#777">#=&gt; 40</span>
+<span style="color:#777"># ...</span>
+
+<span style="color:#777"># Switch back to using APB</span>
+tester.set_timeset(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">timing_for_apb</span><span style="color:#710">"</span></span>)
+tester.timeset.period_in_ns
+  <span style="color:#777">#=&gt; 80</span>
+<span style="color:#777"># ...</span>
+
+<span style="color:#777"># End the pattern using SWD</span>
+tester.set_timeset(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">timing_for_swd</span><span style="color:#710">"</span></span>)
+tester.timeset.period_in_ns
+  <span style="color:#777">#=&gt; 40</span>
+<span style="color:#777"># ...</span>
+</pre></div>
+</div>
+      </div>
+
+      <!--
+Notice that the `period_in_ns` is only defined once per timeset. Swiching
+the `period_in_ns` of a timeset _during_ execution is explicitly blocked
+by `OrigenTesters`:
+
+~~~ruby
+tester.set_timeset(:func, 10)
+
+tester.cycle
+tester.set_timeset(:func, 11)
+  #=> OrigenTester::Timing::InvalidModification
+~~~
+
+In this context, _during execution_ is defined as after a vector has been
+generated with the timeset in question; in other words, after the tester
+has been cycled. Up to the point of cycling though, timeset periods can be
+freely modified:
+
+~~~ruby
+tester.set_timeset(:func, 10)
+tester.timeset.period_in_ns
+  #=> 10
+
+tester.timeset.period_in_ns = 11
+tester.timeset.period_in_ns
+  #=> 11
+
+tester.set_timeset(:func, 12)
+tester.timeset.period_in_ns
+  #=> 12
+
+tester.cycle
+tester.timeset.period_in_ns = 13
+  #=> OrigenTester::Timing::InvalidModification
+~~~
+-->
+      <p>The <code>#cycled?</code> method to denotes if the timeset has been cycled or not:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>tester.set_timeset(<span style="color:#A60">:cycle_test</span>, <span style="color:#00D">10</span>)
+tester.timeset.name
+  <span style="color:#777">#=&gt; "cycle_test"</span>
+tester.timeset.cycled?
+  <span style="color:#777">#=&gt; false</span>
+
+tester.cycle
+tester.timeset.cycled?
+  <span style="color:#777">#=&gt; true</span>
+
+tester.set_timeset(<span style="color:#A60">:cycle_test_2</span>, <span style="color:#00D">11</span>)
+tester.timeset.cycled?
+  <span style="color:#777">#=&gt; false</span>
+
+tester.timesets[<span style="color:#A60">:cycle_test</span>].cycled?
+  <span style="color:#777">#=&gt; true</span>
+tester.timesets[<span style="color:#A60">:cycle_test_2</span>].cycled?
+  <span style="color:#777">#=&gt; false</span>
+</pre></div>
+</div>
+      </div>
+
       <div style="position: relative">
   <hr>
   <div>    
@@ -806,7 +1033,7 @@ dut.pin(<span style="color:#A60">:clk</span>).drive_wave(<span style="background
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = 'origen-sdk';
     var disqus_title;
-    var disqus_url = 'https://' + window.location.hostname + window.location.pathname;
+    var disqus_url = 'http://' + window.location.hostname + window.location.pathname;
 
     disqus_title = $("h1").text();
     if (disqus_title.length == 0) {

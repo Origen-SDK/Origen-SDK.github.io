@@ -315,10 +315,27 @@
           <div class="panel panel-default">
             <div class="panel-heading clickable" data-toggle="collapse" data-parent="#sidebar-accordion" href="#sidebar-collapse-8">
               <a class="no-underline">
-                Simulation
+                Decompilation
               </a>
             </div>
             <div id="sidebar-collapse-8" class="panel-collapse collapse ">
+              <div class="panel-body">
+                <ul class="nav nav-list">
+<li class=""><a href="/origen/guides/decompilation/overview">Overview &amp; Example</a></li>
+<li class=""><a href="/origen/guides/decompilation/decompilerapi">Decompiling, Adding Pins, &amp; Executing</a></li>
+<li class=""><a href="/origen/guides/decompilation/universalapi">Working with Decompiled Patterns</a></li>
+<li class=""><a href="/origen/guides/decompilation/platformspecifics">Platform Specifics</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading clickable" data-toggle="collapse" data-parent="#sidebar-accordion" href="#sidebar-collapse-9">
+              <a class="no-underline">
+                Simulation
+              </a>
+            </div>
+            <div id="sidebar-collapse-9" class="panel-collapse collapse ">
               <div class="panel-body">
                 <ul class="nav nav-list">
 <li class=""><a href="/origen/guides/simulation/introduction">Introduction</a></li>
@@ -338,12 +355,12 @@
             </div>
           </div>
           <div class="panel panel-default">
-            <div class="panel-heading clickable" data-toggle="collapse" data-parent="#sidebar-accordion" href="#sidebar-collapse-9">
+            <div class="panel-heading clickable" data-toggle="collapse" data-parent="#sidebar-accordion" href="#sidebar-collapse-10">
               <a class="no-underline">
                 Documentation Generator
               </a>
             </div>
-            <div id="sidebar-collapse-9" class="panel-collapse collapse ">
+            <div id="sidebar-collapse-10" class="panel-collapse collapse ">
               <div class="panel-body">
                 <ul class="nav nav-list">
 <li class=""><a href="/origen/guides/documentation/introduction">Introduction</a></li>
@@ -358,12 +375,12 @@
             </div>
           </div>
           <div class="panel panel-default">
-            <div class="panel-heading clickable" data-toggle="collapse" data-parent="#sidebar-accordion" href="#sidebar-collapse-10">
+            <div class="panel-heading clickable" data-toggle="collapse" data-parent="#sidebar-accordion" href="#sidebar-collapse-11">
               <a class="no-underline">
                 Plugins
               </a>
             </div>
-            <div id="sidebar-collapse-10" class="panel-collapse collapse ">
+            <div id="sidebar-collapse-11" class="panel-collapse collapse ">
               <div class="panel-body">
                 <ul class="nav nav-list">
 <li class=""><a href="/origen/guides/plugins/introduction">Introduction</a></li>
@@ -379,12 +396,12 @@
             </div>
           </div>
           <div class="panel panel-default">
-            <div class="panel-heading clickable" data-toggle="collapse" data-parent="#sidebar-accordion" href="#sidebar-collapse-11">
+            <div class="panel-heading clickable" data-toggle="collapse" data-parent="#sidebar-accordion" href="#sidebar-collapse-12">
               <a class="no-underline">
                 Miscellaneous
               </a>
             </div>
-            <div id="sidebar-collapse-11" class="panel-collapse collapse ">
+            <div id="sidebar-collapse-12" class="panel-collapse collapse ">
               <div class="panel-body">
                 <ul class="nav nav-list">
 <li class=""><a href="/origen/guides/misc/revisioncontrol">Revision Control</a></li>
@@ -406,12 +423,12 @@
             </div>
           </div>
           <div class="panel panel-default">
-            <div class="panel-heading clickable" data-toggle="collapse" data-parent="#sidebar-accordion" href="#sidebar-collapse-12">
+            <div class="panel-heading clickable" data-toggle="collapse" data-parent="#sidebar-accordion" href="#sidebar-collapse-13">
               <a class="no-underline">
                 Advanced Topics
               </a>
             </div>
-            <div id="sidebar-collapse-12" class="panel-collapse collapse ">
+            <div id="sidebar-collapse-13" class="panel-collapse collapse ">
               <div class="panel-body">
                 <ul class="nav nav-list">
 <li class=""><a href="/origen/guides/advanced/introduction">Introduction</a></li>
@@ -756,6 +773,63 @@ params(<span style="color:#A60">:ate</span>).test.dc.vdd.min    <span style="col
 </div>
       </div>
 
+      <h5 id="multiple-inheritance">Multiple Inheritance</h5>
+
+      <p>Multiple inheritance is also supported by supplying an array of parent IDs (or remote paths)
+for the <code>:inherit</code> option:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>define_params <span style="color:#A60">:set1</span> <span style="color:#080;font-weight:bold">do</span> |params|
+  params.spec_a = <span style="color:#00D">10</span>.uA
+<span style="color:#080;font-weight:bold">end</span>
+
+define_params <span style="color:#A60">:set2</span> <span style="color:#080;font-weight:bold">do</span> |params|
+  params.spec_b = <span style="color:#60E">2.5</span>
+<span style="color:#080;font-weight:bold">end</span>
+
+define_params <span style="color:#A60">:soc</span>, <span style="color:#606">inherit</span>: [<span style="color:#A60">:set1</span>, <span style="color:#A60">:set2</span>] <span style="color:#080;font-weight:bold">do</span> |params, parents|
+  params.spec_c = <span style="color:#00D">100</span>.mV
+  <span style="color:#777"># The parents is a Hash in this case if you need to reference upstream values:</span>
+  <span style="color:#777">#   parents  =&gt;  { set1: &lt;param set1&gt;, set2: &lt;param set2&gt; }</span>
+  params.spec_b = parents[<span style="color:#A60">:set2</span>].spec_b * <span style="color:#00D">2</span>
+<span style="color:#080;font-weight:bold">end</span>
+
+params = <span style="color:#A60">:soc</span>
+params.spec_a     <span style="color:#777"># =&gt; 10.uA</span>
+params.spec_b     <span style="color:#777"># =&gt; 5.0</span>
+params.spec_c     <span style="color:#777"># =&gt; 100.mV</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>The order of the parents specifies the order of precedence if multiple parents define the same parameter -
+those occuring later will override the value inherited from an earlier parent:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>define_params <span style="color:#A60">:set1</span> <span style="color:#080;font-weight:bold">do</span> |params|
+  params.spec_a = <span style="color:#00D">10</span>.uA
+<span style="color:#080;font-weight:bold">end</span>
+
+define_params <span style="color:#A60">:set2</span> <span style="color:#080;font-weight:bold">do</span> |params|
+  params.spec_a = <span style="color:#00D">20</span>.uA
+<span style="color:#080;font-weight:bold">end</span>
+
+define_params <span style="color:#A60">:soc1</span>, <span style="color:#606">inherit</span>: [<span style="color:#A60">:set1</span>, <span style="color:#A60">:set2</span>] <span style="color:#080;font-weight:bold">do</span> |params, parents|
+<span style="color:#080;font-weight:bold">end</span>
+
+define_params <span style="color:#A60">:soc2</span>, <span style="color:#606">inherit</span>: [<span style="color:#A60">:set2</span>, <span style="color:#A60">:set1</span>] <span style="color:#080;font-weight:bold">do</span> |params, parents|
+<span style="color:#080;font-weight:bold">end</span>
+
+params = <span style="color:#A60">:soc1</span>
+params.spec_a     <span style="color:#777"># =&gt; 20.uA</span>
+params = <span style="color:#A60">:soc2</span>
+params.spec_a     <span style="color:#777"># =&gt; 10.uA</span>
+</pre></div>
+</div>
+      </div>
+
       <div>    
   <a class="anchor" name="Live_Updating_Parameters"></a>          
   <h4><a href="#Live_Updating_Parameters">Live Updating Parameters</a></h4>          
@@ -836,7 +910,7 @@ run its value will automatically track the current parameter context.</p>
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = 'origen-sdk';
     var disqus_title;
-    var disqus_url = 'https://' + window.location.hostname + window.location.pathname;
+    var disqus_url = 'http://' + window.location.hostname + window.location.pathname;
 
     disqus_title = $("h1").text();
     if (disqus_title.length == 0) {

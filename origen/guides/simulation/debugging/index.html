@@ -19,8 +19,8 @@
     <link rel="author" href="https://plus.google.com/u/1/b/106463981272125989995/106463981272125989">
   
   
-    <meta property="og:url" content="https://origen-sdk.org/origen/home/nxa13790/">
-    <meta name="twitter:url" content="https://origen-sdk.org/origen/home/nxa13790/">
+    <meta property="og:url" content="https://origen-sdk.org/origen/home/stephen/">
+    <meta name="twitter:url" content="https://origen-sdk.org/origen/home/stephen/">
   
   
     <meta property="og:image" content="https://origen-sdk.org/favicon-260x260.png">
@@ -315,10 +315,27 @@
           <div class="panel panel-default">
             <div class="panel-heading clickable" data-toggle="collapse" data-parent="#sidebar-accordion" href="#sidebar-collapse-8">
               <a class="no-underline">
+                Decompilation
+              </a>
+            </div>
+            <div id="sidebar-collapse-8" class="panel-collapse collapse ">
+              <div class="panel-body">
+                <ul class="nav nav-list">
+<li class=""><a href="/origen/guides/decompilation/overview">Overview &amp; Example</a></li>
+<li class=""><a href="/origen/guides/decompilation/decompilerapi">Decompiling, Adding Pins, &amp; Executing</a></li>
+<li class=""><a href="/origen/guides/decompilation/universalapi">Working with Decompiled Patterns</a></li>
+<li class=""><a href="/origen/guides/decompilation/platformspecifics">Platform Specifics</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading clickable" data-toggle="collapse" data-parent="#sidebar-accordion" href="#sidebar-collapse-9">
+              <a class="no-underline">
                 Simulation
               </a>
             </div>
-            <div id="sidebar-collapse-8" class="panel-collapse collapse in">
+            <div id="sidebar-collapse-9" class="panel-collapse collapse in">
               <div class="panel-body">
                 <ul class="nav nav-list">
 <li class=""><a href="/origen/guides/simulation/introduction">Introduction</a></li>
@@ -338,12 +355,12 @@
             </div>
           </div>
           <div class="panel panel-default">
-            <div class="panel-heading clickable" data-toggle="collapse" data-parent="#sidebar-accordion" href="#sidebar-collapse-9">
+            <div class="panel-heading clickable" data-toggle="collapse" data-parent="#sidebar-accordion" href="#sidebar-collapse-10">
               <a class="no-underline">
                 Documentation Generator
               </a>
             </div>
-            <div id="sidebar-collapse-9" class="panel-collapse collapse ">
+            <div id="sidebar-collapse-10" class="panel-collapse collapse ">
               <div class="panel-body">
                 <ul class="nav nav-list">
 <li class=""><a href="/origen/guides/documentation/introduction">Introduction</a></li>
@@ -358,12 +375,12 @@
             </div>
           </div>
           <div class="panel panel-default">
-            <div class="panel-heading clickable" data-toggle="collapse" data-parent="#sidebar-accordion" href="#sidebar-collapse-10">
+            <div class="panel-heading clickable" data-toggle="collapse" data-parent="#sidebar-accordion" href="#sidebar-collapse-11">
               <a class="no-underline">
                 Plugins
               </a>
             </div>
-            <div id="sidebar-collapse-10" class="panel-collapse collapse ">
+            <div id="sidebar-collapse-11" class="panel-collapse collapse ">
               <div class="panel-body">
                 <ul class="nav nav-list">
 <li class=""><a href="/origen/guides/plugins/introduction">Introduction</a></li>
@@ -379,12 +396,12 @@
             </div>
           </div>
           <div class="panel panel-default">
-            <div class="panel-heading clickable" data-toggle="collapse" data-parent="#sidebar-accordion" href="#sidebar-collapse-11">
+            <div class="panel-heading clickable" data-toggle="collapse" data-parent="#sidebar-accordion" href="#sidebar-collapse-12">
               <a class="no-underline">
                 Miscellaneous
               </a>
             </div>
-            <div id="sidebar-collapse-11" class="panel-collapse collapse ">
+            <div id="sidebar-collapse-12" class="panel-collapse collapse ">
               <div class="panel-body">
                 <ul class="nav nav-list">
 <li class=""><a href="/origen/guides/misc/revisioncontrol">Revision Control</a></li>
@@ -406,12 +423,12 @@
             </div>
           </div>
           <div class="panel panel-default">
-            <div class="panel-heading clickable" data-toggle="collapse" data-parent="#sidebar-accordion" href="#sidebar-collapse-12">
+            <div class="panel-heading clickable" data-toggle="collapse" data-parent="#sidebar-accordion" href="#sidebar-collapse-13">
               <a class="no-underline">
                 Advanced Topics
               </a>
             </div>
-            <div id="sidebar-collapse-12" class="panel-collapse collapse ">
+            <div id="sidebar-collapse-13" class="panel-collapse collapse ">
               <div class="panel-body">
                 <ul class="nav nav-list">
 <li class=""><a href="/origen/guides/advanced/introduction">Introduction</a></li>
@@ -566,6 +583,24 @@ creating pin assertions (reads) that correspond to register bits, like this:</p>
 <a href="https://github.com/Origen-SDK/origen_jtag/pull/10/files">OrigenJTAG - Add meta data for OrigenSim</a></p>
 
       <p>If the driver has not provided this then a warning will be output and no received data will be given.</p>
+
+      <p>In some cases the protocol being used may generate failed compares that contain bit position meta data 
+that does not map to the register being read. In this case a generic message will be displayed with the 
+bit position that failed along with the register that was being read. It may be desirable to have application 
+specific code interpret these bits (for example if it is a status bit). Origen provides a hook for this. Below 
+is an example of how to implement a custom interpreter.</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#080;font-weight:bold">if</span> tester.sim?
+  tester.out_of_bounds_handler = proc <span style="color:#080;font-weight:bold">do</span> |position, received, expected, reg|
+    <span style="color:#036;font-weight:bold">Origen</span>.log.error <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Got data ouside of </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>reg.name<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20"> during the transaction, bit[</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>position<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">]: expected </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>expected<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">, received </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>received<span style="font-weight:bold;color:#666">}</span></span><span style="color:#710">"</span></span>
+    <span style="color:#036;font-weight:bold">Origen</span>.log.error <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">ECC error during read of </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>reg.path<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">.</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>reg.name<span style="font-weight:bold;color:#666">}</span></span><span style="color:#710">"</span></span> <span style="color:#080;font-weight:bold">if</span> position == <span style="color:#00D">39</span>
+  <span style="color:#080;font-weight:bold">end</span>
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+      </div>
 
       <p>This feature will automatically be enabled for any reads launched via the register object itself, e.g.
 <code>my_reg.read!</code>, but not for reads launched by calling the <code>read_register</code> method manually,
@@ -765,7 +800,7 @@ time during a debugger breakpoint (and they can also be used in source code if y
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = 'origen-sdk';
     var disqus_title;
-    var disqus_url = 'https://' + window.location.hostname + window.location.pathname;
+    var disqus_url = 'http://' + window.location.hostname + window.location.pathname;
 
     disqus_title = $("h1").text();
     if (disqus_title.length == 0) {
