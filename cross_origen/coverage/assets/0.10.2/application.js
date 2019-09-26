@@ -1,13 +1,13 @@
 /*!
  * jQuery JavaScript Library v1.6.2
- * http://jquery.com/
+ * https://jquery.com/
  *
  * Copyright 2011, John Resig
  * Dual licensed under the MIT or GPL Version 2 licenses.
- * http://jquery.org/license
+ * https://jquery.org/license
  *
  * Includes Sizzle.js
- * http://sizzlejs.com/
+ * https://sizzlejs.com/
  * Copyright 2011, The Dojo Foundation
  * Released under the MIT, BSD, and GPL Licenses.
  *
@@ -21,14 +21,14 @@ var hljs=new function(){function l(o){return o.replace(/&/gm,"&amp;").replace(/<
 /*!
  Colorbox v1.5.13 - 2014-08-04
  jQuery lightbox and modal window plugin
- (c) 2014 Jack Moore - http://www.jacklmoore.com/colorbox
- license: http://www.opensource.org/licenses/mit-license.php
+ (c) 2014 Jack Moore - https://www.jacklmoore.com/colorbox
+ license: https://www.opensource.org/licenses/mit-license.php
  */
 
 (function ($, document, window) {
     var
     // Default settings object.
-    // See http://jacklmoore.com/colorbox for details.
+    // See https://jacklmoore.com/colorbox for details.
         defaults = {
             // data sources
             html: false,
@@ -184,7 +184,7 @@ var hljs=new function(){function l(o){return o.replace(/&/gm,"&amp;").replace(/<
     }
 
     // Get the window height using innerHeight when available to avoid an issue with iOS
-    // http://bugs.jquery.com/ticket/6724
+    // https://bugs.jquery.com/ticket/6724
     function winheight() {
         return window.innerHeight ? window.innerHeight : $(window).height();
     }
@@ -509,7 +509,7 @@ var hljs=new function(){function l(o){return o.replace(/&/gm,"&amp;").replace(/<
     function addBindings() {
         function clickHandler(e) {
             // ignore non-left-mouse-clicks and clicks modified with ctrl / command, shift, or alt.
-            // See: http://jacklmoore.com/notes/click-events/
+            // See: https://jacklmoore.com/notes/click-events/
             if (!(e.which > 1 || e.shiftKey || e.altKey || e.metaKey || e.ctrlKey)) {
                 e.preventDefault();
                 launch(this);
@@ -1270,10 +1270,10 @@ jQuery.fn.dataTableExt.oSort['percent-desc'] = function(a,b) {
  * updating fuzzy timestamps (e.g. "4 minutes ago" or "about 1 day ago").
  *
  * For usage and examples, visit:
- * http://timeago.yarp.com/
+ * https://timeago.yarp.com/
  *
  * Licensed under the MIT:
- * http://www.opensource.org/licenses/mit-license.php
+ * https://www.opensource.org/licenses/mit-license.php
  *
  * Copyright (c) 2008-2010, Ryan McGeary (ryanonjavascript -[at]- mcgeary [*dot*] org)
  */
@@ -1406,7 +1406,7 @@ jQuery.fn.dataTableExt.oSort['percent-desc'] = function(a,b) {
 })(jQuery);
 // JQuery URL Parser
 // Written by Mark Perkins, mark@allmarkedup.com
-// License: http://unlicense.org/ (i.e. do what you want with it!)
+// License: https://unlicense.org/ (i.e. do what you want with it!)
 
 jQuery.url = function()
 {
@@ -1552,7 +1552,7 @@ jQuery.url = function()
 		
 		/**
 	     * Returns the value of the specified URI segment. Segments are numbered from 1 to the number of segments.
-		 * For example the URI http://test.com/about/company/ segment(1) would return 'about'.
+		 * For example the URI https://test.com/about/company/ segment(1) would return 'about'.
 		 *
 		 * If no integer is passed into the function it returns the number of segments in the URI.
 	     *
