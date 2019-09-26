@@ -102,9 +102,9 @@
 </nav><div class="row">
   <div class="span12">
 
-    <h2 id="ip-xact-export-spirit-14">IP-XACT Export (Spirit 1.4)</h2>
+    <h2 id="ip-xact-export-ieee-1685-2009">IP-XACT Export (IEEE 1685-2009)</h2>
 
-    <p>This page shows IP-XACT formatted XML that has been generated from an Origen
+    <p>This page shows IEEE 1685-2009 IP-XACT formatted XML that has been generated from an Origen
 representation of a module.</p>
 
     <p>The exporter has the following options:</p>
@@ -116,12 +116,22 @@ extentions</li>
       <li>
 <strong>:include_bit_field_values</strong> - true by default, when false the bit field values 
 fields will not be output</li>
+      <li>
+<strong>:schema</strong> - nil by default, which assumes a Spirit 1.4 format. ‘1685-2009’ is also supported.</li>
+      <li>
+<strong>:mmap_name</strong> - nil by default, can be set to any string name for the memory map name.</li>
+      <li>
+<strong>:mmap_ref</strong> - nil by default, can be set to any string name for the memory map reference used by a downstream tool.</li>
+      <li>
+<strong>:vendor</strong> - nil by default, can be set to any string name for the company name.</li>
+      <li>
+<strong>:library</strong> - nil by default, can be set to any string name for the library used by a downstream tool (ex: Magillem XML -&gt; UVM conversion)</li>
     </ul>
-<p>The code to generate this page was simply:</p>
+<p>For this example, targeting CrossOrigen’s target/debug.rb, the code to generate this page is:</p>
 
     <div class="language-eruby highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> <span style="color:#d70">$dut</span>.to_ip_xact <span style="color:#606">format</span>: <span style="color:#A60">:uvm</span> <span style="font-weight:bold;color:#666">%&gt;</span></span>
+  <div class="code"><pre><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> <span style="color:#d70">$dut</span>.to_ip_xact <span style="color:#A60">:format</span> =&gt; <span style="color:#A60">:uvm</span>, <span style="color:#A60">:schema</span>=&gt; <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">1685-2009</span><span style="color:#710">'</span></span>, <span style="color:#A60">:mmap_name</span> =&gt; <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">RegisterMap</span><span style="color:#710">'</span></span>, <span style="color:#A60">:vendor</span> =&gt; <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">origen-sdk.org</span><span style="color:#710">'</span></span>, <span style="color:#A60">:library</span> =&gt; <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">id</span><span style="color:#710">'</span></span>, <span style="color:#A60">:mmap_ref</span> =&gt; <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">test</span><span style="color:#710">'</span></span> <span style="font-weight:bold;color:#666">%&gt;</span></span>
 </pre></div>
 </div>
     </div>
@@ -129,9 +139,9 @@ fields will not be output</li>
     <div class="language-xml highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre><span style="color:#579">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
-<span style="color:#070;font-weight:bold">&lt;spirit:component</span> <span style="color:#b48">xmlns:spirit</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">http://www.spiritconsortium.org/XMLSchema/SPIRIT/1.4</span><span style="color:#710">"</span></span> <span style="color:#b48">xmlns:xsi</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">http://www.w3.org/2001/XMLSchema-instance</span><span style="color:#710">"</span></span> <span style="color:#b48">xmlns:vendorExtensions</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">$IREG_GEN/XMLSchema/SPIRIT</span><span style="color:#710">"</span></span> <span style="color:#b48">xsi:schemaLocation</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">http://www.spiritconsortium.org/XMLSchema/SPIRIT/1.4 http://www.spiritconsortium.org/XMLSchema/SPIRIT/1.4/index.xsd $IREG_GEN/XMLSchema/SPIRIT/VendorExtensions.xsd</span><span style="color:#710">"</span></span><span style="color:#070;font-weight:bold">&gt;</span>
-  <span style="color:#070;font-weight:bold">&lt;spirit:vendor&gt;</span>Origen<span style="color:#070;font-weight:bold">&lt;/spirit:vendor&gt;</span>
-  <span style="color:#070;font-weight:bold">&lt;spirit:library&gt;</span>Origen<span style="color:#070;font-weight:bold">&lt;/spirit:library&gt;</span>
+<span style="color:#070;font-weight:bold">&lt;spirit:component</span> <span style="color:#b48">xmlns:spirit</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">http://www.spiritconsortium.org/XMLSchema/SPIRIT/1685-2009</span><span style="color:#710">"</span></span> <span style="color:#b48">xmlns:xsi</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">http://www.w3.org/2001/XMLSchema-instance</span><span style="color:#710">"</span></span> <span style="color:#b48">xsi:schemaLocation</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">http://www.spiritconsortium.org/XMLSchema/SPIRIT/1685-2009 http://www.spiritconsortium.org/XMLSchema/SPIRIT/1685-2009/index.xsd</span><span style="color:#710">"</span></span><span style="color:#070;font-weight:bold">&gt;</span>
+  <span style="color:#070;font-weight:bold">&lt;spirit:vendor&gt;</span>origen-sdk.org<span style="color:#070;font-weight:bold">&lt;/spirit:vendor&gt;</span>
+  <span style="color:#070;font-weight:bold">&lt;spirit:library&gt;</span>id<span style="color:#070;font-weight:bold">&lt;/spirit:library&gt;</span>
   <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>dut<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
   <span style="color:#070;font-weight:bold">&lt;spirit:version&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:version&gt;</span>
   <span style="color:#070;font-weight:bold">&lt;spirit:memoryMaps&gt;</span>
@@ -157,20 +167,26 @@ fields will not be output</li>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>14<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>1<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>rw<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>top.second_bit<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-write<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>top.second_bit<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;spirit:field&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>pls_work<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>15<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>1<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>rw<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>top.pls_work<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-write<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>top.pls_work<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
         <span style="color:#070;font-weight:bold">&lt;/spirit:register&gt;</span>
         <span style="color:#070;font-weight:bold">&lt;spirit:register&gt;</span>
@@ -188,20 +204,26 @@ fields will not be output</li>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>1<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>1<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>rw<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>top.second_bit<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-write<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>top.second_bit<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;spirit:field&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>pls_work<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>0<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>1<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>ro<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>top.pls_work<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-only<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>top.pls_work<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
         <span style="color:#070;font-weight:bold">&lt;/spirit:register&gt;</span>
       <span style="color:#070;font-weight:bold">&lt;/spirit:addressBlock&gt;</span>
@@ -225,17 +247,26 @@ fields will not be output</li>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span>Divider Value<span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>0<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>4<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>rw<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>atx.div<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-write<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>atx.div<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;spirit:field&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>osch<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span>Oscillator (Hi)<span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>15<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>1<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>rw<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-write<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>atx.osch<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:values&gt;</span>
               <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>0x0<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
               <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>val_0x0<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
@@ -246,9 +277,6 @@ fields will not be output</li>
               <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>val_0x1<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
               <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span>Clock is the internal oscillator from the hardblock<span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;/spirit:values&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>atx.osch<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
         <span style="color:#070;font-weight:bold">&lt;/spirit:register&gt;</span>
         <span style="color:#070;font-weight:bold">&lt;spirit:register&gt;</span>
@@ -266,280 +294,391 @@ fields will not be output</li>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>31<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>1<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>ro<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>atx.readonly<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-only<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>atx.readonly<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;spirit:field&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>readwrite<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>30<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>1<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>rw<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>atx.readwrite<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-write<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>atx.readwrite<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;spirit:field&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>readclear<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>29<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>1<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>rc<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>atx.readclear<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-only<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:readAction&gt;</span>clear<span style="color:#070;font-weight:bold">&lt;/spirit:readAction&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>atx.readclear<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;spirit:field&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>readset<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>28<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>1<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>rs<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>atx.readset<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-only<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:readAction&gt;</span>set<span style="color:#070;font-weight:bold">&lt;/spirit:readAction&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>atx.readset<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;spirit:field&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>writablereadclear<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>27<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>1<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>wrc<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>atx.writablereadclear<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-write<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:readAction&gt;</span>clear<span style="color:#070;font-weight:bold">&lt;/spirit:readAction&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>atx.writablereadclear<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;spirit:field&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>writablereadset<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>26<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>1<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>wrs<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>atx.writablereadset<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-write<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:readAction&gt;</span>set<span style="color:#070;font-weight:bold">&lt;/spirit:readAction&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>atx.writablereadset<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;spirit:field&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>writeclear<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>25<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>1<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>wc<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>atx.writeclear<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-write<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:modifiedWriteValue&gt;</span>clear<span style="color:#070;font-weight:bold">&lt;/spirit:modifiedWriteValue&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>atx.writeclear<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;spirit:field&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>writeset<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>24<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>1<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>ws<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>atx.writeset<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-write<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:modifiedWriteValue&gt;</span>set<span style="color:#070;font-weight:bold">&lt;/spirit:modifiedWriteValue&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>atx.writeset<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;spirit:field&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>writesetreadclear<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>23<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>1<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>wsrc<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>atx.writesetreadclear<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-write<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:readAction&gt;</span>clear<span style="color:#070;font-weight:bold">&lt;/spirit:readAction&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:modifiedWriteValue&gt;</span>set<span style="color:#070;font-weight:bold">&lt;/spirit:modifiedWriteValue&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>atx.writesetreadclear<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;spirit:field&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>writeclearreadset<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>22<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>1<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>wcrs<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>atx.writeclearreadset<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-write<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:readAction&gt;</span>set<span style="color:#070;font-weight:bold">&lt;/spirit:readAction&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:modifiedWriteValue&gt;</span>clear<span style="color:#070;font-weight:bold">&lt;/spirit:modifiedWriteValue&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>atx.writeclearreadset<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;spirit:field&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>write1toclear<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>21<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>1<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>w1c<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>atx.write1toclear<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-write<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:modifiedWriteValue&gt;</span>oneToClear<span style="color:#070;font-weight:bold">&lt;/spirit:modifiedWriteValue&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>atx.write1toclear<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;spirit:field&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>write1toset<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>20<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>1<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>w1s<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>atx.write1toset<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-write<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:modifiedWriteValue&gt;</span>oneToSet<span style="color:#070;font-weight:bold">&lt;/spirit:modifiedWriteValue&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>atx.write1toset<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;spirit:field&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>write1totoggle<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>19<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>1<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>w1t<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>atx.write1totoggle<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-write<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:modifiedWriteValue&gt;</span>oneToToggle<span style="color:#070;font-weight:bold">&lt;/spirit:modifiedWriteValue&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>atx.write1totoggle<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;spirit:field&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>write0toclear<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>18<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>1<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>w0c<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>atx.write0toclear<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-write<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:modifiedWriteValue&gt;</span>zeroToClear<span style="color:#070;font-weight:bold">&lt;/spirit:modifiedWriteValue&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>atx.write0toclear<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;spirit:field&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>write0toset<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>17<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>1<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>w0s<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>atx.write0toset<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-write<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:modifiedWriteValue&gt;</span>zeroToSet<span style="color:#070;font-weight:bold">&lt;/spirit:modifiedWriteValue&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>atx.write0toset<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;spirit:field&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>write0totoggle<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>16<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>1<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>w0t<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>atx.write0totoggle<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-write<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:modifiedWriteValue&gt;</span>zeroToToggle<span style="color:#070;font-weight:bold">&lt;/spirit:modifiedWriteValue&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>atx.write0totoggle<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;spirit:field&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>write1tosetreadclear<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>15<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>1<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>w1src<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>atx.write1tosetreadclear<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-write<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:readAction&gt;</span>clear<span style="color:#070;font-weight:bold">&lt;/spirit:readAction&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:modifiedWriteValue&gt;</span>oneToSet<span style="color:#070;font-weight:bold">&lt;/spirit:modifiedWriteValue&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>atx.write1tosetreadclear<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;spirit:field&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>write1toclearreadset<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>14<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>1<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>w1crs<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>atx.write1toclearreadset<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-write<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:readAction&gt;</span>set<span style="color:#070;font-weight:bold">&lt;/spirit:readAction&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:modifiedWriteValue&gt;</span>oneToClear<span style="color:#070;font-weight:bold">&lt;/spirit:modifiedWriteValue&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>atx.write1toclearreadset<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;spirit:field&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>write0tosetreadclear<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>13<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>1<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>w0src<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>atx.write0tosetreadclear<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-write<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:readAction&gt;</span>clear<span style="color:#070;font-weight:bold">&lt;/spirit:readAction&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:modifiedWriteValue&gt;</span>zeroToSet<span style="color:#070;font-weight:bold">&lt;/spirit:modifiedWriteValue&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>atx.write0tosetreadclear<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;spirit:field&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>write0toclearreadset<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>12<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>1<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>w0crs<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>atx.write0toclearreadset<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-write<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:readAction&gt;</span>set<span style="color:#070;font-weight:bold">&lt;/spirit:readAction&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:modifiedWriteValue&gt;</span>zeroToClear<span style="color:#070;font-weight:bold">&lt;/spirit:modifiedWriteValue&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>atx.write0toclearreadset<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;spirit:field&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>writeonly<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>11<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>1<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>wo<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>atx.writeonly<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>write-only<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>atx.writeonly<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;spirit:field&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>writeonlyclear<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>10<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>1<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>woc<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>atx.writeonlyclear<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>write-only<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:modifiedWriteValue&gt;</span>clear<span style="color:#070;font-weight:bold">&lt;/spirit:modifiedWriteValue&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>atx.writeonlyclear<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;spirit:field&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>writeonlyreadzero<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>9<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>1<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>worz<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>atx.writeonlyreadzero<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>write-only<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>atx.writeonlyreadzero<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;spirit:field&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>writeonlyset<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>8<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>1<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>wos<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>atx.writeonlyset<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>write-only<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:modifiedWriteValue&gt;</span>set<span style="color:#070;font-weight:bold">&lt;/spirit:modifiedWriteValue&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>atx.writeonlyset<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;spirit:field&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>writeonce<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>7<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>1<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>w1<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>atx.writeonce<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-writeOnce<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>atx.writeonce<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;spirit:field&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>writeonlyonce<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>6<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>1<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>wo1<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>atx.writeonlyonce<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>writeOnce<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>atx.writeonlyonce<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;spirit:field&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>readwritenocheck<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>5<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>1<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>dc<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>atx.readwritenocheck<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-write<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>atx.readwritenocheck<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;spirit:field&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>readonlyclearafter<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>4<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>1<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>rowz<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>atx.readonlyclearafter<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-only<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:readAction&gt;</span>clear<span style="color:#070;font-weight:bold">&lt;/spirit:readAction&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>atx.readonlyclearafter<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
         <span style="color:#070;font-weight:bold">&lt;/spirit:register&gt;</span>
       <span style="color:#070;font-weight:bold">&lt;/spirit:addressBlock&gt;</span>
@@ -574,10 +713,13 @@ fields will not be output</li>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>0<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>8<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>rw<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>am0.rf1.reg1_f<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-write<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>am0.rf1.reg1_f<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
         <span style="color:#070;font-weight:bold">&lt;/spirit:register&gt;</span>
         <span style="color:#070;font-weight:bold">&lt;spirit:register&gt;</span>
@@ -595,20 +737,26 @@ fields will not be output</li>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>6<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>2<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>rw<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>am0.rf1.f2<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-write<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>am0.rf1.f2<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;spirit:field&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>f0<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>0<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>2<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>rw<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>am0.rf1.f0<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-write<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>am0.rf1.f0<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
         <span style="color:#070;font-weight:bold">&lt;/spirit:register&gt;</span>
         <span style="color:#070;font-weight:bold">&lt;spirit:register&gt;</span>
@@ -626,10 +774,13 @@ fields will not be output</li>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>3<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>3<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>rw<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>am0.rf1.f0<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-write<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>am0.rf1.f0<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
         <span style="color:#070;font-weight:bold">&lt;/spirit:register&gt;</span>
         <span style="color:#070;font-weight:bold">&lt;spirit:register&gt;</span>
@@ -647,50 +798,65 @@ fields will not be output</li>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>6<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>2<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>rw<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>am0.rf1.rsv<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-write<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>am0.rf1.rsv<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;spirit:field&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>more_dirs<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>4<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>2<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>ro<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>am0.rf1.more_dirs<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-only<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>am0.rf1.more_dirs<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;spirit:field&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>dirs<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>2<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>2<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>wo<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>am0.rf1.dirs<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>write-only<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>am0.rf1.dirs<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;spirit:field&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>f1<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>1<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>1<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>rw<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>am0.rf1.f1<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-write<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>am0.rf1.f1<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;spirit:field&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>f0<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>0<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>1<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>rw<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>am0.rf1.f0<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-write<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>am0.rf1.f0<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
         <span style="color:#070;font-weight:bold">&lt;/spirit:register&gt;</span>
         <span style="color:#070;font-weight:bold">&lt;spirit:register&gt;</span>
@@ -708,20 +874,26 @@ fields will not be output</li>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>4<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>4<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>rw<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>am0.rf1.rsv<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-write<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>am0.rf1.rsv<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;spirit:field&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>dirs<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>2<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>2<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>rw<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>am0.rf1.dirs<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-write<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>am0.rf1.dirs<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
         <span style="color:#070;font-weight:bold">&lt;/spirit:register&gt;</span>
         <span style="color:#070;font-weight:bold">&lt;spirit:register&gt;</span>
@@ -739,20 +911,26 @@ fields will not be output</li>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>2<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>6<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>ro<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>am0.rf1.rsv<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-only<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>am0.rf1.rsv<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;spirit:field&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>more_dirs<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>0<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>2<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>ro<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>am0.rf1.more_dirs<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-only<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>am0.rf1.more_dirs<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
         <span style="color:#070;font-weight:bold">&lt;/spirit:register&gt;</span>
       <span style="color:#070;font-weight:bold">&lt;/spirit:addressBlock&gt;</span>
@@ -776,20 +954,26 @@ fields will not be output</li>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>4<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>4<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>rw<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>am0.rf2.f1<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-write<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>am0.rf2.f1<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;spirit:field&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>f0<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>0<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>4<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>rw<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>am0.rf2.f0<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-write<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>am0.rf2.f0<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
         <span style="color:#070;font-weight:bold">&lt;/spirit:register&gt;</span>
         <span style="color:#070;font-weight:bold">&lt;spirit:register&gt;</span>
@@ -807,20 +991,26 @@ fields will not be output</li>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>4<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>4<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>rw<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>am0.rf2.f1<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-write<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>am0.rf2.f1<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;spirit:field&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>f0<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:description&gt;</span><span style="color:#070;font-weight:bold">&lt;/spirit:description&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitOffset&gt;</span>0<span style="color:#070;font-weight:bold">&lt;/spirit:bitOffset&gt;</span>
             <span style="color:#070;font-weight:bold">&lt;spirit:bitWidth&gt;</span>4<span style="color:#070;font-weight:bold">&lt;/spirit:bitWidth&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>rw<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;spirit:vendorExtensions&gt;</span>
-              <span style="color:#070;font-weight:bold">&lt;vendorExtensions:hdl_path&gt;</span>am0.rf2.f0<span style="color:#070;font-weight:bold">&lt;/vendorExtensions:hdl_path&gt;</span>
-            <span style="color:#070;font-weight:bold">&lt;/spirit:vendorExtensions&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:access&gt;</span>read-write<span style="color:#070;font-weight:bold">&lt;/spirit:access&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;spirit:parameters&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;spirit:parameter&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:name&gt;</span>_hdlPath_<span style="color:#070;font-weight:bold">&lt;/spirit:name&gt;</span>
+                <span style="color:#070;font-weight:bold">&lt;spirit:value&gt;</span>am0.rf2.f0<span style="color:#070;font-weight:bold">&lt;/spirit:value&gt;</span>
+              <span style="color:#070;font-weight:bold">&lt;/spirit:parameter&gt;</span>
+            <span style="color:#070;font-weight:bold">&lt;/spirit:parameters&gt;</span>
           <span style="color:#070;font-weight:bold">&lt;/spirit:field&gt;</span>
         <span style="color:#070;font-weight:bold">&lt;/spirit:register&gt;</span>
       <span style="color:#070;font-weight:bold">&lt;/spirit:addressBlock&gt;</span>
