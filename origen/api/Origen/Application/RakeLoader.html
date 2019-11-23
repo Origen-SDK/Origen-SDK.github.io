@@ -6,7 +6,7 @@
 <title>
   Class: Origen::Application::RakeLoader
   
-    &mdash; Origen Core 0.54.5
+    &mdash; Origen Core 0.54.6
   
 </title>
 
@@ -203,7 +203,17 @@
 130
 131
 132
-133</pre>
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/origen/application.rb', line 107</span>
@@ -222,6 +232,11 @@
       <span class='id identifier rubyid_load'>load</span> <span class='id identifier rubyid_file'>file</span>
     <span class='kw'>end</span>
   <span class='kw'>else</span>
+    <span class='comment'># New application dir structure support
+</span>    <span class='const'>Dir</span><span class='period'>.</span><span class='id identifier rubyid_glob'>glob</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_root'><span class='object_link'><a href="../../Origen.html#root-class_method" title="Origen.root (method)">root</a></span></span><span class='embexpr_end'>}</span><span class='tstring_content'>/app/lib/tasks/*.rake</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_sort'>sort</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_file'>file</span><span class='op'>|</span>
+      <span class='id identifier rubyid_load'>load</span> <span class='id identifier rubyid_file'>file</span>
+    <span class='kw'>end</span>
+
     <span class='const'>Dir</span><span class='period'>.</span><span class='id identifier rubyid_glob'>glob</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_root'><span class='object_link'><a href="../../Origen.html#root-class_method" title="Origen.root (method)">root</a></span></span><span class='embexpr_end'>}</span><span class='tstring_content'>/lib/tasks/*.rake</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_sort'>sort</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_file'>file</span><span class='op'>|</span>
       <span class='id identifier rubyid_load'>load</span> <span class='id identifier rubyid_file'>file</span>
     <span class='kw'>end</span>
@@ -229,6 +244,11 @@
   <span class='comment'># Finally those that the plugin&#39;s have given us
 </span>  <span class='lparen'>(</span><span class='lbracket'>[</span><span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_app'><span class='object_link'><a href="../../Origen.html#app-class_method" title="Origen.app (method)">app</a></span></span><span class='rbracket'>]</span> <span class='op'>+</span> <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_app'><span class='object_link'><a href="../../Origen.html#app-class_method" title="Origen.app (method)">app</a></span></span><span class='period'>.</span><span class='id identifier rubyid_plugins'>plugins</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_plugin'>plugin</span><span class='op'>|</span>
     <span class='id identifier rubyid_namespace'>namespace</span> <span class='id identifier rubyid_plugin'>plugin</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span> <span class='kw'>do</span>
+      <span class='comment'># New application dir structure support
+</span>      <span class='const'>Dir</span><span class='period'>.</span><span class='id identifier rubyid_glob'>glob</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_plugin'>plugin</span><span class='period'>.</span><span class='id identifier rubyid_root'>root</span><span class='embexpr_end'>}</span><span class='tstring_content'>/app/lib/tasks/shared/*.rake</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_sort'>sort</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_file'>file</span><span class='op'>|</span>
+        <span class='id identifier rubyid_load'>load</span> <span class='id identifier rubyid_file'>file</span>
+      <span class='kw'>end</span>
+
       <span class='const'>Dir</span><span class='period'>.</span><span class='id identifier rubyid_glob'>glob</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_plugin'>plugin</span><span class='period'>.</span><span class='id identifier rubyid_root'>root</span><span class='embexpr_end'>}</span><span class='tstring_content'>/lib/tasks/shared/*.rake</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_sort'>sort</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_file'>file</span><span class='op'>|</span>
         <span class='id identifier rubyid_load'>load</span> <span class='id identifier rubyid_file'>file</span>
       <span class='kw'>end</span>
@@ -245,9 +265,9 @@
 </div>
 
       <div id="footer">
-  Generated on Thu Nov 21 17:39:17 2019 by
-  <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.20 (ruby-2.6.0).
+  Generated on Sat Nov 23 13:23:22 2019 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.9.20 (ruby-2.6.3).
 </div>
 
     </div>
