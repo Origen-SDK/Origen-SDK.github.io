@@ -19,8 +19,8 @@
     <link rel="author" href="https://plus.google.com/u/1/b/106463981272125989995/106463981272125989">
   
   
-    <meta property="og:url" content="https://origen-sdk.org/origen/scratch/nxa21353/">
-    <meta name="twitter:url" content="https://origen-sdk.org/origen/scratch/nxa21353/">
+    <meta property="og:url" content="https://origen-sdk.org/origen/users/bcaqueli/origen/">
+    <meta name="twitter:url" content="https://origen-sdk.org/origen/users/bcaqueli/origen/">
   
   
     <meta property="og:image" content="https://origen-sdk.org/favicon-260x260.png">
@@ -773,8 +773,8 @@ In our case let’s say that we have a new DUT on the horizon which has two vreg
 let’s extract this suite of vreg tests to a module so that we can instantiate two of them in
 our flow.</p>
 
-      <p>All sub flow file names must begin with “_”, this is what tells Origen that it is a sub-flow and
-not a top-level flow.
+      <p>By convention, sub flow file names that are meant only to be used from inside another top-level flow should begin with a “_”. 
+(We’ll discuss importing top-level flows below).
 The sub-flow syntax is virtually identical to the regular flow syntax except that a hash of
 options are passed in which will contain any arguments passed in by the caller when they
 instantiate the sub-flow.</p>
@@ -897,6 +897,38 @@ in an array.</p>
       </div>
 
       <div>    
+  <a class="anchor" name="Importing_Top-Level_Flows"></a>          
+  <h4><a href="#Importing_Top-Level_Flows">Importing Top-Level Flows</a></h4>          
+</div>
+
+      <p>Occasionally you may have the need to import a top-level flow for debug or simulation purposes.<br>
+This is generally not recommended since any <code>Flow.create</code> options in the top-level flow being imported 
+will be lost, but if you are careful that the <code>Flow.create</code> options are aligned between the real top-level flow 
+and any imported top-level flows, then you should be fine.</p>
+
+      <p>The same import command is used as before, as it will also look also for a file name not starting with "_"
+if one with "_" is not found.</p>
+
+      <p>So for example we have 3 top-level flows that we know work ok stand-alone, but we want to check that they work ok when 
+running back to back:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#777"># program/probe.rb</span>
+<span style="color:#036;font-weight:bold">Flow</span>.create(<span style="color:#606">environment</span>: <span style="color:#A60">:probe</span>) <span style="color:#080;font-weight:bold">do</span>  <span style="color:#777"># options here match those in the probe_* flows imported below</span>
+
+  import <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">probe_start</span><span style="color:#710">"</span></span>   <span style="color:#777"># will import file called 'probe_start.rb'</span>
+
+  import <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">probe_middle</span><span style="color:#710">"</span></span>  <span style="color:#777"># will import file called 'probe_middle.rb'</span>
+
+  import <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">probe_end</span><span style="color:#710">"</span></span>     <span style="color:#777"># will import file called 'probe_end.rb'</span>
+
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+      </div>
+
+      <div>    
   <a class="anchor" name="Documenting_Tests"></a>          
   <h4><a href="#Documenting_Tests">Documenting Tests</a></h4>          
 </div>
@@ -910,7 +942,7 @@ test.</p>
 
       <p>Origen will extract these later when it comes to generating documentation.</p>
 
-      <p>The comments will be parsed as <a href="https://kramdown.rubyforge.org/quickref.html">Markdown</a>
+      <p>The comments will be parsed as <a href="http://kramdown.rubyforge.org/quickref.html">Markdown</a>
 so this can be used to make things like bulleted lists or tables.</p>
 
       <p>Here is our vreg test suite with some example documentation added:</p>
@@ -966,7 +998,7 @@ so this can be used to make things like bulleted lists or tables.</p>
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = 'origen-sdk';
     var disqus_title;
-    var disqus_url = 'https://' + window.location.hostname + window.location.pathname;
+    var disqus_url = 'http://' + window.location.hostname + window.location.pathname;
 
     disqus_title = $("h1").text();
     if (disqus_title.length == 0) {
