@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Register",""],["RegisterFieldIterator","An iterator for a register's fields which yields them in offset order, starting from 0. An instance of this iterator is returned by my_reg.fields()."]]});
