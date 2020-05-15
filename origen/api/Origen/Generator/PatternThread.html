@@ -6,7 +6,7 @@
 <title>
   Class: Origen::Generator::PatternThread
   
-    &mdash; Origen Core 0.55.5
+    &mdash; Origen Core 0.56.0
   
 </title>
 
@@ -102,7 +102,10 @@
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
     
-<p>An instance of PatternThread is created for each parallel thread of execution in a pattern sequence. One instance of this class is also created to represent the original main thread in addition to those created by calling seq.in_parallel</p>
+<p>An instance of PatternThread is created for each parallel thread of
+execution in a pattern sequence. One instance of this class is also created
+to represent the original main thread in addition to those created by
+calling seq.in_parallel</p>
 
 
   </div>
@@ -351,7 +354,10 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>This should be called only by the pattern sequence running in the main thread, it will un-block the pattern thread which is currently waiting, and it will block the main thread until the pattern thread reaches the next wait point (or completes).</p>
+<p>This should be called only by the pattern sequence running in the main
+thread, it will un-block the pattern thread which is currently waiting, and
+it will block the main thread until the pattern thread reaches the next
+wait point (or completes).</p>
 </div></span>
   
 </li>
@@ -472,7 +478,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#initialize-instance_method" title="#initialize (instance method)">#<strong>initialize</strong>(id, sequence, block, primary = false)  &#x21d2; PatternThread </a>
+      <a href="#initialize-instance_method" title="#initialize (instance method)">#<strong>initialize</strong>(id, sequence, block, primary = false, pre_block = nil)  &#x21d2; PatternThread </a>
     
 
     
@@ -513,7 +519,8 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Returns true if this is main thread (the one from which all in_parallel threads have been branched from).</p>
+<p>Returns true if this is main thread (the one from which all in_parallel
+threads have been branched from).</p>
 </div></span>
   
 </li>
@@ -605,7 +612,9 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>This should be called only by the pattern thread itself, and will block it until it is told to advance by the pattern sequence running in the main thread.</p>
+<p>This should be called only by the pattern thread itself, and will block it
+until it is told to advance by the pattern sequence running in the main
+thread.</p>
 </div></span>
   
 </li>
@@ -629,7 +638,8 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Returns true if the thread is currently waiting for the pattern sequence to advance it.</p>
+<p>Returns true if the thread is currently waiting for the pattern sequence to
+advance it.</p>
 </div></span>
   
 </li>
@@ -653,7 +663,8 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Will be called when the thread can&#39;t execute its next cycle because it is waiting to obtain a lock on a serialized block.</p>
+<p>Will be called when the thread can&#39;t execute its next cycle because it
+is waiting to obtain a lock on a serialized block.</p>
 </div></span>
   
 </li>
@@ -677,7 +688,8 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Will be called when the thread can&#39;t execute its next cycle because it is waiting for another thread to complete.</p>
+<p>Will be called when the thread can&#39;t execute its next cycle because it
+is waiting for another thread to complete.</p>
 </div></span>
   
 </li>
@@ -692,7 +704,7 @@
     <div class="method_details first">
   <h3 class="signature first" id="initialize-instance_method">
   
-    #<strong>initialize</strong>(id, sequence, block, primary = false)  &#x21d2; <tt><span class='object_link'><a href="" title="Origen::Generator::PatternThread (class)">PatternThread</a></span></tt> 
+    #<strong>initialize</strong>(id, sequence, block, primary = false, pre_block = nil)  &#x21d2; <tt><span class='object_link'><a href="" title="Origen::Generator::PatternThread (class)">PatternThread</a></span></tt> 
   
 
   
@@ -731,12 +743,13 @@
 30
 31
 32
-33</pre>
+33
+34</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern_thread.rb', line 17</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_sequence'>sequence</span><span class='comma'>,</span> <span class='id identifier rubyid_block'>block</span><span class='comma'>,</span> <span class='id identifier rubyid_primary'>primary</span> <span class='op'>=</span> <span class='kw'>false</span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_sequence'>sequence</span><span class='comma'>,</span> <span class='id identifier rubyid_block'>block</span><span class='comma'>,</span> <span class='id identifier rubyid_primary'>primary</span> <span class='op'>=</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='id identifier rubyid_pre_block'>pre_block</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_primary'>primary</span>
     <span class='ivar'>@cycle_count_start</span> <span class='op'>=</span> <span class='int'>0</span>
   <span class='kw'>else</span>
@@ -746,6 +759,7 @@
   <span class='ivar'>@id</span> <span class='op'>=</span> <span class='id identifier rubyid_id'>id</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span>
   <span class='ivar'>@sequence</span> <span class='op'>=</span> <span class='id identifier rubyid_sequence'>sequence</span>
   <span class='ivar'>@block</span> <span class='op'>=</span> <span class='id identifier rubyid_block'>block</span>
+  <span class='ivar'>@pre_block</span> <span class='op'>=</span> <span class='id identifier rubyid_pre_block'>pre_block</span>
   <span class='ivar'>@primary</span> <span class='op'>=</span> <span class='id identifier rubyid_primary'>primary</span>
   <span class='ivar'>@running</span> <span class='op'>=</span> <span class='const'>Concurrent</span><span class='op'>::</span><span class='const'>Event</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
   <span class='ivar'>@waiting</span> <span class='op'>=</span> <span class='const'>Concurrent</span><span class='op'>::</span><span class='const'>Event</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
@@ -1083,7 +1097,10 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>This should be called only by the pattern sequence running in the main thread, it will un-block the pattern thread which is currently waiting, and it will block the main thread until the pattern thread reaches the next wait point (or completes)</p>
+<p>This should be called only by the pattern sequence running in the main
+thread, it will un-block the pattern thread which is currently waiting, and
+it will block the main thread until the pattern thread reaches the next
+wait point (or completes)</p>
 
 
   </div>
@@ -1097,14 +1114,14 @@
       <pre class="lines">
 
 
-168
-169
 170
 171
-172</pre>
+172
+173
+174</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern_thread.rb', line 168</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern_thread.rb', line 170</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_advance'>advance</span><span class='lparen'>(</span><span class='id identifier rubyid_completed_cycles'>completed_cycles</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
   <span class='ivar'>@waiting</span><span class='period'>.</span><span class='id identifier rubyid_reset'>reset</span>
@@ -1153,12 +1170,12 @@
       <pre class="lines">
 
 
-148
-149
-150</pre>
+150
+151
+152</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern_thread.rb', line 148</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern_thread.rb', line 150</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_completed?'>completed?</span>
   <span class='ivar'>@completed</span>
@@ -1183,12 +1200,12 @@
       <pre class="lines">
 
 
-68
-69
-70</pre>
+70
+71
+72</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern_thread.rb', line 68</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern_thread.rb', line 70</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_current_cycle_count'>current_cycle_count</span>
   <span class='id identifier rubyid_tester'><span class='object_link'><a href="../GlobalMethods.html#tester-instance_method" title="Origen::GlobalMethods#tester (method)">tester</a></span></span><span class='period'>.</span><span class='id identifier rubyid_try'>try</span><span class='lparen'>(</span><span class='symbol'>:cycle_count</span><span class='rparen'>)</span> <span class='op'>||</span> <span class='int'>0</span>
@@ -1224,8 +1241,6 @@
       <pre class="lines">
 
 
-122
-123
 124
 125
 126
@@ -1243,10 +1258,12 @@
 138
 139
 140
-141</pre>
+141
+142
+143</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern_thread.rb', line 122</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern_thread.rb', line 124</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_cycle'>cycle</span><span class='lparen'>(</span><span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span>
   <span class='ivar'>@pending_cycles</span> <span class='op'>=</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='lbracket'>[</span><span class='symbol'>:repeat</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='int'>1</span>
@@ -1301,12 +1318,12 @@
       <pre class="lines">
 
 
-144
-145
-146</pre>
+146
+147
+148</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern_thread.rb', line 144</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern_thread.rb', line 146</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_executed_cycles'>executed_cycles</span><span class='lparen'>(</span><span class='id identifier rubyid_cycles'>cycles</span><span class='rparen'>)</span>
   <span class='ivar'>@pending_cycles</span> <span class='op'>-=</span> <span class='id identifier rubyid_cycles'>cycles</span> <span class='kw'>if</span> <span class='ivar'>@pending_cycles</span>
@@ -1331,8 +1348,6 @@
       <pre class="lines">
 
 
-72
-73
 74
 75
 76
@@ -1363,10 +1378,12 @@
 101
 102
 103
-104</pre>
+104
+105
+106</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern_thread.rb', line 72</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern_thread.rb', line 74</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_execution_profile'>execution_profile</span><span class='lparen'>(</span><span class='id identifier rubyid_start'>start</span><span class='comma'>,</span> <span class='id identifier rubyid_stop'>stop</span><span class='comma'>,</span> <span class='id identifier rubyid_step'>step</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_events'>events</span> <span class='op'>=</span> <span class='ivar'>@events</span><span class='period'>.</span><span class='id identifier rubyid_dup'>dup</span>
@@ -1418,7 +1435,8 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns true if this is main thread (the one from which all in_parallel threads have been branched from)</p>
+<p>Returns true if this is main thread (the one from which all in_parallel
+threads have been branched from)</p>
 
 
   </div>
@@ -1445,12 +1463,12 @@
       <pre class="lines">
 
 
-37
 38
-39</pre>
+39
+40</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern_thread.rb', line 37</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern_thread.rb', line 38</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_primary?'>primary?</span>
   <span class='ivar'>@primary</span>
@@ -1475,12 +1493,12 @@
       <pre class="lines">
 
 
-64
-65
-66</pre>
+66
+67
+68</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern_thread.rb', line 64</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern_thread.rb', line 66</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_record_active'>record_active</span>
   <span class='id identifier rubyid_events'>events</span> <span class='op'>&lt;&lt;</span> <span class='lbracket'>[</span><span class='symbol'>:active</span><span class='comma'>,</span> <span class='id identifier rubyid_current_cycle_count'>current_cycle_count</span><span class='rbracket'>]</span>
@@ -1505,14 +1523,14 @@
       <pre class="lines">
 
 
-58
-59
 60
 61
-62</pre>
+62
+63
+64</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern_thread.rb', line 58</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern_thread.rb', line 60</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_record_cycle_count_stop'>record_cycle_count_stop</span>
   <span class='ivar'>@cycle_count_stop</span> <span class='op'>=</span> <span class='id identifier rubyid_current_cycle_count'>current_cycle_count</span>
@@ -1540,7 +1558,8 @@
   You should avoid using this method if possible, as it may be removed or be changed in the future.
 </p>
 
-<p>This method is called once by the pattern sequence to start a new thread. It will block until the thread is in the waiting state.</p>
+<p>This method is called once by the pattern sequence to start a new thread.
+It will block until the thread is in the waiting state.</p>
 
 
   </div>
@@ -1554,7 +1573,6 @@
       <pre class="lines">
 
 
-45
 46
 47
 48
@@ -1565,15 +1583,18 @@
 53
 54
 55
-56</pre>
+56
+57
+58</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern_thread.rb', line 45</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern_thread.rb', line 46</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_start'>start</span>
   <span class='ivar'>@thread</span> <span class='op'>=</span> <span class='const'>Thread</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span> <span class='kw'>do</span>
     <span class='const'><span class='object_link'><a href="../../top-level-namespace.html#PatSeq-constant" title="PatSeq (constant)">PatSeq</a></span></span><span class='period'>.</span><span class='id identifier rubyid_send'>send</span><span class='lparen'>(</span><span class='symbol'>:thread=</span><span class='comma'>,</span> <span class='kw'>self</span><span class='rparen'>)</span>
     <span class='id identifier rubyid_wait'>wait</span>
+    <span class='ivar'>@pre_block</span><span class='period'>.</span><span class='id identifier rubyid_call'>call</span> <span class='kw'>if</span> <span class='ivar'>@pre_block</span>
     <span class='ivar'>@block</span><span class='period'>.</span><span class='id identifier rubyid_call'>call</span><span class='lparen'>(</span><span class='id identifier rubyid_sequence'>sequence</span><span class='rparen'>)</span>
     <span class='id identifier rubyid_sequence'>sequence</span><span class='period'>.</span><span class='id identifier rubyid_send'>send</span><span class='lparen'>(</span><span class='symbol'>:thread_completed</span><span class='comma'>,</span> <span class='kw'>self</span><span class='rparen'>)</span>
     <span class='id identifier rubyid_record_cycle_count_stop'>record_cycle_count_stop</span>
@@ -1599,7 +1620,9 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>This should be called only by the pattern thread itself, and will block it until it is told to advance by the pattern sequence running in the main thread</p>
+<p>This should be called only by the pattern thread itself, and will block it
+until it is told to advance by the pattern sequence running in the main
+thread</p>
 
 
   </div>
@@ -1613,14 +1636,14 @@
       <pre class="lines">
 
 
-159
-160
 161
 162
-163</pre>
+163
+164
+165</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern_thread.rb', line 159</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern_thread.rb', line 161</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_wait'>wait</span>
   <span class='ivar'>@running</span><span class='period'>.</span><span class='id identifier rubyid_reset'>reset</span>
@@ -1644,7 +1667,8 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns true if the thread is currently waiting for the pattern sequence to advance it</p>
+<p>Returns true if the thread is currently waiting for the pattern sequence to
+advance it</p>
 
 
   </div>
@@ -1671,12 +1695,12 @@
       <pre class="lines">
 
 
-153
-154
-155</pre>
+155
+156
+157</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern_thread.rb', line 153</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern_thread.rb', line 155</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_waiting?'>waiting?</span>
   <span class='ivar'>@waiting</span><span class='period'>.</span><span class='id identifier rubyid_set?'>set?</span>
@@ -1698,7 +1722,8 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Will be called when the thread can&#39;t execute its next cycle because it is waiting to obtain a lock on a serialized block</p>
+<p>Will be called when the thread can&#39;t execute its next cycle because it
+is waiting to obtain a lock on a serialized block</p>
 
 
   </div>
@@ -1712,14 +1737,14 @@
       <pre class="lines">
 
 
-108
-109
 110
 111
-112</pre>
+112
+113
+114</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern_thread.rb', line 108</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern_thread.rb', line 110</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_waiting_for_serialize'>waiting_for_serialize</span><span class='lparen'>(</span><span class='id identifier rubyid_serialize_id'>serialize_id</span><span class='comma'>,</span> <span class='id identifier rubyid_skip_event'>skip_event</span> <span class='op'>=</span> <span class='kw'>false</span><span class='rparen'>)</span>
   <span class='comment'># puts &quot;Thread #{id} is blocked waiting for #{serialize_id}&quot;
@@ -1743,7 +1768,8 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Will be called when the thread can&#39;t execute its next cycle because it is waiting for another thread to complete</p>
+<p>Will be called when the thread can&#39;t execute its next cycle because it
+is waiting for another thread to complete</p>
 
 
   </div>
@@ -1757,13 +1783,13 @@
       <pre class="lines">
 
 
-116
-117
 118
-119</pre>
+119
+120
+121</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern_thread.rb', line 116</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern_thread.rb', line 118</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_waiting_for_thread'>waiting_for_thread</span><span class='lparen'>(</span><span class='id identifier rubyid_skip_event'>skip_event</span> <span class='op'>=</span> <span class='kw'>false</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_events'>events</span> <span class='op'>&lt;&lt;</span> <span class='lbracket'>[</span><span class='symbol'>:waiting</span><span class='comma'>,</span> <span class='id identifier rubyid_current_cycle_count'>current_cycle_count</span><span class='rbracket'>]</span> <span class='kw'>unless</span> <span class='id identifier rubyid_skip_event'>skip_event</span>
@@ -1779,9 +1805,9 @@
 </div>
 
       <div id="footer">
-  Generated on Fri May  8 09:17:56 2020 by
-  <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.24 (ruby-2.6.5).
+  Generated on Fri May 15 02:17:27 2020 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.9.24 (ruby-2.5.1).
 </div>
 
     </div>

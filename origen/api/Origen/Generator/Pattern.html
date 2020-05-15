@@ -6,7 +6,7 @@
 <title>
   Class: Origen::Generator::Pattern
   
-    &mdash; Origen Core 0.55.5
+    &mdash; Origen Core 0.56.0
   
 </title>
 
@@ -237,7 +237,10 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>The recommended way to create a pattern is to wrap it within a Pattern.create block, however occasionally the need may arise to manually open and close a pattern, this method can be used in that case in association with the close method.</p>
+<p>The recommended way to create a pattern is to wrap it within a
+Pattern.create block, however occasionally the need may arise to manually
+open and close a pattern, this method can be used in that case in
+association with the close method.</p>
 </div></span>
   
 </li>
@@ -378,20 +381,6 @@
       <pre class="lines">
 
 
-104
-105
-106
-107
-108
-109
-110
-111
-112
-113
-114
-115
-116
-117
 118
 119
 120
@@ -486,10 +475,24 @@
 209
 210
 211
-212</pre>
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern.rb', line 104</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern.rb', line 118</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_create'>create</span><span class='lparen'>(</span><span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='ivar'>@pattern_sequence</span>
@@ -688,7 +691,10 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>The recommended way to create a pattern is to wrap it within a Pattern.create block, however occasionally the need may arise to manually open and close a pattern, this method can be used in that case in association with the close method.</p>
+<p>The recommended way to create a pattern is to wrap it within a
+Pattern.create block, however occasionally the need may arise to manually
+open and close a pattern, this method can be used in that case in
+association with the close method.</p>
 
 <p>Pattern iterators are not supported when creating a pattern in this way.</p>
 
@@ -795,12 +801,12 @@
       <pre class="lines">
 
 
-233
-234
-235</pre>
+247
+248
+249</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern.rb', line 233</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern.rb', line 247</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_reset'>reset</span>
   <span class='gvar'>$desc</span> <span class='op'>=</span> <span class='kw'>nil</span>  <span class='comment'># Clear the description
@@ -865,7 +871,21 @@
 99
 100
 101
-102</pre>
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern.rb', line 62</span>
@@ -902,9 +922,23 @@
 </span>  <span class='comment'># end
 </span>
   <span class='ivar'>@pattern_sequence</span> <span class='op'>=</span> <span class='kw'>true</span>
-  <span class='id identifier rubyid_pattern_wrapper'>pattern_wrapper</span><span class='lparen'>(</span><span class='lbracket'>[</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='lbracket'>[</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span> <span class='kw'>do</span>
+
+  <span class='comment'># The startup callbacks need to be skipped for now until the main thread is open for business
+</span>  <span class='id identifier rubyid_pattern_wrapper'>pattern_wrapper</span><span class='lparen'>(</span><span class='lbracket'>[</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='lbracket'>[</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='period'>.</span><span class='id identifier rubyid_merge'>merge</span><span class='lparen'>(</span><span class='label'>call_startup_callbacks:</span> <span class='kw'>false</span><span class='rparen'>)</span><span class='rparen'>)</span> <span class='kw'>do</span>
+    <span class='comment'># The startup callbacks, if required, need to be wrapped up in a closure for calling
+</span>    <span class='comment'># later by the main thread
+</span>    <span class='kw'>if</span> <span class='lparen'>(</span><span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='period'>.</span><span class='id identifier rubyid_key?'>key?</span><span class='lparen'>(</span><span class='symbol'>:call_startup_callbacks</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='op'>!</span><span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='lbracket'>[</span><span class='symbol'>:call_startup_callbacks</span><span class='rbracket'>]</span><span class='rparen'>)</span> <span class='op'>||</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='lbracket'>[</span><span class='symbol'>:skip_startup</span><span class='rbracket'>]</span>
+      <span class='id identifier rubyid_pre_block'>pre_block</span> <span class='op'>=</span> <span class='kw'>nil</span>
+    <span class='kw'>else</span>
+      <span class='id identifier rubyid_pre_block'>pre_block</span> <span class='op'>=</span> <span class='id identifier rubyid_proc'>proc</span> <span class='kw'>do</span>
+        <span class='comment'># Call startup callbacks
+</span>        <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_app'><span class='object_link'><a href="../../Origen.html#app-class_method" title="Origen.app (method)">app</a></span></span><span class='period'>.</span><span class='id identifier rubyid_listeners_for'>listeners_for</span><span class='lparen'>(</span><span class='symbol'>:startup</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_listener'>listener</span><span class='op'>|</span>
+          <span class='id identifier rubyid_listener'>listener</span><span class='period'>.</span><span class='id identifier rubyid_startup'>startup</span><span class='lparen'>(</span><span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span>
+        <span class='kw'>end</span>
+      <span class='kw'>end</span>
+    <span class='kw'>end</span>
     <span class='const'><span class='object_link'><a href="PatternSequencer.html" title="Origen::Generator::PatternSequencer (class)">PatternSequencer</a></span></span><span class='period'>.</span><span class='id identifier rubyid_send'>send</span><span class='lparen'>(</span><span class='symbol'>:active=</span><span class='comma'>,</span> <span class='kw'>true</span><span class='rparen'>)</span>
-    <span class='ivar'>@pattern_sequence</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="PatternSequence.html" title="Origen::Generator::PatternSequence (class)">PatternSequence</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="PatternSequence.html#initialize-instance_method" title="Origen::Generator::PatternSequence#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_job'>job</span><span class='period'>.</span><span class='id identifier rubyid_output_pattern_filename'>output_pattern_filename</span><span class='comma'>,</span> <span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+    <span class='ivar'>@pattern_sequence</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="PatternSequence.html" title="Origen::Generator::PatternSequence (class)">PatternSequence</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="PatternSequence.html#initialize-instance_method" title="Origen::Generator::PatternSequence#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_job'>job</span><span class='period'>.</span><span class='id identifier rubyid_output_pattern_filename'>output_pattern_filename</span><span class='comma'>,</span> <span class='id identifier rubyid_block'>block</span><span class='comma'>,</span> <span class='id identifier rubyid_pre_block'>pre_block</span><span class='rparen'>)</span>
     <span class='ivar'>@pattern_sequence</span><span class='period'>.</span><span class='id identifier rubyid_send'>send</span><span class='lparen'>(</span><span class='symbol'>:execute</span><span class='rparen'>)</span>
     <span class='const'><span class='object_link'><a href="PatternSequencer.html" title="Origen::Generator::PatternSequencer (class)">PatternSequencer</a></span></span><span class='period'>.</span><span class='id identifier rubyid_send'>send</span><span class='lparen'>(</span><span class='symbol'>:active=</span><span class='comma'>,</span> <span class='kw'>false</span><span class='rparen'>)</span>
   <span class='kw'>end</span>
@@ -930,9 +964,12 @@
     
 <p>Split a running Pattern.create block into multiple patterns.</p>
 
-<p>The output that has been generated up until the point where this is called will be written and a new pattern will be opened to contain the remainder of the pattern content generated by the block.</p>
+<p>The output that has been generated up until the point where this is called
+will be written and a new pattern will be opened to contain the remainder
+of the pattern content generated by the block.</p>
 
-<p>Each additional pattern section created by calling this method will have &#39;_partN&#39; appended to the original pattern name.</p>
+<p>Each additional pattern section created by calling this method will have
+&#39;_partN&#39; appended to the original pattern name.</p>
 
 
   </div>
@@ -946,15 +983,15 @@
       <pre class="lines">
 
 
-223
-224
-225
-226
-227
-228</pre>
+237
+238
+239
+240
+241
+242</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern.rb', line 223</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern.rb', line 237</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_split_name'>split_name</span> <span class='op'>=</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='period'>.</span><span class='id identifier rubyid_delete'>delete</span><span class='lparen'>(</span><span class='symbol'>:name</span><span class='rparen'>)</span> <span class='op'>||</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span>
@@ -972,9 +1009,9 @@
 </div>
 
       <div id="footer">
-  Generated on Fri May  8 09:17:53 2020 by
-  <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.24 (ruby-2.6.5).
+  Generated on Fri May 15 02:17:23 2020 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.9.24 (ruby-2.5.1).
 </div>
 
     </div>

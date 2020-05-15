@@ -6,7 +6,7 @@
 <title>
   Class: Origen::Generator::PatternSequencer
   
-    &mdash; Origen Core 0.55.5
+    &mdash; Origen Core 0.56.0
   
 </title>
 
@@ -169,7 +169,8 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Prepends the given string with “[&lt;current thread ID&gt;] ” unless it already contains it.</p>
+<p>Prepends the given string with “[&lt;current thread ID&gt;] ” unless it
+already contains it.</p>
 </div></span>
   
 </li>
@@ -193,7 +194,9 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Once a lock is acquired on a serialize block with the given ID, it won&#39;t be released to other parallel threads until the end of this block.</p>
+<p>Once a lock is acquired on a serialize block with the given ID, it
+won&#39;t be released to other parallel threads until the end of this
+block.</p>
 </div></span>
   
 </li>
@@ -203,6 +206,28 @@
   <span class="summary_signature">
     
       <a href="#serialize-class_method" title="serialize (class method)">.<strong>serialize</strong>(id = nil)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#sync_up-class_method" title="sync_up (class method)">.<strong>sync_up</strong>(*ids)  &#x21d2; Object </a>
     
 
     
@@ -240,6 +265,32 @@
   
     <span class="summary_desc"><div class='inline'>
 <p>Returns the PatternThread object for the current thread.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#wait_for_threads_to_complete-class_method" title="wait_for_threads_to_complete (class method)">.<strong>wait_for_threads_to_complete</strong>(*ids)  &#x21d2; Object </a>
+    
+
+    
+      (also: wait_for_thread, wait_for_threads, wait_for_thread_to_complete)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Wait for the given threads to complete.</p>
 </div></span>
   
 </li>
@@ -324,7 +375,8 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Prepends the given string with “[&lt;current thread ID&gt;] ” unless it already contains it</p>
+<p>Prepends the given string with “[&lt;current thread ID&gt;] ” unless it
+already contains it</p>
 
 
   </div>
@@ -373,7 +425,8 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Once a lock is acquired on a serialize block with the given ID, it won&#39;t be released to other parallel threads until the end of this block</p>
+<p>Once a lock is acquired on a serialize block with the given ID, it
+won&#39;t be released to other parallel threads until the end of this block</p>
 
 
   </div>
@@ -525,6 +578,40 @@
 </div>
     
       <div class="method_details ">
+  <h3 class="signature " id="sync_up-class_method">
+  
+    .<strong>sync_up</strong>(*ids)  &#x21d2; <tt><span class='object_link'><a href="../../Object.html" title="Object (class)">Object</a></span></tt> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+93
+94
+95
+96
+97</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern_sequencer.rb', line 93</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_sync_up'>sync_up</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_ids'>ids</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='ivar'>@current_sequence</span>
+    <span class='ivar'>@current_sequence</span><span class='period'>.</span><span class='id identifier rubyid_send'>send</span><span class='lparen'>(</span><span class='symbol'>:sync_up</span><span class='comma'>,</span> <span class='id identifier rubyid_caller'>caller</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_ids'>ids</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
   <h3 class="signature " id="thread-class_method">
   
     .<strong>thread</strong>  &#x21d2; <tt><span class='object_link'><a href="../../Object.html" title="Object (class)">Object</a></span></tt> 
@@ -565,14 +652,61 @@
 </table>
 </div>
     
+      <div class="method_details ">
+  <h3 class="signature " id="wait_for_threads_to_complete-class_method">
+  
+    .<strong>wait_for_threads_to_complete</strong>(*ids)  &#x21d2; <tt><span class='object_link'><a href="../../Object.html" title="Object (class)">Object</a></span></tt> 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='wait_for_thread-class_method'>wait_for_thread</span>, <span id='wait_for_threads-class_method'>wait_for_threads</span>, <span id='wait_for_thread_to_complete-class_method'>wait_for_thread_to_complete</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Wait for the given threads to complete. If no IDs given it will wait for
+all currently running threads (except for the one who called this) to
+complete.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+86
+87
+88</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern_sequencer.rb', line 86</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_wait_for_threads_to_complete'>wait_for_threads_to_complete</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_ids'>ids</span><span class='rparen'>)</span>
+  <span class='ivar'>@current_sequence</span><span class='period'>.</span><span class='id identifier rubyid_wait_for_threads_to_complete'>wait_for_threads_to_complete</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_ids'>ids</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
   </div>
 
 </div>
 
       <div id="footer">
-  Generated on Fri May  8 09:17:57 2020 by
-  <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.24 (ruby-2.6.5).
+  Generated on Fri May 15 02:17:28 2020 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.9.24 (ruby-2.5.1).
 </div>
 
     </div>

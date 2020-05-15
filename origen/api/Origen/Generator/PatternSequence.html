@@ -6,7 +6,7 @@
 <title>
   Class: Origen::Generator::PatternSequence
   
-    &mdash; Origen Core 0.55.5
+    &mdash; Origen Core 0.56.0
   
 </title>
 
@@ -102,7 +102,8 @@
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
     
-<p>Manages a single pattern sequence, i.e. an instance of PatternSequence is created for every Pattern.sequence do … end block</p>
+<p>Manages a single pattern sequence, i.e. an instance of PatternSequence is
+created for every Pattern.sequence do … end block</p>
 
 
   </div>
@@ -128,7 +129,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#initialize-instance_method" title="#initialize (instance method)">#<strong>initialize</strong>(name, block)  &#x21d2; PatternSequence </a>
+      <a href="#initialize-instance_method" title="#initialize (instance method)">#<strong>initialize</strong>(name, block, pre_block = nil)  &#x21d2; PatternSequence </a>
     
 
     
@@ -206,11 +207,11 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#wait_for_threads-instance_method" title="#wait_for_threads (instance method)">#<strong>wait_for_threads</strong>(*ids)  &#x21d2; Object </a>
+      <a href="#wait_for_threads_to_complete-instance_method" title="#wait_for_threads_to_complete (instance method)">#<strong>wait_for_threads_to_complete</strong>(*ids)  &#x21d2; Object </a>
     
 
     
-      (also: #wait_for_thread)
+      (also: #wait_for_thread, #wait_for_threads, #wait_for_thread_to_complete)
     
   </span>
   
@@ -236,7 +237,7 @@
     <div class="method_details first">
   <h3 class="signature first" id="initialize-instance_method">
   
-    #<strong>initialize</strong>(name, block)  &#x21d2; <tt><span class='object_link'><a href="" title="Origen::Generator::PatternSequence (class)">PatternSequence</a></span></tt> 
+    #<strong>initialize</strong>(name, block, pre_block = nil)  &#x21d2; <tt><span class='object_link'><a href="" title="Origen::Generator::PatternSequence (class)">PatternSequence</a></span></tt> 
   
 
   
@@ -268,20 +269,24 @@
 14
 15
 16
-17</pre>
+17
+18
+19</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern_sequence.rb', line 8</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_block'>block</span><span class='comma'>,</span> <span class='id identifier rubyid_pre_block'>pre_block</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
   <span class='ivar'>@number_of_threads</span> <span class='op'>=</span> <span class='int'>1</span>
   <span class='ivar'>@name</span> <span class='op'>=</span> <span class='id identifier rubyid_name'>name</span>
   <span class='ivar'>@running_thread_ids</span> <span class='op'>=</span> <span class='lbrace'>{</span> <span class='label'>main:</span> <span class='kw'>true</span> <span class='rbrace'>}</span>
   <span class='comment'># The contents of the main Pattern.sequence block will be executed as a thread and treated
 </span>  <span class='comment'># like any other parallel block
-</span>  <span class='id identifier rubyid_thread'>thread</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="PatternThread.html" title="Origen::Generator::PatternThread (class)">PatternThread</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="PatternThread.html#initialize-instance_method" title="Origen::Generator::PatternThread#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='symbol'>:main</span><span class='comma'>,</span> <span class='kw'>self</span><span class='comma'>,</span> <span class='id identifier rubyid_block'>block</span><span class='comma'>,</span> <span class='kw'>true</span><span class='rparen'>)</span>
+</span>  <span class='id identifier rubyid_thread'>thread</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="PatternThread.html" title="Origen::Generator::PatternThread (class)">PatternThread</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="PatternThread.html#initialize-instance_method" title="Origen::Generator::PatternThread#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='symbol'>:main</span><span class='comma'>,</span> <span class='kw'>self</span><span class='comma'>,</span> <span class='id identifier rubyid_block'>block</span><span class='comma'>,</span> <span class='kw'>true</span><span class='comma'>,</span> <span class='id identifier rubyid_pre_block'>pre_block</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_threads'>threads</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_thread'>thread</span>
   <span class='id identifier rubyid_active_threads'>active_threads</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_thread'>thread</span>
+  <span class='const'><span class='object_link'><a href="../../top-level-namespace.html#PatSeq-constant" title="PatSeq (constant)">PatSeq</a></span></span><span class='period'>.</span><span class='id identifier rubyid_send'>send</span><span class='lparen'>(</span><span class='symbol'>:current_sequence=</span><span class='comma'>,</span> <span class='kw'>self</span><span class='rparen'>)</span>
+  <span class='ivar'>@sync_ups</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -325,8 +330,6 @@
       <pre class="lines">
 
 
-20
-21
 22
 23
 24
@@ -339,10 +342,12 @@
 31
 32
 33
-34</pre>
+34
+35
+36</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern_sequence.rb', line 20</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern_sequence.rb', line 22</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_run'>run</span><span class='lparen'>(</span><span class='id identifier rubyid_pattern_name'>pattern_name</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_name'>name</span> <span class='op'>=</span> <span class='const'>Pathname</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_pattern_name'>pattern_name</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_basename'>basename</span>
@@ -394,17 +399,17 @@
       <pre class="lines">
 
 
-38
-39
 40
 41
 42
 43
 44
-45</pre>
+45
+46
+47</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern_sequence.rb', line 38</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern_sequence.rb', line 40</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_thread'>thread</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
   <span class='ivar'>@number_of_threads</span> <span class='op'>+=</span> <span class='int'>1</span>
@@ -420,14 +425,14 @@
 </div>
     
       <div class="method_details ">
-  <h3 class="signature " id="wait_for_threads-instance_method">
+  <h3 class="signature " id="wait_for_threads_to_complete-instance_method">
   
-    #<strong>wait_for_threads</strong>(*ids)  &#x21d2; <tt><span class='object_link'><a href="../../Object.html" title="Object (class)">Object</a></span></tt> 
+    #<strong>wait_for_threads_to_complete</strong>(*ids)  &#x21d2; <tt><span class='object_link'><a href="../../Object.html" title="Object (class)">Object</a></span></tt> 
   
 
   
     <span class="aliases">Also known as:
-    <span class="names"><span id='wait_for_thread-instance_method'>wait_for_thread</span></span>
+    <span class="names"><span id='wait_for_thread-instance_method'>wait_for_thread</span>, <span id='wait_for_threads-instance_method'>wait_for_threads</span>, <span id='wait_for_thread_to_complete-instance_method'>wait_for_thread_to_complete</span></span>
     </span>
   
 
@@ -438,8 +443,6 @@
       <pre class="lines">
 
 
-48
-49
 50
 51
 52
@@ -463,12 +466,14 @@
 70
 71
 72
-73</pre>
+73
+74
+75</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern_sequence.rb', line 48</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/generator/pattern_sequence.rb', line 50</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_wait_for_threads'>wait_for_threads</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_ids'>ids</span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_wait_for_threads_to_complete'>wait_for_threads_to_complete</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_ids'>ids</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_completed'>completed</span> <span class='op'>=</span> <span class='kw'>false</span>
   <span class='id identifier rubyid_blocked'>blocked</span> <span class='op'>=</span> <span class='kw'>false</span>
   <span class='id identifier rubyid_ids'>ids</span> <span class='op'>=</span> <span class='id identifier rubyid_ids'>ids</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span><span class='lparen'>(</span><span class='op'>&amp;</span><span class='symbol'>:to_sym</span><span class='rparen'>)</span>
@@ -504,9 +509,9 @@
 </div>
 
       <div id="footer">
-  Generated on Fri May  8 09:17:57 2020 by
-  <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.24 (ruby-2.6.5).
+  Generated on Fri May 15 02:17:28 2020 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.9.24 (ruby-2.5.1).
 </div>
 
     </div>

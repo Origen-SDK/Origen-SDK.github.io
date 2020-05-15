@@ -900,7 +900,7 @@ until all other threads complete:</p>
 
       <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre>seq.wait_for_threads
+  <div class="code"><pre><span style="color:#036;font-weight:bold">PatSeq</span>.wait_for_threads_to_complete
 </pre></div>
 </div>
       </div>
@@ -909,8 +909,8 @@ until all other threads complete:</p>
 
       <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre>seq.wait_for_thread <span style="color:#A60">:th1</span>
-seq.wait_for_threads <span style="color:#A60">:th1</span>, <span style="color:#A60">:th2</span>
+  <div class="code"><pre><span style="color:#036;font-weight:bold">PatSeq</span>.wait_for_thread_to_complete <span style="color:#A60">:th1</span>
+<span style="color:#036;font-weight:bold">Patseq</span>.wait_for_threads_to_complete <span style="color:#A60">:th1</span>, <span style="color:#A60">:th2</span>
 </pre></div>
 </div>
       </div>
@@ -930,7 +930,7 @@ seq.wait_for_threads <span style="color:#A60">:th1</span>, <span style="color:#A
     <span style="color:#00D">20</span>.ms!
   <span style="color:#080;font-weight:bold">end</span>
 
-  seq.wait_for_threads
+  <span style="color:#036;font-weight:bold">PatSeq</span>.wait_for_threads_to_complete
 
   <span style="color:#00D">5</span>.ms!
 <span style="color:#080;font-weight:bold">end</span>
@@ -954,6 +954,88 @@ th2:  __________________________████████████████
 </pre></div>
 </div>
       </div>
+
+      <p>It is also possible to sync up threads to a common point in the code by calling <code>PatSeq.sync_up</code>,
+consider the following example:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">sync_up</span>
+  <span style="color:#036;font-weight:bold">PatSeq</span>.sync_up
+<span style="color:#080;font-weight:bold">end</span>
+
+<span style="color:#036;font-weight:bold">Pattern</span>.sequence <span style="color:#080;font-weight:bold">do</span> |seq|
+  <span style="color:#00D">5</span>.ms!
+
+  seq.thread <span style="color:#A60">:th1</span> <span style="color:#080;font-weight:bold">do</span>
+    <span style="color:#00D">5</span>.ms!
+    sync_up
+    <span style="color:#00D">5</span>.ms!
+  <span style="color:#080;font-weight:bold">end</span>
+
+  seq.thread <span style="color:#A60">:th2</span> <span style="color:#080;font-weight:bold">do</span>
+    sync_up
+    <span style="color:#00D">20</span>.ms!
+  <span style="color:#080;font-weight:bold">end</span>
+
+  <span style="color:#036;font-weight:bold">PatSeq</span>.wait_for_threads_to_complete
+
+  <span style="color:#00D">5</span>.ms!
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>What would that execution profile look like?</p>
+
+      <p>In this case the 20ms in thread 2 will be blocked until thread 1 reaches the sync up point after executing for 5ms:</p>
+
+      <div class="language-text highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>      |-------------------------|-------------------------|-------------------------|-------------
+      0                         10.0ms                    20.0ms                    30.0ms
+
+main: █████████████_________________________________________________________________██████████████
+
+th1:  _____________███████████████████████████____________________________________________________
+
+th2:  __________________________████████████████████████████████████████████████████______________
+</pre></div>
+</div>
+      </div>
+
+      <div class="alert alert-info">
+  <strong>Note!</strong> 
+  A sync up point is associated with the threads reaching <strong>the exact same point in the code</strong>.
+  This is why <code>PatSeq.sync_up</code> is called from a method in the above example. Calling `PatSeq.sync_up`
+  directly from within each thread would have hung forever since each thread would never reach the sync up
+  point within the other thread's code block.
+</div>
+
+      <p>By default, calling <code>PatSeq.sync_up</code> with no arguments means “wait for all threads except for main to reach this point”. 
+Normally, that is what most applications would naturally mean since the main thread does not contain much active code
+and is usually just used as a launching point for concurrent threads.
+If you wish to wait for all threads including main, then use:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#036;font-weight:bold">PatSeq</span>.sync_up <span style="color:#606">include_main</span>: <span style="color:#069">true</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>You can also wait for specific threads, e.g.</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#036;font-weight:bold">PatSeq</span>.sync_up <span style="color:#A60">:th1</span>, <span style="color:#A60">:th2</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>In that example if either <code>:th1</code> or <code>:th2</code> reached that code it would wait there until the other thread arrived.</p>
+
+      <p>If a third thread, <code>:th3</code> arrived at that point, it would not wait and would continue unimpeded.</p>
 
       <div>    
   <a class="anchor" name="Reserving_Serial_Resources"></a>          
@@ -1007,7 +1089,7 @@ within the time specified and/or that they do not separated by transactions from
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = 'origen-sdk';
     var disqus_title;
-    var disqus_url = 'https://' + window.location.hostname + window.location.pathname;
+    var disqus_url = 'http://' + window.location.hostname + window.location.pathname;
 
     disqus_title = $("h1").text();
     if (disqus_title.length == 0) {
