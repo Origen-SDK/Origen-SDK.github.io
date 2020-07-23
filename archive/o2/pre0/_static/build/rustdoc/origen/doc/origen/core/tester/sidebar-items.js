@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["TesterSource",""]],"struct":[["RenderStatus",""],["Tester",""]],"trait":[["Interceptor","Trait which allows Rust-side implemented testers to intercept generic calls   from the tester. Each method will be given the resulting node after processing. Note: the node given is only a clone of what will be stored in the AST."],["TesterAPI",""]]});

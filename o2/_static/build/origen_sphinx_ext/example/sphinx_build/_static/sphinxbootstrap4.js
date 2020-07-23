@@ -1,3 +1,7 @@
+/*
+  Taken from the sphinxbootstrap4 theme: https://github.com/myyasuda/sphinxbootstrap4theme
+*/
+
 function stickySidebar() {
     
     var topPadding = $('.navbar').outerHeight(true);
@@ -105,7 +109,9 @@ $(function() {
     $("a.download").prepend('<div class="icon"><div class="download"></div></div>');
 
     
-    stickySidebar();
+    // This is causing jitteriness if there isn't sufficent page content to fully expand the sidebar.
+    // Need to investigate further. It's a nice feature but needs some integration work.
+    // stickySidebar();
     
 
 });

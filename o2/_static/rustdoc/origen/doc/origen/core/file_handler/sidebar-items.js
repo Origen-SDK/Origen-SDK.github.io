@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["File",""],["FileHandler","This is an iterator + external API for consuming the file list"]]});

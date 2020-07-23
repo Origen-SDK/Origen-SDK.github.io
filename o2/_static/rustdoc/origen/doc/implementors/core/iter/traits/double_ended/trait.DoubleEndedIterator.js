@@ -1,0 +1,3 @@
+(function() {var implementors = {};
+implementors["origen"] = [{"text":"impl&lt;'a&gt; <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/iter/traits/double_ended/trait.DoubleEndedIterator.html\" title=\"trait core::iter::traits::double_ended::DoubleEndedIterator\">DoubleEndedIterator</a> for <a class=\"struct\" href=\"origen/core/model/registers/register/struct.RegisterFieldIterator.html\" title=\"struct origen::core::model::registers::register::RegisterFieldIterator\">RegisterFieldIterator</a>&lt;'a&gt;","synthetic":false,"types":["origen::core::model::registers::register::RegisterFieldIterator"]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["PinActions","List of supported pin actions."],["PinRoles","Available Pin Roles"]],"struct":[["Pin","Model for single pin."]]});

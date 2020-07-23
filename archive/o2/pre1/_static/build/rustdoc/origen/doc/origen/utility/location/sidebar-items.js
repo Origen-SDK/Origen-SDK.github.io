@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Location","Stores a location and implements some helpers for discerning where its pointing Support types so far:   url   git https   git ssh   path (Windows or Linux) Notes:   * This does not check for existence and permissions. Simply stores the location and discerns its type   * A git HTTPS URL will also return as a URL"]]});

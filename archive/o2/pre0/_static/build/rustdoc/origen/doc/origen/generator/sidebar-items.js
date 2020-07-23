@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["ast",""],["processor","The processor API is intentionally placed in a separate modele from the AST/Node to ensure that processor implementations use the Node API rather than coupling to its internals (i.e. children vector) which could be subject to change."],["processors",""],["stil",""]],"struct":[["TestManager",""]]});
