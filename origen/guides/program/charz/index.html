@@ -290,7 +290,7 @@
                 Test Program Generator
               </a>
             </div>
-            <div id="sidebar-collapse-7" class="panel-collapse collapse ">
+            <div id="sidebar-collapse-7" class="panel-collapse collapse in">
               <div class="panel-body">
                 <ul class="nav nav-list">
 <li class=""><a href="/origen/guides/program/introduction">Introduction</a></li>
@@ -300,7 +300,7 @@
 <li class=""><a href="/origen/guides/program/interface">Creating an Interface</a></li>
 <li class=""><a href="/origen/guides/program/resources">Additional Resources</a></li>
 <li class=""><a href="/origen/guides/program/code">Dynamic Custom Code</a></li>
-<li class=""><a href="/origen/guides/program/charz">Characterization API</a></li>
+<li class="active"><a href="/origen/guides/program/charz">Characterization API</a></li>
 <li class=""><a href="/origen/guides/program/j750">J750 API</a></li>
 <li class=""><a href="/origen/guides/program/v93k">V93K Common API</a></li>
 <li class=""><a href="/origen/guides/program/v93ksmt7">V93K SMT7 API</a></li>
@@ -336,14 +336,14 @@
                 Simulation
               </a>
             </div>
-            <div id="sidebar-collapse-9" class="panel-collapse collapse in">
+            <div id="sidebar-collapse-9" class="panel-collapse collapse ">
               <div class="panel-body">
                 <ul class="nav nav-list">
 <li class=""><a href="/origen/guides/simulation/introduction">Introduction</a></li>
 <li class=""><a href="/origen/guides/simulation/howitworks">How It Works</a></li>
 <li class=""><a href="/origen/guides/simulation/compiling">Compiling the DUT</a></li>
 <li class=""><a href="/origen/guides/simulation/ams">AMS Support</a></li>
-<li class="active"><a href="/origen/guides/simulation/environment">Environment Setup</a></li>
+<li class=""><a href="/origen/guides/simulation/environment">Environment Setup</a></li>
 <li class=""><a href="/origen/guides/simulation/app">Application Setup</a></li>
 <li class=""><a href="/origen/guides/simulation/patterns">Simulating Patterns</a></li>
 <li class=""><a href="/origen/guides/simulation/flows">Simulating Flows</a></li>
@@ -449,234 +449,203 @@
   <div class="col-md-9 nav-page-container">
     <article class="search-results">
 
-      <h3 class="topic-title">Simulation</h3>
+      <h3 class="topic-title">Test Program Generator</h3>
 
-      <h2 class="topic-subtitle">Environment Setup</h2>
+      <h2 class="topic-subtitle">Characterization API</h2>
 
       <hr>
 
-      <p>By convention, the OrigenSim simulator driver is configured within the file <code>environment/sim.rb</code>.</p>
+      <p>Be sure to read and understand the guide to
+<a href="/origen/guides/program/interface">Creating an Interface</a> before
+reading this guide.
+This guide covers aspects of the Characterization (charz) API.</p>
 
-      <p>Usually the simulator configuration may be different for each DUT target, so often this file is structured like this
-to enable a single Origen simulation environment setup file to support multiple DUT targets within the
-application:</p>
+      <p>Currently, the charz API has only been proven out for V93K SMT7, but isn’t inherently designed around working only for that environment.</p>
+
+      <p>The Charz API is enabled by including the Charz module in your interface:</p>
 
       <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># environment/sim.rb</span>
+  <div class="code"><pre><span style="color:#777"># app/lib/my_app/interface.rb</span>
+<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">MyApp</span>
+  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">Interface</span>
+    include <span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">ProgramGenerators</span>
+    include <span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">Charz</span>
+</pre></div>
+</div>
+      </div>
 
-<span style="color:#080;font-weight:bold">case</span> <span style="color:#036;font-weight:bold">Origen</span>.target.name
+      <p>Note this guide assumes the audience is familiar with interface creation and custom test methods, and will not go into detail explaining those topics.</p>
 
-<span style="color:#080;font-weight:bold">when</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">my_dut1</span><span style="color:#710">"</span></span>
-  <span style="color:#036;font-weight:bold">OrigenSim</span>.cadence <span style="color:#080;font-weight:bold">do</span> |sim|
-    <span style="color:#777"># Configuration of Cadence simulator to be used for DUT1 here</span>
-  <span style="color:#080;font-weight:bold">end</span>
+      <div>    
+  <a class="anchor" name="Overview"></a>          
+  <h2><a href="#Overview">Overview</a></h2>          
+</div>
 
-<span style="color:#080;font-weight:bold">when</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">my_dut2</span><span style="color:#710">"</span></span>
-  <span style="color:#036;font-weight:bold">OrigenSim</span>.synopsys <span style="color:#080;font-weight:bold">do</span> |sim|
-    <span style="color:#777"># Configuration of Synopsys simulator to be used for DUT2 here</span>
-  <span style="color:#080;font-weight:bold">end</span>
+      <p>The Characterization API allows a flow to add characterization to existing production tests with little additional overhead.</p>
 
-<span style="color:#080;font-weight:bold">else</span>
-  <span style="color:#036;font-weight:bold">Origen</span>.log.error <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">No simulation environment has been setup for target </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.target.name<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">, edit environment/sim.rb to add one.</span><span style="color:#710">"</span></span>
-  exit <span style="color:#00D">1</span>
+      <p>First specify charz routines to set charz test options, then create a profile with flow creation meta for the resulting tests.
+Afterwards, the <code>charz_on</code> method can be called in the flow to activate charz profiles, which is explained below.</p>
+
+      <div>    
+  <a class="anchor" name="Charz_Routines"></a>          
+  <h3><a href="#Charz_Routines">Charz Routines</a></h3>          
+</div>
+
+      <p>Charz routines contain relevant charz data thats specific to a charz test to be created. Created routines are stored in the <code>@charz_routines</code> attribute.
+The data stored within a routine will be used in combination with the options used to make a production test to make a charz variant of the production test.</p>
+
+      <p>The interface adds charz routines by calling the <code>add_charz_routine</code> method:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>add_charz_routine <span style="color:#A60">:vmin</span> <span style="color:#080;font-weight:bold">do</span> |routine|
+  routine.name = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">cz_vmin_vdd</span><span style="color:#710">'</span></span>
+  routine.start = <span style="color:#60E">1.0</span>.V
+  routine.stop = <span style="color:#60E">0.5</span>.V
+  routine.res = <span style="color:#00D">5</span>.mV
+  routine.spec = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">VDD</span><span style="color:#710">'</span></span>
 <span style="color:#080;font-weight:bold">end</span>
 </pre></div>
 </div>
       </div>
 
       <div>    
-  <a class="anchor" name="Configuring_The_Simulator"></a>          
-  <h4><a href="#Configuring_The_Simulator">Configuring The Simulator</a></h4>          
+  <a class="anchor" name="Charz_Profiles"></a>          
+  <h3><a href="#Charz_Profiles">Charz Profiles</a></h3>          
 </div>
 
-      <p>Here is an example of configuring the simulator with some generic options that are supported by all simulators:</p>
+      <p>Charz profiles contain a collection of routines, as well as test creation meta data related to test placement, production test result dependence, and conditional execution.</p>
+
+      <p>The interface adds charz profiles by calling the <code>add_charz_profile</code> method. To create a profile that contains previously defined vmin and vmax search routines, whose resulting searches
+only run if the production test failed, and sets the vmax search routine to only run if the ‘VmaxEnable’ variable is set:</p>
 
       <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">OrigenSim</span>.cadence <span style="color:#080;font-weight:bold">do</span> |sim|
-  <span style="color:#777"># By default a simulation will be given 60 seconds to startup, if it fails to start within this time the</span>
-  <span style="color:#777"># simulation will be abandoned and considered failed. If a particular simulation is known to be slow to start,</span>
-  <span style="color:#777"># the timeout can be extended as shown in this example (5 minutes):</span>
-  sim.startup_timeout <span style="color:#00D">5</span> * <span style="color:#00D">60</span>
-  <span style="color:#777"># Abort the simulation when this number of errors is reached (defaults to 100).</span>
-  <span style="color:#777"># This can also be overridden at runtime via the --max_errors switch.</span>
-  sim.max_errors = <span style="color:#00D">50</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
-
-      <p>Note that defining a configuration like this will also instantiate an instance of <code>OrigenSim::Tester</code> and assign it to
-the global variable <code>tester</code>.
-This <code>tester</code> object will behave like any other Origen tester driver and your application will be unaware that it is
-driving a simulator rather than an ATE-specific pattern renderer.</p>
-
-      <p>Note also that the <code>post_process_run_cmd</code> option is available for all simulators, however it is reserved for discussion
-later in this guide since it is more of an advanced topic.</p>
-
-      <div>    
-  <a class="anchor" name="Cadence_(irun)_Specific_Configuration"></a>          
-  <h4><a href="#Cadence_(irun)_Specific_Configuration">Cadence (irun) Specific Configuration</a></h4>          
-</div>
-
-      <p>Additionally, a Cadence simulator setup supports the following vendor-specific options:</p>
-
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">OrigenSim</span>.cadence <span style="color:#080;font-weight:bold">do</span> |sim|
-  <span style="color:#777"># By default the simulation will be run by calling 'irun', this can be changed to anything you want, but it</span>
-  <span style="color:#777"># is usually a good idea to use this option to lock to a specific version of irun (the same version that was</span>
-  <span style="color:#777"># used to compile the DUT snapshot)</span>
-  sim.irun <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/tools/cadence/15.10.023/bin/irun</span><span style="color:#710">'</span></span>
-  <span style="color:#777"># The default wave viewer is 'simvision', this can also be changed</span>
-  sim.simvision <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/tools/cadence/15.10.023/bin/simvision</span><span style="color:#710">'</span></span>
-  <span style="color:#777"># The cadence simulator configuration does support the use of forces, though this is generally discouraged</span>
-  sim.force {
-    <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">origen.dut.vref_0v8</span><span style="color:#710">'</span></span> =&gt; <span style="color:#00D">1</span>,
-    <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">origen.dut.pmc.some.internal.node</span><span style="color:#710">'</span></span> =&gt; <span style="color:#00D">1</span>,
-  }
-  <span style="color:#777"># Custom probes can be specified, e.g. to include memory contents in the wave dump</span>
-  sim.tcl_inputs <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">%Q(</span><span style="color:#D20">
-    probe -create -shm origen.dut.mems.user -all -memories -variables -unpacked 262144 -depth all
-    probe -create -shm origen.dut.mems.cache -all -memories -variables -unpacked 262144 -depth all
-  </span><span style="color:#710">)</span></span>
+  <div class="code"><pre>add_charz_profile <span style="color:#A60">:fail_searches</span> <span style="color:#080;font-weight:bold">do</span> |profile|
+  profile.name = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">fail_searches</span><span style="color:#710">'</span></span>
+  profile.on_result = <span style="color:#A60">:on_fail</span>
+  profile.routines = [<span style="color:#A60">:vmin</span>, <span style="color:#A60">:vmax</span>]
+  profile.enables = { [<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">$VmaxEnable</span><span style="color:#710">'</span></span>] =&gt; [<span style="color:#A60">:vmax</span>] }
 <span style="color:#080;font-weight:bold">end</span>
 </pre></div>
 </div>
       </div>
 
       <div>    
-  <a class="anchor" name="Synopsys_Specific_Configuration"></a>          
-  <h4><a href="#Synopsys_Specific_Configuration">Synopsys Specific Configuration</a></h4>          
+  <a class="anchor" name="Charz_Session"></a>          
+  <h3><a href="#Charz_Session">Charz Session</a></h3>          
 </div>
 
-      <p>Here are the vendor-specific options for Synopsys:</p>
+      <p>The charz session (stored in your interfaces <code>@charz_session</code> attribute) monitors the current state of characterization at a given point in flow generation.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">OrigenSim</span>.cadence <span style="color:#080;font-weight:bold">do</span> |sim|
-  <span style="color:#777"># By default the simulation will be run by calling 'vcs', this can be changed to anything you want, but it</span>
-  <span style="color:#777"># is usually a good idea to use this option to lock to a specific version of vcs (the same version that was</span>
-  <span style="color:#777"># used to compile the DUT snapshot)</span>
-  sim.vcs <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">/tools/synopsys/L-2016.06/bin/vcs</span><span style="color:#710">"</span></span>
-  <span style="color:#777"># The default wave viewer is 'dve', this can also be changed</span>
-  sim.dve <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">/tools/synopsys/L-2016.06/bin/dve</span><span style="color:#710">"</span></span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
-
-      <p>Origen Sim also offers the option to use Verdi as a wave viewer instead of ‘dve’, the vendor-specific options for Synopsys w/Verdi would be:</p>
-
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">OrigenSim</span>.cadence <span style="color:#080;font-weight:bold">do</span> |sim|
-  sim.vcs <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">/tools/synopsys/L-2016.06/bin/vcs</span><span style="color:#710">"</span></span>
-  sim.verdi <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">/tools/synopsys/L-2016.06/bin/verdi</span><span style="color:#710">"</span></span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
-
-      <div>    
-  <a class="anchor" name="Icarus_Verilog_Specific_Configuration"></a>          
-  <h4><a href="#Icarus_Verilog_Specific_Configuration">Icarus Verilog Specific Configuration</a></h4>          
-</div>
-
-      <p>Here are the vendor-specific options for Icarus Verilog:</p>
-
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">OrigenSim</span>.cadence <span style="color:#080;font-weight:bold">do</span> |sim|
-  <span style="color:#777"># By default the simulation will be run by calling 'vvp', this can be changed to anything you want, but it</span>
-  <span style="color:#777"># is usually a good idea to use this option to lock to a specific version of vvp (the same version that was</span>
-  <span style="color:#777"># used to compile the DUT snapshot)</span>
-  sim.vvp <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">/tools/icarus/0.9.7/bin/vvp</span><span style="color:#710">"</span></span>
-  <span style="color:#777"># The default wave viewer is 'gtkwave', this can also be changed</span>
-  sim.gtkwave <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">/tools/gtkwave/3.3.66/bin/gtkwave</span><span style="color:#710">"</span></span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
-
-      <div>    
-  <a class="anchor" name="Custom_Simulator_Configuration"></a>          
-  <h4><a href="#Custom_Simulator_Configuration">Custom Simulator Configuration</a></h4>          
-</div>
-
-      <p>A custom simulator configuration allows you to use a tool that is not supported out of the box by <code>OrigenSim</code>,
-or to setup a more advanced simulation run command such as that required to run an analog-digital co-simulation if your
-DUT contains full electrical models of some IPs.
-For these, it 
-is your responsibility to provide the command to start the simulation process, however, this allows for arbitrary commands to
-start the process and allows end users to still use <code>origen g</code> as if with a fully <code>OrigenSim</code> supported
-simulator configuration.</p>
-
-      <p>An example of such a configuration could be:</p>
-
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">OrigenSim</span>.generic <span style="color:#080;font-weight:bold">do</span> |sim|
-  sim.generic_run_cmd <span style="color:#080;font-weight:bold">do</span> |s|
-    <span style="color:#777"># Return the command to start the simulation</span>
-    <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">path/to/custom/sim/script +socket+</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>s.socket_id<span style="font-weight:bold;color:#666">}</span></span><span style="color:#710">"</span></span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
-
-      <p>Here is an example using the predecessor of the supported Cadence tool <code>irun</code>, <code>ncsim</code>:</p>
-
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">OrigenSim</span>.generic <span style="color:#080;font-weight:bold">do</span> |sim|
-  sim.testbench_top <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">na_origen</span><span style="color:#710">'</span></span>
-  sim.generic_run_cmd <span style="color:#080;font-weight:bold">do</span> |s|
-    <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">ncsim na_origen -loadpli origen.so:origen_init +socket+</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>s.socket_id<span style="font-weight:bold;color:#666">}</span></span><span style="color:#710">"</span></span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
-
-      <p>The following commonly used options are available to a generic simulation configuration:</p>
+      <p>The API provides some key methods for querying that state during generation, such as:</p>
 
       <ul>
         <li>
-<code>testbench_top</code> - Defines the testbench name if different from <code>origen</code>.</li>
+<code>charz_active?</code> : indicates if applicable productions tests should be generating charz tests as well</li>
         <li>
-<code>view_waveform_cmd</code> - Required for generic configurations - prints out this statement following a simulation instructing the
-user on how to open the waveforms for viewing. For supported simulators, this is already provided, but can be overwritten.</li>
-        <li>
-<code>generic_run_cmd</code> - Either a string, array to be joined by ‘ &amp;&amp; ‘, or a block returning either of the aforementioned that
-the generic configuration will use to launch the simulation.</li>
-        <li>
-<code>post_process_run_cmd</code> - Block object to post-process the command that OrigenSim will launch the simulation with. This can be used
-to post-process the command for any supported vendor. This block should return the command to run, as a string.</li>
+<code>charz_only?</code>   : indicates if the production tests should be added to the flow or not, only generating the resulting charz test</li>
       </ul>
 
-      <p>An example of the <code>post_process_run_cmd</code> usage is:</p>
+      <div>    
+  <a class="anchor" name="Interface_Considerations"></a>          
+  <h2><a href="#Interface_Considerations">Interface Considerations</a></h2>          
+</div>
+
+      <p>A couple of enhancements will need to be added to your interface to take advantage of the API in addition to adding <code>include OrigenTesters::Charz</code> as shown above.
+The charz routines and profiles will need to be added, and your flow methods will need to be updated to know what to do when a charz session is active.</p>
+
+      <div>    
+  <a class="anchor" name="Adding_charz_routines_and_profiles"></a>          
+  <h3><a href="#Adding_charz_routines_and_profiles">Adding charz routines and profiles</a></h3>          
+</div>
+
+      <p>As long as the desired routines and profiles exist in the interface’s @charz_routines and @charz_profiles hashes, the rest of the API will work as expected.
+One option is to add them during the interface initialization:</p>
 
       <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">OrigenSim</span>.cadence <span style="color:#080;font-weight:bold">do</span> |sim|
-  sim.post_process_run_cmd <span style="color:#080;font-weight:bold">do</span> |cmd, s|
-    <span style="color:#777"># cmd is the current command that will be run. s is the simulator object, same as sim in this case.</span>
-    <span style="color:#777"># this should return either a string or an array to be joined by ' &amp;&amp; ' (chain commands)</span>
-    <span style="color:#777"># note that we must RETURN the string. We cannot just edit it.</span>
-    
-    <span style="color:#777"># add an environment variable and run setup script as an example</span>
-    <span style="color:#080;font-weight:bold">return</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">export PROJECT=my_rtl &amp;&amp; source </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.app.root.join(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">settings.sh</span><span style="color:#710">'</span></span>)<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20"> &amp;&amp; </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>cmd<span style="font-weight:bold;color:#666">}</span></span><span style="color:#710">"</span></span>
-    
-    <span style="color:#777"># or, we could return</span>
-    <span style="color:#080;font-weight:bold">return</span> [
-      <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">export PROJECT=my_rtl</span><span style="color:#710">'</span></span>,
-      <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">source </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.app.root.join(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">settings.sh</span><span style="color:#710">'</span></span>)<span style="font-weight:bold;color:#666">}</span></span><span style="color:#710">"</span></span>,
-      cmd
-    ]
-    <span style="color:#777">#=&gt; "export PROJECT=my_rtl &amp;&amp; source #{Origen.app.root.join('settings.sh')} &amp;&amp; #{cmd}"</span>
+  <div class="code"><pre><span style="color:#777"># app/lib/my_app/interface.rb</span>
+<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">MyApp</span>
+  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">Interface</span>
+    include <span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">ProgramGenerators</span>
+    include <span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">Charz</span>
+
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">add_charz</span>
+      add_charz_routine <span style="color:#A60">:my_routine</span> <span style="color:#080;font-weight:bold">do</span> |routine|
+        routine.name = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">cz_vmin_vdd</span><span style="color:#710">'</span></span>
+        routine.start = <span style="color:#60E">1.0</span>.V
+        routine.stop = <span style="color:#60E">0.5</span>.V
+        routine.res = <span style="color:#00D">5</span>.mV
+        routine.spec = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">VDD</span><span style="color:#710">'</span></span>
+      <span style="color:#080;font-weight:bold">end</span>
+      add_charz_profile <span style="color:#A60">:my_profile</span> <span style="color:#080;font-weight:bold">do</span> |profile|
+        profile.name = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">vmin_search</span><span style="color:#710">'</span></span>
+        profile.routines = [<span style="color:#A60">:vmin</span>]
+      <span style="color:#080;font-weight:bold">end</span>
+    <span style="color:#080;font-weight:bold">end</span>
+
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options = {})
+      add_charz
+    <span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+      </div>
+
+      <div>    
+  <a class="anchor" name="Configuring_Existing_Flow_Methods"></a>          
+  <h3><a href="#Configuring_Existing_Flow_Methods">Configuring Existing Flow Methods</a></h3>          
+</div>
+
+      <p>Now that your interface has defined some routines and profiles, the flow methods needs to be updated to work with an active charz session.</p>
+
+      <p>Lets take a simplistic example functional flow method defined in <code>MyApp::Interface</code>:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#777"># V93K SMT7 example</span>
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">func</span>(name, options = {})
+  tm = test_methods.ac_tml.ac_test.functional_test
+  ts = test_suites.run(name, options)
+  ts.test_method = tm
+  ts.pattern = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">example</span><span style="color:#710">'</span></span>
+  flow.test ts, options
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>And now we’ll add the ability for this flow method to generate a charz test as well:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#777"># V93K SMT7 example</span>
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">func</span>(name, options = {})
+  <span style="color:#080;font-weight:bold">if</span> options[<span style="color:#A60">:routine</span>]
+    tm = test_methods.ac_tml.ac_test.spec_search
+  <span style="color:#080;font-weight:bold">else</span>
+    tm = test_methods.ac_tml.ac_test.functional_test
+  <span style="color:#080;font-weight:bold">end</span>
+  ts = test_suites.run(name, options)
+  ts.test_method = tm
+  ts.pattern = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">example</span><span style="color:#710">'</span></span>
+
+  <span style="color:#080;font-weight:bold">if</span> options[<span style="color:#A60">:routine</span>]
+    ts.spec = options[<span style="color:#A60">:routine</span>].spec
+    ts.min = options[<span style="color:#A60">:routine</span>].stop
+    ts.max = options[<span style="color:#A60">:routine</span>].start
+    ts.resolution = options[<span style="color:#A60">:routine</span>].res
+  <span style="color:#080;font-weight:bold">end</span>
+
+  flow.test ts, options
+
+  <span style="color:#080;font-weight:bold">unless</span> options[<span style="color:#A60">:charz_test</span>]
+    insert_charz_tests(options.merge(<span style="color:#606">parent_test_name</span>: name, <span style="color:#606">charz_test</span>: <span style="color:#069">true</span>)) <span style="color:#080;font-weight:bold">do</span> |options|
+      charz_name = <span style="color:#A60"><span style="color:#A60">:</span><span style="color:#740">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>name<span style="font-weight:bold;color:#666">}</span></span><span style="color:#A60">_</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>charz_routines[options[<span style="color:#A60">:current_routine</span>]].name<span style="font-weight:bold;color:#666">}</span></span><span style="color:#740">"</span></span>
+      options[<span style="color:#A60">:routine</span>] = charz_routines[options[<span style="color:#A60">:current_routine</span>]]
+      func(charz_name, options)
+    <span style="color:#080;font-weight:bold">end</span>
   <span style="color:#080;font-weight:bold">end</span>
 <span style="color:#080;font-weight:bold">end</span>
 </pre></div>
@@ -684,44 +653,85 @@ to post-process the command for any supported vendor. This block should return t
       </div>
 
       <div>    
-  <a class="anchor" name="Simulation_Object_Checkin/Checkout"></a>          
-  <h4><a href="#Simulation_Object_Checkin/Checkout">Simulation Object Checkin/Checkout</a></h4>          
+  <a class="anchor" name="#insert_charz_tests"></a>          
+  <h3><a href="##insert_charz_tests">#insert_charz_tests</a></h3>          
 </div>
 
-      <p>Environment setups can also include information on the url and version of where the compiled simulation object
-is to be stored - often this will not be checked into the same repository as the main application code since
-for example Git, which is good for application code storage, is not really so good for storing large binaries
-like the simulation objects.</p>
+      <p>The <code>insert_charz_tests</code> method handles everything regarding adding the charz test into the flow except determining the actual name and parameters of the test, which is
+done by the local interface in the block passed to the <code>insert_charz_tests</code> method. This method handles:</p>
 
-      <p>Here is an example setup:</p>
+      <ul>
+        <li>querying the charz session</li>
+        <li>test placement</li>
+        <li>charz test grouping</li>
+        <li>production test result dependency</li>
+        <li>gate processing (enables, flags)</li>
+      </ul>
+
+      <p>The block that gets passed is yielded the latest options (with id removed if passed for the production test, so it doesn’t get re-used for charz tests).
+Routines in the current session are yielded one at a time, with their id being returned in <code>options[:current_routine]</code>.</p>
+
+      <div>    
+  <a class="anchor" name="Company_Plugin_Oppurtunity"></a>          
+  <h4><a href="#Company_Plugin_Oppurtunity">Company Plugin Oppurtunity</a></h4>          
+</div>
+
+      <p>If your company is already using a plugin to distribute the definitions of these flow methods, this is a good oppurtunity to add charz variants of those methods
+that take routine as an input. This can really streamline the process, for example if you combine the charz flow methods plugin with a central flow entry point method called by
+all flow methods, then the implementation becomes:</p>
 
       <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">OrigenSim</span>.synopsys <span style="color:#080;font-weight:bold">do</span> |sim|
-  sim.rc_dir_url <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">sync://sync-12345:12345/Projects/origen_sim_snapshots</span><span style="color:#710">'</span></span>
-  sim.rc_version <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Trunk</span><span style="color:#710">'</span></span>
+  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">add_to_flow</span>(ts, options = {})
+  flow.test ts, options
+
+  <span style="color:#080;font-weight:bold">unless</span> options[<span style="color:#A60">:charz_test</span>]
+    insert_charz_tests(options.merge(<span style="color:#606">parent_test_name</span>: name, <span style="color:#606">charz_test</span>: <span style="color:#069">true</span>)) <span style="color:#080;font-weight:bold">do</span> |options|
+      insert_current_charz_test(options)
+    <span style="color:#080;font-weight:bold">end</span>
+  <span style="color:#080;font-weight:bold">end</span>
 <span style="color:#080;font-weight:bold">end</span>
 </pre></div>
 </div>
       </div>
 
-      <p>The <code>rc_dir_url</code> option should point to a directory in the repository where the snapshot files should be
-stored, not to the snapshot file itself.</p>
+      <p>Where insert_current_charz_test is a method defined in the company charz flow method plugin.</p>
 
-      <p>The <code>rc_version</code> can be set to the version to use, which can be a pointer to latest like ‘Trunk’ or ‘master’ or
-to an absolute version.</p>
+      <div>    
+  <a class="anchor" name="Flow_Usage_Examples"></a>          
+  <h3><a href="#Flow_Usage_Examples">Flow Usage Examples</a></h3>          
+</div>
 
-      <p>The object should be committed to the repository by running the <code>origen sim:ci</code> command with the environment/target
-setup to select the object to be checked in.
-Origen Sim will then automatically tar up the object and check it in.</p>
+      <p>Now that the interface has charz routines and profiles, lets look at how to use the API within the flow itself:</p>
 
-      <p>This same command can be run again in future to check in new versions.</p>
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#036;font-weight:bold">Flow</span>.create(<span style="color:#606">interface</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">MyApp:Interface</span><span style="color:#710">'</span></span>) <span style="color:#080;font-weight:bold">do</span>
 
-      <p>Origen Sim will then automatically check for the presence of the object in the local workspace and will fetch
-it as required - i.e. if not present or if the <code>rc_version</code> has been updated.</p>
+  <span style="color:#777"># regular non charz test</span>
+  func <span style="color:#A60">:my_test1</span>
 
-      <p>Note that when a latest pointer is used as the version, the remote repository is not automatically checked for updates.
-If you want to fetch the latest version or force a re-checkout at anytime you can run the <code>origen sim:co</code> command.</p>
+  <span style="color:#777"># create charz test variants of my_test2 following the production</span>
+  <span style="color:#777"># version of my_test2 using the routines in :my_profile</span>
+  charz_on <span style="color:#A60">:my_profile</span> <span style="color:#080;font-weight:bold">do</span>
+    func <span style="color:#A60">:my_test2</span>
+  <span style="color:#080;font-weight:bold">end</span>
+
+  <span style="color:#777"># conditional charz enablement</span>
+  <span style="color:#777"># besides dut.enable_charz? check, identical to above</span>
+  charz_on <span style="color:#A60">:my_profile</span> <span style="color:#080;font-weight:bold">if</span> dut.enable_charz?
+  func <span style="color:#A60">:my_test3</span>
+  charz_off <span style="color:#080;font-weight:bold">if</span> dut.enable_charz?
+
+  <span style="color:#777"># override session values at the flow level</span>
+  charz_on <span style="color:#A60">:my_profile</span>, <span style="color:#606">placement</span>: <span style="color:#A60">:eof</span> <span style="color:#080;font-weight:bold">do</span>
+    func <span style="color:#A60">:my_test4</span>
+  <span style="color:#080;font-weight:bold">end</span>
+
+<span style="color:#080;font-weight:bold">end</span>
+</pre></div>
+</div>
+      </div>
 
       <div style="position: relative">
   <hr>
