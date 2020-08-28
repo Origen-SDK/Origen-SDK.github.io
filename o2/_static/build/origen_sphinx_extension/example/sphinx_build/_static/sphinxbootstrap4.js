@@ -2,10 +2,12 @@
   Taken from the sphinxbootstrap4 theme: https://github.com/myyasuda/sphinxbootstrap4theme
 */
 
+/*
 function stickySidebar() {
-    
     var topPadding = $('.navbar').outerHeight(true);
-    
+    console.log("top padding!");
+    var topPadding = 0;
+    console.log("no top padding");
     var $sidebar = $('.sphinxsidebar');
     var $sidebarwrapper = $('.sphinxsidebarwrapper');
     var $footer = $('footer');
@@ -48,6 +50,7 @@ function stickySidebar() {
 
     adjust();
 }
+*/
 
 function sidebarTreeView() {
     var $toctree = $('.sidebartoctree > ul');
@@ -111,6 +114,8 @@ $(function() {
     
     // This is causing jitteriness if there isn't sufficent page content to fully expand the sidebar.
     // Need to investigate further. It's a nice feature but needs some integration work.
+    // Update - The more I mess with this the more buggy it gets and, tbh, I just don't like how the page looks
+    //          with two scrollbars on overflow content. Probably just keep this off. If anything, can make the breadcrumbs section sticky.
     // stickySidebar();
     
 

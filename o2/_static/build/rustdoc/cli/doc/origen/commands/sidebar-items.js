@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["launch","Launch the given command in Python"]],"mod":[["fmt",""],["interactive",""],["mode",""],["proj",""],["save_ref",""],["setup",""],["target",""],["update",""]]});
+initSidebarItems({"fn":[["launch","Launch the given command in Python"]],"mod":[["build",""],["fmt",""],["interactive",""],["mode",""],["new",""],["proj",""],["save_ref",""],["setup",""],["target",""],["update",""]]});

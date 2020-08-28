@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["generate_dut",""],["run",""],["validate_resource_name","Validate that the given name meets the following criteria:   * lowercased   * underscored   * starts with a letter   * doesn't contain any special characters"],["write_block_file",""]]});
