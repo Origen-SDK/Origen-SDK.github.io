@@ -251,11 +251,59 @@
 <span id="251">251</span>
 <span id="252">252</span>
 <span id="253">253</span>
+<span id="254">254</span>
+<span id="255">255</span>
+<span id="256">256</span>
+<span id="257">257</span>
+<span id="258">258</span>
+<span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
+<span id="262">262</span>
+<span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">time</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">core</span>::<span class="ident">application</span>::<span class="ident">Application</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">utility</span>::<span class="ident">file_utils</span>::<span class="ident">with_dir</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">built_info</span>, <span class="prelude-ty">Result</span>};
+<span class="kw">use</span> <span class="ident">regex</span>::<span class="ident">Regex</span>;
 <span class="kw">use</span> <span class="ident">semver</span>::<span class="ident">Version</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">env</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">Path</span>;
@@ -271,6 +319,7 @@
 <span class="comment">// If you add an attribute to this you must also update:</span>
 <span class="comment">// * pyapi/src/lib.rs to convert it to Python</span>
 <span class="comment">// * default function below to define the default value (no nils in Rust)</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Status</span> {
     <span class="doccomment">/// When true, Origen is executing within an origen development workspace</span>
     <span class="kw">pub</span> <span class="ident">is_origen_present</span>: <span class="ident">bool</span>,
@@ -278,8 +327,10 @@
     <span class="kw">pub</span> <span class="ident">is_app_present</span>: <span class="ident">bool</span>,
     <span class="doccomment">/// When Origen is executing with the context of an application, this represents it</span>
     <span class="kw">pub</span> <span class="ident">app</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Application</span><span class="op">&gt;</span>,
-    <span class="doccomment">/// When Origen is running within an Origen development workspace, this will</span>
-    <span class="doccomment">/// point to the root of the workspace</span>
+    <span class="doccomment">/// When Origen is running within an Origen development workspace or when it is running within</span>
+    <span class="doccomment">/// an app which is referencing a local copy of Origen, this will point to the root of the</span>
+    <span class="doccomment">/// Origen workspace.</span>
+    <span class="doccomment">/// i.e. it is only valid when either is_origen_present or is_app_in_origen_dev_mode is true.</span>
     <span class="kw">pub</span> <span class="ident">origen_wksp_root</span>: <span class="ident">PathBuf</span>,
     <span class="doccomment">/// The Origen version in a Semver object</span>
     <span class="kw">pub</span> <span class="ident">origen_version</span>: <span class="ident">Version</span>,
@@ -287,6 +338,9 @@
     <span class="doccomment">/// The full file system path to the user&#39;s home directory</span>
     <span class="kw">pub</span> <span class="ident">home</span>: <span class="ident">PathBuf</span>,
     <span class="kw">pub</span> <span class="ident">log_level</span>: <span class="ident">u8</span>,
+    <span class="doccomment">/// When true it means that Origen is running within an app and that app is using a local</span>
+    <span class="doccomment">/// development version of Origen</span>
+    <span class="kw">pub</span> <span class="ident">is_app_in_origen_dev_mode</span>: <span class="ident">bool</span>,
     <span class="ident">unhandled_error_count</span>: <span class="ident">RwLock</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
     <span class="doccomment">/// This must remain private, forcing it to be accessed by a function. That ensures</span>
     <span class="doccomment">/// that it will always be created if it doesn&#39;t exist and all other code can forget about</span>
@@ -301,20 +355,54 @@
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">Status</span> {
     <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Status</span> {
         <span class="macro">log_trace</span><span class="macro">!</span>(<span class="string">&quot;Building STATUS&quot;</span>);
-        <span class="kw">let</span> (<span class="ident">p</span>, <span class="ident">r</span>) <span class="op">=</span> <span class="ident">search_for</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;config&quot;</span>, <span class="string">&quot;origen.toml&quot;</span>], <span class="bool-val">true</span>);
-        <span class="kw">let</span> (<span class="ident">o</span>, <span class="ident">r2</span>) <span class="op">=</span> <span class="ident">search_for</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;.origen_dev_workspace&quot;</span>], <span class="bool-val">false</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">dev_mode_origen_root</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PathBuf</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">origen_dev_mode</span> <span class="op">=</span> <span class="bool-val">false</span>;
+        <span class="kw">let</span> (<span class="ident">app_present</span>, <span class="ident">app_root</span>) <span class="op">=</span> <span class="ident">search_for_from_pwd</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;config&quot;</span>, <span class="string">&quot;origen.toml&quot;</span>], <span class="bool-val">true</span>);
+        <span class="kw">let</span> (<span class="ident">origen_present</span>, <span class="ident">origen_wksp_root</span>) <span class="op">=</span>
+            <span class="ident">search_for_from_pwd</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;.origen_dev_workspace&quot;</span>], <span class="bool-val">false</span>);
+
+        <span class="comment">// If a standalone app is present check if it contains a reference to a local Origen</span>
+        <span class="kw">if</span> <span class="ident">app_present</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="op">!</span><span class="ident">origen_present</span> {
+            <span class="kw">let</span> <span class="ident">pyproject</span> <span class="op">=</span> <span class="ident">app_root</span>.<span class="ident">join</span>(<span class="string">&quot;pyproject.toml&quot;</span>);
+            <span class="kw">match</span> <span class="ident">std</span>::<span class="ident">fs</span>::<span class="ident">read_to_string</span>(<span class="kw-2">&amp;</span><span class="ident">pyproject</span>) {
+                <span class="prelude-val">Ok</span>(<span class="ident">contents</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="comment">// (?m) is how you set the multiline flag</span>
+                    <span class="kw">let</span> <span class="ident">regex</span> <span class="op">=</span> <span class="ident">Regex</span>::<span class="ident">new</span>(
+                        <span class="string">r#&quot;(?m)^\s*origen\s*=\s*\{\s*path\s*=\s*[&#39;&quot;](?P&lt;path&gt;[^&#39;&quot;]+)[&#39;&quot;]&quot;#</span>,
+                    )
+                    .<span class="ident">unwrap</span>();
+                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">captures</span>) <span class="op">=</span> <span class="ident">regex</span>.<span class="ident">captures</span>(<span class="kw-2">&amp;</span><span class="ident">contents</span>) {
+                        <span class="kw">let</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">PathBuf</span>::<span class="ident">from</span>(<span class="ident">captures</span>.<span class="ident">name</span>(<span class="string">&quot;path&quot;</span>).<span class="ident">unwrap</span>().<span class="ident">as_str</span>());
+                        <span class="kw">let</span> <span class="ident">path</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">path</span>.<span class="ident">is_relative</span>() {
+                            <span class="bool-val">true</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">app_root</span>.<span class="ident">join</span>(<span class="kw-2">&amp;</span><span class="ident">path</span>),
+                            <span class="bool-val">false</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">path</span>,
+                        };
+                        <span class="kw">let</span> (<span class="ident">found</span>, <span class="ident">path</span>) <span class="op">=</span> <span class="ident">search_for</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;.origen_dev_workspace&quot;</span>], <span class="bool-val">false</span>, <span class="kw-2">&amp;</span><span class="ident">path</span>);
+                        <span class="kw">if</span> <span class="ident">found</span> {
+                            <span class="ident">dev_mode_origen_root</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">path</span>);
+                            <span class="ident">origen_dev_mode</span> <span class="op">=</span> <span class="bool-val">true</span>;
+                        }
+                    }
+                }
+                <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="macro">log_error</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">e</span>),
+            }
+        }
+
         <span class="kw">let</span> <span class="ident">version</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">Version</span>::<span class="ident">parse</span>(<span class="ident">built_info</span>::<span class="ident">PKG_VERSION</span>) {
             <span class="prelude-val">Ok</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>,
             <span class="prelude-val">Err</span>(<span class="ident">_e</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Version</span>::<span class="ident">parse</span>(<span class="string">&quot;0.0.0&quot;</span>).<span class="ident">unwrap</span>(),
         };
         <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="ident">Status</span> {
-            <span class="ident">is_app_present</span>: <span class="ident">p</span>,
-            <span class="ident">app</span>: <span class="kw">match</span> <span class="ident">p</span> {
-                <span class="bool-val">true</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">Application</span>::<span class="ident">new</span>(<span class="ident">r</span>)),
+            <span class="ident">is_app_present</span>: <span class="ident">app_present</span>,
+            <span class="ident">app</span>: <span class="kw">match</span> <span class="ident">app_present</span> {
+                <span class="bool-val">true</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">Application</span>::<span class="ident">new</span>(<span class="ident">app_root</span>.<span class="ident">clone</span>())),
                 <span class="bool-val">false</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">None</span>,
             },
-            <span class="ident">is_origen_present</span>: <span class="ident">o</span>,
-            <span class="ident">origen_wksp_root</span>: <span class="ident">r2</span>,
+            <span class="ident">is_origen_present</span>: <span class="ident">origen_present</span>,
+            <span class="ident">origen_wksp_root</span>: <span class="kw">match</span> <span class="ident">dev_mode_origen_root</span> {
+                <span class="prelude-val">Some</span>(<span class="ident">x</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">x</span>,
+                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">origen_wksp_root</span>,
+            },
             <span class="ident">origen_version</span>: <span class="ident">version</span>,
             <span class="ident">start_time</span>: <span class="ident">time</span>::<span class="ident">now</span>(),
             <span class="ident">home</span>: <span class="ident">get_home_dir</span>(),
@@ -322,6 +410,7 @@
             <span class="ident">unhandled_error_count</span>: <span class="ident">RwLock</span>::<span class="ident">new</span>(<span class="number">0</span>),
             <span class="ident">output_dir</span>: <span class="ident">RwLock</span>::<span class="ident">new</span>(<span class="prelude-val">None</span>),
             <span class="ident">reference_dir</span>: <span class="ident">RwLock</span>::<span class="ident">new</span>(<span class="prelude-val">None</span>),
+            <span class="ident">is_app_in_origen_dev_mode</span>: <span class="ident">origen_dev_mode</span>,
         };
         <span class="macro">log_trace</span><span class="macro">!</span>(<span class="string">&quot;Status built successfully&quot;</span>);
         <span class="ident">s</span>
@@ -443,18 +532,23 @@
     }
 }
 
-<span class="kw">fn</span> <span class="ident">search_for</span>(<span class="ident">paths</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span>, <span class="ident">searching_for_app</span>: <span class="ident">bool</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">bool</span>, <span class="ident">PathBuf</span>) {
-    <span class="kw">if</span> <span class="ident">searching_for_app</span> {
-        <span class="macro">log_trace</span><span class="macro">!</span>(<span class="string">&quot;Searching for app&quot;</span>);
-    }
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">aborted</span> <span class="op">=</span> <span class="bool-val">false</span>;
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">search_for_from_pwd</span>(<span class="ident">paths</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span>, <span class="ident">searching_for_app</span>: <span class="ident">bool</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">bool</span>, <span class="ident">PathBuf</span>) {
     <span class="kw">let</span> <span class="ident">base</span> <span class="op">=</span> <span class="ident">env</span>::<span class="ident">current_dir</span>();
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">base</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">base</span> {
+    <span class="kw">let</span> <span class="ident">base</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">base</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">p</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">p</span>,
         <span class="prelude-val">Err</span>(<span class="ident">_e</span>) <span class="op">=</span><span class="op">&gt;</span> {
             <span class="kw">return</span> (<span class="bool-val">false</span>, <span class="ident">PathBuf</span>::<span class="ident">new</span>());
         }
     };
+    <span class="ident">search_for</span>(<span class="ident">paths</span>, <span class="ident">searching_for_app</span>, <span class="kw-2">&amp;</span><span class="ident">base</span>)
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">search_for</span>(<span class="ident">paths</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span>, <span class="ident">searching_for_app</span>: <span class="ident">bool</span>, <span class="ident">base</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">bool</span>, <span class="ident">PathBuf</span>) {
+    <span class="kw">if</span> <span class="ident">searching_for_app</span> {
+        <span class="macro">log_trace</span><span class="macro">!</span>(<span class="string">&quot;Searching for app&quot;</span>);
+    }
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">aborted</span> <span class="op">=</span> <span class="bool-val">false</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">base</span> <span class="op">=</span> <span class="ident">base</span>.<span class="ident">to_path_buf</span>();
 
     <span class="kw">while</span> <span class="op">!</span><span class="ident">paths</span>
         .<span class="ident">iter</span>()

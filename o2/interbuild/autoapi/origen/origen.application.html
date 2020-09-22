@@ -115,6 +115,12 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../guides/documenting/shorthand_ext.html">The Shorthand Extension</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/plugins.html">Plugins</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../guides/plugins/introduction.html">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../guides/plugins/creating.html">Creating a Plugin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../guides/plugins/using.html">Using a Plugin</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../../guides/developers.html">Developers</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../guides/developers/installation.html">Development Environment Setup</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../guides/developers/architecture_overview.html">Architecture Overview</a></li>
@@ -251,6 +257,12 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../guides/documenting/shorthand_ext.html">The Shorthand Extension</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/plugins.html">Plugins</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../guides/plugins/introduction.html">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../guides/plugins/creating.html">Creating a Plugin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../guides/plugins/using.html">Using a Plugin</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../../guides/developers.html">Developers</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../guides/developers/installation.html">Development Environment Setup</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../guides/developers/architecture_overview.html">Architecture Overview</a></li>
@@ -349,9 +361,20 @@ The base class of all Origen <code class="docutils literal notranslate"><span cl
 <em class="property">class </em><code class="sig-prename descclassname">origen.application.</code><code class="sig-name descname">Base</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">options</span></em><span class="sig-paren">)</span><a class="headerlink" href="#origen.application.Base" title="Permalink to this definition">¶</a></dt>
 <dd><p>The base class of all Origen <code class="docutils literal notranslate"><span class="pre">applications</span></code>.</p>
 <dl class="py method">
-<dt id="origen.application.Base.block_path_to_filepath">
-<code class="sig-name descname">block_path_to_filepath</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em><span class="sig-paren">)</span><a class="headerlink" href="#origen.application.Base.block_path_to_filepath" title="Permalink to this definition">¶</a></dt>
+<dt id="origen.application.Base.app_dir">
+<em class="property">property </em><code class="sig-name descname">app_dir</code><a class="headerlink" href="#origen.application.Base.app_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a path to the application’s main Python dir, that is &lt;app.root&gt;/&lt;app.name&gt;</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="origen.application.Base.block_path_to_dir">
+<code class="sig-name descname">block_path_to_dir</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em>, <em class="sig-param"><span class="n">force_search</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#origen.application.Base.block_path_to_dir" title="Permalink to this definition">¶</a></dt>
 <dd><p>Translates something like “dut.falcon” to &lt;root&gt;/&lt;app&gt;/blocks/dut/derivatives/falcon</p>
+<p>A tuple is returned where the first item is True/False indicating whether a block dir was found
+and if so then the second item is valid and contains the path to it.</p>
+<p>Note that this method caches the results and will always return the same result for the same path
+by default regardless of whether the block directories have been changed on disk.
+To force a re-evaluation of the given path pass ‘True’ as a second argument.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -376,7 +399,7 @@ The base class of all Origen <code class="docutils literal notranslate"><span cl
 
 <dl class="py method">
 <dt id="origen.application.Base.instantiate_block">
-<code class="sig-name descname">instantiate_block</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em><span class="sig-paren">)</span><a class="headerlink" href="#origen.application.Base.instantiate_block" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">instantiate_block</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em>, <em class="sig-param"><span class="n">base_path</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#origen.application.Base.instantiate_block" title="Permalink to this definition">¶</a></dt>
 <dd><p>Instantiate the given block and return it</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">origen</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">instantiate_block</span><span class="p">(</span><span class="s2">&quot;dut.falcon&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">origen</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">instantiate_block</span><span class="p">(</span><span class="s2">&quot;nvm.flash.f2mb&quot;</span><span class="p">)</span>
@@ -410,6 +433,18 @@ sub-blocks can be instantiated</p>
 <dt id="origen.application.Base.output_dir">
 <em class="property">property </em><code class="sig-name descname">output_dir</code><a class="headerlink" href="#origen.application.Base.output_dir" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the directory in which generated content should be placed</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="origen.application.Base.plugin">
+<em class="property">property </em><code class="sig-name descname">plugin</code><a class="headerlink" href="#origen.application.Base.plugin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Will be set to true if the app instance it not the top-level app and is therefore operating as a plugin</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="origen.application.Base.python_dir">
+<em class="property">property </em><code class="sig-name descname">python_dir</code><a class="headerlink" href="#origen.application.Base.python_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>An alias for app_dir</p>
 </dd></dl>
 
 <dl class="py method">
@@ -491,7 +526,7 @@ website should be placed upon using the <code class="docutils literal notranslat
 <footer class="footer d-flex justify-content-between flex-wrap">
   <div class="copyright">
       <div>&copy; Copyright 2020, Origen Core Team.</div>
-    <div>Generated by <a href="https://sphinx.pocoo.org/">Sphinx</a> 3.0.2 and <a href="https://origen-sdk.org/o2">Origen</a> 2.0.0-pre0.</div>
+    <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.0.2 and <a href="https://origen-sdk.org/o2">Origen</a> 2.0.0.dev3.</div>
   </div>
   <div>
       <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>

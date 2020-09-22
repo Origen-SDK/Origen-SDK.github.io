@@ -322,6 +322,15 @@
 <span id="322">322</span>
 <span id="323">323</span>
 <span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused_imports</span>)]</span>
 <span class="attribute">#[<span class="ident">macro_use</span>]</span>
@@ -382,6 +391,7 @@
 <span class="kw">fn</span> <span class="ident">_origen</span>(<span class="ident">_py</span>: <span class="ident">Python</span>, <span class="ident">m</span>: <span class="kw-2">&amp;</span><span class="ident">PyModule</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="ident">m</span>.<span class="ident">add_wrapped</span>(<span class="macro">wrap_pyfunction</span><span class="macro">!</span>(<span class="ident">initialize</span>))<span class="question-mark">?</span>;
     <span class="ident">m</span>.<span class="ident">add_wrapped</span>(<span class="macro">wrap_pyfunction</span><span class="macro">!</span>(<span class="ident">status</span>))<span class="question-mark">?</span>;
+    <span class="ident">m</span>.<span class="ident">add_wrapped</span>(<span class="macro">wrap_pyfunction</span><span class="macro">!</span>(<span class="ident">version</span>))<span class="question-mark">?</span>;
     <span class="ident">m</span>.<span class="ident">add_wrapped</span>(<span class="macro">wrap_pyfunction</span><span class="macro">!</span>(<span class="ident">config</span>))<span class="question-mark">?</span>;
     <span class="ident">m</span>.<span class="ident">add_wrapped</span>(<span class="macro">wrap_pyfunction</span><span class="macro">!</span>(<span class="ident">app_config</span>))<span class="question-mark">?</span>;
     <span class="ident">m</span>.<span class="ident">add_wrapped</span>(<span class="macro">wrap_pyfunction</span><span class="macro">!</span>(<span class="ident">clean_mode</span>))<span class="question-mark">?</span>;
@@ -510,6 +520,14 @@
     <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">ret</span>.<span class="ident">set_item</span>(<span class="string">&quot;home&quot;</span>, <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">STATUS</span>.<span class="ident">home</span>.<span class="ident">display</span>()));
     <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">ret</span>.<span class="ident">set_item</span>(<span class="string">&quot;on_windows&quot;</span>, <span class="macro">cfg</span><span class="macro">!</span>(<span class="ident">windows</span>));
     <span class="prelude-val">Ok</span>(<span class="ident">ret</span>.<span class="ident">into</span>())
+}
+
+<span class="doccomment">/// Returns the Origen version formatted into PEP440, e.g. &quot;1.2.3.dev4&quot;</span>
+<span class="attribute">#[<span class="ident">pyfunction</span>]</span>
+<span class="kw">fn</span> <span class="ident">version</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+    <span class="prelude-val">Ok</span>(<span class="ident">origen</span>::<span class="ident">utility</span>::<span class="ident">version</span>::<span class="ident">to_pep440</span>(
+        <span class="kw-2">&amp;</span><span class="ident">STATUS</span>.<span class="ident">origen_version</span>.<span class="ident">to_string</span>(),
+    )<span class="question-mark">?</span>)
 }
 
 <span class="doccomment">/// Returns the Origen configuration (as defined in origen.toml files)</span>

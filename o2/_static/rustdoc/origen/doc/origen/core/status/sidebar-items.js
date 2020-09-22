@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Status","Exposes some status information about the runtime environment, e.g. whether an application workspace is present"]]});
+initSidebarItems({"fn":[["search_for",""],["search_for_from_pwd",""]],"struct":[["Status","Exposes some status information about the runtime environment, e.g. whether an application workspace is present"]]});
