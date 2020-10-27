@@ -6,7 +6,7 @@
 <title>
   Module: OrigenTesters::Charz
   
-    &mdash; Origen Testers 0.48.0
+    &mdash; Origen Testers 0.48.1
   
 </title>
 
@@ -509,6 +509,33 @@ charz tests even if the session is valid.</p>
   
     <span class="summary_desc"><div class='inline'>
 <p>Resumes the current charz session.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#create_charz_routine-instance_method" title="#create_charz_routine (instance method)">#<strong>create_charz_routine</strong>(id, options = {}, &amp;block)  &#x21d2; Routine </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Called by add_charz_routine, split out from that method to make it easier
+to override this handler from a user&#39;s interface This is the method to
+override if you want to use custom Routines specifc to your company&#39;s
+implementation.</p>
 </div></span>
   
 </li>
@@ -1093,16 +1120,16 @@ not have been previously used</p>
       <pre class="lines">
 
 
-86
-87
-88
-89
-90
-91
-92</pre>
+99
+100
+101
+102
+103
+104
+105</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/charz.rb', line 86</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/charz.rb', line 99</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_add_charz_profile'>add_charz_profile</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_charz_profiles'>charz_profiles</span><span class='period'>.</span><span class='id identifier rubyid_ids'>ids</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='rparen'>)</span>
@@ -1132,6 +1159,9 @@ not have been previously used</p>
 contains all the necessary info specific to a characterization test Its
 intended to be used in combination with an existing point test (regular non
 charz test) to create a characterization version of the point test</p>
+
+<p>To use your own Routine classes, override the create_charz_routine method
+in your interface</p>
 
 
   </div>
@@ -1229,37 +1259,23 @@ not have been previously used</p>
       <pre class="lines">
 
 
-58
-59
 60
 61
 62
 63
 64
 65
-66
-67
-68
-69
-70
-71</pre>
+66</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/charz.rb', line 58</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/charz.rb', line 60</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_add_charz_routine'>add_charz_routine</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_charz_routines'>charz_routines</span><span class='period'>.</span><span class='id identifier rubyid_ids'>ids</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='rparen'>)</span>
     <span class='const'><span class='object_link'><a href="../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_log'>log</span><span class='period'>.</span><span class='id identifier rubyid_error'>error</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Cannot create charz routine &#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_id'>id</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39;, it already exists!</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
     <span class='id identifier rubyid_fail'>fail</span>
   <span class='kw'>end</span>
-  <span class='kw'>case</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:type</span><span class='rbracket'>]</span>
-  <span class='kw'>when</span> <span class='symbol'>:search</span><span class='comma'>,</span> <span class='symbol'>:&#39;1d&#39;</span>
-    <span class='id identifier rubyid_charz_routines'>charz_routines</span><span class='lbracket'>[</span><span class='id identifier rubyid_id'>id</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="Charz/SearchRoutine.html" title="OrigenTesters::Charz::SearchRoutine (class)">SearchRoutine</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="Charz/SearchRoutine.html#initialize-instance_method" title="OrigenTesters::Charz::SearchRoutine#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
-  <span class='kw'>when</span> <span class='symbol'>:shmoo</span><span class='comma'>,</span> <span class='symbol'>:&#39;2d&#39;</span>
-    <span class='id identifier rubyid_charz_routines'>charz_routines</span><span class='lbracket'>[</span><span class='id identifier rubyid_id'>id</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="Charz/ShmooRoutine.html" title="OrigenTesters::Charz::ShmooRoutine (class)">ShmooRoutine</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="Charz/ShmooRoutine.html#initialize-instance_method" title="OrigenTesters::Charz::ShmooRoutine#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
-  <span class='kw'>else</span>
-    <span class='id identifier rubyid_charz_routines'>charz_routines</span><span class='lbracket'>[</span><span class='id identifier rubyid_id'>id</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="Charz/Routine.html" title="OrigenTesters::Charz::Routine (class)">Routine</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="Charz/Routine.html#initialize-instance_method" title="OrigenTesters::Charz::Routine#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
-  <span class='kw'>end</span>
+  <span class='id identifier rubyid_charz_routines'>charz_routines</span><span class='lbracket'>[</span><span class='id identifier rubyid_id'>id</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_create_charz_routine'>create_charz_routine</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1306,12 +1322,12 @@ tests should be generating charz tests</p>
       <pre class="lines">
 
 
-95
-96
-97</pre>
+108
+109
+110</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/charz.rb', line 95</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/charz.rb', line 108</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_charz_active?'>charz_active?</span>
   <span class='id identifier rubyid_charz_session'>charz_session</span><span class='period'>.</span><span class='id identifier rubyid_active'>active</span>
@@ -1349,17 +1365,17 @@ the new data if not, the session will become inactive</p>
       <pre class="lines">
 
 
-117
-118
-119
-120
-121
-122
-123
-124</pre>
+130
+131
+132
+133
+134
+135
+136
+137</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/charz.rb', line 117</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/charz.rb', line 130</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_charz_off'>charz_off</span>
   <span class='id identifier rubyid_charz_stack'>charz_stack</span><span class='period'>.</span><span class='id identifier rubyid_pop'>pop</span>
@@ -1472,19 +1488,6 @@ in @charz_routines or @charz_profiles</p>
       <pre class="lines">
 
 
-134
-135
-136
-137
-138
-139
-140
-141
-142
-143
-144
-145
-146
 147
 148
 149
@@ -1504,10 +1507,23 @@ in @charz_routines or @charz_profiles</p>
 163
 164
 165
-166</pre>
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/charz.rb', line 134</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/charz.rb', line 147</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_charz_on'>charz_on</span><span class='lparen'>(</span><span class='id identifier rubyid_charz_id'>charz_id</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span>
@@ -1587,12 +1603,12 @@ generation, only adding the resulting charz test</p>
       <pre class="lines">
 
 
-100
-101
-102</pre>
+113
+114
+115</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/charz.rb', line 100</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/charz.rb', line 113</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_charz_only?'>charz_only?</span>
   <span class='id identifier rubyid_charz_active?'>charz_active?</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_charz_session'>charz_session</span><span class='period'>.</span><span class='id identifier rubyid_charz_only'>charz_only</span>
@@ -1629,12 +1645,12 @@ charz tests even if the session is valid</p>
       <pre class="lines">
 
 
-105
-106
-107</pre>
+118
+119
+120</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/charz.rb', line 105</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/charz.rb', line 118</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_charz_pause'>charz_pause</span>
   <span class='id identifier rubyid_charz_session'>charz_session</span><span class='period'>.</span><span class='id identifier rubyid_pause'>pause</span>
@@ -1671,15 +1687,157 @@ charz_resume before setting up the session) then nothing will happen</p>
       <pre class="lines">
 
 
-110
-111
-112</pre>
+123
+124
+125</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/charz.rb', line 110</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/charz.rb', line 123</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_charz_resume'>charz_resume</span>
   <span class='id identifier rubyid_charz_session'>charz_session</span><span class='period'>.</span><span class='id identifier rubyid_resume'>resume</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="create_charz_routine-instance_method">
+  
+    #<strong>create_charz_routine</strong>(id, options = {}, &amp;block)  &#x21d2; <tt><span class='object_link'><a href="Charz/Routine.html" title="OrigenTesters::Charz::Routine (class)">Routine</a></span></tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Called by add_charz_routine, split out from that method to make it easier
+to override this handler from a user&#39;s interface This is the method to
+override if you want to use custom Routines specifc to your company&#39;s
+implementation</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>id</span>
+      
+      
+        <span class='type'>(<tt>Symbol</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>charz_routine id, will be the key value in the @charz_routines hash. Must
+not have been previously used</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>options</span>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>{}</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>charz_routine options</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+  
+    
+    
+    
+    
+    <p class="tag_title">Options Hash (<tt>options</tt>):</p>
+    <ul class="option">
+      
+        <li>
+          <span class="name">:type</span>
+          <span class="type">(<tt>Symbol</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'>
+<p>:search or :&#39;1d&#39; will create a SearchRoutine, :shmoo or
+:&#39;2d&#39; will create a ShmooRoutine, nil will create a Routine</p>
+</div>
+          
+        </li>
+      
+    </ul>
+  
+    
+    
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Charz/Routine.html" title="OrigenTesters::Charz::Routine (class)">Routine</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>a charz routine object</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/charz.rb', line 75</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_create_charz_routine'>create_charz_routine</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+  <span class='kw'>case</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:type</span><span class='rbracket'>]</span>
+  <span class='kw'>when</span> <span class='symbol'>:search</span><span class='comma'>,</span> <span class='symbol'>:&#39;1d&#39;</span>
+    <span class='const'><span class='object_link'><a href="Charz/SearchRoutine.html" title="OrigenTesters::Charz::SearchRoutine (class)">SearchRoutine</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="Charz/SearchRoutine.html#initialize-instance_method" title="OrigenTesters::Charz::SearchRoutine#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+  <span class='kw'>when</span> <span class='symbol'>:shmoo</span><span class='comma'>,</span> <span class='symbol'>:&#39;2d&#39;</span>
+    <span class='const'><span class='object_link'><a href="Charz/ShmooRoutine.html" title="OrigenTesters::Charz::ShmooRoutine (class)">ShmooRoutine</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="Charz/ShmooRoutine.html#initialize-instance_method" title="OrigenTesters::Charz::ShmooRoutine#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+  <span class='kw'>else</span>
+    <span class='const'><span class='object_link'><a href="Charz/Routine.html" title="OrigenTesters::Charz::Routine (class)">Routine</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="Charz/Routine.html#initialize-instance_method" title="OrigenTesters::Charz::Routine#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1713,21 +1871,21 @@ flow charz tests user should not have to reference this call explicitly</p>
       <pre class="lines">
 
 
-240
-241
-242
-243
-244
-245
-246
-247
-248
-249
-250
-251</pre>
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/charz.rb', line 240</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/charz.rb', line 253</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_generate_eof_charz_tests'>generate_eof_charz_tests</span>
   <span class='kw'>unless</span> <span class='id identifier rubyid_eof_charz_tests'>eof_charz_tests</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
@@ -1786,19 +1944,6 @@ to the user&#39;s interface to handle creating and inserting the test</p>
       <pre class="lines">
 
 
-205
-206
-207
-208
-209
-210
-211
-212
-213
-214
-215
-216
-217
 218
 219
 220
@@ -1817,10 +1962,23 @@ to the user&#39;s interface to handle creating and inserting the test</p>
 233
 234
 235
-236</pre>
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/charz.rb', line 205</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/charz.rb', line 218</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_insert_charz_tests'>insert_charz_tests</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_charz_active?'>charz_active?</span>
@@ -1923,19 +2081,6 @@ alternatively pass the name in the options hash under :parent_test_name</p>
       <pre class="lines">
 
 
-171
-172
-173
-174
-175
-176
-177
-178
-179
-180
-181
-182
-183
 184
 185
 186
@@ -1943,10 +2088,23 @@ alternatively pass the name in the options hash under :parent_test_name</p>
 188
 189
 190
-191</pre>
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/charz.rb', line 171</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/charz.rb', line 184</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_set_conditional_charz_id'>set_conditional_charz_id</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
   <span class='kw'>case</span> <span class='id identifier rubyid_args'>args</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span>
@@ -1979,8 +2137,8 @@ alternatively pass the name in the options hash under :parent_test_name</p>
 </div>
 
       <div id="footer">
-  Generated on Wed Aug 26 09:05:45 2020 by
-  <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  Generated on Tue Oct 27 07:46:42 2020 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.25 (ruby-2.4.7).
 </div>
 
