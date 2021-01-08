@@ -6,7 +6,7 @@
 <title>
   Module: Origen::Registers
   
-    &mdash; Origen Core 0.59.6
+    &mdash; Origen Core 0.59.7
   
 </title>
 
@@ -93,7 +93,13 @@
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
     
-<p>Origen provides a powerful register class which you are encouraged to use when you wish to interact with a silicon register (or RAM location). By interacting with the register on silicon through the register API your pattern will automatically track silicon state, so you can set and forget bits in the patgen the same as you would do with a physical register. Include this module to add registers to your block, then use the macros described below to instantiate register objects</p>
+<p>Origen provides a powerful register class which you are encouraged to use
+when you wish to interact with a silicon register (or RAM location). By
+interacting with the register on silicon through the register API your
+pattern will automatically track silicon state, so you can set and forget
+bits in the patgen the same as you would do with a physical register.
+Include this module to add registers to your block, then use the macros
+described below to instantiate register objects</p>
 
 <pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_include'>include</span> <span class='const'><span class='object_link'><a href="../Origen.html" title="Origen (module)">Origen</a></span></span><span class='op'>::</span><span class='const'>Registers</span>
 </code></pre>
@@ -168,7 +174,8 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Returns a lookup table containing all custom bit metadata defined by objects in an application.</p>
+<p>Returns a lookup table containing all custom bit metadata defined by
+objects in an application.</p>
 </div></span>
   
 </li>
@@ -288,7 +295,8 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Returns a lookup table containing all custom register metadata defined by objects in an application.</p>
+<p>Returns a lookup table containing all custom register metadata defined by
+objects in an application.</p>
 </div></span>
   
 </li>
@@ -321,7 +329,8 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>All register objects are stored here, but they should be accessed via the _reg method to ensure that feature scoping is applied.</p>
+<p>All register objects are stored here, but they should be accessed via the
+_reg method to ensure that feature scoping is applied.</p>
 </div></span>
   
 </li>
@@ -441,7 +450,8 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Returns true if the given object is one of the recognized Origen bit containers (bit collection, reg or container).</p>
+<p>Returns true if the given object is one of the recognized Origen bit
+containers (bit collection, reg or container).</p>
 </div></span>
   
 </li>
@@ -491,7 +501,8 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Can be called to add app specific meta data that is isolated to all registers defined within a given class.</p>
+<p>Can be called to add app specific meta data that is isolated to all
+registers defined within a given class.</p>
 </div></span>
   
 </li>
@@ -679,7 +690,9 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Returns the size (in bits) of the register with the highest address, can be useful in combination with max_reg_address to work out the range of addresses containing registers.</p>
+<p>Returns the size (in bits) of the register with the highest address, can be
+useful in combination with max_reg_address to work out the range of
+addresses containing registers.</p>
 </div></span>
   
 </li>
@@ -799,7 +812,9 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Returns  -the register object matching the given name  -or a hash of all registes matching a given regular expression  -or a hash of all registers, associated with a feature, if no name is specified.</p>
+<p>Returns  -the register object matching the given name  -or a hash of all
+registes matching a given regular expression  -or a hash of all registers,
+associated with a feature, if no name is specified.</p>
 </div></span>
   
 </li>
@@ -972,7 +987,8 @@
   You should avoid using this method if possible, as it may be removed or be changed in the future.
 </p>
 
-<p>Returns a lookup table containing all custom bit metadata defined by objects in an application</p>
+<p>Returns a lookup table containing all custom bit metadata defined by
+objects in an application</p>
 
 
   </div>
@@ -1205,7 +1221,8 @@
   You should avoid using this method if possible, as it may be removed or be changed in the future.
 </p>
 
-<p>Returns a lookup table containing all custom register metadata defined by objects in an application</p>
+<p>Returns a lookup table containing all custom register metadata defined by
+objects in an application</p>
 
 
   </div>
@@ -1256,7 +1273,8 @@
   You should avoid using this method if possible, as it may be removed or be changed in the future.
 </p>
 
-<p>All register objects are stored here, but they should be accessed via the _reg method to ensure that feature scoping is applied</p>
+<p>All register objects are stored here, but they should be accessed via the
+_reg method to ensure that feature scoping is applied</p>
 
 
   </div>
@@ -1297,7 +1315,10 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Add a register. When adding a register you must supply a name, an address, size in bits, and bit definitions, any bits that are not declared will be filled with dummy bit objects that are not writable and will read back as 0.</p>
+<p>Add a register. When adding a register you must supply a name, an address,
+size in bits, and bit definitions, any bits that are not declared will be
+filled with dummy bit objects that are not writable and will read back as
+0.</p>
 
 <pre class="code ruby"><code class="ruby">add_reg :control,  0x00,    16    :mode    =&gt; { :pos =&gt; 8, :bits =&gt; 8 },
                                   # Leaving out bits does 1 by default
@@ -1305,8 +1326,7 @@
                                   # The default reset state is 0, specify an alternative..
                                   :status  =&gt; { :pos =&gt; 4, :bits =&gt; 2, :res =&gt; 0b11 },
                                   :fail    =&gt; { :pos =&gt; 2 },
-                                  :done    =&gt; { :pos =&gt; 0 }
-</code></pre>
+                                  :done    =&gt; { :pos =&gt; 0 }</code></pre>
 
 <p>Can be called on any object to add a register to it</p>
 
@@ -1612,7 +1632,9 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns the bit order attribute of the model (either :msb0 or :lsb0). If not explicitly defined on this model it will be inherited from the parent and will default to :lsb0 at the top-level</p>
+<p>Returns the bit order attribute of the model (either :msb0 or :lsb0). If
+not explicitly defined on this model it will be inherited from the parent
+and will default to :lsb0 at the top-level</p>
 
 
   </div>
@@ -1665,7 +1687,8 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns true if the given object is one of the recognized Origen bit containers (bit collection, reg or container).</p>
+<p>Returns true if the given object is one of the recognized Origen bit
+containers (bit collection, reg or container).</p>
 
 
   </div>
@@ -1769,7 +1792,8 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Can be called to add app specific meta data that is isolated to all registers defined within a given class</p>
+<p>Can be called to add app specific meta data that is isolated to all
+registers defined within a given class</p>
 
 
   </div>
@@ -1946,7 +1970,9 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Creates a dummy register. Equivalent to Reg.dummy except the reg owner is assigned as the caller rather than Reg. Use this if you need to call read! or write! on the dummy register object.</p>
+<p>Creates a dummy register. Equivalent to Reg.dummy except the reg owner is
+assigned as the caller rather than Reg. Use this if you need to call read!
+or write! on the dummy register object.</p>
 
 
   </div>
@@ -2176,7 +2202,9 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns the size (in bits) of the register with the highest address, can be useful in combination with max_reg_address to work out the range of addresses containing registers</p>
+<p>Returns the size (in bits) of the register with the highest address, can be
+useful in combination with max_reg_address to work out the range of
+addresses containing registers</p>
 
 
   </div>
@@ -2363,10 +2391,10 @@ method in the </span><span class='embexpr_beg'>#{</span><span class='id identifi
 
 <pre class="code ruby"><code class="ruby">-the register object matching the given name
 -or a hash of all registes matching a given regular expression
--or a hash of all registers, associated with a feature, if no name is specified.
-</code></pre>
+-or a hash of all registers, associated with a feature, if no name is specified.</code></pre>
 
-<p>Can also be used to define a new register if a block is supplied in which case it is equivalent to calling add_reg with a block.</p>
+<p>Can also be used to define a new register if a block is supplied in which
+case it is equivalent to calling add_reg with a block.</p>
 
 
   </div>
@@ -2717,9 +2745,9 @@ method in the </span><span class='embexpr_beg'>#{</span><span class='id identifi
 </div>
 
       <div id="footer">
-  Generated on Tue Dec  8 13:03:30 2020 by
-  <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.25 (ruby-2.6.0).
+  Generated on Fri Jan  8 08:39:29 2021 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.9.25 (ruby-2.4.7).
 </div>
 
     </div>
