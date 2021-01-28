@@ -106,7 +106,7 @@
 <div class="row">
   <div class="span12">
 
-    <h1>Origen Memory Image <span style="font-size: 14px">(0.8.0)</span>
+    <h1>Origen Memory Image <span style="font-size: 14px">(0.8.1)</span>
 </h1>
 
     <div>    
@@ -141,7 +141,7 @@ srec.to_a.each <span style="color:#080;font-weight:bold">do</span> |addr, data|
 
     <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre>gem <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">origen_memory_image</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">0.8.0</span><span style="color:#710">'</span></span>
+  <div class="code"><pre>gem <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">origen_memory_image</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">0.8.1</span><span style="color:#710">'</span></span>
 </pre></div>
 </div>
     </div>
@@ -152,7 +152,7 @@ srec.to_a.each <span style="color:#080;font-weight:bold">do</span> |addr, data|
 
     <div class="language-ruby highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre>spec.add_runtime_dependency <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">origen_memory_image</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">~&gt; 0</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">&gt;= 0.8.0</span><span style="color:#710">'</span></span>
+  <div class="code"><pre>spec.add_runtime_dependency <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">origen_memory_image</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">~&gt; 0</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">&gt;= 0.8.1</span><span style="color:#710">'</span></span>
 </pre></div>
 </div>
     </div>
@@ -185,6 +185,27 @@ my_hex  = <span style="color:#036;font-weight:bold">OrigenMemoryImage</span>.new
 </pre></div>
 </div>
     </div>
+
+    <p>By default any partial data words are right justified. Change this behavior to left justified like this:</p>
+
+    <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>my_srec = <span style="color:#036;font-weight:bold">OrigenMemoryImage</span>.new(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">source_files/test_atd.abs.S19</span><span style="color:#710">"</span></span>, <span style="color:#606">ljust_partial_data</span>: <span style="color:#069">true</span>)
+my_hex  = <span style="color:#036;font-weight:bold">OrigenMemoryImage</span>.new(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">source_files/math.hex</span><span style="color:#710">"</span></span>, <span style="color:#606">ljust_partial_data</span>: <span style="color:#069">true</span>)
+</pre></div>
+</div>
+    </div>
+
+    <p>Partial data example:</p>
+
+    <pre><code>0304FE
+
+# Default interpretation into 32-bit word:
+0x0003_04FE
+
+# Left justified interpretation into 32-bit word:
+0x0304_FE00
+</code></pre>
 
     <p>Memory images can also be created directly from a string:</p>
 
@@ -337,7 +358,7 @@ S7053F000410A7
 
     <p>Follow the instructions here if you want to make a 3rd party app
 workspace use your development copy of the OrigenMemoryImage plugin:
-<a href="https://origen-sdk.org/origen/latest/guides/plugins">Setting up a Plugin Development Environment</a></p>
+<a href="http://origen-sdk.org/origen/latest/guides/plugins">Setting up a Plugin Development Environment</a></p>
 
     <p>This plugin also contains a test suite, makes sure this passes before committing
 any changes!</p>
@@ -361,7 +382,7 @@ any changes!</p>
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = 'origen-sdk';
     var disqus_title;
-    var disqus_url = 'https://' + window.location.hostname + window.location.pathname;
+    var disqus_url = 'http://' + window.location.hostname + window.location.pathname;
 
     disqus_title = $("h1").text();
     if (disqus_title.length == 0) {
