@@ -457,10 +457,14 @@
 
       <p>Origen can be installed on Linux or Windows, this guide refers to the Windows installation.</p>
 
+      <div class="alert alert-info" role="alert"> <strong>@powershell commands</strong>
+  <br> All @powershell commands should be run from a commandshell other than powershell.
+</div>
+
       <p>If you want to run on Linux then please see this guide instead:
 <a href="/origen/guides/installation/installing">How to Install Origen on Linux</a></p>
 
-      <div class="alert alert-info" role="alert"> <strong>Last updated on 15th February 2017</strong>
+      <div class="alert alert-info" role="alert"> <strong>Last updated on 11th January 2021</strong>
   <br>The vast majority of Origen use in production is on Linux, and over time this Windows guide can
   become out of date and no one realizes.
   If you do experience any issues when following this guide, then please do let us
@@ -468,8 +472,8 @@
 </div>
 
       <div>    
-  <a class="anchor" name="1._Install_a_Better_Console"></a>          
-  <h3><a href="#1._Install_a_Better_Console">1. Install a Better Console</a></h3>          
+  <a class="anchor" name="1._(Optional)_Install_a_Better_Console"></a>          
+  <h3><a href="#1._(Optional)_Install_a_Better_Console">1. (Optional) Install a Better Console</a></h3>          
 </div>
 
       <p>Download Console <a href="https://sourceforge.net/projects/console/files/latest/download?source=typ_redirect">by following this link</a>.</p>
@@ -500,141 +504,23 @@ of the settings called <code>Save settings to user directory</code>.</p>
 </div>
       </div>
 
-      <div class="alert alert-info" role="alert"> <strong>Opening the Console</strong>
-  <br>
-  The rest of this guide requires you to open the console with administrator privileges and then execute
-  the given commands, do this by right-clicking on the desktop shortcut you just created and selecting
-  <code>Run as administrator</code>.
-  <br>
-  Some of the operations will require that you open a new console session in order for the previous operation
-  to take effect. If any errors are encountered please start a new console session and try again before
-  reporting it.
-</div>
-
       <div>    
   <a class="anchor" name="2._Install_Pre-Requisites"></a>          
   <h3><a href="#2._Install_Pre-Requisites">2. Install Pre-Requisites</a></h3>          
 </div>
 
-      <p>Before starting this next section you should ensure that the following environment variables
-are set if your computer accesses the internet via a proxy (the proxy url here is an example and
-the real one will be specific to your company environment):</p>
+      <p>Install unxutils by going to this link <a href="https://sourceforge.net/projects/unxutils/">https://sourceforge.net/projects/unxutils/</a>.</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>HTTP_PROXY  = https://proxy.my_company.com:8080
-HTTPS_PROXY = https://proxy.my_company.com:8080
-</pre></div>
-</div>
-      </div>
-
-      <p>Here is a link to a 3rd party tutorial on <a href="https://kb.wisc.edu/cae/page.php?id=24500">How to Create an Environment Variable in Windows</a>.</p>
-
-      <p>The next step is to install a package manager, please copy the text below into the console (running as administrator)</p>
-
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>@powershell -NoProfile -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" &amp;&amp; SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
-</pre></div>
-</div>
-      </div>
-
-      <div class="alert alert-danger" role="alert">Now re-open the console (Run as administrator)</div>
-
-      <p>Install some required packages by running these commands from the console:</p>
-
-      <div class="language-tetxt highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>choco install git -y --force
-choco install unxutils -y --force
-choco install consoleZ -y --force
-</pre></div>
-</div>
-      </div>
-
-      <div class="alert alert-danger" role="alert">Now re-open the console (Run as administrator)</div>
+      <p>Install git from the official Git website <a href="https://git-scm.com/downloads">https://git-scm.com/downloads</a></p>
 
       <div>    
   <a class="anchor" name="3._Install_Ruby"></a>          
   <h3><a href="#3._Install_Ruby">3. Install Ruby</a></h3>          
 </div>
 
-      <div>    
-  <a class="anchor" name="3.1_Install_the_Ruby_Executable"></a>          
-  <h4><a href="#3.1_Install_the_Ruby_Executable">3.1 Install the Ruby Executable</a></h4>          
-</div>
+      <p>We are currently recommending installing Ruby version 2.6.</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>choco install ruby -y --version=2.3 --force
-choco install ruby2.devkit -y --force
-</pre></div>
-</div>
-      </div>
-
-      <div class="alert alert-danger" role="alert">Now re-open the console (Run as administrator)</div>
-
-      <p>Execute the following command from the console:</p>
-
-      <div>    
-  <a class="anchor" name="3.2_Install_RubyGems"></a>          
-  <h4><a href="#3.2_Install_RubyGems">3.2 Install RubyGems</a></h4>          
-</div>
-
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>@powershell (new-object System.Net.WebClient).DownloadFile('https://rubygems.org/downloads/rubygems-update-2.7.3.gem’,'C:\rubygems-update-2.7.3.gem') &amp;&amp; gem install --local C:\rubygems-update-2.7.3.gem &amp;&amp; update_rubygems --no-ri --no-rdoc &amp;&amp; gem uninstall rubygems-update -x
-</pre></div>
-</div>
-      </div>
-
-      <div class="alert alert-danger">
-  The version of Ruby is just a recommendation from the Origen development team. Origen has proven to
-  work on several versions of Ruby. However, changing the version of Ruby may also require you to reevaluate
-  the version of RubyGems used. For example, we've found that Ruby 2.2.4, is not fully compatible RubyGems 2.6.7,
-  for all gems (we run into issues with Symlinks on Windows that are resolved by updating RubyGems) but
-  it works with RubyGems 2.2.3. Also, the version of RubyGems that ships with your installation of Ruby may be
-  fine. See the <a href="https://guides.rubygems.org/rubygems-basics/">RubyGems website</a> for additional details.
-  <br>
-  <br>
-  The conclusion of this alert box is don't stress too much about the exact versions you're using and if you
-  run into issues installing gems, consider possible incompatabilities between the versions of Ruby, RubyGems,
-  or the gem that you are trying to install. You can also use RubyGems to manually install the gems yourself,
-  to bypass any installation options Origen may try to set.
-</div>
-
-      <p>Open <code>C:\tools\DevKit2\config.yml</code> in your favorite editor and write this at the
-bottom:</p>
-
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>- C:/tools/ruby23
-</pre></div>
-</div>
-      </div>
-
-      <p>Save it, and then execute the following commands from the console:</p>
-
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>cd C:\tools\DevKit2\
-ruby dk.rb install
-</pre></div>
-</div>
-      </div>
-
-      <p>Ensure that you see the following output when running the above command, if not review
-what you have added to <code>C:\tools\DevKit2\config.yml</code>:</p>
-
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>[INFO] Installing 'C:/tools/ruby22/lib/ruby/site_ruby/2.2.0/rubygems/default
-[INFO] Installing 'C:/tools/ruby22/lib/ruby/site_ruby/devkit.rb'
-</pre></div>
-</div>
-      </div>
-
-      <div class="alert alert-danger" role="alert">Now re-open the console (Run as administrator)</div>
+      <p>Follow the instructions at <a href="https://www.ruby-lang.org/en/">https://www.ruby-lang.org/en/</a> to install Ruby with the devkit.</p>
 
       <div>    
   <a class="anchor" name="4._Install_Origen"></a>          
@@ -645,7 +531,7 @@ what you have added to <code>C:\tools\DevKit2\config.yml</code>:</p>
 
       <div class="language-text highlighter-coderay">
 <div class="CodeRay">
-  <div class="code"><pre>gem install origen --no-ri --no-rdoc
+  <div class="code"><pre>gem install origen --no-document
 </pre></div>
 </div>
       </div>
@@ -658,6 +544,41 @@ at which point you should see something like this:</p>
       <div class="language-text highlighter-coderay">
 <div class="CodeRay">
   <div class="code"><pre>    Origen: 0.59.8
+</pre></div>
+</div>
+      </div>
+
+      <div>    
+  <a class="anchor" name="4.1_Update_PATH_variable"></a>          
+  <h4><a href="#4.1_Update_PATH_variable">4.1 Update PATH variable</a></h4>          
+</div>
+
+      <p>This step is required to ensure that Origen boots correctly inside of a workspace. Add <code>.\lbin</code> as the first entry in your <code>PATH</code> variable by following this 3rd party tutorial on <a href="https://kb.wisc.edu/cae/page.php?id=24500">How to Create an Environment Variable in Windows</a>.
+ The <strong>SYSTEM VARIABLES</strong> PATH entry will need to be udpated.</p>
+
+      <p>You can check that the path was updated correctly by opening a new powershell console (after the variable update) and typing:</p>
+
+      <div class="language-text highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>$env:path
+</pre></div>
+</div>
+      </div>
+
+      <p><code>.\lbin</code> should appear as the first entry in your path. If it is not, be sure that you added it to the system variables (not user variables) PATH entry.</p>
+
+      <div>    
+  <a class="anchor" name="4.2_Install_a_newer_bundler_version"></a>          
+  <h4><a href="#4.2_Install_a_newer_bundler_version">4.2 Install a newer bundler version</a></h4>          
+</div>
+
+      <p>This step is not required. But, you may quickly encounter a scenario where a newer bundler version is required. In this case before Origen boots it will display a message with instructions for what is needed.</p>
+
+      <p>Run this command to install a newer version of bundler:</p>
+
+      <div class="language-text highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>gem install bundler -v 2.1.4
 </pre></div>
 </div>
       </div>
@@ -696,7 +617,7 @@ why that is.</p>
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = 'origen-sdk';
     var disqus_title;
-    var disqus_url = 'https://' + window.location.hostname + window.location.pathname;
+    var disqus_url = 'http://' + window.location.hostname + window.location.pathname;
 
     disqus_title = $("h1").text();
     if (disqus_title.length == 0) {
