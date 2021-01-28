@@ -6,7 +6,7 @@
 <title>
   Module: Origen::Pins
   
-    &mdash; Origen Core 0.59.7
+    &mdash; Origen Core 0.59.8
   
 </title>
 
@@ -95,34 +95,26 @@
     
 <p>****** These notes refer to the pin model for the upcoming Origen V3 ******</p>
 
-<p>Pin muxing and grouping on modern SoCs can be incredibly complex, Origen
-provides the following pin model architecture which should hopefully be
-sufficient to accurately model even the most complex of cases…</p>
+<p>Pin muxing and grouping on modern SoCs can be incredibly complex, Origen provides the following pin model architecture which should hopefully be sufficient to accurately model even the most complex of cases…</p>
 
-<p>At the lowest layer are the pin objects, one per physical pin on a DUT.
-Each pin can store 1-bit of data with directional/state information for
-pattern generation, and additional metadata about the function of that pin
-in different modes of operation.</p>
+<p>At the lowest layer are the pin objects, one per physical pin on a DUT. Each pin can store 1-bit of data with directional/state information for pattern generation, and additional metadata about the function of that pin in different modes of operation.</p>
 
 <pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_pin1'>pin1</span>                        <span class='id identifier rubyid_pin2'>pin2</span>                        <span class='id identifier rubyid_pin3'>pin3</span>                        <span class='id identifier rubyid_pin4'>pin4</span>
 </code></pre>
 
 <p><strong>Package</strong></p>
 
-<p>Packages are the first layer of filtering that can be applied to pins, each
-pin has a package hash which contains information about which packages it
-is available in and any additional metadata associated with the pin when in
-that package - for example what package pin location it is.</p>
+<p>Packages are the first layer of filtering that can be applied to pins, each pin has a package hash which contains information about which packages it is available in and any additional metadata associated with the pin when in that package - for example what package pin location it is.</p>
 
 <pre class="code ruby"><code class="ruby">pin1                        pin2                        pin3                        pin4
   packages:                   packages:                   packages:                   packages:
     p1:                         p1:                         p1:
       location: &quot;A5&quot;              location: &quot;B2&quot;              location: &quot;B3&quot;
     p2:                                                     p2:
-      location: &quot;A5&quot;                                          location: &quot;B2&quot;</code></pre>
+      location: &quot;A5&quot;                                          location: &quot;B2&quot;
+</code></pre>
 
-<p>Based on the above metadata these pins will work as follows within an SoC
-model:</p>
+<p>Based on the above metadata these pins will work as follows within an SoC model:</p>
 
 <pre class="code ruby"><code class="ruby"><span class='gvar'>$dut</span><span class='period'>.</span><span class='id identifier rubyid_package'>package</span>                     <span class='comment'># =&gt; :none
 </span><span class='gvar'>$dut</span><span class='period'>.</span><span class='id identifier rubyid_pins'>pins</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span>                   <span class='comment'># =&gt; 4
@@ -144,37 +136,19 @@ model:</p>
 </span><span class='kw'>end</span>
 </code></pre>
 
-<p>Aside from a physical package the packages attribute can also be used to
-model pseudo-packages like the subset of pins that are available in a probe
-or burn-in setup for example.</p>
+<p>Aside from a physical package the packages attribute can also be used to model pseudo-packages like the subset of pins that are available in a probe or burn-in setup for example.</p>
 
 <p>Pins availability can also be scoped by SoC mode and configuration…</p>
 
 <p><strong>Mode</strong></p>
 
-<p>The SoC mode attribute is inteded to be used to model top-level operating
-modes, such as functional test, RAMBIST, NVMBIST, etc. As such it is a
-top-level attribute similar to package attribute e.g. the SoC can be in
-RAMBIST mode within package P1, or it could be in User mode within package
-P2.</p>
+<p>The SoC mode attribute is inteded to be used to model top-level operating modes, such as functional test, RAMBIST, NVMBIST, etc. As such it is a top-level attribute similar to package attribute e.g. the SoC can be in RAMBIST mode within package P1, or it could be in User mode within package P2.</p>
 
 <p><strong>Configuration</strong></p>
 
-<p>The configuration scope should be used to model pin muxing that can occur
-independently of the SoC mode, for example in a functional test mode many
-different pin configurations may exist based on the IP modules that are
-enabled or disabled at runtime. Unlike the mode the configuration attribute
-can also be set at pin level as well. Any configuration attribute set on a
-pin will override the configuration attribute that is currently live on the
-SoC. This allows individual pins, or perhaps more commonly individual pin
-groups, to be set to a particular configuration independently of the other
-pins or the SoC.</p>
+<p>The configuration scope should be used to model pin muxing that can occur independently of the SoC mode, for example in a functional test mode many different pin configurations may exist based on the IP modules that are enabled or disabled at runtime. Unlike the mode the configuration attribute can also be set at pin level as well. Any configuration attribute set on a pin will override the configuration attribute that is currently live on the SoC. This allows individual pins, or perhaps more commonly individual pin groups, to be set to a particular configuration independently of the other pins or the SoC.</p>
 
-<p>The mode and configuration attributes at pin level are similar to those for
-the package, each pin also has a current_configuration attribute which will
-override the current_configuration attribute of the SoC when present. Each
-mode and configuration entry will be hash for storing meta data as
-required.</p>
+<p>The mode and configuration attributes at pin level are similar to those for the package, each pin also has a current_configuration attribute which will override the current_configuration attribute of the SoC when present. Each mode and configuration entry will be hash for storing meta data as required.</p>
 
 <pre class="code ruby"><code class="ruby">pin1                        pin2                        pin3                        pin4
   modes:                      modes:                      modes:                      modes:
@@ -183,14 +157,12 @@ required.</p>
   configurations:             configurations:             configurations:             configurations:
     default:                    default:                    default:                    default:
     alt0:                       alt1:                       alt0:
-                                                            alt1:</code></pre>
+                                                            alt1:
+</code></pre>
 
-<p>Pin availability will be scoped accordingly when the mode and configuration
-of the SoC model is changed.</p>
+<p>Pin availability will be scoped accordingly when the mode and configuration of the SoC model is changed.</p>
 
-<p>Although not shown in this example all of these filters are AND&#39;d
-together, so a pin is only available if it is available in the current
-package, mode and configuration.</p>
+<p>Although not shown in this example all of these filters are AND&#39;d together, so a pin is only available if it is available in the current package, mode and configuration.</p>
 
 <pre class="code ruby"><code class="ruby"><span class='gvar'>$dut</span><span class='period'>.</span><span class='id identifier rubyid_mode'>mode</span>                        <span class='comment'># =&gt; :none
 </span><span class='gvar'>$dut</span><span class='period'>.</span><span class='id identifier rubyid_configuration'>configuration</span>               <span class='comment'># =&gt; :none
@@ -207,22 +179,13 @@ package, mode and configuration.</p>
 <span class='gvar'>$dut</span><span class='period'>.</span><span class='id identifier rubyid_pins'>pins</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span>                   <span class='comment'># =&gt; 3   (pin2 is now available to)
 </span></code></pre>
 
-<p>While not shown here an additional value of :all can be set when specifying
-the mode/configuration attributes of a given pin and which means that it
-will be available in all modes and/or configurations.</p>
+<p>While not shown here an additional value of :all can be set when specifying the mode/configuration attributes of a given pin and which means that it will be available in all modes and/or configurations.</p>
 
 <p><strong>Functions</strong></p>
 
-<p>Each pin can have multiple functions associated with it which is intended
-to reflect the current signal that is mux&#39;d onto it. Functions are
-scoped by mode and configuration (not package) and only one function can
-exist per mode/configuration combo.</p>
+<p>Each pin can have multiple functions associated with it which is intended to reflect the current signal that is mux&#39;d onto it. Functions are scoped by mode and configuration (not package) and only one function can exist per mode/configuration combo.</p>
 
-<p>Again the reserved mode/configuration name :all can be used here to reflect
-a function that will be common to all modes/configurations unless a more
-specific function has been declared. The top-level key of the functions
-hash is the mode, then the configuration and then the meta data associated
-with that selection:</p>
+<p>Again the reserved mode/configuration name :all can be used here to reflect a function that will be common to all modes/configurations unless a more specific function has been declared. The top-level key of the functions hash is the mode, then the configuration and then the meta data associated with that selection:</p>
 
 <pre class="code ruby"><code class="ruby">pin1                        pin2                        pin3                        pin4
   functions:                  functions:                  functions:                  functions:
@@ -239,10 +202,10 @@ with that selection:</p>
     nvmbist:                    nvmbist:
       all:                        all:
         name: &quot;NVM_FAIL&quot;            name: &quot;NVM_DONE&quot;
-        direction: :output          direction: :output</code></pre>
+        direction: :output          direction: :output
+</code></pre>
 
-<p>The function attributes returned will automatically scope to the current
-SoC state:</p>
+<p>The function attributes returned will automatically scope to the current SoC state:</p>
 
 <pre class="code ruby"><code class="ruby"><span class='gvar'>$dut</span><span class='period'>.</span><span class='id identifier rubyid_mode'>mode</span> <span class='op'>=</span> <span class='symbol'>:user</span>
 <span class='gvar'>$dut</span><span class='period'>.</span><span class='id identifier rubyid_pin'>pin</span><span class='lparen'>(</span><span class='symbol'>:pin1</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span>             <span class='comment'># =&gt; &quot;TDI&quot;
@@ -255,13 +218,9 @@ SoC state:</p>
 
 <p><strong>Aliases</strong></p>
 
-<p>Aliases are alternative names/handles to give to pins when using them to
-create patterns and other IP in Origen. Aliases can be made universal in
-which case they will work regardless of scope, or they can be scoped to the
-current package, mode and configuration.</p>
+<p>Aliases are alternative names/handles to give to pins when using them to create patterns and other IP in Origen. Aliases can be made universal in which case they will work regardless of scope, or they can be scoped to the current package, mode and configuration.</p>
 
-<p>The Origen pin API will automatically create scoped aliases for functions
-and package locations as they are declared, so for example:</p>
+<p>The Origen pin API will automatically create scoped aliases for functions and package locations as they are declared, so for example:</p>
 
 <pre class="code ruby"><code class="ruby"><span class='gvar'>$dut</span><span class='period'>.</span><span class='id identifier rubyid_mode'>mode</span> <span class='op'>=</span> <span class='symbol'>:user</span>
 <span class='gvar'>$dut</span><span class='period'>.</span><span class='id identifier rubyid_pin'>pin</span><span class='lparen'>(</span><span class='symbol'>:pin1</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span>             <span class='comment'># =&gt; &quot;TDI&quot;
@@ -277,15 +236,9 @@ and package locations as they are declared, so for example:</p>
 
 <p>*Pin Groups*</p>
 
-<p>Pin groups will be similar to aliases in that they can be made universal or
-scoped to a specific package/mode/ configuration.</p>
+<p>Pin groups will be similar to aliases in that they can be made universal or scoped to a specific package/mode/ configuration.</p>
 
-<p>While aliases are simply pointers to pin objects pin groups will themselves
-be an Origen object which will be like a Ruby array with additional
-metadata attached (such as a name) and a dedicated API for working with the
-pins. Generally a pin and pingroup will respond to the same API so that
-calling code does not need to worry very much about dealing with a single
-pin vs. a collection.</p>
+<p>While aliases are simply pointers to pin objects pin groups will themselves be an Origen object which will be like a Ruby array with additional metadata attached (such as a name) and a dedicated API for working with the pins. Generally a pin and pingroup will respond to the same API so that calling code does not need to worry very much about dealing with a single pin vs. a collection.</p>
 
 
   </div>
@@ -362,9 +315,7 @@ pin vs. a collection.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Aliases are stored in a global array that is cleared out everytime the
-target is loaded, while a bit hacky this is an easy way to allow sub
-modules to defined con.</p>
+<p>Aliases are stored in a global array that is cleared out everytime the target is loaded, while a bit hacky this is an easy way to allow sub modules to defined con.</p>
 </div></span>
   
 </li>
@@ -491,8 +442,7 @@ modules to defined con.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Use this method to add any pins that are considered owned by the given
-object.</p>
+<p>Use this method to add any pins that are considered owned by the given object.</p>
 </div></span>
   
 </li>
@@ -676,8 +626,7 @@ object.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Equivalent to the all_pins method but considers ground pins rather than
-regular pins.</p>
+<p>Equivalent to the all_pins method but considers ground pins rather than regular pins.</p>
 </div></span>
   
 </li>
@@ -701,8 +650,7 @@ regular pins.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Equivalent to the all_pins method but considers other pins rather than
-regular pins.</p>
+<p>Equivalent to the all_pins method but considers other pins rather than regular pins.</p>
 </div></span>
   
 </li>
@@ -748,8 +696,7 @@ regular pins.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Similar to the pins method except that this method will bypass the
-package/mode/configuration scope.</p>
+<p>Similar to the pins method except that this method will bypass the package/mode/configuration scope.</p>
 </div></span>
   
 </li>
@@ -773,8 +720,7 @@ package/mode/configuration scope.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Equivalent to the all_pins method but considers power pins rather than
-regular pins.</p>
+<p>Equivalent to the all_pins method but considers power pins rather than regular pins.</p>
 </div></span>
   
 </li>
@@ -798,8 +744,7 @@ regular pins.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Equivalent to the all_pins method but considers ground pins rather than
-regular pins.</p>
+<p>Equivalent to the all_pins method but considers ground pins rather than regular pins.</p>
 </div></span>
   
 </li>
@@ -871,8 +816,7 @@ regular pins.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Equivalent to the pin_groups method but considers ground pins rather than
-regular pins.</p>
+<p>Equivalent to the pin_groups method but considers ground pins rather than regular pins.</p>
 </div></span>
   
 </li>
@@ -898,8 +842,7 @@ regular pins.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Equivalent to the pins method but considers ground pins rather than regular
-pins.</p>
+<p>Equivalent to the pins method but considers ground pins rather than regular pins.</p>
 </div></span>
   
 </li>
@@ -925,8 +868,7 @@ pins.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Equivalent to the has_pin? method but considers ground pins rather than
-regular pins.</p>
+<p>Equivalent to the has_pin? method but considers ground pins rather than regular pins.</p>
 </div></span>
   
 </li>
@@ -976,8 +918,7 @@ regular pins.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Returns true if the module has access to a pin with the given name within
-the current context.</p>
+<p>Returns true if the module has access to a pin with the given name within the current context.</p>
 </div></span>
   
 </li>
@@ -1003,8 +944,7 @@ the current context.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Equivalent to the has_pin? method but considers power pins rather than
-regular pins.</p>
+<p>Equivalent to the has_pin? method but considers power pins rather than regular pins.</p>
 </div></span>
   
 </li>
@@ -1030,8 +970,7 @@ regular pins.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Equivalent to the has_pin? method but considers virtual pins rather than
-regular pins.</p>
+<p>Equivalent to the has_pin? method but considers virtual pins rather than regular pins.</p>
 </div></span>
   
 </li>
@@ -1057,8 +996,7 @@ regular pins.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Equivalent to the pin_groups method but considers other pins rather than
-regular pins.</p>
+<p>Equivalent to the pin_groups method but considers other pins rather than regular pins.</p>
 </div></span>
   
 </li>
@@ -1084,8 +1022,7 @@ regular pins.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Equivalent to the pins method but considers other pins rather than regular
-pins.</p>
+<p>Equivalent to the pins method but considers other pins rather than regular pins.</p>
 </div></span>
   
 </li>
@@ -1229,8 +1166,7 @@ pins.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Specify the order that pins will appear in the output pattern, unspecified
-pins will appear in an arbitrary order at the end.</p>
+<p>Specify the order that pins will appear in the output pattern, unspecified pins will appear in an arbitrary order at the end.</p>
 </div></span>
   
 </li>
@@ -1256,8 +1192,7 @@ pins will appear in an arbitrary order at the end.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Permits access via object.pin(x), returns a hash of all pins if no id is
-specified.</p>
+<p>Permits access via object.pin(x), returns a hash of all pins if no id is specified.</p>
 </div></span>
   
 </li>
@@ -1283,8 +1218,7 @@ specified.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Equivalent to the pin_groups method but considers power pins rather than
-regular pins.</p>
+<p>Equivalent to the pin_groups method but considers power pins rather than regular pins.</p>
 </div></span>
   
 </li>
@@ -1310,8 +1244,7 @@ regular pins.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Equivalent to the pins method but considers power pins rather than regular
-pins.</p>
+<p>Equivalent to the pins method but considers power pins rather than regular pins.</p>
 </div></span>
   
 </li>
@@ -1337,8 +1270,7 @@ pins.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Equivalent to the pin_groups method but considers virtual pins rather than
-regular pins.</p>
+<p>Equivalent to the pin_groups method but considers virtual pins rather than regular pins.</p>
 </div></span>
   
 </li>
@@ -1364,8 +1296,7 @@ regular pins.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Equivalent to the pins method but considers virtual pins rather than
-regular pins.</p>
+<p>Equivalent to the pins method but considers virtual pins rather than regular pins.</p>
 </div></span>
   
 </li>
@@ -1452,9 +1383,7 @@ regular pins.</p>
   You should avoid using this method if possible, as it may be removed or be changed in the future.
 </p>
 
-<p>Aliases are stored in a global array that is cleared out everytime the
-target is loaded, while a bit hacky this is an easy way to allow sub
-modules to defined con</p>
+<p>Aliases are stored in a global array that is cleared out everytime the target is loaded, while a bit hacky this is an easy way to allow sub modules to defined con</p>
 
 <p>API v2, deprecated</p>
 
@@ -1683,13 +1612,7 @@ modules to defined con</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Use this method to add any pins that are considered owned by the given
-object. Pins declared via this method will be accessible within the object
-via pin(:pinname) or if you prefer self.pin(:pinname). Externally you would
-refer to it via $top.pin(:pinname) or $soc.pin(:pinname) or even
-$top.sub_module.pin(:pinname) depending on where you called this method.
-Pins are output in the pattern in the order that they are declared. A
-minimum declaration is this:</p>
+<p>Use this method to add any pins that are considered owned by the given object. Pins declared via this method will be accessible within the object via pin(:pinname) or if you prefer self.pin(:pinname). Externally you would refer to it via $top.pin(:pinname) or $soc.pin(:pinname) or even $top.sub_module.pin(:pinname) depending on where you called this method. Pins are output in the pattern in the order that they are declared. A minimum declaration is this:</p>
 
 <pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_add_pin'>add_pin</span>  <span class='symbol'>:d_out</span>        <span class='comment'># A single pin that will be set to :dont_care by default
 </span></code></pre>
@@ -1700,8 +1623,7 @@ minimum declaration is this:</p>
 <span class='id identifier rubyid_add_pin'>add_pin</span>  <span class='symbol'>:invoke</span><span class='comma'>,</span> <span class='symbol'>:reset</span> <span class='op'>=&gt;</span> <span class='symbol'>:drive_lo</span>
 </code></pre>
 
-<p>You can override the name that appears in the pattern by providing a string
-as the last argument</p>
+<p>You can override the name that appears in the pattern by providing a string as the last argument</p>
 
 <pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_add_pin'>add_pin</span>  <span class='symbol'>:done</span><span class='comma'>,</span>   <span class='symbol'>:reset</span> <span class='op'>=&gt;</span> <span class='symbol'>:expect_hi</span><span class='comma'>,</span> <span class='symbol'>:name</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>bist_done</span><span class='tstring_end'>&quot;</span></span>
 <span class='id identifier rubyid_add_pin'>add_pin</span>  <span class='symbol'>:fail</span><span class='comma'>,</span>                         <span class='symbol'>:name</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>bist_fail</span><span class='tstring_end'>&quot;</span></span>
@@ -2264,8 +2186,7 @@ as the last argument</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Equivalent to the all_pins method but considers ground pins rather than
-regular pins</p>
+<p>Equivalent to the all_pins method but considers ground pins rather than regular pins</p>
 
 
   </div>
@@ -2314,8 +2235,7 @@ regular pins</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Equivalent to the all_pins method but considers other pins rather than
-regular pins</p>
+<p>Equivalent to the all_pins method but considers other pins rather than regular pins</p>
 
 
   </div>
@@ -2438,12 +2358,9 @@ regular pins</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Similar to the pins method except that this method will bypass the
-package/mode/configuration scope.</p>
+<p>Similar to the pins method except that this method will bypass the package/mode/configuration scope.</p>
 
-<p>Therefore with no id supplied it will return all known pins and with an id
-it will return the given pin object regardless of where or not it is
-enabled by the current context</p>
+<p>Therefore with no id supplied it will return all known pins and with an id it will return the given pin object regardless of where or not it is enabled by the current context</p>
 
 
   </div>
@@ -2492,8 +2409,7 @@ enabled by the current context</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Equivalent to the all_pins method but considers power pins rather than
-regular pins</p>
+<p>Equivalent to the all_pins method but considers power pins rather than regular pins</p>
 
 
   </div>
@@ -2542,8 +2458,7 @@ regular pins</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Equivalent to the all_pins method but considers ground pins rather than
-regular pins</p>
+<p>Equivalent to the all_pins method but considers ground pins rather than regular pins</p>
 
 
   </div>
@@ -2622,8 +2537,7 @@ regular pins</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Delete any pin or pin group.  If arg is a pin then delete the pin and any
-instances of it in any pin groups</p>
+<p>Delete any pin or pin group.  If arg is a pin then delete the pin and any instances of it in any pin groups</p>
 
 
   </div>
@@ -2684,8 +2598,7 @@ instances of it in any pin groups</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Equivalent to the pin_groups method but considers ground pins rather than
-regular pins</p>
+<p>Equivalent to the pin_groups method but considers ground pins rather than regular pins</p>
 
 
   </div>
@@ -2762,8 +2675,7 @@ If you meant to define the ground_pin_group then use the add_ground_pin_group me
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Equivalent to the pins method but considers ground pins rather than regular
-pins</p>
+<p>Equivalent to the pins method but considers ground pins rather than regular pins</p>
 
 
   </div>
@@ -2818,8 +2730,7 @@ pins</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Equivalent to the has_pin? method but considers ground pins rather than
-regular pins</p>
+<p>Equivalent to the has_pin? method but considers ground pins rather than regular pins</p>
 
 
   </div>
@@ -2933,8 +2844,7 @@ regular pins</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns true if the module has access to a pin with the given name within
-the current context</p>
+<p>Returns true if the module has access to a pin with the given name within the current context</p>
 
 
   </div>
@@ -2992,8 +2902,7 @@ the current context</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Equivalent to the has_pin? method but considers power pins rather than
-regular pins</p>
+<p>Equivalent to the has_pin? method but considers power pins rather than regular pins</p>
 
 
   </div>
@@ -3051,8 +2960,7 @@ regular pins</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Equivalent to the has_pin? method but considers virtual pins rather than
-regular pins</p>
+<p>Equivalent to the has_pin? method but considers virtual pins rather than regular pins</p>
 
 
   </div>
@@ -3110,8 +3018,7 @@ regular pins</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Equivalent to the pin_groups method but considers other pins rather than
-regular pins</p>
+<p>Equivalent to the pin_groups method but considers other pins rather than regular pins</p>
 
 
   </div>
@@ -3188,8 +3095,7 @@ If you meant to define the other_pin_group then use the add_other_pin_group meth
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Equivalent to the pins method but considers other pins rather than regular
-pins</p>
+<p>Equivalent to the pins method but considers other pins rather than regular pins</p>
 
 
   </div>
@@ -3516,8 +3422,7 @@ If you meant to define the pin_group then use the add_pin_group method instead.
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Specify the order that pins will appear in the output pattern, unspecified
-pins will appear in an arbitrary order at the end</p>
+<p>Specify the order that pins will appear in the output pattern, unspecified pins will appear in an arbitrary order at the end</p>
 
 <p>API v2, deprecated</p>
 
@@ -3588,8 +3493,7 @@ pins will appear in an arbitrary order at the end</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Permits access via object.pin(x), returns a hash of all pins if no id is
-specified.</p>
+<p>Permits access via object.pin(x), returns a hash of all pins if no id is specified.</p>
 
 <h4 id="label-Examples">Examples</h4>
 
@@ -3743,8 +3647,7 @@ If you meant to define the pin then use the add_pin method instead.
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Equivalent to the pin_groups method but considers power pins rather than
-regular pins</p>
+<p>Equivalent to the pin_groups method but considers power pins rather than regular pins</p>
 
 
   </div>
@@ -3821,8 +3724,7 @@ If you meant to define the power_pin_group then use the add_power_pin_group meth
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Equivalent to the pins method but considers power pins rather than regular
-pins</p>
+<p>Equivalent to the pins method but considers power pins rather than regular pins</p>
 
 
   </div>
@@ -3875,8 +3777,7 @@ pins</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Equivalent to the pin_groups method but considers virtual pins rather than
-regular pins</p>
+<p>Equivalent to the pin_groups method but considers virtual pins rather than regular pins</p>
 
 
   </div>
@@ -3953,8 +3854,7 @@ If you meant to define the virtual_pin_group then use the add_virtual_pin_group 
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Equivalent to the pins method but considers virtual pins rather than
-regular pins</p>
+<p>Equivalent to the pins method but considers virtual pins rather than regular pins</p>
 
 
   </div>
@@ -3996,9 +3896,9 @@ regular pins</p>
 </div>
 
       <div id="footer">
-  Generated on Fri Jan  8 08:39:29 2021 by
-  <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.25 (ruby-2.4.7).
+  Generated on Thu Jan 28 07:10:17 2021 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.9.26 (ruby-2.6.6).
 </div>
 
     </div>
