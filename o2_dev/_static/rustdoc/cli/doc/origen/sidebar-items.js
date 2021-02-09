@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["build_command",""],["main",""]],"mod":[["app_commands","This module handles the parsing of commands defined by the current application"],["commands",""],["python",""]],"struct":[["CommandHelp",""]]});

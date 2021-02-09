@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["designsync",""],["git",""]],"struct":[["Credentials",""],["RevisionControl",""],["Status",""]],"trait":[["RevisionControlAPI","Defines a common minimum API that all revision control system drivers should support"]]});

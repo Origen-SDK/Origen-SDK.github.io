@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["run",""]],"mod":[["new_resource",""]],"static":[["PY_APP",""],["PY_BLOCK",""]],"struct":[["App",""]]});

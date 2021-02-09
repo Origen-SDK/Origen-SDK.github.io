@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["Operation",""]],"fn":[["get_home_dir",""],["search_for",""],["search_for_from_pwd",""]],"struct":[["Status","Exposes some status information about the runtime environment, e.g. whether an application workspace is present"]]});

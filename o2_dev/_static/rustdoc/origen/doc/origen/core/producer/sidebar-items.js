@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["JobType",""],["OptionType",""]],"mod":[["job",""]],"struct":[["Producer","The producer is a singleton instantiated as origen::PRODUCER, it provides static storage and state tracking for all jobs created by an origen command invocation (e.g. origen g blah). A job is created for each source file provided by the user."]]});

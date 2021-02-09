@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["bit_slice","Returns the value of the given BigUint for the given bit field range. Notes:  * start_bit and stop_bit can be given in either high/low order, but they mean the same  * start_bit == stop_bit will be handled correctly  * The size of the input number is assumed to be infinite and references to"]],"trait":[["BigUintHelpers",""]]});

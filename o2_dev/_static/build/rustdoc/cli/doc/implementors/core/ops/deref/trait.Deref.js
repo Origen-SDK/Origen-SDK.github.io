@@ -1,0 +1,3 @@
+(function() {var implementors = {};
+implementors["origen"] = [{"text":"impl <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/ops/deref/trait.Deref.html\" title=\"trait core::ops::deref::Deref\">Deref</a> for <a class=\"struct\" href=\"origen/python/struct.PYTHON_CONFIG.html\" title=\"struct origen::python::PYTHON_CONFIG\">PYTHON_CONFIG</a>","synthetic":false,"types":["origen::python::PYTHON_CONFIG"]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

@@ -1,0 +1,43 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `logger` mod in crate `origen`."><meta name="keywords" content="rust, rustlang, rust-lang, logger"><title>origen::utility::logger - Rust</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.png");}</style></head><body class="rustdoc mod"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../origen/index.html'><div class='logo-container'><img src='../../../rust-logo.png' alt='logo'></div></a><p class='location'>Module logger</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#structs">Structs</a></li><li><a href="#functions">Functions</a></li></ul></div><p class='location'><a href='../../index.html'>origen</a>::<wbr><a href='../index.html'>utility</a></p><script>window.sidebarCurrent = {name: 'logger', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.png" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.png" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class='fqn'><span class='out-of-band'><span id='render-detail'><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class='inner'>&#x2212;</span>]</a></span><a class='srclink' href='../../../src/origen/utility/logger.rs.html#1-545' title='goto source code'>[src]</a></span><span class='in-band'>Module <a href='../../index.html'>origen</a>::<wbr><a href='../index.html'>utility</a>::<wbr><a class="mod" href=''>logger</a></span></h1><div class='docblock'><p>The Origen logger is implemented as a singleton and data is logged via globally available macros.</p>
+<p>All log macros operate similar to the println! macro, accepting a string argument and optionally
+some variables to be substituted into the message.</p>
+<h2 id="examples" class="section-header"><a href="#examples">Examples</a></h2>
+<p>Display is like a log aware print, the data will always appear in the console without any timestamp
+or other decoration and will be written to the log file with timestamp info.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered">
+<span class="macro">display</span><span class="macro">!</span>(<span class="string">&quot;Some msg&quot;</span>);       <span class="comment">// This one is equivalent to print! but appears in the log</span>
+<span class="macro">displayln</span><span class="macro">!</span>(<span class="string">&quot;Some msg&quot;</span>);     <span class="comment">// Like println!</span>
+
+<span class="kw">let</span> <span class="ident">x</span> <span class="op">=</span> <span class="number">10</span>;
+<span class="macro">displayln</span><span class="macro">!</span>(<span class="string">&quot;The value of x is {}&quot;</span>, <span class="ident">x</span>);
+
+<span class="comment">// There are also red/green versions of display:</span>
+<span class="macro">display_green</span><span class="macro">!</span>(<span class="string">&quot;The value of x is {}&quot;</span>, <span class="ident">x</span>);
+<span class="macro">display_redln</span><span class="macro">!</span>(<span class="string">&quot;The value of x is {}&quot;</span>, <span class="ident">x</span>);
+</pre></div>
+<p>Similar macros exist to display messages at different log levels, all of these appear with timestamps
+in both the console and the log file:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered">
+<span class="kw">let</span> <span class="ident">x</span> <span class="op">=</span> <span class="number">10</span>;
+
+<span class="macro">log_error</span><span class="macro">!</span>(<span class="string">&quot;The value of x is {}&quot;</span>, <span class="ident">x</span>);
+<span class="macro">log_info</span><span class="macro">!</span>(<span class="string">&quot;The value of x is {}&quot;</span>, <span class="ident">x</span>);
+<span class="macro">log_success</span><span class="macro">!</span>(<span class="string">&quot;The value of x is {}&quot;</span>, <span class="ident">x</span>);
+<span class="macro">log_warning</span><span class="macro">!</span>(<span class="string">&quot;The value of x is {}&quot;</span>, <span class="ident">x</span>);
+<span class="macro">log_deprecated</span><span class="macro">!</span>(<span class="string">&quot;The value of x is {}&quot;</span>, <span class="ident">x</span>);
+<span class="macro">log_debug</span><span class="macro">!</span>(<span class="string">&quot;The value of x is {}&quot;</span>, <span class="ident">x</span>);
+<span class="macro">log_trace</span><span class="macro">!</span>(<span class="string">&quot;The value of x is {}&quot;</span>, <span class="ident">x</span>);</pre></div>
+<h2 id="log-levels" class="section-header"><a href="#log-levels">Log Levels</a></h2>
+<p>The log verbosity mapping is shown below, level 0 is equivalent to running with no verbosity switch,
+level 1 is -v, level 2 is -vv, etc.</p>
+<ul>
+<li>Level 0 - display, log_error</li>
+<li>Level 1 - log_info, log_success, log_warning, log_deprecated</li>
+<li>Level 2 - log_debug</li>
+<li>Level 3 - log_trace</li>
+</ul>
+</div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table><tr class='module-item'><td><a class="struct" href="struct.Inner.html" title='origen::utility::logger::Inner struct'>Inner</a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="struct" href="struct.Logger.html" title='origen::utility::logger::Logger struct'>Logger</a></td><td class='docblock-short'></td></tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
+<table><tr class='module-item'><td><a class="fn" href="fn.log_dir.html" title='origen::utility::logger::log_dir fn'>log_dir</a></td><td class='docblock-short'></td></tr></table></section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../";window.currentCrate = "origen";</script><script src="../../../main.js"></script><script defer src="../../../search-index.js"></script></body></html>

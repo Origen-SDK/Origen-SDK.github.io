@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["EnumeratedValue",""],["Field","Named collections of bits within a register"],["Reset",""],["SummaryField","A lightweight version of a Field that is returned by the my_reg.fields() iterator, and which is also used to represent gaps in the register (when spacer = true)."]]});

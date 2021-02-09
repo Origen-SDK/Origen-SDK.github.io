@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Job","A job represents the execution of an Origen application source file. For example, if the user runs `origen g <pat1> <pat2>` then two jobs will be created, one for each pattern source file."]]});

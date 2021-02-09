@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["api",""],["pattern_renderer",""]],"trait":[["VectorBased",""]]});
