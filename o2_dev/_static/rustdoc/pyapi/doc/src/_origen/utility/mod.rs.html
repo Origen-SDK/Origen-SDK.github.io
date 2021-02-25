@@ -32,22 +32,24 @@
 <span id="32">32</span>
 <span id="33">33</span>
 <span id="34">34</span>
+<span id="35">35</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">caller</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">location</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">transaction</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">mailer</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">session_store</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">metadata</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">ldap</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">location</span>;
+<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">non_snake_case</span>)]</span>
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">mailer</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">metadata</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">session_store</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">transaction</span>;
 
+<span class="kw">use</span> <span class="ident">ldap</span>::<span class="ident">PyInit_ldap</span>;
 <span class="kw">use</span> <span class="ident">location</span>::<span class="ident">Location</span>;
+<span class="kw">use</span> <span class="ident">mailer</span>::<span class="ident">PyInit_mailer</span>;
 <span class="kw">use</span> <span class="ident">pyo3</span>::<span class="ident">prelude</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">pyo3</span>::{<span class="ident">wrap_pyfunction</span>, <span class="ident">wrap_pymodule</span>};
-<span class="kw">use</span> <span class="ident">transaction</span>::<span class="ident">Transaction</span>;
-<span class="kw">use</span> <span class="ident">mailer</span>::<span class="ident">Mailer</span>;
 <span class="kw">use</span> <span class="ident">session_store</span>::<span class="ident">PyInit_session_store</span>;
-<span class="kw">use</span> <span class="ident">ldap</span>::<span class="ident">PyInit_ldap</span>;
+<span class="kw">use</span> <span class="ident">transaction</span>::<span class="ident">Transaction</span>;
 
 <span class="kw">use</span> <span class="ident">num_bigint</span>::<span class="ident">BigUint</span>;
 <span class="kw">use</span> <span class="ident">origen</span>::<span class="ident">utility</span>::<span class="ident">big_uint_helpers</span>::<span class="ident">BigUintHelpers</span>;
@@ -56,8 +58,8 @@
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">utility</span>(<span class="ident">_py</span>: <span class="ident">Python</span>, <span class="ident">m</span>: <span class="kw-2">&amp;</span><span class="ident">PyModule</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="ident">m</span>.<span class="ident">add_class</span>::<span class="op">&lt;</span><span class="ident">Location</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
     <span class="ident">m</span>.<span class="ident">add_class</span>::<span class="op">&lt;</span><span class="ident">Transaction</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
-    <span class="ident">m</span>.<span class="ident">add_class</span>::<span class="op">&lt;</span><span class="ident">Mailer</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
     <span class="ident">m</span>.<span class="ident">add_wrapped</span>(<span class="macro">wrap_pyfunction</span><span class="macro">!</span>(<span class="ident">reverse_bits</span>))<span class="question-mark">?</span>;
+    <span class="ident">m</span>.<span class="ident">add_wrapped</span>(<span class="macro">wrap_pymodule</span><span class="macro">!</span>(<span class="ident">mailer</span>))<span class="question-mark">?</span>;
     <span class="ident">m</span>.<span class="ident">add_wrapped</span>(<span class="macro">wrap_pymodule</span><span class="macro">!</span>(<span class="ident">session_store</span>))<span class="question-mark">?</span>;
     <span class="ident">m</span>.<span class="ident">add_wrapped</span>(<span class="macro">wrap_pymodule</span><span class="macro">!</span>(<span class="ident">ldap</span>))<span class="question-mark">?</span>;
     <span class="prelude-val">Ok</span>(())

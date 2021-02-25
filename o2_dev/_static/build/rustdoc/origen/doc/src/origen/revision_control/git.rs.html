@@ -653,12 +653,10 @@
 <span id="653">653</span>
 <span id="654">654</span>
 <span id="655">655</span>
-<span id="656">656</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">Credentials</span>, <span class="ident">RevisionControlAPI</span>, <span class="ident">Status</span>};
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">utility</span>::<span class="ident">command_helpers</span>::<span class="ident">log_stdout_and_stderr</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">OrigenResult</span>;
-<span class="comment">// use crate::current_user;</span>
 <span class="kw">use</span> <span class="ident">git2</span>::<span class="ident">Repository</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fs</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::{<span class="ident">Path</span>, <span class="ident">PathBuf</span>};
@@ -1101,7 +1099,6 @@
             <span class="kw">let</span> <span class="ident">username</span>;
             <span class="kw">let</span> <span class="ident">password</span>;
             {
-                <span class="kw">let</span> <span class="ident">last_password_attempt</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">last_password_attempt</span>.<span class="ident">borrow</span>();
                 <span class="ident">password</span> <span class="op">=</span> {
                     <span class="kw">if</span> <span class="self">self</span>.<span class="ident">credentials</span>.<span class="ident">is_some</span>()
                         <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="self">self</span>.<span class="ident">credentials</span>.<span class="ident">as_ref</span>().<span class="ident">unwrap</span>().<span class="ident">password</span>.<span class="ident">is_some</span>()
@@ -1118,9 +1115,10 @@
                             <span class="ident">u</span>.<span class="ident">password</span>(
                                 <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;to access repository &#39;{}&#39;&quot;</span>, <span class="ident">url</span>)),
                                 <span class="bool-val">true</span>,
-                                <span class="prelude-val">Some</span>(<span class="prelude-val">None</span>)
+                                <span class="prelude-val">Some</span>(<span class="prelude-val">None</span>),
                             )
-                        }).<span class="ident">expect</span>(<span class="string">&quot;Couldn&#39;t prompt for password&quot;</span>)
+                        })
+                        .<span class="ident">expect</span>(<span class="string">&quot;Couldn&#39;t prompt for password&quot;</span>)
                     }
                 };
                 <span class="ident">username</span> <span class="op">=</span> {

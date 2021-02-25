@@ -412,49 +412,69 @@ home directories, and email addresses.</p>
 </pre></div>
 </div>
 <p>Each dataset can be configured independently from the <a class="reference internal" href="getting_started/configuring_your_workspace.html#configuring-your-application"><span class="std std-ref">Origen config</span></a>. This will be most applicable when handling <a class="reference internal" href="#data-integration"><span class="std std-ref">data integration</span></a>.</p>
-<p>You may also notice the <code class="docutils literal notranslate"><span class="pre">default</span></code> dataset present. When a user field is accessed on any <code class="docutils literal notranslate"><span class="pre">User</span></code>, instead of a <code class="docutils literal notranslate"><span class="pre">dataset</span></code>, the <code class="docutils literal notranslate"><span class="pre">default</span> <span class="pre">dataset</span></code> is actually what gets queried. The default dataset can be changed the <a class="reference internal" href="getting_started/configuring_your_workspace.html#configuring-your-application"><span class="std std-ref">Origen config</span></a>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Before configuration</span>
-<span class="n">origen</span><span class="o">.</span><span class="n">current_user</span><span class="p">()</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="s2">&quot;p&quot;</span>
-<span class="n">origen</span><span class="o">.</span><span class="n">current_user</span><span class="p">()</span><span class="o">.</span><span class="n">password</span>
-    <span class="c1">#=&gt; &quot;p&quot;</span>
-
-<span class="n">origen</span><span class="o">.</span><span class="n">current_user</span><span class="p">()</span><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="s1">&#39;git&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="s2">&quot;git&quot;</span>
-<span class="n">origen</span><span class="o">.</span><span class="n">current_user</span><span class="p">()</span><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="s1">&#39;git&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">password</span>
-    <span class="c1">#=&gt; &quot;git&quot;</span>
-
-<span class="n">origen</span><span class="o">.</span><span class="n">current_user</span><span class="p">()</span><span class="o">.</span><span class="n">password</span>
-    <span class="c1">#=&gt; &quot;p&quot;</span>
-<span class="n">origen</span><span class="o">.</span><span class="n">current_user</span><span class="p">()</span><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="s2">&quot;pw&quot;</span>
-<span class="n">origen</span><span class="o">.</span><span class="n">current_user</span><span class="p">()</span><span class="o">.</span><span class="n">password</span>
-    <span class="c1">#=&gt; &quot;pw&quot;</span>
+<blockquote>
+<div><p>When a user field is accessed on any <code class="docutils literal notranslate"><span class="pre">User</span></code>, instead of a <code class="docutils literal notranslate"><span class="pre">dataset</span></code> directly, the <a class="reference internal" href="../interbuild/autoapi/_origen/_origen.users.html#origen.users.User.data_lookup_hierarchy" title="_origen.users.User.data_lookup_hierarchy"><code class="xref py py-meth docutils literal notranslate"><span class="pre">data_lookup_hierarchy</span></code></a> is followed to actually look up what is returned. This hierarchy will go dataset-by-dataset until a “non-<code class="docutils literal notranslate"><span class="pre">None</span></code>” value is found. If <code class="docutils literal notranslate"><span class="pre">None</span></code> is returned anyway, then no dataset provided the given field. This hierarchy can be set in the <a class="reference internal" href="getting_started/configuring_your_workspace.html#configuring-your-application"><span class="std std-ref">Origen config</span></a>:</p>
+</div></blockquote>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="n">user__data_lookup_hierarchy</span> <span class="o">=</span> <span class="k">[&quot;git&quot;, &quot;bitbucket&quot;]</span>
 </pre></div>
 </div>
-<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="n">user__default_dataset</span> <span class="o">=</span> <span class="s">&quot;test&quot;</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set the &#39;first_name&#39; fields for both datasets</span>
+<span class="n">origen</span><span class="o">.</span><span class="n">current_user</span><span class="p">()</span><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="s1">&#39;git&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">first_name</span> <span class="o">=</span> <span class="s2">&quot;Git&quot;</span>
+<span class="n">origen</span><span class="o">.</span><span class="n">current_user</span><span class="p">()</span><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="s1">&#39;bitbucket&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">first_name</span> <span class="o">=</span> <span class="s2">&quot;BB&quot;</span>
 
-<span class="k">[user__datasets]</span>
-<span class="k">[user__datasets.git]</span>
+<span class="c1"># Get the first name. Dataset &quot;git&quot; will be returned</span>
+<span class="n">origen</span><span class="o">.</span><span class="n">current_user</span><span class="p">()</span><span class="o">.</span><span class="n">first_name</span>
+    <span class="c1">#=&gt; &quot;Git&quot;</span>
+
+<span class="c1"># Clear Git&#39;s first name</span>
+<span class="c1"># As the &quot;Git&quot; dataset no longer provides a first name, the &quot;BB&quot; dataset will be used.</span>
+<span class="n">origen</span><span class="o">.</span><span class="n">current_user</span><span class="p">()</span><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="s1">&#39;git&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">first_name</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">origen</span><span class="o">.</span><span class="n">current_user</span><span class="p">()</span><span class="o">.</span><span class="n">first_name</span>
+    <span class="c1">#=&gt; &quot;BB&quot;</span>
 </pre></div>
 </div>
+<p>This hierarchy can be set programmatically, per-<code class="docutils literal notranslate"><span class="pre">User</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">origen</span><span class="o">.</span><span class="n">current_user</span><span class="p">()</span><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="s1">&#39;git&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">first_name</span> <span class="o">=</span> <span class="s2">&quot;Git&quot;</span>
+<span class="n">origen</span><span class="o">.</span><span class="n">current_user</span><span class="p">()</span><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="s1">&#39;bitbucket&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">first_name</span> <span class="o">=</span> <span class="s2">&quot;BB&quot;</span>
+
+<span class="n">origen</span><span class="o">.</span><span class="n">current_user</span><span class="p">()</span><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="s1">&#39;git&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">first_name</span>
+    <span class="c1">#=&gt; &quot;Git&quot;</span>
+<span class="n">origen</span><span class="o">.</span><span class="n">current_user</span><span class="p">()</span><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="s1">&#39;bitbucket&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">first_name</span>
+    <span class="c1">#=&gt; &quot;BB&quot;</span>
+
+<span class="n">origen</span><span class="o">.</span><span class="n">current_user</span><span class="p">()</span><span class="o">.</span><span class="n">first_name</span>
+    <span class="c1">#=&gt; &quot;Git&quot;</span>
+
+<span class="n">origen</span><span class="o">.</span><span class="n">current_user</span><span class="p">()</span><span class="o">.</span><span class="n">data_lookup_hierarchy</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Bitbucket&quot;</span><span class="p">,</span> <span class="s2">&quot;Git&quot;</span><span class="p">]</span>
+
+<span class="n">origen</span><span class="o">.</span><span class="n">current_user</span><span class="p">()</span><span class="o">.</span><span class="n">first_name</span>
+    <span class="c1">#=&gt; &quot;BB&quot;</span>
+</pre></div>
+</div>
+<p>Some fields, however, are exempt from this scheme, the <a class="reference internal" href="../interbuild/autoapi/_origen/_origen.users.html#origen.users.User.username" title="_origen.users.User.username"><code class="xref py py-meth docutils literal notranslate"><span class="pre">username</span></code></a> and <a class="reference internal" href="../interbuild/autoapi/_origen/_origen.users.html#origen.users.User.password" title="_origen.users.User.password"><code class="xref py py-meth docutils literal notranslate"><span class="pre">password</span></code></a> among them, and will stop at the <a class="reference internal" href="../interbuild/autoapi/_origen/_origen.users.html#origen.users.User.top_datakey" title="_origen.users.User.top_datakey"><code class="xref py py-meth docutils literal notranslate"><span class="pre">top_datakey</span></code></a> - which is the first value in the hierarchy and of the highest priority.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">origen</span><span class="o">.</span><span class="n">current_user</span><span class="p">()</span><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="s1">&#39;git&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="s2">&quot;git&quot;</span>
+<span class="n">origen</span><span class="o">.</span><span class="n">current_user</span><span class="p">()</span><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="s1">&#39;bitbucket&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="s2">&quot;bb&quot;</span>
+
+<span class="n">origen</span><span class="o">.</span><span class="n">current_user</span><span class="p">()</span><span class="o">.</span><span class="n">password</span>
+    <span class="c1">#=&gt; &quot;git&quot;</span>
+
 <span class="n">origen</span><span class="o">.</span><span class="n">current_user</span><span class="p">()</span><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="s1">&#39;git&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">password</span>
     <span class="c1">#=&gt; &quot;git&quot;</span>
-<span class="n">origen</span><span class="o">.</span><span class="n">current_user</span><span class="p">()</span><span class="o">.</span><span class="n">password</span>
-    <span class="c1">#=&gt; &quot;git&quot;</span>
+<span class="n">origen</span><span class="o">.</span><span class="n">current_user</span><span class="p">()</span><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="s1">&#39;bitbucket&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">password</span>
+    <span class="c1">#=&gt; &quot;bb&quot;</span>
 
-<span class="n">origen</span><span class="o">.</span><span class="n">current_user</span><span class="p">()</span><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="s1">&#39;git&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="s2">&quot;git_pw&quot;</span>
+<span class="n">origen</span><span class="o">.</span><span class="n">current_user</span><span class="p">()</span><span class="o">.</span><span class="n">clear_cached_password</span><span class="p">(</span><span class="s2">&quot;git&quot;</span><span class="p">)</span>
 <span class="n">origen</span><span class="o">.</span><span class="n">current_user</span><span class="p">()</span><span class="o">.</span><span class="n">password</span>
-    <span class="c1">#=&gt; &quot;git_pw&quot;</span>
-
-<span class="n">origen</span><span class="o">.</span><span class="n">current_user</span><span class="p">()</span><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">password</span>
-    <span class="c1">#=&gt; Error</span>
-    <span class="c1">#=&gt; &quot;no dataset default is available&quot;</span>
+    <span class="c1">#=&gt; &lt;- Begin Password Dialog -&gt;</span>
+    <span class="c1">#=&gt; &lt;- Does not query bitbucket dataset -&gt;</span>
 </pre></div>
 </div>
-<p>Notice that when a default dataset is specified, Origen will not create its own <code class="docutils literal notranslate"><span class="pre">default</span></code> dataset and attempts to access it without having explicitly added it will raise exceptions.</p>
+<p>Not all defined datasets need be in the hierarchy and a hierarchy that only include a single value will essentially alias all the fields on the <code class="docutils literal notranslate"><span class="pre">User</span></code> to a single dataset.</p>
+<p>Furthermore, an empty hierarchy will not allow any field accesses on the <code class="docutils literal notranslate"><span class="pre">User</span></code> - all accesses must be explicitly done though the <code class="docutils literal notranslate"><span class="pre">Dataset</span></code>.</p>
 </div>
 <div class="section" id="data-integration">
 <h3>Data Integration<a class="headerlink" href="#data-integration" title="Permalink to this headline">¶</a></h3>
-<p>User’s can be integrated with supported <code class="docutils literal notranslate"><span class="pre">data-sources</span></code>. Currently, the only supported source is the <a class="reference internal" href="#ldap"><span class="std std-ref">Origen’s LDAP</span></a>, but more may be added in the future.</p>
+<p>Users can be integrated with supported <code class="docutils literal notranslate"><span class="pre">data-sources</span></code>, which will populate the fields for a dataset behind the scenes. Currently, the only supported sources are the <a class="reference internal" href="#ldap"><span class="std std-ref">Origen’s LDAP</span></a> and the <a class="reference external" href="https://git-scm.com/book/en/v2/Customizing-Git-Git-Configuration">Git Configuration</a>, but more may be added in the future.</p>
 <p>All data integration in done via the <a class="reference internal" href="getting_started/configuring_your_workspace.html#configuring-your-application"><span class="std std-ref">Origen config</span></a>. The <code class="docutils literal notranslate"><span class="pre">data_source</span></code> option denotes what other options are available and how they are used.</p>
 <div class="section" id="ldap-integration">
 <h4>LDAP Integration<a class="headerlink" href="#ldap-integration" title="Permalink to this headline">¶</a></h4>
@@ -486,14 +506,24 @@ home directories, and email addresses.</p>
 </div>
 <p><a class="reference external" href="https://github.com/Origen-SDK/o2/blob/mailer_ldap_users_session_and_more/test_apps/python_app/tests/origen_utilities/test_users.py">The Users tests</a> contains a setup and some tests against a <a class="reference external" href="https://www.forumsys.com/tutorials/integration-how-to/ldap/online-ldap-test-server/">freely available LDAP</a> and can be used as an example and a reference.</p>
 </div>
+<div class="section" id="git-configuration">
+<h4>Git Configuration<a class="headerlink" href="#git-configuration" title="Permalink to this headline">¶</a></h4>
+<p>If <a class="reference external" href="https://git-scm.com/">Git</a> is installed and accessible, a dataset can be populated from the <a class="reference external" href="https://git-scm.com/book/en/v2/Customizing-Git-Git-Configuration">Git Configuration</a>. Currently, the <a class="reference internal" href="../interbuild/autoapi/_origen/_origen.users.html#origen.users.User.display_name" title="_origen.users.User.display_name"><code class="xref py py-meth docutils literal notranslate"><span class="pre">display_name</span></code></a> and <a class="reference internal" href="../interbuild/autoapi/_origen/_origen.users.html#origen.users.User.email" title="_origen.users.User.email"><code class="xref py py-meth docutils literal notranslate"><span class="pre">email</span></code></a> are the only values queried.</p>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[user__datasets.git]</span>
+<span class="n">data_source</span> <span class="o">=</span> <span class="s">&quot;git&quot;</span>
+</pre></div>
+</div>
+</div>
 </div>
 <div class="section" id="more-on-passwords">
 <h3>More On Passwords<a class="headerlink" href="#more-on-passwords" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="password-caching">
 <h4>Password Caching<a class="headerlink" href="#password-caching" title="Permalink to this headline">¶</a></h4>
-<p>By default, users who have had their passwords set and validated will have their passwords stored in the <a class="reference internal" href="#session-storage"><span class="std std-ref">session store</span></a> for future retrieval. Passwords are stored encrypted using Origen’s <a class="reference internal" href="../_static/build/rustdoc/origen/doc/origen/core/config/static.DEFAULT_ENCRYPTION_KEY.html">default encryption key</a> and <a class="reference internal" href="../_static/build/rustdoc/origen/doc/origen/core/config/static.DEFAULT_ENCRYPTION_NONCE.html">default encryption nonce</a> (so this is really just to avoid plaintext password as an actual security mechanism) but can be overridden by the <a class="reference internal" href="getting_started/configuring_your_workspace.html#configuring-your-application"><span class="std std-ref">Origen config</span></a>.</p>
+<p>By default, users who have had their passwords set and validated will have them stored in the <a class="reference external" href="https://en.wikipedia.org/wiki/GNOME_Keyring">Linux Keyring</a> (or the <a class="reference external" href="https://support.microsoft.com/en-us/windows/accessing-credential-manager-1b5c916a-6a16-889f-8581-fc16e8165ac0">Windows Credential Manager</a>) for future retrieval.</p>
+<p>This can be explicitly set in the <a class="reference internal" href="getting_started/configuring_your_workspace.html#configuring-your-application"><span class="std std-ref">Origen config</span></a> by setting the <code class="docutils literal notranslate"><span class="pre">user__password_cache_option</span></code> to either <code class="docutils literal notranslate"><span class="pre">true</span></code> or <code class="docutils literal notranslate"><span class="pre">keyring</span></code>.</p>
+<p>A second option is to store the passwords in the <a class="reference internal" href="#session-storage"><span class="std std-ref">session store</span></a>. Passwords stored here are encrypted using Origen’s <a class="reference internal" href="../_static/build/rustdoc/origen/doc/origen/core/config/static.DEFAULT_ENCRYPTION_KEY.html">default encryption key</a> and <a class="reference internal" href="../_static/build/rustdoc/origen/doc/origen/core/config/static.DEFAULT_ENCRYPTION_NONCE.html">default encryption nonce</a>, so this is really just to avoid plaintext password storage as opposed to an actual security mechanism, but these too can be overridden by the <a class="reference internal" href="getting_started/configuring_your_workspace.html#configuring-your-application"><span class="std std-ref">Origen config</span></a>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Allows passwords to be stored in the user&#39;s session store</span>
-<span class="n">user__cache_passwords</span> <span class="o">=</span> <span class="n">false</span>
+<span class="n">user__cache_passwords</span> <span class="o">=</span> <span class="s2">&quot;session&quot;</span>
 
 <span class="c1"># Allows custom encryption keys used by passwords only</span>
 <span class="c1"># These must conform to AES-256 GCM standards</span>
@@ -501,8 +531,8 @@ home directories, and email addresses.</p>
 <span class="n">password_encryption_nonce</span> <span class="o">=</span> <span class="s2">&quot;...&quot;</span>
 </pre></div>
 </div>
-<p>Passwords are stored in the <code class="docutils literal notranslate"><span class="pre">user_session</span></code>, so retrieval will persists not just across invocations but across applications and are available in the global space.</p>
-<p>Passwords for the current user can be set and cleared on the command line as well using the <code class="docutils literal notranslate"><span class="pre">credentials</span></code> command:</p>
+<p>Regardless of the caching mechanism used, passwords stored will persists not just across invocations but across applications, as well as being available in global invocations.</p>
+<p>In addition to the <em>password dialog</em> and the <code class="docutils literal notranslate"><span class="pre">password=</span></code> method shown previously, passwords for the current user can be set and cleared on the command line with the <code class="docutils literal notranslate"><span class="pre">credentials</span></code> command:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>origen.exe-credentials
 Set or clear user credentials
 
@@ -519,6 +549,7 @@ SUBCOMMANDS:
     set      Set the current user&#39;s password
 </pre></div>
 </div>
+<p>Password caching can also be disabled entirely by setting <code class="docutils literal notranslate"><span class="pre">user__password_cache_option</span></code> to either <code class="docutils literal notranslate"><span class="pre">false</span></code> or <code class="docutils literal notranslate"><span class="pre">none</span></code>.</p>
 </div>
 <div class="section" id="password-reasons">
 <h4>Password “Reasons”<a class="headerlink" href="#password-reasons" title="Permalink to this headline">¶</a></h4>

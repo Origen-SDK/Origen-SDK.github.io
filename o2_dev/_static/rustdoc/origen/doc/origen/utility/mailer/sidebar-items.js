@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["EmailContent","Wrapper around Lettre's Email Builder, providing some Origen-specific stuff."],["GlobalContext","Global context for the mailer applied to every email. Overrides here apply to every email sent after the update. Individual emails can also have these fields edited after creation but before sending."],["Mailer",""],["Maillist",""]]});
+initSidebarItems({"struct":[["Mailer",""]]});

@@ -476,8 +476,6 @@
 <span id="476">476</span>
 <span id="477">477</span>
 <span id="478">478</span>
-<span id="479">479</span>
-<span id="480">480</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused_imports</span>)]</span>
 <span class="attribute">#[<span class="ident">macro_use</span>]</span>
@@ -500,20 +498,20 @@
 <span class="kw">mod</span> <span class="ident">standard_sub_blocks</span>;
 <span class="kw">mod</span> <span class="ident">tester</span>;
 <span class="kw">mod</span> <span class="ident">tester_apis</span>;
-<span class="kw">mod</span> <span class="ident">utility</span>;
 <span class="kw">mod</span> <span class="ident">user</span>;
+<span class="kw">mod</span> <span class="ident">utility</span>;
 
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">registers</span>::<span class="ident">bit_collection</span>::<span class="ident">BitCollection</span>;
 <span class="kw">use</span> <span class="ident">num_bigint</span>::<span class="ident">BigUint</span>;
 <span class="kw">use</span> <span class="ident">origen</span>::{<span class="ident">Dut</span>, <span class="ident">Error</span>, <span class="ident">Operation</span>, <span class="prelude-ty">Result</span>, <span class="ident">Value</span>, <span class="ident">FLOW</span>, <span class="ident">ORIGEN_CONFIG</span>, <span class="ident">STATUS</span>, <span class="ident">TEST</span>};
+<span class="kw">use</span> <span class="ident">pyo3</span>::<span class="ident">conversion</span>::<span class="ident">AsPyPointer</span>;
 <span class="kw">use</span> <span class="ident">pyo3</span>::<span class="ident">prelude</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">pyo3</span>::<span class="ident">types</span>::<span class="ident">IntoPyDict</span>;
-<span class="kw">use</span> <span class="ident">pyo3</span>::<span class="ident">types</span>::{<span class="ident">PyAny</span>, <span class="ident">PyDict</span>, <span class="ident">PyBytes</span>};
+<span class="kw">use</span> <span class="ident">pyo3</span>::<span class="ident">types</span>::{<span class="ident">PyAny</span>, <span class="ident">PyBytes</span>, <span class="ident">PyDict</span>};
 <span class="kw">use</span> <span class="ident">pyo3</span>::{<span class="ident">wrap_pyfunction</span>, <span class="ident">wrap_pymodule</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">Path</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">MutexGuard</span>;
-<span class="kw">use</span> <span class="ident">pyo3</span>::<span class="ident">conversion</span>::<span class="ident">AsPyPointer</span>;
 
 <span class="comment">// Imported pyapi modules</span>
 <span class="kw">use</span> <span class="ident">application</span>::<span class="ident">PyInit_application</span>;
@@ -526,9 +524,9 @@
 <span class="kw">use</span> <span class="ident">standard_sub_blocks</span>::<span class="ident">PyInit_standard_sub_blocks</span>;
 <span class="kw">use</span> <span class="ident">tester</span>::<span class="ident">PyInit_tester</span>;
 <span class="kw">use</span> <span class="ident">tester_apis</span>::<span class="ident">PyInit_tester_apis</span>;
+<span class="kw">use</span> <span class="ident">user</span>::<span class="ident">PyInit_users</span>;
 <span class="kw">use</span> <span class="ident">utility</span>::<span class="ident">location</span>::<span class="ident">Location</span>;
 <span class="kw">use</span> <span class="ident">utility</span>::<span class="ident">PyInit_utility</span>;
-<span class="kw">use</span> <span class="ident">user</span>::<span class="ident">PyInit_users</span>;
 
 <span class="attribute">#[<span class="ident">macro_export</span>]</span>
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">pypath</span> {
@@ -943,9 +941,7 @@
 <span class="attribute">#[<span class="ident">macro_export</span>]</span>
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">runtime_error</span> {
     (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">message</span>:<span class="ident">expr</span>) <span class="op">=</span><span class="op">&gt;</span> {{
-        <span class="prelude-val">Err</span>(<span class="ident">PyErr</span>::<span class="ident">new</span>::<span class="op">&lt;</span><span class="ident">pyo3</span>::<span class="ident">exceptions</span>::<span class="ident">RuntimeError</span>, <span class="kw">_</span><span class="op">&gt;</span>(
-            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">message</span>,
-        ))
+        <span class="prelude-val">Err</span>(<span class="ident">PyErr</span>::<span class="ident">new</span>::<span class="op">&lt;</span><span class="ident">pyo3</span>::<span class="ident">exceptions</span>::<span class="ident">RuntimeError</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">message</span>))
     }};
 }
 
@@ -958,5 +954,6 @@
     <span class="kw">let</span> <span class="ident">pickle</span> <span class="op">=</span> <span class="ident">PyModule</span>::<span class="ident">import</span>(<span class="ident">py</span>, <span class="string">&quot;pickle&quot;</span>)<span class="question-mark">?</span>;
     <span class="kw">let</span> <span class="ident">bytes</span> <span class="op">=</span> <span class="ident">PyBytes</span>::<span class="ident">new</span>(<span class="ident">py</span>, <span class="ident">object</span>);
     <span class="ident">pickle</span>.<span class="ident">call1</span>(<span class="string">&quot;loads&quot;</span>, (<span class="ident">bytes</span>,))
-}</pre></div>
+}
+</pre></div>
 </section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../";window.currentCrate = "_origen";</script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>

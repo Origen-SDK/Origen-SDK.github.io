@@ -256,46 +256,21 @@
 <span id="256">256</span>
 <span id="257">257</span>
 <span id="258">258</span>
-<span id="259">259</span>
-<span id="260">260</span>
-<span id="261">261</span>
-<span id="262">262</span>
-<span id="263">263</span>
-<span id="264">264</span>
-<span id="265">265</span>
-<span id="266">266</span>
-<span id="267">267</span>
-<span id="268">268</span>
-<span id="269">269</span>
-<span id="270">270</span>
-<span id="271">271</span>
-<span id="272">272</span>
-<span id="273">273</span>
-<span id="274">274</span>
-<span id="275">275</span>
-<span id="276">276</span>
-<span id="277">277</span>
-<span id="278">278</span>
-<span id="279">279</span>
-<span id="280">280</span>
-<span id="281">281</span>
-<span id="282">282</span>
-<span id="283">283</span>
-<span id="284">284</span>
 </pre><div class="example-wrap"><pre class="rust ">
-<span class="kw">use</span> <span class="ident">lettre</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::{<span class="prelude-ty">Result</span>, <span class="ident">ORIGEN_CONFIG</span>};
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">PathBuf</span>;
+<span class="kw">use</span> <span class="ident">lettre</span>;
+<span class="comment">// use std::path::PathBuf;</span>
 
-<span class="kw">use</span> <span class="ident">lettre</span>::<span class="ident">Message</span>;
 <span class="kw">use</span> <span class="ident">lettre</span>::<span class="ident">transport</span>::<span class="ident">smtp</span>::<span class="ident">authentication</span>::{<span class="ident">Credentials</span>, <span class="ident">Mechanism</span>};
-<span class="kw">use</span> <span class="ident">lettre</span>::{<span class="ident">Transport</span>, <span class="ident">Address</span>};
-<span class="kw">use</span> <span class="ident">lettre</span>::<span class="ident">message</span>::{<span class="ident">header</span>, <span class="ident">SinglePart</span>, <span class="ident">MultiPart</span>, <span class="ident">Mailbox</span>};
+<span class="kw">use</span> <span class="ident">lettre</span>::<span class="ident">Message</span>;
+<span class="comment">// use lettre::{Transport, Address};</span>
+<span class="kw">use</span> <span class="ident">lettre</span>::<span class="ident">message</span>::{<span class="ident">header</span>, <span class="ident">Mailbox</span>, <span class="ident">MultiPart</span>, <span class="ident">SinglePart</span>};
+<span class="kw">use</span> <span class="ident">lettre</span>::<span class="ident">Transport</span>;
 
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Maillist</span> {
-    <span class="kw">pub</span> <span class="ident">to</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Address</span><span class="op">&gt;</span>,
-    <span class="ident">from_file</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PathBuf</span><span class="op">&gt;</span>,
-}
+<span class="comment">// pub struct Maillist {</span>
+<span class="comment">//     pub to: Vec&lt;Address&gt;,</span>
+<span class="comment">//     from_file: Option&lt;PathBuf&gt;,</span>
+<span class="comment">// }</span>
 
 <span class="comment">// impl Maillist {</span>
 <span class="comment">//     fn from_file(f: &amp;Path) -&gt; Result&lt;Self&gt; {</span>
@@ -390,7 +365,9 @@
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">p</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">auth_password</span>.<span class="ident">as_ref</span>() {
             <span class="prelude-val">Ok</span>(<span class="ident">p</span>.<span class="ident">clone</span>())
         } <span class="kw">else</span> {
-            <span class="macro">error</span><span class="macro">!</span>(<span class="string">&quot;Tried to retrieve the mailer&#39;s &#39;auth_password&#39; but no auth password has been set&quot;</span>)
+            <span class="macro">error</span><span class="macro">!</span>(
+                <span class="string">&quot;Tried to retrieve the mailer&#39;s &#39;auth_password&#39; but no auth password has been set&quot;</span>
+            )
         }
     }
 
@@ -403,45 +380,28 @@
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">html_singlepart</span>(<span class="ident">body</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">SinglePart</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Ok</span>(
-            <span class="ident">SinglePart</span>::<span class="ident">builder</span>()
-                .<span class="ident">header</span>(<span class="ident">header</span>::<span class="ident">ContentType</span>(
-                    <span class="string">&quot;text/html; charset=utf8&quot;</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>(),
-                )).<span class="ident">header</span>(<span class="ident">header</span>::<span class="ident">ContentTransferEncoding</span>::<span class="ident">QuotedPrintable</span>)
-                .<span class="ident">body</span>(<span class="ident">body</span>)
-        )
+        <span class="prelude-val">Ok</span>(<span class="ident">SinglePart</span>::<span class="ident">builder</span>()
+            .<span class="ident">header</span>(<span class="ident">header</span>::<span class="ident">ContentType</span>(
+                <span class="string">&quot;text/html; charset=utf8&quot;</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>(),
+            ))
+            .<span class="ident">header</span>(<span class="ident">header</span>::<span class="ident">ContentTransferEncoding</span>::<span class="ident">QuotedPrintable</span>)
+            .<span class="ident">body</span>(<span class="ident">body</span>))
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">compose</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="comment">// from: Mailbox,</span>
-        <span class="comment">// to: Vec&lt;Mailbox&gt;,</span>
         <span class="ident">from</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
         <span class="ident">to</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span>,
         <span class="ident">subject</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span>,
         <span class="ident">body</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span>,
-        <span class="ident">include_origen_signature</span>: <span class="ident">bool</span>
+        <span class="ident">include_origen_signature</span>: <span class="ident">bool</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Message</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">e</span>: <span class="ident">Mailbox</span> <span class="op">=</span> <span class="ident">from</span>.<span class="ident">parse</span>()<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">email_to</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Mailbox</span><span class="op">&gt;</span>;
-        <span class="comment">// if let Some(t) = to {</span>
-        <span class="comment">//     email_to = vec![];</span>
-        <span class="comment">//     for recipient in t {</span>
-        <span class="comment">//         email_to.push(recipient.parse()?);</span>
-        <span class="comment">//     }</span>
-        <span class="comment">// } else {</span>
-        <span class="comment">//     email_to = vec![e.clone()];</span>
-        <span class="comment">// }</span>
-
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">Message</span>::<span class="ident">builder</span>();
         <span class="ident">m</span> <span class="op">=</span> <span class="ident">m</span>.<span class="ident">from</span>(<span class="ident">e</span>);
         <span class="kw">for</span> <span class="ident">t</span> <span class="kw">in</span> <span class="ident">to</span> {
             <span class="ident">m</span> <span class="op">=</span> <span class="ident">m</span>.<span class="ident">to</span>(<span class="ident">t</span>.<span class="ident">parse</span>()<span class="question-mark">?</span>);
         }
-        <span class="comment">// m = m.from(from);</span>
-        <span class="comment">// for t in to {</span>
-        <span class="comment">//     m = m.to(t);</span>
-        <span class="comment">// }</span>
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">s</span>) <span class="op">=</span> <span class="ident">subject</span> {
             <span class="ident">m</span> <span class="op">=</span> <span class="ident">m</span>.<span class="ident">subject</span>(<span class="ident">s</span>);
         }
@@ -452,16 +412,20 @@
         <span class="kw">if</span> <span class="ident">include_origen_signature</span> {
             <span class="ident">content</span>.<span class="ident">push_str</span>(<span class="string">&quot;\n&lt;p style=\&quot;font-size:11px\&quot;&gt;Sent using &lt;a href=\&quot;https://origen-sdk.org/\&quot;&gt;Origen&#39;s Mailer&lt;/a&gt;&lt;/p&gt;&quot;</span>);
         }
-        <span class="prelude-val">Ok</span>(<span class="ident">m</span>.<span class="ident">multipart</span>(
-            <span class="ident">MultiPart</span>::<span class="ident">mixed</span>()
-            .<span class="ident">singlepart</span>(<span class="self">Self</span>::<span class="ident">html_singlepart</span>(<span class="kw-2">&amp;</span><span class="ident">content</span>)<span class="question-mark">?</span>)
-        ).<span class="ident">unwrap</span>())
+        <span class="prelude-val">Ok</span>(
+            <span class="ident">m</span>.<span class="ident">multipart</span>(<span class="ident">MultiPart</span>::<span class="ident">mixed</span>().<span class="ident">singlepart</span>(<span class="self">Self</span>::<span class="ident">html_singlepart</span>(<span class="kw-2">&amp;</span><span class="ident">content</span>)<span class="question-mark">?</span>))
+                .<span class="ident">unwrap</span>(),
+        )
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">send</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">m</span>: <span class="ident">Message</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">lettre</span>::<span class="ident">transport</span>::<span class="ident">smtp</span>::<span class="ident">SmtpTransport</span>::<span class="ident">starttls_relay</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">get_server</span>()<span class="question-mark">?</span>).<span class="ident">unwrap</span>()
-            .<span class="ident">authentication</span>(<span class="macro">vec</span><span class="macro">!</span>(<span class="ident">Mechanism</span>::<span class="ident">Login</span>))
-            .<span class="ident">credentials</span>(<span class="ident">Credentials</span>::<span class="ident">new</span>(<span class="self">self</span>.<span class="ident">get_auth_email</span>()<span class="question-mark">?</span>, <span class="self">self</span>.<span class="ident">get_auth_password</span>()<span class="question-mark">?</span>))
+        <span class="kw">let</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">lettre</span>::<span class="ident">transport</span>::<span class="ident">smtp</span>::<span class="ident">SmtpTransport</span>::<span class="ident">starttls_relay</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">get_server</span>()<span class="question-mark">?</span>)
+            .<span class="ident">unwrap</span>()
+            .<span class="ident">authentication</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="ident">Mechanism</span>::<span class="ident">Login</span>])
+            .<span class="ident">credentials</span>(<span class="ident">Credentials</span>::<span class="ident">new</span>(
+                <span class="self">self</span>.<span class="ident">get_auth_email</span>()<span class="question-mark">?</span>,
+                <span class="self">self</span>.<span class="ident">get_auth_password</span>()<span class="question-mark">?</span>,
+            ))
             .<span class="ident">port</span>(<span class="self">self</span>.<span class="ident">get_port</span>()<span class="question-mark">?</span> <span class="kw">as</span> <span class="ident">u16</span>)
             .<span class="ident">timeout</span>(<span class="prelude-val">Some</span>(<span class="ident">std</span>::<span class="ident">time</span>::<span class="ident">Duration</span>::<span class="ident">new</span>(<span class="number">300</span>, <span class="number">0</span>)))
             .<span class="ident">build</span>();
@@ -472,26 +436,10 @@
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">test</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">to</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="comment">// let e: Mailbox = crate::core::user::get_current_email()?.parse()?;</span>
-        <span class="comment">// let mut email_to: Vec&lt;Mailbox&gt;;</span>
-        <span class="comment">// if let Some(t) = to {</span>
-        <span class="comment">//     email_to = vec![];</span>
-        <span class="comment">//     for recipient in t {</span>
-        <span class="comment">//         email_to.push(recipient.parse()?);</span>
-        <span class="comment">//     }</span>
-        <span class="comment">// } else {</span>
-        <span class="comment">//     email_to = vec![e.clone()];</span>
-        <span class="comment">// }</span>
         <span class="kw">let</span> <span class="ident">e</span> <span class="op">=</span> <span class="kw">crate</span>::<span class="ident">core</span>::<span class="ident">user</span>::<span class="ident">get_current_email</span>()<span class="question-mark">?</span>;
         <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">compose</span>(
-            <span class="comment">// e,</span>
-            <span class="comment">// email_to,</span>
             <span class="kw-2">&amp;</span><span class="ident">e</span>,
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">t</span>) <span class="op">=</span> <span class="ident">to</span> {
-                <span class="ident">t</span>
-            } <span class="kw">else</span> {
-                <span class="macro">vec</span><span class="macro">!</span>(<span class="kw-2">&amp;</span><span class="ident">e</span>)
-            },
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">t</span>) <span class="op">=</span> <span class="ident">to</span> { <span class="ident">t</span> } <span class="kw">else</span> { <span class="macro">vec</span><span class="macro">!</span>[<span class="kw-2">&amp;</span><span class="ident">e</span>] },
             <span class="prelude-val">Some</span>(<span class="string">&quot;Hello from Origen&#39;s Mailer!&quot;</span>),
             <span class="prelude-val">Some</span>(<span class="string">&quot;&lt;b&gt;Hello from Origen&#39;s Mailer!&lt;b&gt;&quot;</span>),
             <span class="bool-val">true</span>,
@@ -507,37 +455,37 @@
     }
 }
 
-<span class="doccomment">/// Global context for the mailer applied to every email.</span>
-<span class="doccomment">/// Overrides here apply to every email sent after the update.</span>
-<span class="doccomment">/// Individual emails can also have these fields edited after creation</span>
-<span class="doccomment">/// but before sending.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">GlobalContext</span> {
-    <span class="ident">server</span>: <span class="ident">String</span>,
-    <span class="ident">port</span>: <span class="ident">String</span>,
-    <span class="ident">from</span>: <span class="ident">String</span>,
-    <span class="ident">from_alias</span>: <span class="ident">String</span>,
-    <span class="ident">authentication</span>: <span class="ident">String</span>,
-    <span class="ident">domain</span>: <span class="ident">String</span>,
-    <span class="kw">pub</span> <span class="ident">include_website</span>: <span class="ident">bool</span>,
-    <span class="kw">pub</span> <span class="ident">website</span>: <span class="ident">String</span>,
-    <span class="kw">pub</span> <span class="ident">include_app_context</span>: <span class="ident">bool</span>,
-    <span class="kw">pub</span> <span class="ident">include_app_intro</span>: <span class="ident">bool</span>,
-}
+<span class="comment">// /// Global context for the mailer applied to every email.</span>
+<span class="comment">// /// Overrides here apply to every email sent after the update.</span>
+<span class="comment">// /// Individual emails can also have these fields edited after creation</span>
+<span class="comment">// /// but before sending.</span>
+<span class="comment">// pub struct GlobalContext {</span>
+<span class="comment">//     server: String,</span>
+<span class="comment">//     port: String,</span>
+<span class="comment">//     from: String,</span>
+<span class="comment">//     from_alias: String,</span>
+<span class="comment">//     authentication: String,</span>
+<span class="comment">//     domain: String,</span>
+<span class="comment">//     pub include_website: bool,</span>
+<span class="comment">//     pub website: String,</span>
+<span class="comment">//     pub include_app_context: bool,</span>
+<span class="comment">//     pub include_app_intro: bool,</span>
+<span class="comment">// }</span>
 
-<span class="doccomment">/// Wrapper around Lettre&#39;s Email Builder, providing some</span>
-<span class="doccomment">/// Origen-specific stuff.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">EmailContent</span> {
-    <span class="comment">// pub maillist: Vec!&lt;Maillist&gt;,</span>
-    <span class="kw">pub</span> <span class="ident">subject</span>: <span class="ident">String</span>,
-    <span class="kw">pub</span> <span class="ident">body</span>: <span class="ident">String</span>,
+<span class="comment">// /// Wrapper around Lettre&#39;s Email Builder, providing some</span>
+<span class="comment">// /// Origen-specific stuff.</span>
+<span class="comment">// pub struct EmailContent {</span>
+<span class="comment">//     // pub maillist: Vec!&lt;Maillist&gt;,</span>
+<span class="comment">//     pub subject: String,</span>
+<span class="comment">//     pub body: String,</span>
 
-    <span class="doccomment">/// Everything in the global context allows per-email overrides.</span>
-    <span class="doccomment">/// Rather than duplicating all the keys, just provide a copy of the</span>
-    <span class="doccomment">/// GlobalContext this email was built with. This context will be snapshot</span>
-    <span class="doccomment">/// of the GlobalContext at the time of creation.</span>
-    <span class="kw">pub</span> <span class="ident">global_context</span>: <span class="ident">GlobalContext</span>,
-    <span class="comment">//pub email: EmailBuilder,</span>
-}
+<span class="comment">//     /// Everything in the global context allows per-email overrides.</span>
+<span class="comment">//     /// Rather than duplicating all the keys, just provide a copy of the</span>
+<span class="comment">//     /// GlobalContext this email was built with. This context will be snapshot</span>
+<span class="comment">//     /// of the GlobalContext at the time of creation.</span>
+<span class="comment">//     pub global_context: GlobalContext,</span>
+<span class="comment">//     //pub email: EmailBuilder,</span>
+<span class="comment">// }</span>
 
 <span class="comment">// impl Struct EmailContent {</span>
 <span class="comment">//     pub fn new() -&gt; Result&lt;Self&gt; {</span>
@@ -566,5 +514,6 @@
 
 <span class="comment">// pub fn release_context() {</span>
 <span class="comment">//     let mail = EmailBuilder::new()</span>
-<span class="comment">// }</span></pre></div>
+<span class="comment">// }</span>
+</pre></div>
 </section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../";window.currentCrate = "origen";</script><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script><script defer src="../../../search-index.js"></script></body></html>

@@ -253,90 +253,16 @@
 <span id="253">253</span>
 <span id="254">254</span>
 <span id="255">255</span>
-<span id="256">256</span>
-<span id="257">257</span>
-<span id="258">258</span>
-<span id="259">259</span>
-<span id="260">260</span>
-<span id="261">261</span>
-<span id="262">262</span>
-<span id="263">263</span>
-<span id="264">264</span>
-<span id="265">265</span>
-<span id="266">266</span>
-<span id="267">267</span>
-<span id="268">268</span>
-<span id="269">269</span>
-<span id="270">270</span>
-<span id="271">271</span>
-<span id="272">272</span>
-<span id="273">273</span>
-<span id="274">274</span>
-<span id="275">275</span>
-<span id="276">276</span>
-<span id="277">277</span>
-<span id="278">278</span>
-<span id="279">279</span>
-<span id="280">280</span>
-<span id="281">281</span>
-<span id="282">282</span>
-<span id="283">283</span>
-<span id="284">284</span>
-<span id="285">285</span>
-<span id="286">286</span>
-<span id="287">287</span>
-<span id="288">288</span>
-<span id="289">289</span>
-<span id="290">290</span>
-<span id="291">291</span>
-<span id="292">292</span>
-<span id="293">293</span>
-<span id="294">294</span>
-<span id="295">295</span>
-<span id="296">296</span>
-<span id="297">297</span>
-<span id="298">298</span>
-<span id="299">299</span>
-<span id="300">300</span>
-<span id="301">301</span>
-<span id="302">302</span>
-<span id="303">303</span>
-<span id="304">304</span>
-<span id="305">305</span>
-<span id="306">306</span>
-<span id="307">307</span>
-<span id="308">308</span>
-<span id="309">309</span>
-<span id="310">310</span>
-<span id="311">311</span>
-<span id="312">312</span>
-<span id="313">313</span>
-<span id="314">314</span>
-<span id="315">315</span>
-<span id="316">316</span>
-<span id="317">317</span>
-<span id="318">318</span>
-<span id="319">319</span>
-<span id="320">320</span>
-<span id="321">321</span>
-<span id="322">322</span>
-<span id="323">323</span>
-<span id="324">324</span>
-<span id="325">325</span>
-<span id="326">326</span>
-<span id="327">327</span>
-<span id="328">328</span>
 </pre><div class="example-wrap"><pre class="rust ">
-<span class="kw">use</span> <span class="ident">pyo3</span>::<span class="ident">prelude</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">HashMap</span>;
 <span class="kw">use</span> <span class="ident">pyo3</span>::<span class="ident">class</span>::<span class="ident">mapping</span>::<span class="ident">PyMappingProtocol</span>;
+<span class="kw">use</span> <span class="ident">pyo3</span>::<span class="ident">prelude</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">pyo3</span>::<span class="ident">wrap_pyfunction</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">HashMap</span>;
 
 <span class="attribute">#[<span class="ident">pymodule</span>]</span>
 <span class="kw">fn</span> <span class="ident">ldap</span>(<span class="ident">_py</span>: <span class="ident">Python</span>, <span class="ident">m</span>: <span class="kw-2">&amp;</span><span class="ident">PyModule</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="ident">m</span>.<span class="ident">add_class</span>::<span class="op">&lt;</span><span class="ident">LDAPs</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
     <span class="ident">m</span>.<span class="ident">add_class</span>::<span class="op">&lt;</span><span class="ident">LDAP</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
-    <span class="ident">m</span>.<span class="ident">add_class</span>::<span class="op">&lt;</span><span class="ident">AnonymousLDAP</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
     <span class="ident">m</span>.<span class="ident">add_wrapped</span>(<span class="macro">wrap_pyfunction</span><span class="macro">!</span>(<span class="ident">ldaps</span>))<span class="question-mark">?</span>;
     <span class="prelude-val">Ok</span>(())
 }
@@ -361,18 +287,23 @@
         <span class="kw">let</span> <span class="ident">ldaps</span> <span class="op">=</span> <span class="ident">origen</span>::<span class="ident">ldaps</span>();
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">retn</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
         <span class="kw">for</span> <span class="ident">n</span> <span class="kw">in</span> <span class="ident">ldaps</span>.<span class="ident">ldaps</span>().<span class="ident">keys</span>() {
-            <span class="ident">retn</span>.<span class="ident">push</span>(<span class="ident">LDAP</span> { <span class="ident">name</span>: <span class="ident">n</span>.<span class="ident">to_string</span>( )});
+            <span class="ident">retn</span>.<span class="ident">push</span>(<span class="ident">LDAP</span> {
+                <span class="ident">name</span>: <span class="ident">n</span>.<span class="ident">to_string</span>(),
+            });
         }
         <span class="prelude-val">Ok</span>(<span class="ident">retn</span>)
-
-        <span class="comment">// Ok(ldaps.ldaps().keys().cloned().collect())</span>
     }
 
     <span class="kw">fn</span> <span class="ident">items</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">String</span>, <span class="ident">LDAP</span>)<span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">ldaps</span> <span class="op">=</span> <span class="ident">origen</span>::<span class="ident">ldaps</span>();
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">retn</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
         <span class="kw">for</span> <span class="ident">n</span> <span class="kw">in</span> <span class="ident">ldaps</span>.<span class="ident">ldaps</span>().<span class="ident">keys</span>() {
-            <span class="ident">retn</span>.<span class="ident">push</span>((<span class="ident">n</span>.<span class="ident">to_string</span>(), <span class="ident">LDAP</span> { <span class="ident">name</span>: <span class="ident">n</span>.<span class="ident">to_string</span>( )}));
+            <span class="ident">retn</span>.<span class="ident">push</span>((
+                <span class="ident">n</span>.<span class="ident">to_string</span>(),
+                <span class="ident">LDAP</span> {
+                    <span class="ident">name</span>: <span class="ident">n</span>.<span class="ident">to_string</span>(),
+                },
+            ));
         }
         <span class="prelude-val">Ok</span>(<span class="ident">retn</span>)
     }
@@ -381,7 +312,7 @@
         <span class="kw">let</span> <span class="ident">ldaps</span> <span class="op">=</span> <span class="ident">origen</span>::<span class="ident">ldaps</span>();
         <span class="kw">if</span> <span class="ident">ldaps</span>.<span class="ident">ldaps</span>().<span class="ident">contains_key</span>(<span class="ident">ldap</span>) {
             <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">LDAP</span> {
-                <span class="ident">name</span>: <span class="ident">ldap</span>.<span class="ident">to_string</span>()
+                <span class="ident">name</span>: <span class="ident">ldap</span>.<span class="ident">to_string</span>(),
             }))
         } <span class="kw">else</span> {
             <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
@@ -407,16 +338,6 @@
         <span class="prelude-val">Ok</span>(<span class="ident">ldaps</span>.<span class="ident">ldaps</span>().<span class="ident">len</span>())
     }
 }
-
-<span class="comment">// #[pyproto]</span>
-<span class="comment">// impl pyo3::class::sequence::PySequenceProtocol for LDAPs {</span>
-<span class="comment">//     fn __contains__(&amp;self, item: &amp;PyAny) -&gt; PyResult&lt;bool&gt; {</span>
-<span class="comment">//         match pyo3::PyMappingProtocol::__getitem__(self, &amp;item) {</span>
-<span class="comment">//             Ok(_) =&gt; Ok(true),</span>
-<span class="comment">//             Err(_) =&gt; Ok(false),</span>
-<span class="comment">//         }</span>
-<span class="comment">//     }</span>
-<span class="comment">// }</span>
 
 <span class="attribute">#[<span class="ident">pyclass</span>]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">LDAPsIter</span> {
@@ -458,7 +379,6 @@
 
 <span class="attribute">#[<span class="ident">pymethods</span>]</span>
 <span class="kw">impl</span> <span class="ident">LDAP</span> {
-
     <span class="doccomment">/// Retrieves the server this LDAP was instantiated with</span>
     <span class="attribute">#[<span class="ident">getter</span>]</span>
     <span class="kw">fn</span> <span class="ident">get_server</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
@@ -522,12 +442,12 @@
     <span class="doccomment">/// --------</span>
     <span class="doccomment">/// * For examples, see the specs tests written against a free LDAP server</span>
     <span class="doccomment">/// * {{ link_to(&#39;origen_utilities:ldap&#39;, &#39;LDAP in the guides&#39;) }}</span>
-    <span class="kw">fn</span> <span class="ident">search</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">filter</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">attrs</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>
-        <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, (
-            <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-            <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>
-        )<span class="op">&gt;</span>
-    <span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">search</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">filter</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+        <span class="ident">attrs</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, (<span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>)<span class="op">&gt;</span><span class="op">&gt;</span>
+    {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ldaps</span> <span class="op">=</span> <span class="ident">origen</span>::<span class="ident">ldaps</span>();
         <span class="kw">let</span> <span class="ident">ldap</span> <span class="op">=</span> <span class="ident">ldaps</span>.<span class="ident">_get_mut</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="ident">ldap</span>.<span class="ident">search</span>(<span class="ident">filter</span>, <span class="ident">attrs</span>)<span class="question-mark">?</span>)
@@ -545,10 +465,11 @@
     <span class="doccomment">/// Returns:</span>
     <span class="doccomment">///     tuple: Two-item tuple, each item being a dict corresponding to ``(returned data, binary returned data)``</span>
     <span class="doccomment">///     respectively.</span>
-    <span class="kw">fn</span> <span class="ident">single_filter_search</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">filter</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">attrs</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>(
-        <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-        <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>
-    )<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">single_filter_search</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">filter</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+        <span class="ident">attrs</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>(<span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>)<span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ldaps</span> <span class="op">=</span> <span class="ident">origen</span>::<span class="ident">ldaps</span>();
         <span class="kw">let</span> <span class="ident">ldap</span> <span class="op">=</span> <span class="ident">ldaps</span>.<span class="ident">_get_mut</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="ident">ldap</span>.<span class="ident">single_filter_search</span>(<span class="ident">filter</span>, <span class="ident">attrs</span>)<span class="question-mark">?</span>)
@@ -583,76 +504,10 @@
     }
 
     <span class="kw">fn</span> <span class="ident">validate_credentials</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">username</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">password</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Ok</span>(<span class="ident">origen</span>::<span class="ident">utility</span>::<span class="ident">ldap</span>::<span class="ident">LDAPs</span>::<span class="ident">try_password</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>, <span class="ident">username</span>, <span class="ident">password</span>)<span class="question-mark">?</span>)
+        <span class="prelude-val">Ok</span>(<span class="ident">origen</span>::<span class="ident">utility</span>::<span class="ident">ldap</span>::<span class="ident">LDAPs</span>::<span class="ident">try_password</span>(
+            <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>, <span class="ident">username</span>, <span class="ident">password</span>,
+        )<span class="question-mark">?</span>)
     }
 }
-
-<span class="attribute">#[<span class="ident">pyclass</span>(<span class="ident">subclass</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">AnonymousLDAP</span> {
-    <span class="ident">ldap</span>: <span class="ident">origen</span>::<span class="ident">utility</span>::<span class="ident">ldap</span>::<span class="ident">LDAP</span>
-}
-
-<span class="attribute">#[<span class="ident">pymethods</span>]</span>
-<span class="kw">impl</span> <span class="ident">AnonymousLDAP</span> {
-
-    <span class="attribute">#[<span class="ident">getter</span>]</span>
-    <span class="kw">fn</span> <span class="ident">get_server</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">ldap</span>.<span class="ident">server</span>().<span class="ident">to_string</span>())
-    }
-
-    <span class="attribute">#[<span class="ident">getter</span>]</span>
-    <span class="kw">fn</span> <span class="ident">get_base</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">ldap</span>.<span class="ident">base</span>().<span class="ident">to_string</span>())
-    }
-
-    <span class="attribute">#[<span class="ident">getter</span>]</span>
-    <span class="kw">fn</span> <span class="ident">get_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">ldap</span>.<span class="ident">name</span>().<span class="ident">to_string</span>())
-    }
-
-    <span class="attribute">#[<span class="ident">getter</span>]</span>
-    <span class="kw">fn</span> <span class="ident">get_auth</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">ldap</span>.<span class="ident">auth</span>().<span class="ident">to_hashmap</span>())
-    }
-
-    <span class="attribute">#[<span class="ident">getter</span>]</span>
-    <span class="kw">fn</span> <span class="ident">get_bound</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">ldap</span>.<span class="ident">bound</span>())
-    }
-
-    <span class="kw">fn</span> <span class="ident">search</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">filter</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">attrs</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>
-        <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, (
-            <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-            <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>
-        )<span class="op">&gt;</span>
-    <span class="op">&gt;</span> {
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">ldap</span>.<span class="ident">search</span>(<span class="ident">filter</span>, <span class="ident">attrs</span>)<span class="question-mark">?</span>)
-    }
-
-    <span class="kw">fn</span> <span class="ident">single_filter_search</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">filter</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">attrs</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>(
-        <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-        <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>
-    )<span class="op">&gt;</span> {
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">ldap</span>.<span class="ident">single_filter_search</span>(<span class="ident">filter</span>, <span class="ident">attrs</span>)<span class="question-mark">?</span>)
-    }
-
-    <span class="kw">fn</span> <span class="ident">bind</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">ldap</span>.<span class="ident">bind</span>()<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(<span class="bool-val">true</span>)
-    }
-
-    <span class="kw">fn</span> <span class="ident">unbind</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">ldap</span>.<span class="ident">unbind</span>()<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(<span class="bool-val">true</span>)
-    }
-
-    <span class="kw">fn</span> <span class="ident">bind_as</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">username</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">password</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">ldap</span>.<span class="ident">bind_as</span>(<span class="ident">username</span>, <span class="ident">password</span>)<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(<span class="bool-val">true</span>)
-    }
-
-    <span class="kw">fn</span> <span class="ident">validate_credentials</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">username</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">password</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Ok</span>(<span class="ident">origen</span>::<span class="ident">utility</span>::<span class="ident">ldap</span>::<span class="ident">LDAPs</span>::<span class="ident">try_password</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">ldap</span>.<span class="ident">name</span>(), <span class="ident">username</span>, <span class="ident">password</span>)<span class="question-mark">?</span>)
-    }
-}</pre></div>
+</pre></div>
 </section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../";window.currentCrate = "_origen";</script><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script><script defer src="../../../search-index.js"></script></body></html>
