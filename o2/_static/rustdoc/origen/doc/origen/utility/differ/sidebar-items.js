@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Differ","A utility for diffing two different files, with the ability to ignore code in comments, and to specify character strings within the file to suspend and resume diffing. Blank lines will be ignored by default."]]});
+initSidebarItems({"struct":[["ASCIIDiffer","A utility for diffing two different files, with the ability to ignore code in comments, and to specify character strings within the file to suspend and resume diffing. Blank lines will be ignored by default."]],"trait":[["Differ",""]]});

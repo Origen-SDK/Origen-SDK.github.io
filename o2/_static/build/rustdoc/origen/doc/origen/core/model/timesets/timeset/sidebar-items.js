@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["EventActions",""]],"struct":[["Event",""],["SimpleTimeset",""],["Timeset",""],["Wave",""],["WaveGroup",""],["Wavetable",""]]});
+initSidebarItems({"enum":[["EventActions",""]],"fn":[["default_resolver",""]],"struct":[["Event",""],["SimpleTimeset",""],["Timeset",""],["Wave",""],["WaveGroup",""],["Wavetable",""]]});

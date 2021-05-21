@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/utility/differ.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>differ.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.png");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../origen/index.html'><div class='logo-container'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.png" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.png" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src\utility\differ.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>differ.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.png");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../origen/index.html'><div class='logo-container'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.png" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.png" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -316,12 +316,34 @@
 <span id="316">316</span>
 <span id="317">317</span>
 <span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="prelude-ty">Result</span>;
 <span class="kw">use</span> <span class="ident">regex</span>::<span class="ident">Regex</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fs</span>::<span class="ident">File</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::{<span class="self">self</span>, <span class="ident">prelude</span>::<span class="kw-2">*</span>, <span class="ident">BufReader</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::{<span class="ident">Path</span>, <span class="ident">PathBuf</span>};
+
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Differ</span> {
+    <span class="doccomment">/// Returns true if diffs are found between the contained files based on the differ&#39;s current</span>
+    <span class="doccomment">/// configuration.</span>
+    <span class="doccomment">/// An error will be returned if any of the files doesn&#39;t exist or if there is some</span>
+    <span class="doccomment">/// other problem with reading them.</span>
+    <span class="kw">fn</span> <span class="ident">has_diffs</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>;
+}
 
 <span class="doccomment">/// A utility for diffing two different files, with the ability to ignore code in comments,</span>
 <span class="doccomment">/// and to specify character strings within the file to suspend and resume diffing.</span>
@@ -332,7 +354,7 @@
 <span class="doccomment">/// ```</span>
 <span class="doccomment">/// use std::io::Write;</span>
 <span class="doccomment">/// # use tempfile::NamedTempFile;</span>
-<span class="doccomment">/// use origen::utility::differ::Differ;</span>
+<span class="doccomment">/// use origen::utility::differ::{ASCIIDiffer, Differ};</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// # let mut file_a = NamedTempFile::new().unwrap();</span>
 <span class="doccomment">/// # let mut file_b = NamedTempFile::new().unwrap();</span>
@@ -340,7 +362,7 @@
 <span class="doccomment">/// let _ = writeln!(file_b, &quot;This part is the same // But this is not&quot;);</span>
 <span class="doccomment">/// let _ = writeln!(file_b, &quot;&quot;);   // An extra blank line in file B</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// let mut differ = Differ::new(file_a.path(), file_b.path());</span>
+<span class="doccomment">/// let mut differ = ASCIIDiffer::new(file_a.path(), file_b.path());</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// assert_eq!(differ.has_diffs().unwrap(), true);</span>
 <span class="doccomment">///</span>
@@ -352,7 +374,7 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// assert_eq!(differ.has_diffs().unwrap(), true);</span>
 <span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Differ</span> {
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ASCIIDiffer</span> {
     <span class="ident">file_a</span>: <span class="ident">PathBuf</span>,
     <span class="ident">file_b</span>: <span class="ident">PathBuf</span>,
     <span class="kw">pub</span> <span class="ident">ignore_blank_lines</span>: <span class="ident">bool</span>,
@@ -365,9 +387,15 @@
     <span class="ident">resume_on</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Regex</span><span class="op">&gt;</span>,
 }
 
-<span class="kw">impl</span> <span class="ident">Differ</span> {
+<span class="kw">impl</span> <span class="ident">Differ</span> <span class="kw">for</span> <span class="ident">ASCIIDiffer</span> {
+    <span class="kw">fn</span> <span class="ident">has_diffs</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">run</span>()
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">ASCIIDiffer</span> {
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">file_a</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>, <span class="ident">file_b</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="ident">Differ</span> {
+        <span class="ident">ASCIIDiffer</span> {
             <span class="ident">file_a</span>: <span class="ident">file_a</span>.<span class="ident">to_path_buf</span>(),
             <span class="ident">file_b</span>: <span class="ident">file_b</span>.<span class="ident">to_path_buf</span>(),
             <span class="ident">ignore_blank_lines</span>: <span class="bool-val">true</span>,
@@ -406,7 +434,7 @@
     <span class="doccomment">/// configuration.</span>
     <span class="doccomment">/// An error will be returned if either of the files doesn&#39;t exist or if there is some</span>
     <span class="doccomment">/// other problem with reading them.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_diffs</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">run</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">fa</span> <span class="op">=</span> <span class="ident">File</span>::<span class="ident">open</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">file_a</span>)<span class="question-mark">?</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">fa</span> <span class="op">=</span> <span class="ident">BufReader</span>::<span class="ident">new</span>(<span class="ident">fa</span>).<span class="ident">lines</span>();
 
@@ -511,7 +539,7 @@
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">utility</span>::<span class="ident">differ</span>::<span class="ident">Differ</span>;
+    <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">utility</span>::<span class="ident">differ</span>::{<span class="ident">ASCIIDiffer</span>, <span class="ident">Differ</span>};
     <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Write</span>;
     <span class="kw">use</span> <span class="ident">tempfile</span>::<span class="ident">NamedTempFile</span>;
 
@@ -536,7 +564,7 @@
              and now we are back&quot;</span>
         );
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">differ</span> <span class="op">=</span> <span class="ident">Differ</span>::<span class="ident">new</span>(<span class="ident">file_a</span>.<span class="ident">path</span>(), <span class="ident">file_b</span>.<span class="ident">path</span>());
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">differ</span> <span class="op">=</span> <span class="ident">ASCIIDiffer</span>::<span class="ident">new</span>(<span class="ident">file_a</span>.<span class="ident">path</span>(), <span class="ident">file_b</span>.<span class="ident">path</span>());
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">differ</span>.<span class="ident">has_diffs</span>().<span class="ident">unwrap</span>(), <span class="bool-val">true</span>);
 
@@ -567,7 +595,7 @@
              and now we are back&quot;</span>
         );
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">differ</span> <span class="op">=</span> <span class="ident">Differ</span>::<span class="ident">new</span>(<span class="ident">file_a</span>.<span class="ident">path</span>(), <span class="ident">file_b</span>.<span class="ident">path</span>());
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">differ</span> <span class="op">=</span> <span class="ident">ASCIIDiffer</span>::<span class="ident">new</span>(<span class="ident">file_a</span>.<span class="ident">path</span>(), <span class="ident">file_b</span>.<span class="ident">path</span>());
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">differ</span>.<span class="ident">has_diffs</span>().<span class="ident">unwrap</span>(), <span class="bool-val">true</span>);
 
@@ -598,7 +626,7 @@
              and now we are back&quot;</span>
         );
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">differ</span> <span class="op">=</span> <span class="ident">Differ</span>::<span class="ident">new</span>(<span class="ident">file_a</span>.<span class="ident">path</span>(), <span class="ident">file_b</span>.<span class="ident">path</span>());
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">differ</span> <span class="op">=</span> <span class="ident">ASCIIDiffer</span>::<span class="ident">new</span>(<span class="ident">file_a</span>.<span class="ident">path</span>(), <span class="ident">file_b</span>.<span class="ident">path</span>());
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">differ</span>.<span class="ident">has_diffs</span>().<span class="ident">unwrap</span>(), <span class="bool-val">true</span>);
 
@@ -626,7 +654,7 @@
              This part is the same&quot;</span>
         );
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">differ</span> <span class="op">=</span> <span class="ident">Differ</span>::<span class="ident">new</span>(<span class="ident">file_a</span>.<span class="ident">path</span>(), <span class="ident">file_b</span>.<span class="ident">path</span>());
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">differ</span> <span class="op">=</span> <span class="ident">ASCIIDiffer</span>::<span class="ident">new</span>(<span class="ident">file_a</span>.<span class="ident">path</span>(), <span class="ident">file_b</span>.<span class="ident">path</span>());
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">differ</span>.<span class="ident">has_diffs</span>().<span class="ident">unwrap</span>(), <span class="bool-val">false</span>);
 
@@ -636,4 +664,4 @@
     }
 }
 </pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../";window.currentCrate = "origen";</script><script src="../../../aliases.js"></script><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script><script defer src="../../../search-index.js"></script></body></html>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../";window.currentCrate = "origen";</script><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script><script defer src="../../../search-index.js"></script></body></html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/core/model/timesets/timeset.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>timeset.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../../../light.css" id="themeStyle"><script src="../../../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../../../down-arrow.png");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../../../origen/index.html'><div class='logo-container'><img src='../../../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../../../brush.png" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../../../settings.html"><img src="../../../../../wheel.png" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src\core\model\timesets\timeset.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>timeset.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../../../light.css" id="themeStyle"><script src="../../../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../../../down-arrow.png");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../../../origen/index.html'><div class='logo-container'><img src='../../../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../../../brush.png" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../../../settings.html"><img src="../../../../../wheel.png" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -475,12 +475,199 @@
 <span id="475">475</span>
 <span id="476">476</span>
 <span id="477">477</span>
+<span id="478">478</span>
+<span id="479">479</span>
+<span id="480">480</span>
+<span id="481">481</span>
+<span id="482">482</span>
+<span id="483">483</span>
+<span id="484">484</span>
+<span id="485">485</span>
+<span id="486">486</span>
+<span id="487">487</span>
+<span id="488">488</span>
+<span id="489">489</span>
+<span id="490">490</span>
+<span id="491">491</span>
+<span id="492">492</span>
+<span id="493">493</span>
+<span id="494">494</span>
+<span id="495">495</span>
+<span id="496">496</span>
+<span id="497">497</span>
+<span id="498">498</span>
+<span id="499">499</span>
+<span id="500">500</span>
+<span id="501">501</span>
+<span id="502">502</span>
+<span id="503">503</span>
+<span id="504">504</span>
+<span id="505">505</span>
+<span id="506">506</span>
+<span id="507">507</span>
+<span id="508">508</span>
+<span id="509">509</span>
+<span id="510">510</span>
+<span id="511">511</span>
+<span id="512">512</span>
+<span id="513">513</span>
+<span id="514">514</span>
+<span id="515">515</span>
+<span id="516">516</span>
+<span id="517">517</span>
+<span id="518">518</span>
+<span id="519">519</span>
+<span id="520">520</span>
+<span id="521">521</span>
+<span id="522">522</span>
+<span id="523">523</span>
+<span id="524">524</span>
+<span id="525">525</span>
+<span id="526">526</span>
+<span id="527">527</span>
+<span id="528">528</span>
+<span id="529">529</span>
+<span id="530">530</span>
+<span id="531">531</span>
+<span id="532">532</span>
+<span id="533">533</span>
+<span id="534">534</span>
+<span id="535">535</span>
+<span id="536">536</span>
+<span id="537">537</span>
+<span id="538">538</span>
+<span id="539">539</span>
+<span id="540">540</span>
+<span id="541">541</span>
+<span id="542">542</span>
+<span id="543">543</span>
+<span id="544">544</span>
+<span id="545">545</span>
+<span id="546">546</span>
+<span id="547">547</span>
+<span id="548">548</span>
+<span id="549">549</span>
+<span id="550">550</span>
+<span id="551">551</span>
+<span id="552">552</span>
+<span id="553">553</span>
+<span id="554">554</span>
+<span id="555">555</span>
+<span id="556">556</span>
+<span id="557">557</span>
+<span id="558">558</span>
+<span id="559">559</span>
+<span id="560">560</span>
+<span id="561">561</span>
+<span id="562">562</span>
+<span id="563">563</span>
+<span id="564">564</span>
+<span id="565">565</span>
+<span id="566">566</span>
+<span id="567">567</span>
+<span id="568">568</span>
+<span id="569">569</span>
+<span id="570">570</span>
+<span id="571">571</span>
+<span id="572">572</span>
+<span id="573">573</span>
+<span id="574">574</span>
+<span id="575">575</span>
+<span id="576">576</span>
+<span id="577">577</span>
+<span id="578">578</span>
+<span id="579">579</span>
+<span id="580">580</span>
+<span id="581">581</span>
+<span id="582">582</span>
+<span id="583">583</span>
+<span id="584">584</span>
+<span id="585">585</span>
+<span id="586">586</span>
+<span id="587">587</span>
+<span id="588">588</span>
+<span id="589">589</span>
+<span id="590">590</span>
+<span id="591">591</span>
+<span id="592">592</span>
+<span id="593">593</span>
+<span id="594">594</span>
+<span id="595">595</span>
+<span id="596">596</span>
+<span id="597">597</span>
+<span id="598">598</span>
+<span id="599">599</span>
+<span id="600">600</span>
+<span id="601">601</span>
+<span id="602">602</span>
+<span id="603">603</span>
+<span id="604">604</span>
+<span id="605">605</span>
+<span id="606">606</span>
+<span id="607">607</span>
+<span id="608">608</span>
+<span id="609">609</span>
+<span id="610">610</span>
+<span id="611">611</span>
+<span id="612">612</span>
+<span id="613">613</span>
+<span id="614">614</span>
+<span id="615">615</span>
+<span id="616">616</span>
+<span id="617">617</span>
+<span id="618">618</span>
+<span id="619">619</span>
+<span id="620">620</span>
+<span id="621">621</span>
+<span id="622">622</span>
+<span id="623">623</span>
+<span id="624">624</span>
+<span id="625">625</span>
+<span id="626">626</span>
+<span id="627">627</span>
+<span id="628">628</span>
+<span id="629">629</span>
+<span id="630">630</span>
+<span id="631">631</span>
+<span id="632">632</span>
+<span id="633">633</span>
+<span id="634">634</span>
+<span id="635">635</span>
+<span id="636">636</span>
+<span id="637">637</span>
+<span id="638">638</span>
+<span id="639">639</span>
 </pre><div class="example-wrap"><pre class="rust ">
-<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">num</span>;
-<span class="comment">//use super::super::pins::pin::PinActions;</span>
+<span class="kw">use</span> <span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">pins</span>::<span class="ident">pin</span>::<span class="ident">Resolver</span> <span class="kw">as</span> <span class="ident">PinActionsResolver</span>;
+<span class="kw">use</span> <span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">pins</span>::<span class="ident">pin</span>::{<span class="ident">PinAction</span>, <span class="ident">ResolvePinActions</span>};
+<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">core</span>::<span class="ident">dut</span>::<span class="ident">Dut</span>;
+<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">core</span>::<span class="ident">tester</span>::<span class="ident">TesterSource</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Error</span>;
 <span class="kw">use</span> <span class="ident">eval</span>;
 <span class="kw">use</span> <span class="ident">indexmap</span>::<span class="ident">map</span>::<span class="ident">IndexMap</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">HashMap</span>;
+
+<span class="comment">// pub fn default_resolver() -&gt; PinActionsResolver {</span>
+<span class="comment">//     let mut map = PinActionsResolver::new();</span>
+<span class="comment">//     map.update_mapping(PinActions::DriveHigh, &quot;1&quot;.to_string());</span>
+<span class="comment">//     map.update_mapping(PinActions::DriveLow, &quot;0&quot;.to_string());</span>
+<span class="comment">//     map.update_mapping(PinActions::VerifyHigh, &quot;H&quot;.to_string());</span>
+<span class="comment">//     map.update_mapping(PinActions::VerifyLow, &quot;L&quot;.to_string());</span>
+<span class="comment">//     map.update_mapping(PinActions::Capture, &quot;C&quot;.to_string());</span>
+<span class="comment">//     map.update_mapping(PinActions::HighZ, &quot;X&quot;.to_string());</span>
+<span class="comment">//     map</span>
+<span class="comment">// }</span>
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">default_resolver</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PinActionsResolver</span> {
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">map</span> <span class="op">=</span> <span class="ident">PinActionsResolver</span>::<span class="ident">new</span>();
+    <span class="ident">map</span>.<span class="ident">update_mapping</span>(<span class="ident">PinAction</span>::<span class="ident">drive_high</span>(), <span class="string">&quot;1&quot;</span>.<span class="ident">to_string</span>());
+    <span class="ident">map</span>.<span class="ident">update_mapping</span>(<span class="ident">PinAction</span>::<span class="ident">drive_low</span>(), <span class="string">&quot;0&quot;</span>.<span class="ident">to_string</span>());
+    <span class="ident">map</span>.<span class="ident">update_mapping</span>(<span class="ident">PinAction</span>::<span class="ident">verify_high</span>(), <span class="string">&quot;H&quot;</span>.<span class="ident">to_string</span>());
+    <span class="ident">map</span>.<span class="ident">update_mapping</span>(<span class="ident">PinAction</span>::<span class="ident">verify_low</span>(), <span class="string">&quot;L&quot;</span>.<span class="ident">to_string</span>());
+    <span class="ident">map</span>.<span class="ident">update_mapping</span>(<span class="ident">PinAction</span>::<span class="ident">capture</span>(), <span class="string">&quot;C&quot;</span>.<span class="ident">to_string</span>());
+    <span class="ident">map</span>.<span class="ident">update_mapping</span>(<span class="ident">PinAction</span>::<span class="ident">highz</span>(), <span class="string">&quot;X&quot;</span>.<span class="ident">to_string</span>());
+    <span class="ident">map</span>
+}
 
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SimpleTimeset</span> {
     <span class="kw">pub</span> <span class="ident">name</span>: <span class="ident">String</span>,
@@ -496,6 +683,9 @@
     <span class="kw">pub</span> <span class="ident">period_as_string</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">default_period</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">wavetable_ids</span>: <span class="ident">IndexMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">usize</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">pin_action_resolvers</span>: <span class="ident">IndexMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">PinActionsResolver</span><span class="op">&gt;</span>,
+
+    <span class="ident">active_wavetable</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Timeset</span> {
@@ -505,6 +695,7 @@
         <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
         <span class="ident">period_as_string</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">std</span>::<span class="ident">string</span>::<span class="ident">ToString</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">default_period</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>,
+        <span class="ident">targets</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">TesterSource</span><span class="op">&gt;</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="ident">Timeset</span> {
             <span class="ident">model_id</span>: <span class="ident">model_id</span>,
@@ -516,6 +707,26 @@
             },
             <span class="ident">default_period</span>: <span class="ident">default_period</span>,
             <span class="ident">wavetable_ids</span>: <span class="ident">IndexMap</span>::<span class="ident">new</span>(),
+            <span class="ident">active_wavetable</span>: <span class="prelude-ty">Option</span>::<span class="prelude-val">None</span>,
+            <span class="comment">//allow_implicit_pin_lookups: false,</span>
+            <span class="ident">pin_action_resolvers</span>: {
+                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">i</span> <span class="op">=</span> <span class="ident">IndexMap</span>::<span class="ident">new</span>();
+                <span class="kw">for</span> <span class="ident">target</span> <span class="kw">in</span> <span class="ident">targets</span> {
+                    <span class="kw">match</span> <span class="ident">target</span> {
+                        <span class="ident">TesterSource</span>::<span class="ident">External</span>(<span class="ident">tester_name</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                            <span class="ident">i</span>.<span class="ident">insert</span>(<span class="ident">tester_name</span>.<span class="ident">to_string</span>(), <span class="ident">default_resolver</span>());
+                        }
+                        <span class="ident">TesterSource</span>::<span class="ident">Internal</span>(<span class="ident">t</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">r</span>) <span class="op">=</span> <span class="ident">t</span>.<span class="ident">pin_action_resolver</span>() {
+                                <span class="ident">i</span>.<span class="ident">insert</span>(<span class="ident">t</span>.<span class="ident">name</span>(), <span class="ident">r</span>);
+                            } <span class="kw">else</span> {
+                                <span class="ident">i</span>.<span class="ident">insert</span>(<span class="ident">t</span>.<span class="ident">name</span>(), <span class="ident">default_resolver</span>());
+                            }
+                        }
+                    }
+                }
+                <span class="ident">i</span>
+            },
         }
     }
 
@@ -523,6 +734,26 @@
         <span class="kw">let</span> <span class="ident">default</span> <span class="op">=</span> <span class="ident">String</span>::<span class="ident">from</span>(<span class="string">&quot;period&quot;</span>);
         <span class="kw">let</span> <span class="ident">p</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">period_as_string</span>.<span class="ident">as_ref</span>().<span class="ident">unwrap_or</span>(<span class="kw-2">&amp;</span><span class="ident">default</span>);
         <span class="ident">p</span>.<span class="ident">clone</span>()
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">activate_wavetable</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">wtbl_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">wavetable_ids</span>.<span class="ident">contains_key</span>(<span class="ident">wtbl_name</span>) {
+            <span class="self">self</span>.<span class="ident">active_wavetable</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">wtbl_name</span>.<span class="ident">to_string</span>());
+            <span class="prelude-val">Ok</span>(())
+        } <span class="kw">else</span> {
+            <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="macro">format</span><span class="macro">!</span>(
+                <span class="string">&quot;Timeset {} does not have a wavetable named {}!&quot;</span>,
+                <span class="self">self</span>.<span class="ident">name</span>, <span class="ident">wtbl_name</span>
+            )))
+        }
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">clear_active_wavetable</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+        <span class="self">self</span>.<span class="ident">active_wavetable</span> <span class="op">=</span> <span class="prelude-ty">Option</span>::<span class="prelude-val">None</span>;
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">active_wavetable</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_dut</span>: <span class="ident">Dut</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">active_wavetable</span>.<span class="ident">clone</span>()
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">eval</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">current_period</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">f64</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
@@ -570,7 +801,17 @@
 
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">Timeset</span> {
     <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="self">Self</span>::<span class="ident">new</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="string">&quot;dummy&quot;</span>, <span class="prelude-ty">Option</span>::<span class="prelude-val">None</span>, <span class="prelude-ty">Option</span>::<span class="prelude-val">None</span>)
+        <span class="self">Self</span>::<span class="ident">new</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="string">&quot;dummy&quot;</span>, <span class="prelude-ty">Option</span>::<span class="prelude-val">None</span>, <span class="prelude-ty">Option</span>::<span class="prelude-val">None</span>, <span class="macro">vec</span><span class="macro">!</span>[])
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">ResolvePinActions</span> <span class="kw">for</span> <span class="ident">Timeset</span> {
+    <span class="kw">fn</span> <span class="ident">pin_action_resolver</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">target</span>: <span class="ident">String</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">PinActionsResolver</span> {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">pin_action_resolvers</span>[<span class="kw-2">&amp;</span><span class="ident">target</span>]
+    }
+
+    <span class="kw">fn</span> <span class="ident">mut_pin_action_resolver</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">target</span>: <span class="ident">String</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">PinActionsResolver</span> {
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">pin_action_resolvers</span>[<span class="kw-2">&amp;</span><span class="ident">target</span>]
     }
 }
 
@@ -591,6 +832,10 @@
     <span class="comment">// Note that events are Event-IDs, which can be looked up from the DUT.</span>
     <span class="comment">//pub wave_ids: IndexMap&lt;String, usize&gt;</span>
     <span class="kw">pub</span> <span class="ident">wave_group_ids</span>: <span class="ident">IndexMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">usize</span><span class="op">&gt;</span>,
+
+    <span class="doccomment">/// Stores the wave &lt;-&gt; physical relationship, after ID resolution</span>
+    <span class="ident">applied_waves</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">usize</span>, <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">usize</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">inherited_wavetable_ids</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Wavetable</span> {
@@ -601,9 +846,83 @@
             <span class="ident">timeset_id</span>: <span class="ident">timeset_id</span>,
             <span class="ident">id</span>: <span class="ident">id</span>,
             <span class="ident">period</span>: <span class="prelude-ty">Option</span>::<span class="prelude-val">None</span>,
-            <span class="comment">//wave_ids: IndexMap::new(),</span>
             <span class="ident">wave_group_ids</span>: <span class="ident">IndexMap</span>::<span class="ident">new</span>(),
+            <span class="ident">applied_waves</span>: <span class="ident">HashMap</span>::<span class="ident">new</span>(),
+            <span class="ident">inherited_wavetable_ids</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
         })
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">apply_wave_to</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">physical_pin_id</span>: <span class="ident">usize</span>, <span class="ident">wave_indicator</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">wave_id</span>: <span class="ident">usize</span>) {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">pin_waves</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">applied_waves</span>.<span class="ident">get_mut</span>(<span class="kw-2">&amp;</span><span class="ident">physical_pin_id</span>) {
+            <span class="ident">pin_waves</span>.<span class="ident">insert</span>(<span class="ident">wave_indicator</span>.<span class="ident">to_string</span>(), <span class="ident">wave_id</span>);
+        } <span class="kw">else</span> {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">pin_waves</span> <span class="op">=</span> <span class="ident">HashMap</span>::<span class="ident">new</span>();
+            <span class="ident">pin_waves</span>.<span class="ident">insert</span>(<span class="ident">wave_indicator</span>.<span class="ident">to_string</span>(), <span class="ident">wave_id</span>);
+            <span class="self">self</span>.<span class="ident">applied_waves</span>.<span class="ident">insert</span>(<span class="ident">physical_pin_id</span>, <span class="ident">pin_waves</span>);
+        }
+    }
+
+    <span class="doccomment">/// Returns all the wave IDs, including inherited ones, which is included in the pin list and</span>
+    <span class="doccomment">/// has an indicator in the indicator list.</span>
+    <span class="doccomment">/// If the pin list is empty, then all pins are returned. Likewise with the indicator list.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">applied_waves</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">dut</span>: <span class="kw-2">&amp;</span><span class="ident">Dut</span>,
+        <span class="ident">pins</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">usize</span>, <span class="ident">String</span>)<span class="op">&gt;</span>,
+        <span class="ident">indicators</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">usize</span>, <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">usize</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">__pins</span>;
+        <span class="kw">if</span> <span class="ident">pins</span>.<span class="ident">len</span>() <span class="op">&gt;</span> <span class="number">1</span> {
+            <span class="kw">let</span> <span class="ident">t</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
+            <span class="kw">for</span> (<span class="ident">model_id</span>, <span class="ident">pname</span>) <span class="kw">in</span> <span class="ident">pins</span>.<span class="ident">iter</span>() {
+                <span class="ident">dut</span>.<span class="ident">_get_pin</span>(<span class="kw-2">*</span><span class="ident">model_id</span>, <span class="kw-2">&amp;</span><span class="ident">pname</span>)<span class="question-mark">?</span>.<span class="ident">id</span>;
+            }
+            <span class="ident">__pins</span> <span class="op">=</span> <span class="ident">t</span>;
+        } <span class="kw">else</span> {
+            <span class="ident">__pins</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">applied_waves</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">k</span>, <span class="kw">_</span>)<span class="op">|</span> <span class="kw-2">*</span><span class="ident">k</span>).<span class="ident">collect</span>();
+        }
+
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">retn</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">usize</span>, <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">usize</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">HashMap</span>::<span class="ident">new</span>();
+        <span class="kw">for</span> <span class="ident">p</span> <span class="kw">in</span> <span class="ident">__pins</span>.<span class="ident">iter</span>() {
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">wids</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">wave_ids_for</span>(<span class="ident">dut</span>, <span class="kw-2">*</span><span class="ident">p</span>, <span class="ident">indicators</span>) {
+                <span class="ident">retn</span>.<span class="ident">insert</span>(<span class="kw-2">*</span><span class="ident">p</span>, <span class="ident">wids</span>);
+            }
+        }
+        <span class="prelude-val">Ok</span>(<span class="ident">retn</span>)
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wave_ids_for</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">dut</span>: <span class="kw-2">&amp;</span><span class="ident">Dut</span>,
+        <span class="ident">pin_id</span>: <span class="ident">usize</span>,
+        <span class="ident">indicators</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">usize</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">retn</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">usize</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">HashMap</span>::<span class="ident">new</span>();
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">waves</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">applied_waves</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">pin_id</span>) {
+            <span class="ident">retn</span>.<span class="ident">extend</span>(<span class="ident">waves</span>.<span class="ident">clone</span>());
+        }
+        <span class="kw">for</span> <span class="ident">parent_id</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">inherited_wavetable_ids</span>.<span class="ident">iter</span>().<span class="ident">rev</span>() {
+            <span class="kw">let</span> <span class="ident">parent</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">dut</span>.<span class="ident">wavetables</span>[<span class="kw-2">*</span><span class="ident">parent_id</span>];
+            <span class="comment">// Notes here:</span>
+            <span class="comment">//  Could potentially be an inheritance chain, so need to use the</span>
+            <span class="comment">//      the &#39;waves_for&#39; method over just checking applied_waves structure</span>
+            <span class="comment">//  Any circular inheritance structures should&#39;ve been weeded out</span>
+            <span class="comment">//      during initialization, so not checking here.</span>
+            <span class="comment">//  We&#39;re only checking one pin at a time, so the result will be</span>
+            <span class="comment">//      a vector of size 1 with either Option::None or Option&lt;wave_id&gt;</span>
+            <span class="comment">//  Either way, we can just stick this directly into the return</span>
+            <span class="comment">// retn.insert(parent.wave_ids_for(dut, &amp;vec!(*pid))[0]);</span>
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">t</span> <span class="op">=</span> <span class="ident">parent</span>
+                .<span class="ident">wave_ids_for</span>(<span class="ident">dut</span>, <span class="ident">pin_id</span>, <span class="ident">indicators</span>)
+                .<span class="ident">unwrap_or</span>(<span class="ident">HashMap</span>::<span class="ident">new</span>());
+            <span class="ident">t</span>.<span class="ident">extend</span>(<span class="ident">retn</span>);
+            <span class="ident">retn</span> <span class="op">=</span> <span class="ident">t</span>;
+        }
+        <span class="kw">if</span> <span class="ident">retn</span>.<span class="ident">keys</span>().<span class="ident">len</span>() <span class="op">&gt;</span> <span class="number">0</span> {
+            <span class="prelude-val">Some</span>(<span class="ident">retn</span>)
+        } <span class="kw">else</span> {
+            <span class="prelude-val">None</span>
+        }
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_wave_group_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
@@ -629,11 +948,6 @@
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="comment">// pub fn register_wave(&amp;mut self, id: usize, name: &amp;str) -&gt; Result&lt;Wave, Error&gt; {</span>
-    <span class="comment">//   let w = Wave::new(self.model_id, self.timeset_id, self.id, id, name)?;</span>
-    <span class="comment">//   self.wave_ids.insert(String::from(name), id);</span>
-    <span class="comment">//   Ok(w)</span>
-    <span class="comment">// }</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">register_wave_group</span>(
         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
         <span class="ident">id</span>: <span class="ident">usize</span>,
@@ -719,21 +1033,6 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">contains_wave</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
         <span class="self">self</span>.<span class="ident">wave_ids</span>.<span class="ident">contains_key</span>(<span class="ident">name</span>)
     }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_waves_applied_to</span>(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">dut</span>: <span class="kw-2">&amp;</span><span class="kw">super</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">dut</span>::<span class="ident">Dut</span>,
-        <span class="ident">pin</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rtn</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
-        <span class="kw">for</span> (<span class="ident">name</span>, <span class="ident">id</span>) <span class="kw">in</span> <span class="self">self</span>.<span class="ident">wave_ids</span>.<span class="ident">iter</span>() {
-            <span class="kw">let</span> <span class="ident">w</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">dut</span>.<span class="ident">waves</span>[<span class="kw-2">*</span><span class="ident">id</span>];
-            <span class="kw">if</span> <span class="ident">w</span>.<span class="ident">pins</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">pin</span>.<span class="ident">to_string</span>()) {
-                <span class="ident">rtn</span>.<span class="ident">push</span>(<span class="ident">name</span>.<span class="ident">clone</span>());
-            }
-        }
-        <span class="ident">rtn</span>
-    }
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
@@ -743,9 +1042,8 @@
     <span class="kw">pub</span> <span class="ident">wavetable_id</span>: <span class="ident">usize</span>,
     <span class="kw">pub</span> <span class="ident">wave_group_id</span>: <span class="ident">usize</span>,
     <span class="kw">pub</span> <span class="ident">wave_id</span>: <span class="ident">usize</span>,
-    <span class="comment">//pub name: String,</span>
     <span class="kw">pub</span> <span class="ident">events</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">pins</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">applied_pin_ids</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">indicator</span>: <span class="ident">String</span>,
 }
 
@@ -764,9 +1062,8 @@
             <span class="ident">wavetable_id</span>: <span class="ident">wavetable_id</span>,
             <span class="ident">wave_group_id</span>: <span class="ident">wave_group_id</span>,
             <span class="ident">wave_id</span>: <span class="ident">wave_id</span>,
-            <span class="comment">//name: String::from(name),</span>
             <span class="ident">events</span>: <span class="macro">vec</span><span class="macro">!</span>[],
-            <span class="ident">pins</span>: <span class="macro">vec</span><span class="macro">!</span>[],
+            <span class="ident">applied_pin_ids</span>: <span class="macro">vec</span><span class="macro">!</span>[],
             <span class="ident">indicator</span>: <span class="ident">String</span>::<span class="ident">from</span>(<span class="ident">indicator</span>),
         })
     }
@@ -783,16 +1080,9 @@
             <span class="ident">wave_group_id</span>: <span class="ident">wgrp</span>.<span class="ident">id</span>,
             <span class="ident">wave_id</span>: <span class="ident">id</span>,
             <span class="ident">events</span>: <span class="macro">vec</span><span class="macro">!</span>[],
-            <span class="ident">pins</span>: <span class="macro">vec</span><span class="macro">!</span>[],
+            <span class="ident">applied_pin_ids</span>: <span class="macro">vec</span><span class="macro">!</span>[],
             <span class="ident">indicator</span>: <span class="ident">String</span>::<span class="ident">from</span>(<span class="ident">indicator</span>),
         })
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">apply_to</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">pins</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="comment">// At some point, add some error handling to ensure the pins exists, isn&#39;t already included, etc.</span>
-        <span class="comment">// For now though, just adding it.</span>
-        <span class="self">self</span>.<span class="ident">pins</span>.<span class="ident">extend</span>(<span class="ident">pins</span>.<span class="ident">clone</span>());
-        <span class="prelude-val">Ok</span>(())
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_indicator</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">indicator</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
@@ -932,16 +1222,49 @@
     }
 }
 
+<span class="kw">impl</span> <span class="ident">Dut</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">apply_wave_id_to_pins</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">wave_id</span>: <span class="ident">usize</span>,
+        <span class="ident">pins</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">usize</span>, <span class="ident">String</span>)<span class="op">&gt;</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> (<span class="ident">wtbl_id</span>, <span class="ident">wave_indicator</span>);
+        {
+            <span class="kw">let</span> <span class="ident">wave</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">waves</span>[<span class="ident">wave_id</span>];
+            <span class="ident">wtbl_id</span> <span class="op">=</span> <span class="ident">wave</span>.<span class="ident">wavetable_id</span>;
+            <span class="ident">wave_indicator</span> <span class="op">=</span> <span class="ident">wave</span>.<span class="ident">indicator</span>.<span class="ident">clone</span>();
+        }
+
+        <span class="kw">let</span> <span class="ident">physical_pin_ids</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">_resolve_groups_to_physical_pin_ids</span>(<span class="kw-2">&amp;</span><span class="ident">pins</span>)<span class="question-mark">?</span>;
+        <span class="kw">for</span> <span class="ident">ppin_ids</span> <span class="kw">in</span> <span class="ident">physical_pin_ids</span>.<span class="ident">iter</span>() {
+            <span class="kw">for</span> <span class="ident">ppin_id</span> <span class="kw">in</span> <span class="ident">ppin_ids</span>.<span class="ident">iter</span>() {
+                {
+                    <span class="kw">let</span> <span class="ident">wtbl</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">wavetables</span>[<span class="ident">wtbl_id</span>];
+                    <span class="ident">wtbl</span>.<span class="ident">apply_wave_to</span>(<span class="kw-2">*</span><span class="ident">ppin_id</span>, <span class="kw-2">&amp;</span><span class="ident">wave_indicator</span>, <span class="ident">wave_id</span>);
+                }
+                {
+                    <span class="kw">let</span> <span class="ident">wave</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">waves</span>[<span class="ident">wave_id</span>];
+                    <span class="ident">wave</span>.<span class="ident">applied_pin_ids</span>.<span class="ident">push</span>(<span class="kw-2">*</span><span class="ident">ppin_id</span>);
+                }
+            }
+        }
+        <span class="prelude-val">Ok</span>(())
+    }
+}
+
 <span class="attribute">#[<span class="ident">test</span>]</span>
 <span class="kw">fn</span> <span class="ident">test</span>() {
-    <span class="comment">//let e = Event { action: PinActions::Drive, at: vec!() };</span>
-    <span class="comment">// let t = Timeset::new(&quot;t1&quot;, Some(Box::new(&quot;1.0&quot;)), Option::None);</span>
-    <span class="comment">// assert_eq!(t.eval(None).unwrap(), 1.0 as f64);</span>
-
-    <span class="kw">let</span> <span class="ident">t</span> <span class="op">=</span> <span class="ident">Timeset</span>::<span class="ident">new</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="string">&quot;t1&quot;</span>, <span class="prelude-val">Some</span>(<span class="ident">Box</span>::<span class="ident">new</span>(<span class="string">&quot;1.0 + 1&quot;</span>)), <span class="prelude-ty">Option</span>::<span class="prelude-val">None</span>);
+    <span class="kw">let</span> <span class="ident">t</span> <span class="op">=</span> <span class="ident">Timeset</span>::<span class="ident">new</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="string">&quot;t1&quot;</span>, <span class="prelude-val">Some</span>(<span class="ident">Box</span>::<span class="ident">new</span>(<span class="string">&quot;1.0 + 1&quot;</span>)), <span class="prelude-ty">Option</span>::<span class="prelude-val">None</span>, <span class="macro">vec</span><span class="macro">!</span>[]);
     <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">t</span>.<span class="ident">eval</span>(<span class="prelude-val">None</span>).<span class="ident">is_err</span>());
 
-    <span class="kw">let</span> <span class="ident">t</span> <span class="op">=</span> <span class="ident">Timeset</span>::<span class="ident">new</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="string">&quot;t1&quot;</span>, <span class="prelude-val">Some</span>(<span class="ident">Box</span>::<span class="ident">new</span>(<span class="string">&quot;period&quot;</span>)), <span class="prelude-val">Some</span>(<span class="number">1.0</span> <span class="kw">as</span> <span class="ident">f64</span>));
+    <span class="kw">let</span> <span class="ident">t</span> <span class="op">=</span> <span class="ident">Timeset</span>::<span class="ident">new</span>(
+        <span class="number">0</span>,
+        <span class="number">0</span>,
+        <span class="string">&quot;t1&quot;</span>,
+        <span class="prelude-val">Some</span>(<span class="ident">Box</span>::<span class="ident">new</span>(<span class="string">&quot;period&quot;</span>)),
+        <span class="prelude-val">Some</span>(<span class="number">1.0</span> <span class="kw">as</span> <span class="ident">f64</span>),
+        <span class="macro">vec</span><span class="macro">!</span>[],
+    );
     <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">t</span>.<span class="ident">eval</span>(<span class="prelude-val">Some</span>(<span class="number">1.0</span> <span class="kw">as</span> <span class="ident">f64</span>)).<span class="ident">unwrap</span>(), <span class="number">1.0</span> <span class="kw">as</span> <span class="ident">f64</span>);
 
     <span class="kw">let</span> <span class="ident">t</span> <span class="op">=</span> <span class="ident">Timeset</span>::<span class="ident">new</span>(
@@ -950,8 +1273,9 @@
         <span class="string">&quot;t1&quot;</span>,
         <span class="prelude-val">Some</span>(<span class="ident">Box</span>::<span class="ident">new</span>(<span class="string">&quot;period + 0.25&quot;</span>)),
         <span class="prelude-val">Some</span>(<span class="number">1.0</span> <span class="kw">as</span> <span class="ident">f64</span>),
+        <span class="macro">vec</span><span class="macro">!</span>[],
     );
     <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">t</span>.<span class="ident">eval</span>(<span class="prelude-val">Some</span>(<span class="number">1.0</span> <span class="kw">as</span> <span class="ident">f64</span>)).<span class="ident">unwrap</span>(), <span class="number">1.25</span> <span class="kw">as</span> <span class="ident">f64</span>);
 }
 </pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../../../";window.currentCrate = "origen";</script><script src="../../../../../aliases.js"></script><script src="../../../../../main.js"></script><script src="../../../../../source-script.js"></script><script src="../../../../../source-files.js"></script><script defer src="../../../../../search-index.js"></script></body></html>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../../../";window.currentCrate = "origen";</script><script src="../../../../../main.js"></script><script src="../../../../../source-script.js"></script><script src="../../../../../source-files.js"></script><script defer src="../../../../../search-index.js"></script></body></html>

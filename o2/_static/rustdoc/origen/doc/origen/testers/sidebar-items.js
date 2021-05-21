@@ -1,1 +1,1 @@
-initSidebarItems({"constant":[["AVAILABLE_TESTERS",""]],"fn":[["instantiate_tester",""]],"mod":[["igxl",""],["simulator",""],["smt",""]],"struct":[["DummyRenderer",""],["DummyRendererWithInterceptors",""]]});
+initSidebarItems({"enum":[["SupportedTester",""]],"fn":[["instantiate_tester",""]],"mod":[["api",""],["igxl",""],["simulator",""],["smt",""],["vector_based",""]],"struct":[["DummyRenderer",""],["DummyRendererWithInterceptors",""]]});

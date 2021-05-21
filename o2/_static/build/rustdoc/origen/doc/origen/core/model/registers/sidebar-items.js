@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["AccessType",""],["BitOrder",""]],"mod":[["address_block",""],["bit",""],["bit_collection",""],["field",""],["memory_map",""],["register",""],["register_file",""]]});
+initSidebarItems({"enum":[["AccessType",""],["BitOrder",""]],"mod":[["address_block",""],["bit",""],["bit_collection",""],["field",""],["macro_api",""],["memory_map",""],["register",""],["register_file",""]]});

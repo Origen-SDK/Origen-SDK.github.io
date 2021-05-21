@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/core/status.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>status.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.png");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../origen/index.html'><div class='logo-container'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.png" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.png" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src\core\status.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>status.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.png");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../origen/index.html'><div class='logo-container'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.png" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.png" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -298,20 +298,250 @@
 <span id="298">298</span>
 <span id="299">299</span>
 <span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
+<span id="335">335</span>
+<span id="336">336</span>
+<span id="337">337</span>
+<span id="338">338</span>
+<span id="339">339</span>
+<span id="340">340</span>
+<span id="341">341</span>
+<span id="342">342</span>
+<span id="343">343</span>
+<span id="344">344</span>
+<span id="345">345</span>
+<span id="346">346</span>
+<span id="347">347</span>
+<span id="348">348</span>
+<span id="349">349</span>
+<span id="350">350</span>
+<span id="351">351</span>
+<span id="352">352</span>
+<span id="353">353</span>
+<span id="354">354</span>
+<span id="355">355</span>
+<span id="356">356</span>
+<span id="357">357</span>
+<span id="358">358</span>
+<span id="359">359</span>
+<span id="360">360</span>
+<span id="361">361</span>
+<span id="362">362</span>
+<span id="363">363</span>
+<span id="364">364</span>
+<span id="365">365</span>
+<span id="366">366</span>
+<span id="367">367</span>
+<span id="368">368</span>
+<span id="369">369</span>
+<span id="370">370</span>
+<span id="371">371</span>
+<span id="372">372</span>
+<span id="373">373</span>
+<span id="374">374</span>
+<span id="375">375</span>
+<span id="376">376</span>
+<span id="377">377</span>
+<span id="378">378</span>
+<span id="379">379</span>
+<span id="380">380</span>
+<span id="381">381</span>
+<span id="382">382</span>
+<span id="383">383</span>
+<span id="384">384</span>
+<span id="385">385</span>
+<span id="386">386</span>
+<span id="387">387</span>
+<span id="388">388</span>
+<span id="389">389</span>
+<span id="390">390</span>
+<span id="391">391</span>
+<span id="392">392</span>
+<span id="393">393</span>
+<span id="394">394</span>
+<span id="395">395</span>
+<span id="396">396</span>
+<span id="397">397</span>
+<span id="398">398</span>
+<span id="399">399</span>
+<span id="400">400</span>
+<span id="401">401</span>
+<span id="402">402</span>
+<span id="403">403</span>
+<span id="404">404</span>
+<span id="405">405</span>
+<span id="406">406</span>
+<span id="407">407</span>
+<span id="408">408</span>
+<span id="409">409</span>
+<span id="410">410</span>
+<span id="411">411</span>
+<span id="412">412</span>
+<span id="413">413</span>
+<span id="414">414</span>
+<span id="415">415</span>
+<span id="416">416</span>
+<span id="417">417</span>
+<span id="418">418</span>
+<span id="419">419</span>
+<span id="420">420</span>
+<span id="421">421</span>
+<span id="422">422</span>
+<span id="423">423</span>
+<span id="424">424</span>
+<span id="425">425</span>
+<span id="426">426</span>
+<span id="427">427</span>
+<span id="428">428</span>
+<span id="429">429</span>
+<span id="430">430</span>
+<span id="431">431</span>
+<span id="432">432</span>
+<span id="433">433</span>
+<span id="434">434</span>
+<span id="435">435</span>
+<span id="436">436</span>
+<span id="437">437</span>
+<span id="438">438</span>
+<span id="439">439</span>
+<span id="440">440</span>
+<span id="441">441</span>
+<span id="442">442</span>
+<span id="443">443</span>
+<span id="444">444</span>
+<span id="445">445</span>
+<span id="446">446</span>
+<span id="447">447</span>
+<span id="448">448</span>
+<span id="449">449</span>
+<span id="450">450</span>
+<span id="451">451</span>
+<span id="452">452</span>
+<span id="453">453</span>
+<span id="454">454</span>
+<span id="455">455</span>
+<span id="456">456</span>
+<span id="457">457</span>
+<span id="458">458</span>
+<span id="459">459</span>
+<span id="460">460</span>
+<span id="461">461</span>
+<span id="462">462</span>
+<span id="463">463</span>
+<span id="464">464</span>
+<span id="465">465</span>
+<span id="466">466</span>
+<span id="467">467</span>
+<span id="468">468</span>
+<span id="469">469</span>
+<span id="470">470</span>
+<span id="471">471</span>
+<span id="472">472</span>
+<span id="473">473</span>
+<span id="474">474</span>
+<span id="475">475</span>
+<span id="476">476</span>
+<span id="477">477</span>
+<span id="478">478</span>
+<span id="479">479</span>
+<span id="480">480</span>
+<span id="481">481</span>
+<span id="482">482</span>
+<span id="483">483</span>
+<span id="484">484</span>
+<span id="485">485</span>
+<span id="486">486</span>
+<span id="487">487</span>
+<span id="488">488</span>
+<span id="489">489</span>
+<span id="490">490</span>
+<span id="491">491</span>
+<span id="492">492</span>
+<span id="493">493</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">time</span>;
+<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">built_info</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">core</span>::<span class="ident">application</span>::<span class="ident">Application</span>;
+<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">testers</span>::<span class="ident">SupportedTester</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">utility</span>::<span class="ident">file_utils</span>::<span class="ident">with_dir</span>;
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">built_info</span>, <span class="prelude-ty">Result</span>};
+<span class="kw">use</span> <span class="kw">crate</span>::<span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">OrigenResult</span>;
 <span class="kw">use</span> <span class="ident">regex</span>::<span class="ident">Regex</span>;
 <span class="kw">use</span> <span class="ident">semver</span>::<span class="ident">Version</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">env</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">Path</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">PathBuf</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">RwLock</span>;
 
 <span class="comment">// Trait for extending std::path::PathBuf</span>
 <span class="kw">use</span> <span class="ident">path_slash</span>::<span class="ident">PathBufExt</span>;
+
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Operation</span> {
+    <span class="prelude-val">None</span>,
+    <span class="ident">Convert</span>,
+    <span class="ident">Generate</span>,
+    <span class="ident">GeneratePattern</span>,
+    <span class="ident">GenerateFlow</span>,
+    <span class="ident">Compile</span>,
+    <span class="ident">Interactive</span>,
+    <span class="ident">Web</span>,
+    <span class="ident">AppCommand</span>,
+}
+
+<span class="kw">impl</span> <span class="ident">FromStr</span> <span class="kw">for</span> <span class="ident">Operation</span> {
+    <span class="kw">type</span> <span class="prelude-val">Err</span> <span class="op">=</span> <span class="ident">String</span>;
+
+    <span class="kw">fn</span> <span class="ident">from_str</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="self">Self</span>::<span class="prelude-val">Err</span><span class="op">&gt;</span> {
+        <span class="comment">// Accept any case</span>
+        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="ident">s</span>.<span class="ident">to_lowercase</span>();
+        <span class="kw">match</span> <span class="ident">s</span>.<span class="ident">trim</span>() {
+            <span class="string">&quot;none&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Operation</span>::<span class="prelude-val">None</span>),
+            <span class="string">&quot;convert&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Operation</span>::<span class="ident">Convert</span>),
+            <span class="string">&quot;generate&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Operation</span>::<span class="ident">Generate</span>),
+            <span class="string">&quot;generatepattern&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Operation</span>::<span class="ident">GeneratePattern</span>),
+            <span class="string">&quot;generateflow&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Operation</span>::<span class="ident">GenerateFlow</span>),
+            <span class="string">&quot;compile&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Operation</span>::<span class="ident">Compile</span>),
+            <span class="string">&quot;interactive&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Operation</span>::<span class="ident">Interactive</span>),
+            <span class="string">&quot;web&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Operation</span>::<span class="ident">Web</span>),
+            <span class="string">&quot;appcommand&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Operation</span>::<span class="ident">AppCommand</span>),
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;Unknown Operation: &#39;{}&#39;&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">s</span>)),
+        }
+    }
+}
 
 <span class="doccomment">/// Exposes some status information about the runtime environment, e.g. whether an</span>
 <span class="doccomment">/// application workspace is present</span>
@@ -350,11 +580,22 @@
     <span class="doccomment">/// that it will always be created if it doesn&#39;t exist and all other code can forget about</span>
     <span class="doccomment">/// checking for that.</span>
     <span class="ident">reference_dir</span>: <span class="ident">RwLock</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PathBuf</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">cli_location</span>: <span class="ident">RwLock</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PathBuf</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">_custom_tester_ids</span>: <span class="ident">RwLock</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">testers_eq</span>: <span class="ident">RwLock</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">SupportedTester</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">testers_neq</span>: <span class="ident">RwLock</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">SupportedTester</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">unique_id</span>: <span class="ident">RwLock</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
+    <span class="ident">debug_enabled</span>: <span class="ident">RwLock</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
+    <span class="ident">_operation</span>: <span class="ident">RwLock</span><span class="op">&lt;</span><span class="ident">Operation</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">Status</span> {
     <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Status</span> {
         <span class="macro">log_trace</span><span class="macro">!</span>(<span class="string">&quot;Building STATUS&quot;</span>);
+        <span class="macro">log_trace</span><span class="macro">!</span>(
+            <span class="string">&quot;Current exe is {}&quot;</span>,
+            <span class="ident">std</span>::<span class="ident">env</span>::<span class="ident">current_exe</span>().<span class="ident">unwrap</span>().<span class="ident">display</span>()
+        );
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">dev_mode_origen_root</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PathBuf</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">origen_dev_mode</span> <span class="op">=</span> <span class="bool-val">false</span>;
         <span class="kw">let</span> (<span class="ident">app_present</span>, <span class="ident">app_root</span>) <span class="op">=</span> <span class="ident">search_for_from_pwd</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;config&quot;</span>, <span class="string">&quot;origen.toml&quot;</span>], <span class="bool-val">true</span>);
@@ -410,7 +651,14 @@
             <span class="ident">unhandled_error_count</span>: <span class="ident">RwLock</span>::<span class="ident">new</span>(<span class="number">0</span>),
             <span class="ident">output_dir</span>: <span class="ident">RwLock</span>::<span class="ident">new</span>(<span class="prelude-val">None</span>),
             <span class="ident">reference_dir</span>: <span class="ident">RwLock</span>::<span class="ident">new</span>(<span class="prelude-val">None</span>),
+            <span class="ident">cli_location</span>: <span class="ident">RwLock</span>::<span class="ident">new</span>(<span class="prelude-val">None</span>),
             <span class="ident">is_app_in_origen_dev_mode</span>: <span class="ident">origen_dev_mode</span>,
+            <span class="ident">_custom_tester_ids</span>: <span class="ident">RwLock</span>::<span class="ident">new</span>(<span class="macro">vec</span><span class="macro">!</span>[]),
+            <span class="ident">testers_eq</span>: <span class="ident">RwLock</span>::<span class="ident">new</span>(<span class="macro">vec</span><span class="macro">!</span>[]),
+            <span class="ident">testers_neq</span>: <span class="ident">RwLock</span>::<span class="ident">new</span>(<span class="macro">vec</span><span class="macro">!</span>[]),
+            <span class="ident">unique_id</span>: <span class="ident">RwLock</span>::<span class="ident">new</span>(<span class="number">0</span>),
+            <span class="ident">debug_enabled</span>: <span class="ident">RwLock</span>::<span class="ident">new</span>(<span class="bool-val">false</span>),
+            <span class="ident">_operation</span>: <span class="ident">RwLock</span>::<span class="ident">new</span>(<span class="ident">Operation</span>::<span class="prelude-val">None</span>),
         };
         <span class="macro">log_trace</span><span class="macro">!</span>(<span class="string">&quot;Status built successfully&quot;</span>);
         <span class="ident">s</span>
@@ -418,6 +666,111 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Status</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">register_custom_tester</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">t</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">_custom_tester_ids</span>.<span class="ident">write</span>().<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">name</span>.<span class="ident">to_string</span>();
+        <span class="kw">if</span> <span class="op">!</span><span class="ident">t</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">name</span>) {
+            <span class="ident">t</span>.<span class="ident">push</span>(<span class="ident">name</span>);
+        }
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">custom_tester_ids</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ids</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
+        <span class="kw">for</span> <span class="ident">id</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="self">self</span>.<span class="ident">_custom_tester_ids</span>.<span class="ident">read</span>().<span class="ident">unwrap</span>() {
+            <span class="ident">ids</span>.<span class="ident">push</span>(<span class="ident">id</span>.<span class="ident">to_string</span>());
+        }
+        <span class="ident">ids</span>
+    }
+
+    <span class="doccomment">/// Returns an ID that it guaranteed unique across threads and within the lifetime of an Origen</span>
+    <span class="doccomment">/// invocation</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">generate_unique_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">unique_id</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">unique_id</span>.<span class="ident">write</span>().<span class="ident">unwrap</span>();
+        <span class="kw-2">*</span><span class="ident">unique_id</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+        <span class="kw-2">*</span><span class="ident">unique_id</span>
+    }
+
+    <span class="doccomment">/// Corresponds to the start of a tester specific block of code, returns an error if the given tester</span>
+    <span class="doccomment">/// selection is not a subset of any existing selection</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">push_testers_eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">testers</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">SupportedTester</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">OrigenResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="ident">testers</span>.<span class="ident">is_empty</span>() {
+            <span class="kw">return</span> <span class="macro">error</span><span class="macro">!</span>(<span class="string">&quot;No tester type(s) given&quot;</span>);
+        }
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">testers_eq</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">testers_eq</span>.<span class="ident">write</span>().<span class="ident">unwrap</span>();
+        <span class="comment">// This may not be correct, makes it harder to call re-useable functions that make their own tester selections</span>
+        <span class="comment">//let testers_neq = self.testers_neq.read().unwrap();</span>
+        <span class="comment">//// Verify that the new selection does not violate any existing tester exclusion</span>
+        <span class="comment">//if !testers_neq.is_empty() {</span>
+        <span class="comment">//    for t_neqs in &amp;*testers_neq {</span>
+        <span class="comment">//        for t_neq in t_neqs {</span>
+        <span class="comment">//            for t_eq in &amp;testers {</span>
+        <span class="comment">//                if t_neq.is_compatible_with(t_eq) {</span>
+        <span class="comment">//                    return error!(</span>
+        <span class="comment">//                        &quot;Can&#39;t select tester &#39;{}&#39; within a block that already excludes it&quot;,</span>
+        <span class="comment">//                        t_eq,</span>
+        <span class="comment">//                    );</span>
+        <span class="comment">//                }</span>
+        <span class="comment">//            }</span>
+        <span class="comment">//        }</span>
+        <span class="comment">//    }</span>
+        <span class="comment">//}</span>
+        <span class="comment">// When some testers are already selected, the application is only allowed to select a subset of them,</span>
+        <span class="comment">// so verify that all given testers are already contained in the last selection</span>
+        <span class="comment">//if !testers_eq.is_empty() {</span>
+        <span class="comment">//    let last = testers_eq.last().unwrap();</span>
+        <span class="comment">//    for t in &amp;testers {</span>
+        <span class="comment">//        if !last</span>
+        <span class="comment">//            .iter()</span>
+        <span class="comment">//            .any(|current_tester| t.is_compatible_with(current_tester))</span>
+        <span class="comment">//        {</span>
+        <span class="comment">//            return error!(</span>
+        <span class="comment">//                &quot;Can&#39;t select tester &#39;{}&#39; within a block that selects &#39;{}&#39;&quot;,</span>
+        <span class="comment">//                t,</span>
+        <span class="comment">//                last.iter()</span>
+        <span class="comment">//                    .map(|t| t.to_string())</span>
+        <span class="comment">//                    .collect::&lt;Vec&lt;String&gt;&gt;()</span>
+        <span class="comment">//                    .join(&quot;, &quot;)</span>
+        <span class="comment">//            );</span>
+        <span class="comment">//        }</span>
+        <span class="comment">//    }</span>
+        <span class="comment">//}</span>
+        <span class="ident">testers_eq</span>.<span class="ident">push</span>(<span class="ident">testers</span>.<span class="ident">clone</span>());
+        <span class="prelude-val">Ok</span>(())
+    }
+
+    <span class="doccomment">/// Corresponds to the start of a tester except (tester not equal to) block of code, returns an error if the given tester</span>
+    <span class="doccomment">/// selection is not valid within any existing eq or neq blocks</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">push_testers_neq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">testers</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">SupportedTester</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">OrigenResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="ident">testers</span>.<span class="ident">is_empty</span>() {
+            <span class="kw">return</span> <span class="macro">error</span><span class="macro">!</span>(<span class="string">&quot;No tester type(s) given&quot;</span>);
+        }
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">testers_neq</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">testers_neq</span>.<span class="ident">write</span>().<span class="ident">unwrap</span>();
+        <span class="ident">testers_neq</span>.<span class="ident">push</span>(<span class="ident">testers</span>.<span class="ident">clone</span>());
+        <span class="prelude-val">Ok</span>(())
+    }
+
+    <span class="doccomment">/// Corresponds to the end of a tester specific block, returns an error if no tester specific</span>
+    <span class="doccomment">/// selection currently exists</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">pop_testers_eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">OrigenResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">current_testers</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">testers_eq</span>.<span class="ident">write</span>().<span class="ident">unwrap</span>();
+        <span class="kw">if</span> <span class="ident">current_testers</span>.<span class="ident">is_empty</span>() {
+            <span class="kw">return</span> <span class="macro">error</span><span class="macro">!</span>(<span class="string">&quot;There has been an attempt to close a tester-specific block, but none is currently open&quot;</span>);
+        }
+        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">current_testers</span>.<span class="ident">pop</span>();
+        <span class="prelude-val">Ok</span>(())
+    }
+
+    <span class="doccomment">/// Corresponds to the end of a tester exclusion block, returns an error if no tester exlcusion</span>
+    <span class="doccomment">/// selection currently exists</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">pop_testers_neq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">OrigenResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">current_testers</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">testers_neq</span>.<span class="ident">write</span>().<span class="ident">unwrap</span>();
+        <span class="kw">if</span> <span class="ident">current_testers</span>.<span class="ident">is_empty</span>() {
+            <span class="kw">return</span> <span class="macro">error</span><span class="macro">!</span>(<span class="string">&quot;There has been an attempt to close a tester-exclusion block, but none is currently open&quot;</span>);
+        }
+        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">current_testers</span>.<span class="ident">pop</span>();
+        <span class="prelude-val">Ok</span>(())
+    }
+
     <span class="doccomment">/// Returns the number of unhandled errors that have been encountered since this thread started.</span>
     <span class="doccomment">/// An example of a unhandled error is a pattern that failed to generate.</span>
     <span class="doccomment">/// If an error occurs on the Python side then Origen will most likely crash, however on the</span>
@@ -430,6 +783,35 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">inc_unhandled_error_count</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cnt</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">unhandled_error_count</span>.<span class="ident">write</span>().<span class="ident">unwrap</span>();
         <span class="kw-2">*</span><span class="ident">cnt</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_debug_enabled</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">val</span>: <span class="ident">bool</span>) {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">debug_enabled</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">debug_enabled</span>.<span class="ident">write</span>().<span class="ident">unwrap</span>();
+        <span class="kw-2">*</span><span class="ident">debug_enabled</span> <span class="op">=</span> <span class="ident">val</span>;
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_debug_enabled</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+        <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">debug_enabled</span>.<span class="ident">read</span>().<span class="ident">unwrap</span>()
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_operation</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">val</span>: <span class="ident">Operation</span>) {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">operation</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">_operation</span>.<span class="ident">write</span>().<span class="ident">unwrap</span>();
+        <span class="kw-2">*</span><span class="ident">operation</span> <span class="op">=</span> <span class="ident">val</span>;
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">operation</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Operation</span> {
+        <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">_operation</span>.<span class="ident">read</span>().<span class="ident">unwrap</span>()
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_cli_location</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">loc</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>) {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">loc</span>) <span class="op">=</span> <span class="ident">loc</span> {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cli_loc</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">cli_location</span>.<span class="ident">write</span>().<span class="ident">unwrap</span>();
+            <span class="kw-2">*</span><span class="ident">cli_loc</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">PathBuf</span>::<span class="ident">from</span>(<span class="ident">loc</span>));
+        }
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">cli_location</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PathBuf</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">cli_location</span>.<span class="ident">read</span>().<span class="ident">unwrap</span>().<span class="ident">to_owned</span>()
     }
 
     <span class="doccomment">/// Set the base output dir to the given path, it is &lt;APP ROOT&gt;/output by default</span>
@@ -476,9 +858,9 @@
     <span class="doccomment">/// the function and then restored at the end by setting change_to to True.</span>
     <span class="doccomment">/// If this is called when Origen is executing outside of an application workspace then it will</span>
     <span class="doccomment">/// return None unless it has been previously set by calling set_output_dir().</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_output_dir</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">change_dir</span>: <span class="ident">bool</span>, <span class="kw-2">mut</span> <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_output_dir</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">change_dir</span>: <span class="ident">bool</span>, <span class="kw-2">mut</span> <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">OrigenResult</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
     <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="ident">Path</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
+        <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="ident">Path</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">OrigenResult</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
     {
         <span class="kw">let</span> <span class="ident">dir</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">output_dir</span>();
         <span class="kw">if</span> <span class="ident">change_dir</span> {
@@ -518,9 +900,9 @@
     <span class="doccomment">/// the function and then restored at the end by setting change_to to True.</span>
     <span class="doccomment">/// If this is called when Origen is executing outside of an application workspace then it will</span>
     <span class="doccomment">/// return None unless it has been previously set by calling set_reference_dir().</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_reference_dir</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">change_dir</span>: <span class="ident">bool</span>, <span class="kw-2">mut</span> <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_reference_dir</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">change_dir</span>: <span class="ident">bool</span>, <span class="kw-2">mut</span> <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">OrigenResult</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
     <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">PathBuf</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
+        <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">PathBuf</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">OrigenResult</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
     {
         <span class="kw">let</span> <span class="ident">dir</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">reference_dir</span>();
         <span class="kw">if</span> <span class="ident">change_dir</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">dir</span>.<span class="ident">is_some</span>() {
@@ -530,6 +912,10 @@
             <span class="ident">f</span>(<span class="ident">dir</span>.<span class="ident">as_ref</span>())
         }
     }
+
+    <span class="comment">// pub fn current_user(&amp;self) -&gt; &amp;User {</span>
+    <span class="comment">//     &amp;self._current_user.read().unwrap()</span>
+    <span class="comment">// }</span>
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">search_for_from_pwd</span>(<span class="ident">paths</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span>, <span class="ident">searching_for_app</span>: <span class="ident">bool</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">bool</span>, <span class="ident">PathBuf</span>) {
@@ -574,7 +960,7 @@
     }
 }
 
-<span class="kw">fn</span> <span class="ident">get_home_dir</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PathBuf</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_home_dir</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PathBuf</span> {
     <span class="kw">if</span> <span class="macro">cfg</span><span class="macro">!</span>(<span class="ident">windows</span>) {
         <span class="ident">PathBuf</span>::<span class="ident">from</span>(<span class="ident">env</span>::<span class="ident">var</span>(<span class="string">&quot;USERPROFILE&quot;</span>).<span class="ident">expect</span>(<span class="string">&quot;Please set environment variable USERPROFILE to point to your home directory, then try again&quot;</span>))
     } <span class="kw">else</span> {
@@ -600,4 +986,4 @@
     <span class="ident">clean_path</span>
 }
 </pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../";window.currentCrate = "origen";</script><script src="../../../aliases.js"></script><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script><script defer src="../../../search-index.js"></script></body></html>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../";window.currentCrate = "origen";</script><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script><script defer src="../../../search-index.js"></script></body></html>

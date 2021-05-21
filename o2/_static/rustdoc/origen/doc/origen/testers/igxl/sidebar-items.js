@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["ultraflex",""]]});
+initSidebarItems({"mod":[["j750",""],["ultraflex",""]]});

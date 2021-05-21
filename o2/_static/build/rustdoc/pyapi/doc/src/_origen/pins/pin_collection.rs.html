@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/pins/pin_collection.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>pin_collection.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.png");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../_origen/index.html'><div class='logo-container'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.png" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.png" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src\pins\pin_collection.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>pin_collection.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.png");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../_origen/index.html'><div class='logo-container'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.png" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.png" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -241,11 +241,47 @@
 <span id="241">241</span>
 <span id="242">242</span>
 <span id="243">243</span>
+<span id="244">244</span>
+<span id="245">245</span>
+<span id="246">246</span>
+<span id="247">247</span>
+<span id="248">248</span>
+<span id="249">249</span>
+<span id="250">250</span>
+<span id="251">251</span>
+<span id="252">252</span>
+<span id="253">253</span>
+<span id="254">254</span>
+<span id="255">255</span>
+<span id="256">256</span>
+<span id="257">257</span>
+<span id="258">258</span>
+<span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
+<span id="262">262</span>
+<span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">meta</span>::<span class="ident">py_like_apis</span>::<span class="ident">list_like_api</span>::{<span class="ident">ListLikeAPI</span>, <span class="ident">ListLikeIter</span>};
-<span class="kw">use</span> <span class="ident">origen</span>::<span class="ident">core</span>::<span class="ident">model</span>::<span class="ident">pins</span>::<span class="ident">pin_collection</span>::<span class="ident">PinCollection</span> <span class="kw">as</span> <span class="ident">OrigenPinCollection</span>;
+<span class="kw">use</span> <span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">pins</span>::<span class="ident">extract_pin_transaction</span>;
+<span class="kw">use</span> <span class="kw">super</span>::<span class="ident">pin_actions</span>::<span class="ident">PinActions</span>;
+<span class="kw">use</span> <span class="ident">num_bigint</span>::<span class="ident">BigUint</span>;
+<span class="kw">use</span> <span class="ident">origen</span>::<span class="ident">core</span>::<span class="ident">model</span>::<span class="ident">pins</span>::<span class="ident">pin_store</span>::<span class="ident">PinStore</span> <span class="kw">as</span> <span class="ident">OrigenPinCollection</span>;
 <span class="kw">use</span> <span class="ident">origen</span>::<span class="ident">core</span>::<span class="ident">model</span>::<span class="ident">pins</span>::<span class="ident">Endianness</span>;
 <span class="kw">use</span> <span class="ident">origen</span>::<span class="ident">error</span>::<span class="ident">Error</span>;
+<span class="kw">use</span> <span class="ident">origen</span>::<span class="ident">Transaction</span>;
 <span class="kw">use</span> <span class="ident">origen</span>::{<span class="ident">dut</span>, <span class="ident">DUT</span>};
 <span class="kw">use</span> <span class="ident">pyo3</span>::<span class="ident">prelude</span>::<span class="kw-2">*</span>;
 <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused_imports</span>)]</span>
@@ -254,113 +290,110 @@
 <span class="attribute">#[<span class="ident">pyclass</span>]</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PinCollection</span> {
-    <span class="ident">model_id</span>: <span class="ident">usize</span>,
     <span class="ident">pin_collection</span>: <span class="ident">OrigenPinCollection</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">PinCollection</span> {
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(
-        <span class="ident">model_id</span>: <span class="ident">usize</span>,
+        <span class="comment">// Todo - allow this to take Pins as well</span>
         <span class="ident">names</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
         <span class="ident">endianness</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Endianness</span><span class="op">&gt;</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">PinCollection</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">dut</span> <span class="op">=</span> <span class="ident">dut</span>();
-        <span class="comment">//let model = dut.get_mut_model(model_id)?;</span>
-        <span class="kw">let</span> <span class="ident">collection</span> <span class="op">=</span> <span class="ident">dut</span>.<span class="ident">collect</span>(<span class="ident">model_id</span>, <span class="ident">names</span>, <span class="ident">endianness</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">dut</span> <span class="op">=</span> <span class="ident">dut</span>();
+        <span class="kw">let</span> <span class="ident">collection</span> <span class="op">=</span> <span class="ident">dut</span>.<span class="ident">collect</span>(
+            <span class="kw-2">&amp;</span><span class="ident">names</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">n</span><span class="op">|</span> (<span class="ident">n</span>.<span class="ident">to_string</span>(), <span class="number">0</span>)).<span class="ident">collect</span>(),
+            <span class="ident">endianness</span>,
+        )<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="ident">PinCollection</span> {
             <span class="ident">pin_collection</span>: <span class="ident">collection</span>,
-            <span class="ident">model_id</span>: <span class="ident">model_id</span>,
         })
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_ids_unchecked</span>(<span class="ident">pin_ids</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>, <span class="ident">endianness</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Endianness</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="ident">PinCollection</span> {
+            <span class="ident">pin_collection</span>: <span class="ident">OrigenPinCollection</span> {
+                <span class="ident">pin_ids</span>: <span class="ident">pin_ids</span>,
+                <span class="ident">endianness</span>: <span class="ident">endianness</span>.<span class="ident">unwrap_or</span>(<span class="ident">Endianness</span>::<span class="ident">LittleEndian</span>),
+            },
+        }
     }
 }
 
 <span class="attribute">#[<span class="ident">pymethods</span>]</span>
 <span class="kw">impl</span> <span class="ident">PinCollection</span> {
-    <span class="attribute">#[<span class="ident">getter</span>]</span>
-    <span class="kw">fn</span> <span class="ident">get_data</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">dut</span> <span class="op">=</span> <span class="ident">DUT</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
-        <span class="prelude-val">Ok</span>(<span class="ident">dut</span>.<span class="ident">get_pin_data</span>(<span class="self">self</span>.<span class="ident">pin_collection</span>.<span class="ident">model_id</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">pin_collection</span>.<span class="ident">pin_names</span>)<span class="question-mark">?</span>)
-    }
-
     <span class="attribute">#[<span class="ident">setter</span>]</span>
-    <span class="kw">fn</span> <span class="ident">set_data</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">data</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">Py</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">dut</span> <span class="op">=</span> <span class="ident">DUT</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
-        <span class="ident">dut</span>.<span class="ident">set_pin_collection_data</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">pin_collection</span>, <span class="ident">data</span>)<span class="question-mark">?</span>;
-
-        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python</span>::<span class="ident">acquire_gil</span>();
-        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
-
-        <span class="comment">// I&#39;m sure there&#39;s a better way to return self, but I wasn&#39;t able to get anything to work.</span>
-        <span class="comment">// Just copying self and returning that for now.</span>
-        <span class="prelude-val">Ok</span>(<span class="ident">Py</span>::<span class="ident">new</span>(
-            <span class="ident">py</span>,
-            <span class="ident">PinCollection</span> {
-                <span class="ident">pin_collection</span>: <span class="self">self</span>.<span class="ident">pin_collection</span>.<span class="ident">clone</span>(),
-                <span class="ident">model_id</span>: <span class="self">self</span>.<span class="ident">model_id</span>,
-            },
-        )
-        .<span class="ident">unwrap</span>())
-    }
-
-    <span class="kw">fn</span> <span class="ident">with_mask</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">mask</span>: <span class="ident">usize</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">Py</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">dut</span> <span class="op">=</span> <span class="ident">DUT</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
-        <span class="ident">dut</span>.<span class="ident">set_pin_collection_nonsticky_mask</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">pin_collection</span>, <span class="ident">mask</span>)<span class="question-mark">?</span>;
-
-        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python</span>::<span class="ident">acquire_gil</span>();
-        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
-        <span class="prelude-val">Ok</span>(<span class="ident">Py</span>::<span class="ident">new</span>(
-            <span class="ident">py</span>,
-            <span class="ident">PinCollection</span> {
-                <span class="ident">pin_collection</span>: <span class="self">self</span>.<span class="ident">pin_collection</span>.<span class="ident">clone</span>(),
-                <span class="ident">model_id</span>: <span class="self">self</span>.<span class="ident">model_id</span>,
-            },
-        )
-        .<span class="ident">unwrap</span>())
-    }
-
-    <span class="kw">fn</span> <span class="ident">set</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">data</span>: <span class="ident">u32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">Py</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">return</span> <span class="self">self</span>.<span class="ident">set_data</span>(<span class="ident">data</span>);
-    }
-
-    <span class="attribute">#[<span class="ident">getter</span>]</span>
-    <span class="kw">fn</span> <span class="ident">get_pin_actions</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">dut</span> <span class="op">=</span> <span class="ident">DUT</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
-        <span class="prelude-val">Ok</span>(<span class="ident">dut</span>.<span class="ident">get_pin_actions</span>(<span class="self">self</span>.<span class="ident">model_id</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">pin_collection</span>.<span class="ident">pin_names</span>)<span class="question-mark">?</span>)
-    }
-
-    <span class="kw">fn</span> <span class="ident">drive</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">data</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">dut</span> <span class="op">=</span> <span class="ident">DUT</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
-        <span class="ident">dut</span>.<span class="ident">drive_pin_collection</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">pin_collection</span>, <span class="ident">data</span>)<span class="question-mark">?</span>;
+    <span class="kw">fn</span> <span class="ident">actions</span>(<span class="ident">slf</span>: <span class="ident">PyRefMut</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>, <span class="ident">actions</span>: <span class="kw-2">&amp;</span><span class="ident">PyAny</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="self">Self</span>::<span class="ident">set_actions</span>(<span class="ident">slf</span>, <span class="ident">actions</span>, <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn</span> <span class="ident">verify</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">data</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">dut</span> <span class="op">=</span> <span class="ident">DUT</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
-        <span class="ident">dut</span>.<span class="ident">verify_pin_collection</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">pin_collection</span>, <span class="ident">data</span>)<span class="question-mark">?</span>;
+    <span class="attribute">#[<span class="ident">args</span>(<span class="ident">kwargs</span> <span class="op">=</span> <span class="string">&quot;**&quot;</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">set_actions</span>(
+        <span class="ident">slf</span>: <span class="ident">PyRefMut</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>,
+        <span class="ident">actions</span>: <span class="kw-2">&amp;</span><span class="ident">PyAny</span>,
+        <span class="ident">kwargs</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">PyDict</span><span class="op">&gt;</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">Py</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">dut</span> <span class="op">=</span> <span class="ident">DUT</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
+        <span class="ident">slf</span>.<span class="ident">pin_collection</span>
+            .<span class="ident">update</span>(<span class="kw-2">&amp;</span><span class="ident">dut</span>, <span class="kw-2">&amp;</span><span class="ident">extract_pin_transaction</span>(<span class="ident">actions</span>, <span class="ident">kwargs</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(<span class="ident">slf</span>.<span class="ident">into</span>())
+    }
+
+    <span class="attribute">#[<span class="ident">getter</span>]</span>
+    <span class="kw">fn</span> <span class="ident">get_actions</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">PyObject</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">dut</span> <span class="op">=</span> <span class="ident">DUT</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python</span>::<span class="ident">acquire_gil</span>();
+        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
+
+        <span class="kw">let</span> <span class="ident">pin_actions</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">pin_collection</span>.<span class="ident">get_actions</span>(<span class="kw-2">&amp;</span><span class="ident">dut</span>)<span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(<span class="ident">PinActions</span> {
+            <span class="ident">actions</span>: <span class="ident">pin_actions</span>,
+        }
+        .<span class="ident">into_py</span>(<span class="ident">py</span>))
+    }
+
+    <span class="kw">fn</span> <span class="ident">drive</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">data</span>: <span class="ident">BigUint</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">dut</span> <span class="op">=</span> <span class="ident">DUT</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
+        <span class="self">self</span>.<span class="ident">pin_collection</span>.<span class="ident">update</span>(
+            <span class="kw-2">&amp;</span><span class="ident">dut</span>,
+            <span class="kw-2">&amp;</span><span class="ident">Transaction</span>::<span class="ident">new_write</span>(<span class="ident">data</span>, <span class="self">self</span>.<span class="ident">pin_collection</span>.<span class="ident">len</span>())<span class="question-mark">?</span>,
+        )<span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(())
+    }
+
+    <span class="kw">fn</span> <span class="ident">verify</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">data</span>: <span class="ident">BigUint</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">dut</span> <span class="op">=</span> <span class="ident">DUT</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
+        <span class="self">self</span>.<span class="ident">pin_collection</span>.<span class="ident">update</span>(
+            <span class="kw-2">&amp;</span><span class="ident">dut</span>,
+            <span class="kw-2">&amp;</span><span class="ident">Transaction</span>::<span class="ident">new_verify</span>(<span class="ident">data</span>, <span class="self">self</span>.<span class="ident">pin_collection</span>.<span class="ident">len</span>())<span class="question-mark">?</span>,
+        )<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(())
     }
 
     <span class="kw">fn</span> <span class="ident">capture</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">dut</span> <span class="op">=</span> <span class="ident">DUT</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
-        <span class="ident">dut</span>.<span class="ident">capture_pin_collection</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">pin_collection</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">dut</span> <span class="op">=</span> <span class="ident">DUT</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
+        <span class="self">self</span>.<span class="ident">pin_collection</span>
+            .<span class="ident">update</span>(<span class="kw-2">&amp;</span><span class="ident">dut</span>, <span class="kw-2">&amp;</span><span class="ident">Transaction</span>::<span class="ident">new_capture</span>(<span class="self">self</span>.<span class="ident">pin_collection</span>.<span class="ident">len</span>())<span class="question-mark">?</span>)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(())
     }
 
     <span class="kw">fn</span> <span class="ident">highz</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">dut</span> <span class="op">=</span> <span class="ident">DUT</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
-        <span class="ident">dut</span>.<span class="ident">highz_pin_collection</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">pin_collection</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">dut</span> <span class="op">=</span> <span class="ident">DUT</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
+        <span class="self">self</span>.<span class="ident">pin_collection</span>
+            .<span class="ident">update</span>(<span class="kw-2">&amp;</span><span class="ident">dut</span>, <span class="kw-2">&amp;</span><span class="ident">Transaction</span>::<span class="ident">new_highz</span>(<span class="self">self</span>.<span class="ident">pin_collection</span>.<span class="ident">len</span>())<span class="question-mark">?</span>)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(())
     }
 
     <span class="kw">fn</span> <span class="ident">reset</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">dut</span> <span class="op">=</span> <span class="ident">DUT</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
-        <span class="ident">dut</span>.<span class="ident">reset_pin_collection</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">pin_collection</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">dut</span> <span class="op">=</span> <span class="ident">DUT</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
+        <span class="self">self</span>.<span class="ident">pin_collection</span>.<span class="ident">reset</span>(<span class="kw-2">&amp;</span><span class="ident">dut</span>)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">getter</span>]</span>
     <span class="kw">fn</span> <span class="ident">get_pin_names</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">pin_collection</span>.<span class="ident">pin_names</span>.<span class="ident">clone</span>())
+        <span class="kw">let</span> <span class="ident">dut</span> <span class="op">=</span> <span class="ident">DUT</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">pin_collection</span>.<span class="ident">pin_names</span>(<span class="kw-2">&amp;</span><span class="ident">dut</span>)<span class="question-mark">?</span>)
     }
 
     <span class="attribute">#[<span class="ident">getter</span>]</span>
@@ -369,15 +402,15 @@
     }
 
     <span class="attribute">#[<span class="ident">getter</span>]</span>
-    <span class="kw">fn</span> <span class="ident">get_reset_data</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">get_reset_actions</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">PyObject</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">dut</span> <span class="op">=</span> <span class="ident">DUT</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
-        <span class="prelude-val">Ok</span>(<span class="ident">dut</span>.<span class="ident">get_pin_collection_reset_data</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">pin_collection</span>)<span class="question-mark">?</span>)
-    }
-
-    <span class="attribute">#[<span class="ident">getter</span>]</span>
-    <span class="kw">fn</span> <span class="ident">get_reset_actions</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">dut</span> <span class="op">=</span> <span class="ident">DUT</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
-        <span class="prelude-val">Ok</span>(<span class="ident">dut</span>.<span class="ident">get_pin_collection_reset_actions</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">pin_collection</span>)<span class="question-mark">?</span>)
+        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python</span>::<span class="ident">acquire_gil</span>();
+        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
+        <span class="kw">let</span> <span class="ident">pin_actions</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">pin_collection</span>.<span class="ident">get_reset_actions</span>(<span class="kw-2">&amp;</span><span class="ident">dut</span>)<span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(<span class="ident">PinActions</span> {
+            <span class="ident">actions</span>: <span class="ident">pin_actions</span>,
+        }
+        .<span class="ident">into_py</span>(<span class="ident">py</span>))
     }
 
     <span class="attribute">#[<span class="ident">getter</span>]</span>
@@ -389,6 +422,37 @@
     <span class="kw">fn</span> <span class="ident">get_little_endian</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">pin_collection</span>.<span class="ident">is_little_endian</span>())
     }
+
+    <span class="attribute">#[<span class="ident">args</span>(<span class="ident">kwargs</span> <span class="op">=</span> <span class="string">&quot;**&quot;</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">cycle</span>(<span class="ident">slf</span>: <span class="ident">PyRef</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>, <span class="ident">kwargs</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">PyDict</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">Py</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python</span>::<span class="ident">acquire_gil</span>();
+        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
+
+        <span class="kw">let</span> <span class="ident">locals</span> <span class="op">=</span> <span class="ident">PyDict</span>::<span class="ident">new</span>(<span class="ident">py</span>);
+        <span class="ident">locals</span>.<span class="ident">set_item</span>(<span class="string">&quot;origen&quot;</span>, <span class="ident">py</span>.<span class="ident">import</span>(<span class="string">&quot;origen&quot;</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
+        <span class="ident">locals</span>.<span class="ident">set_item</span>(<span class="string">&quot;kwargs&quot;</span>, <span class="ident">kwargs</span>.<span class="ident">to_object</span>(<span class="ident">py</span>))<span class="question-mark">?</span>;
+
+        <span class="ident">py</span>.<span class="ident">eval</span>(
+            <span class="kw-2">&amp;</span><span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;origen.tester.cycle(**(kwargs or {{}}))&quot;</span>),
+            <span class="prelude-val">None</span>,
+            <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">locals</span>),
+        )<span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(<span class="ident">slf</span>.<span class="ident">into</span>())
+    }
+
+    <span class="kw">fn</span> <span class="ident">repeat</span>(<span class="ident">slf</span>: <span class="ident">PyRef</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>, <span class="ident">count</span>: <span class="ident">usize</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">Py</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python</span>::<span class="ident">acquire_gil</span>();
+        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
+
+        <span class="kw">let</span> <span class="ident">locals</span> <span class="op">=</span> <span class="ident">PyDict</span>::<span class="ident">new</span>(<span class="ident">py</span>);
+        <span class="ident">locals</span>.<span class="ident">set_item</span>(<span class="string">&quot;origen&quot;</span>, <span class="ident">py</span>.<span class="ident">import</span>(<span class="string">&quot;origen&quot;</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
+        <span class="ident">py</span>.<span class="ident">eval</span>(
+            <span class="kw-2">&amp;</span><span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;origen.tester.repeat({})&quot;</span>, <span class="ident">count</span>),
+            <span class="prelude-val">None</span>,
+            <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">locals</span>),
+        )<span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(<span class="ident">slf</span>.<span class="ident">into</span>())
+    }
 }
 
 <span class="attribute">#[<span class="ident">pyproto</span>]</span>
@@ -396,8 +460,9 @@
     <span class="comment">// Need to overwrite contains to account for aliasing</span>
     <span class="kw">fn</span> <span class="ident">__contains__</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">item</span>: <span class="kw-2">&amp;</span><span class="ident">PyAny</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">s</span>) <span class="op">=</span> <span class="ident">item</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>() {
+            <span class="comment">// For just a String, assume model_id is 0 (DUT-level)</span>
             <span class="kw">let</span> <span class="ident">dut</span> <span class="op">=</span> <span class="ident">DUT</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
-            <span class="prelude-val">Ok</span>(<span class="ident">dut</span>.<span class="ident">pin_names_contain</span>(<span class="self">self</span>.<span class="ident">model_id</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">pin_collection</span>.<span class="ident">pin_names</span>, <span class="kw-2">&amp;</span><span class="ident">s</span>)<span class="question-mark">?</span>)
+            <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">pin_collection</span>.<span class="ident">contains_identifier</span>(<span class="kw-2">&amp;</span><span class="ident">dut</span>, (<span class="number">0</span>, <span class="ident">s</span>))<span class="question-mark">?</span>)
         } <span class="kw">else</span> {
             <span class="prelude-val">Ok</span>(<span class="bool-val">false</span>)
         }
@@ -405,25 +470,21 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ListLikeAPI</span> <span class="kw">for</span> <span class="ident">PinCollection</span> {
-    <span class="kw">fn</span> <span class="ident">item_ids</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">dut</span>: <span class="kw-2">&amp;</span><span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">MutexGuard</span><span class="op">&lt;</span><span class="ident">origen</span>::<span class="ident">core</span>::<span class="ident">dut</span>::<span class="ident">Dut</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">pin_ids</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
-        <span class="kw">for</span> <span class="ident">pname</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">pin_collection</span>.<span class="ident">pin_names</span>.<span class="ident">iter</span>() {
-            <span class="ident">pin_ids</span>.<span class="ident">push</span>(<span class="ident">dut</span>.<span class="ident">_get_pin</span>(<span class="self">self</span>.<span class="ident">model_id</span>, <span class="ident">pname</span>).<span class="ident">unwrap</span>().<span class="ident">id</span>);
-        }
-        <span class="ident">pin_ids</span>
+    <span class="kw">fn</span> <span class="ident">item_ids</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_dut</span>: <span class="kw-2">&amp;</span><span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">MutexGuard</span><span class="op">&lt;</span><span class="ident">origen</span>::<span class="ident">core</span>::<span class="ident">dut</span>::<span class="ident">Dut</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">pin_collection</span>.<span class="ident">pin_ids</span>.<span class="ident">clone</span>()
     }
 
     <span class="comment">// Grabs a single pin and puts it in an anonymous pin collection</span>
     <span class="kw">fn</span> <span class="ident">new_pyitem</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">py</span>: <span class="ident">Python</span>, <span class="ident">idx</span>: <span class="ident">usize</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">PyObject</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">Py</span>::<span class="ident">new</span>(
             <span class="ident">py</span>,
-            <span class="ident">PinCollection</span>::<span class="ident">new</span>(
-                <span class="self">self</span>.<span class="ident">model_id</span>,
-                <span class="macro">vec</span><span class="macro">!</span>[<span class="self">self</span>.<span class="ident">pin_collection</span>.<span class="ident">pin_names</span>[<span class="ident">idx</span>].<span class="ident">clone</span>()],
-                <span class="prelude-val">None</span>,
-            )<span class="question-mark">?</span>,
-        )
-        .<span class="ident">unwrap</span>()
+            <span class="ident">PinCollection</span> {
+                <span class="ident">pin_collection</span>: <span class="ident">OrigenPinCollection</span>::<span class="ident">new</span>(
+                    <span class="macro">vec</span><span class="macro">!</span>[<span class="self">self</span>.<span class="ident">pin_collection</span>.<span class="ident">pin_ids</span>[<span class="ident">idx</span>]],
+                    <span class="prelude-val">None</span>,
+                ),
+            },
+        )<span class="question-mark">?</span>
         .<span class="ident">to_object</span>(<span class="ident">py</span>))
     }
 
@@ -435,27 +496,31 @@
     }
 
     <span class="kw">fn</span> <span class="ident">___getslice__</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">slice</span>: <span class="kw-2">&amp;</span><span class="ident">PySlice</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">PyObject</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">names</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ids</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
         {
-            <span class="kw">let</span> <span class="ident">indices</span> <span class="op">=</span> <span class="ident">slice</span>.<span class="ident">indices</span>((<span class="self">self</span>.<span class="ident">pin_collection</span>.<span class="ident">pin_names</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">i32</span>).<span class="ident">into</span>())<span class="question-mark">?</span>;
+            <span class="kw">let</span> <span class="ident">indices</span> <span class="op">=</span> <span class="ident">slice</span>.<span class="ident">indices</span>((<span class="self">self</span>.<span class="ident">pin_collection</span>.<span class="ident">pin_ids</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">i32</span>).<span class="ident">into</span>())<span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">i</span> <span class="op">=</span> <span class="ident">indices</span>.<span class="ident">start</span>;
             <span class="kw">if</span> <span class="ident">indices</span>.<span class="ident">step</span> <span class="op">&gt;</span> <span class="number">0</span> {
                 <span class="kw">while</span> <span class="ident">i</span> <span class="op">&lt;</span> <span class="ident">indices</span>.<span class="ident">stop</span> {
-                    <span class="ident">names</span>.<span class="ident">push</span>(<span class="self">self</span>.<span class="ident">pin_collection</span>.<span class="ident">pin_names</span>[<span class="ident">i</span> <span class="kw">as</span> <span class="ident">usize</span>].<span class="ident">clone</span>());
+                    <span class="ident">ids</span>.<span class="ident">push</span>(<span class="self">self</span>.<span class="ident">pin_collection</span>.<span class="ident">pin_ids</span>[<span class="ident">i</span> <span class="kw">as</span> <span class="ident">usize</span>].<span class="ident">clone</span>());
                     <span class="ident">i</span> <span class="op">+</span><span class="op">=</span> <span class="ident">indices</span>.<span class="ident">step</span>;
                 }
             } <span class="kw">else</span> {
                 <span class="kw">while</span> <span class="ident">i</span> <span class="op">&gt;</span> <span class="ident">indices</span>.<span class="ident">stop</span> {
-                    <span class="ident">names</span>.<span class="ident">push</span>(<span class="self">self</span>.<span class="ident">pin_collection</span>.<span class="ident">pin_names</span>[<span class="ident">i</span> <span class="kw">as</span> <span class="ident">usize</span>].<span class="ident">clone</span>());
+                    <span class="ident">ids</span>.<span class="ident">push</span>(<span class="self">self</span>.<span class="ident">pin_collection</span>.<span class="ident">pin_ids</span>[<span class="ident">i</span> <span class="kw">as</span> <span class="ident">usize</span>].<span class="ident">clone</span>());
                     <span class="ident">i</span> <span class="op">+</span><span class="op">=</span> <span class="ident">indices</span>.<span class="ident">step</span>;
                 }
             }
         }
         <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python</span>::<span class="ident">acquire_gil</span>();
         <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
-        <span class="prelude-val">Ok</span>(<span class="ident">Py</span>::<span class="ident">new</span>(<span class="ident">py</span>, <span class="ident">PinCollection</span>::<span class="ident">new</span>(<span class="self">self</span>.<span class="ident">model_id</span>, <span class="ident">names</span>, <span class="prelude-val">None</span>)<span class="question-mark">?</span>)
-            .<span class="ident">unwrap</span>()
-            .<span class="ident">to_object</span>(<span class="ident">py</span>))
+        <span class="prelude-val">Ok</span>(<span class="ident">Py</span>::<span class="ident">new</span>(
+            <span class="ident">py</span>,
+            <span class="ident">PinCollection</span> {
+                <span class="ident">pin_collection</span>: <span class="ident">OrigenPinCollection</span>::<span class="ident">new</span>(<span class="ident">ids</span>, <span class="prelude-val">None</span>),
+            },
+        )<span class="question-mark">?</span>
+        .<span class="ident">to_object</span>(<span class="ident">py</span>))
     }
 }
 
@@ -480,10 +545,9 @@
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">OrigenPinCollection</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">PinCollection</span> {
     <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">collection</span>: <span class="ident">OrigenPinCollection</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="ident">PinCollection</span> {
-            <span class="ident">model_id</span>: <span class="ident">collection</span>.<span class="ident">model_id</span>.<span class="ident">clone</span>(),
             <span class="ident">pin_collection</span>: <span class="ident">collection</span>,
         }
     }
 }
 </pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../";window.currentCrate = "_origen";</script><script src="../../../aliases.js"></script><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script><script defer src="../../../search-index.js"></script></body></html>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../";window.currentCrate = "_origen";</script><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script><script defer src="../../../search-index.js"></script></body></html>

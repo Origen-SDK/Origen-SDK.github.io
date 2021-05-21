@@ -1,1 +1,1 @@
-initSidebarItems({"constant":[["POETRY_INSTALLER",""]],"fn":[["delete_virtual_env",""],["run",""]]});
+initSidebarItems({"fn":[["delete_virtual_env",""],["install_poetry",""],["run",""]]});

@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["CONFIG",""],["Config",""]]});
+initSidebarItems({"static":[["DEFAULT_ENCRYPTION_KEY","Default keys generated from crate::utility::mod::tests::check_default_key_values default_encryption_key: !<<<---Origen StandardKey--->>>!"],["DEFAULT_ENCRYPTION_NONCE","default_encryption_nonce: ORIGEN NONCE"]],"struct":[["CONFIG",""],["Config",""]]});

@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["pattern_renderer",""]],"struct":[["SMT7",""]]});
+initSidebarItems({"struct":[["SMT7",""]]});

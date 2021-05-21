@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["_fix_wheel_version","This is no longer used, decided to accept the version that Poetry wants to use, however keeping it around for a while in case that decision changes."],["_hash",""],["dependency_on_pyapi",""],["run",""],["write_version",""]]});
+initSidebarItems({"fn":[["change_pyapi_wheel_version",""],["dependency_on_pyapi",""],["hash",""],["run",""],["write_version",""]]});
