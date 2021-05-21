@@ -936,6 +936,80 @@ for example we can now ask the Eagle how many NVM memory blocks that it has:</p>
 </div>
       </div>
 
+      <div>    
+  <a class="anchor" name="Overriding_and_Inheriting"></a>          
+  <h4><a href="#Overriding_and_Inheriting">Overriding and Inheriting</a></h4>          
+</div>
+
+      <p><mark><b>WARNING: </b>This is a beta feature, there still may be some bugs/undefined behavior when overriding or inheriting blocks.</mark></p>
+
+      <p>Ideally, you will not need to override or inherit blocks. But if you need to make some application
+specific overrides to methods defined in blocks that were instantiated in another application that
+you don’t have control over, overriding may be the solution. Similarly, if you need to make an
+application specific derivative of a block thats been defined in another app, and it doesn’t make
+sense to define the derivative in that app, then you may want to utilize the inherit functionality.</p>
+
+      <h5 id="override">Override</h5>
+
+      <p>Override allows you to recreate a block that already existed.
+For example, lets say that your dut included a sub block called ‘dummy_block’ of class
+<code>OtherApp::Block::BlockA</code> which was created in another app, and it instantiated a sub block
+called ‘dummy_sub’ of class <code>OtherApp::Block::BlockA::Sub1</code>.</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#777"># file: app/blocks/dut/my_dut/sub_blocks.rb</span>
+sub_block <span style="color:#A60">:dummy_block</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">OtherApp::Block::BlockA</span><span style="color:#710">'</span></span>
+</pre></div>
+</div>
+      </div>
+
+      <p>Which you can now access dummy_sub via <code>dut.dummy_block.dummy_sub</code>. But now lets say that your
+application needs a different sub block under dummy block, <code>MyApp::DUT::MyDut::Sub2</code>.</p>
+
+      <p>You could override the existing <code>dut.dummy_block.dummy_sub</code> like so:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#777"># file: app/blocks/dut/my_dut/sub_blocks.rb</span>
+sub_block <span style="color:#A60">:dummy_block</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">OtherApp::Block::BlockA</span><span style="color:#710">'</span></span>
+dummy_block.sub_block <span style="color:#A60">:dummy_sub</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">MyApp::DUT::MyDut::Sub2</span><span style="color:#710">'</span></span>, <span style="color:#606">override</span>: <span style="color:#069">true</span>
+</pre></div>
+</div>
+      </div>
+
+      <h5 id="inherit">Inherit</h5>
+
+      <p>Continuing the above example from Override, lets now say that you want your new
+<code>MyApp::DUT::MyDut::Sub2</code> sub block to inherit <code>OtherApp::Block::BlockA::Sub1</code> as a starting point.
+You can already mostly accomplish this the same way that derivatives operate by setting your class
+definitions in your model.rb and controller.rb files of <code>MyApp::DUT::MyDut::Sub2</code> to inherit the class
+of <code>OtherApp::Block::BlockA::Sub1</code>’s model.rb and controller.rb:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#777"># file: app/blocks/dut/my_dut/sub_blocks/sub2/model.rb</span>
+<span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MyAPP::DUT::MyDut::Sub2</span> &lt; <span style="color:#036;font-weight:bold">OtherApp</span>::<span style="color:#036;font-weight:bold">Block</span>::<span style="color:#036;font-weight:bold">BlockA</span>::<span style="color:#036;font-weight:bold">Sub1</span>
+
+<span style="color:#777"># file: app/blocks/dut/my_dut/sub_blocks/sub2/controller.rb</span>
+<span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MyAPP::DUT::MyDut::Sub2Controller</span> &lt; <span style="color:#036;font-weight:bold">OtherApp</span>::<span style="color:#036;font-weight:bold">Block</span>::<span style="color:#036;font-weight:bold">BlockA</span>::<span style="color:#036;font-weight:bold">Sub1Controller</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>But what this does not do, is inherit the block files (attributes.rb, parameters.rb, etc…) associated
+with <code>OtherApp::Block::BlockA::Sub1</code>. To do that, you can also pass the inherit option to <code>sub_block</code>, which
+will instruct the block loader to pick up those files as well:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#777"># file: app/blocks/dut/my_dut/sub_blocks.rb</span>
+sub_block <span style="color:#A60">:dummy_block</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">OtherApp::Block::BlockA</span><span style="color:#710">'</span></span>
+dummy_block.sub_block <span style="color:#A60">:dummy_sub</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">MyApp::DUT::MyDut::Sub2</span><span style="color:#710">'</span></span>, <span style="color:#606">override</span>: <span style="color:#069">true</span>, <span style="color:#606">inherit</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">OtherApp::Block::BlockA</span><span style="color:#710">'</span></span>
+</pre></div>
+</div>
+      </div>
+
       <div style="position: relative">
   <hr>
   <div>    
