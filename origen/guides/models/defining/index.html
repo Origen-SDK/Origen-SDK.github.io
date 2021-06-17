@@ -938,10 +938,12 @@ for example we can now ask the Eagle how many NVM memory blocks that it has:</p>
 
       <div>    
   <a class="anchor" name="Overriding_and_Inheriting"></a>          
-  <h4><a href="#Overriding_and_Inheriting">Overriding and Inheriting</a></h4>          
+  <h3><a href="#Overriding_and_Inheriting">Overriding and Inheriting</a></h3>          
 </div>
 
-      <p><mark><b>WARNING: </b>This is a beta feature, there still may be some bugs/undefined behavior when overriding or inheriting blocks.</mark></p>
+      <div class="alert alert-warning">
+  <strong>WARNING: </strong>This is a beta feature, there still may be some bugs/undefined behavior when overriding or inheriting blocks.
+</div>
 
       <p>Ideally, you will not need to override or inherit blocks. But if you need to make some application
 specific overrides to methods defined in blocks that were instantiated in another application that
@@ -949,7 +951,10 @@ you don’t have control over, overriding may be the solution. Similarly, if you
 application specific derivative of a block thats been defined in another app, and it doesn’t make
 sense to define the derivative in that app, then you may want to utilize the inherit functionality.</p>
 
-      <h5 id="override">Override</h5>
+      <div>    
+  <a class="anchor" name="Override"></a>          
+  <h4><a href="#Override">Override</a></h4>          
+</div>
 
       <p>Override allows you to recreate a block that already existed.
 For example, lets say that your dut included a sub block called ‘dummy_block’ of class
@@ -978,7 +983,47 @@ dummy_block.sub_block <span style="color:#A60">:dummy_sub</span>, <span style="c
 </div>
       </div>
 
-      <h5 id="inherit">Inherit</h5>
+      <h5 id="skiprequirefiles">skip_require_files</h5>
+
+      <p>When overriding, previously instantiated subblocks have already initialzed some namespaces, which can result in some funny constant behavior:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#036;font-weight:bold">NamespaceA</span>::<span style="color:#036;font-weight:bold">B</span>::<span style="color:#036;font-weight:bold">C</span>
+=&gt;  <span style="color:#036;font-weight:bold">NameSpaceX</span>::<span style="color:#036;font-weight:bold">Y</span>::<span style="color:#036;font-weight:bold">Z</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>To get around this the override feature will require the relevant block files which returns the constant behavior back to sanity:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#036;font-weight:bold">NamespaceA</span>::<span style="color:#036;font-weight:bold">B</span>::<span style="color:#036;font-weight:bold">C</span>
+=&gt;  <span style="color:#036;font-weight:bold">NameSpaceA</span>::<span style="color:#036;font-weight:bold">B</span>::<span style="color:#036;font-weight:bold">C</span>
+</pre></div>
+</div>
+      </div>
+
+      <p>However, there are many block files which aren’t meant to be required directly (e.g attributes.rb) as they could contain method calls which wouldn’t
+be available at the time they are required. So by default, these kinds of block files are skipped.
+Specifically: attributes.rb, parameters.rb, pins.rb, registers.rb, sub_blocks.rb, and timesets.rb</p>
+
+      <p>If you have other block files in your modeling that you need require to skip, you can do so by passing an array of files (without the extension) to the sub_block method as an option of <code>skip_require_files</code>:</p>
+
+      <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre>dummy_block.sub_block <span style="color:#A60">:dummy_sub</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">MyApp::DUT::MyDut::Sub2</span><span style="color:#710">'</span></span>, <span style="color:#606">override</span>: <span style="color:#069">true</span>, <span style="color:#606">skip_require_files</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">%w(</span><span style="color:#D20">file1 file2 file3</span><span style="color:#710">)</span></span>
+</pre></div>
+</div>
+      </div>
+
+      <p>Note however that you’ll likely need to include the files that are skipped by default in your custom skip_require_files option as this will override the default array.</p>
+
+      <div>    
+  <a class="anchor" name="Inherit"></a>          
+  <h4><a href="#Inherit">Inherit</a></h4>          
+</div>
 
       <p>Continuing the above example from Override, lets now say that you want your new
 <code>MyApp::DUT::MyDut::Sub2</code> sub block to inherit <code>OtherApp::Block::BlockA::Sub1</code> as a starting point.
@@ -1022,7 +1067,7 @@ dummy_block.sub_block <span style="color:#A60">:dummy_sub</span>, <span style="c
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = 'origen-sdk';
     var disqus_title;
-    var disqus_url = 'https://' + window.location.hostname + window.location.pathname;
+    var disqus_url = 'http://' + window.location.hostname + window.location.pathname;
 
     disqus_title = $("h1").text();
     if (disqus_title.length == 0) {
