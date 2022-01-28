@@ -6,7 +6,7 @@
 <title>
   Module: OrigenARMDebug::DPController
   
-    &mdash; Origen ARM Debug 1.1.4
+    &mdash; Origen ARM Debug 1.2.0
   
 </title>
 
@@ -243,15 +243,27 @@
 12
 13
 14
-15</pre>
+15
+16
+17
+18
+19
+20
+21</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/origen_arm_debug/dp_controller.rb', line 10</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_select_ap_reg'>select_ap_reg</span><span class='lparen'>(</span><span class='id identifier rubyid_reg'>reg</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_address'>address</span> <span class='op'>=</span> <span class='id identifier rubyid_reg'>reg</span><span class='period'>.</span><span class='id identifier rubyid_address'>address</span> <span class='op'>&amp;</span> <span class='int'>0xFFFF_FFF0</span>
-  <span class='kw'>if</span> <span class='id identifier rubyid_model'>model</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span><span class='period'>.</span><span class='id identifier rubyid_data'>data</span> <span class='op'>!=</span> <span class='id identifier rubyid_address'>address</span>
-    <span class='id identifier rubyid_model'>model</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span><span class='period'>.</span><span class='id identifier rubyid_write!'>write!</span><span class='lparen'>(</span><span class='id identifier rubyid_address'>address</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_apsel'>apsel</span> <span class='op'>=</span> <span class='lparen'>(</span><span class='id identifier rubyid_reg'>reg</span><span class='period'>.</span><span class='id identifier rubyid_address'>address</span> <span class='op'>&amp;</span> <span class='int'>0xFF00_0000</span><span class='rparen'>)</span> <span class='op'>&gt;&gt;</span> <span class='int'>24</span>
+  <span class='id identifier rubyid_apbanksel'>apbanksel</span> <span class='op'>=</span> <span class='lparen'>(</span><span class='id identifier rubyid_reg'>reg</span><span class='period'>.</span><span class='id identifier rubyid_address'>address</span> <span class='op'>&amp;</span> <span class='int'>0xF0</span><span class='rparen'>)</span> <span class='op'>&gt;&gt;</span> <span class='int'>4</span>
+  <span class='comment'># if model.select.data != address
+</span>  <span class='kw'>if</span> <span class='id identifier rubyid_model'>model</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span><span class='period'>.</span><span class='id identifier rubyid_apsel'>apsel</span><span class='period'>.</span><span class='id identifier rubyid_data'>data</span> <span class='op'>!=</span> <span class='id identifier rubyid_apsel'>apsel</span> <span class='op'>||</span> <span class='id identifier rubyid_model'>model</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span><span class='period'>.</span><span class='id identifier rubyid_apbanksel'>apbanksel</span><span class='period'>.</span><span class='id identifier rubyid_data'>data</span> <span class='op'>!=</span> <span class='id identifier rubyid_apbanksel'>apbanksel</span>
+    <span class='id identifier rubyid_model'>model</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span><span class='period'>.</span><span class='id identifier rubyid_write!'>write!</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_r'>r</span><span class='op'>|</span>
+      <span class='id identifier rubyid_r'>r</span><span class='period'>.</span><span class='id identifier rubyid_apsel'>apsel</span><span class='period'>.</span><span class='id identifier rubyid_write'>write</span> <span class='id identifier rubyid_apsel'>apsel</span>
+      <span class='id identifier rubyid_r'>r</span><span class='period'>.</span><span class='id identifier rubyid_apbanksel'>apbanksel</span><span class='period'>.</span><span class='id identifier rubyid_write'>write</span> <span class='id identifier rubyid_apbanksel'>apbanksel</span>
+    <span class='kw'>end</span>
   <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -264,9 +276,9 @@
 </div>
 
       <div id="footer">
-  Generated on Thu May 14 09:20:42 2020 by
-  <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.25 (ruby-2.5.1).
+  Generated on Fri Jan 28 08:28:40 2022 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.9.27 (ruby-2.6.6).
 </div>
 
     </div>
