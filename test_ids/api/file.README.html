@@ -6,7 +6,7 @@
 <title>
   File: README
   
-    &mdash; test_ids 1.2.2
+    &mdash; test_ids 1.2.3
   
 </title>
 
@@ -578,6 +578,30 @@ independent configurations can be created by supplying an identifier, like this:
 <p>If only <code>TestIds.number_config</code> had been set, then the others would continue to be allocated from the default
 active configuration.</p>
 
+<h3 id="parallel-lsf-setup">Parallel LSF Setup</h3>
+
+<p>There are multiple race conditions when dealing with a git repo in a parallel nature.
+If you follow these steps, the lsf jobs will work in publish mode with one down side.</p>
+
+<p>1) Call <code>TestIds.lsf_init(git_repo, publish_flag)</code> before you kick off any lsf jobs. IMPORTANT: <code>git_repo</code> and <code>publish_flag</code> are not tied to your configure method declarations
+2) Call <code>TestIds.lsf_shutdown(publish_flag)</code> after you kick off all the jobs and you Origen.lsf.wait_for_completion. IMPORTANT: <code>publish_flag</code> are not tied to your configure method declarations</p>
+
+<p>The downside of this implementation is that the repo will be locked until all LSF jobs are complete. It is recommended that you only run in publish mode when you are trying to release an application version.</p>
+
+<div class="language-ruby highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre class="code ruby"><code class="ruby"><span class="line-numbers"> <a href="#n1" name="n1">1</a></span><span style="color:#777"># User defined setup for LSF job submission</span>
+<span class="line-numbers"> <a href="#n2" name="n2">2</a></span><span style="color:#777"># Example TestIds.lsf_init(Origen.app.config.test_ids_repo, !(Origen.mode.debug?))</span>
+<span class="line-numbers"> <a href="#n3" name="n3">3</a></span><span style="color:#036;font-weight:bold">TestIds</span>.lsf_init(git_repo, publish_flag)
+<span class="line-numbers"> <a href="#n4" name="n4">4</a></span>
+<span class="line-numbers"> <a href="#n5" name="n5">5</a></span><span style="color:#777"># Submit all LSF jobs</span>
+<span class="line-numbers"> <a href="#n6" name="n6">6</a></span>
+<span class="line-numbers"> <a href="#n7" name="n7">7</a></span><span style="color:#036;font-weight:bold">Origen</span>.lsf.wait_for_completion
+<span class="line-numbers"> <a href="#n8" name="n8">8</a></span><span style="color:#777"># Example TestIds.lsf_shutdown(!(Origen.mode.debug?))</span>
+<span class="line-numbers"> <a href="#n9" name="n9">9</a></span><span style="color:#036;font-weight:bold">TestIds</span>.lsf_shutdown(publish_flag)
+</code></pre></div>
+</div>
+</div>
+
 <h2 id="notes-on-duplicates">Notes on Duplicates</h2>
 
 <p>The time is recorded each time a reference is made to an ID number when generating a test program, this means
@@ -596,9 +620,9 @@ valid under the new configuration get re-generated.</p>
 </div></div>
 
       <div id="footer">
-  Generated on Tue Aug 10 11:18:39 2021 by
+  Generated on Wed Feb  9 10:34:57 2022 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.26 (ruby-2.6.6).
+  0.9.26 (ruby-2.6.0).
 </div>
 
     </div>

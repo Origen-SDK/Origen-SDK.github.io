@@ -95,7 +95,7 @@
 <div class="row">
   <div class="span12">
 
-    <h1>TestIds <span style="font-size: 14px">(1.2.2)</span>
+    <h1>TestIds <span style="font-size: 14px">(1.2.3)</span>
 </h1>
 
     <p><a href="https://coveralls.io/github/Origen-SDK/test_ids?branch=master"><img src="https://coveralls.io/repos/github/Origen-SDK/test_ids/badge.svg?branch=master" alt="Coverage Status"></a></p>
@@ -693,6 +693,34 @@ independent configurations can be created by supplying an identifier, like this:
 
     <p>If only <code>TestIds.number_config</code> had been set, then the others would continue to be allocated from the default
 active configuration.</p>
+
+    <div>    
+  <a class="anchor" name="Parallel_LSF_Setup"></a>          
+  <h3><a href="#Parallel_LSF_Setup">Parallel LSF Setup</a></h3>          
+</div>
+
+    <p>There are multiple race conditions when dealing with a git repo in a parallel nature.
+If you follow these steps, the lsf jobs will work in publish mode with one down side.</p>
+
+    <p>1) Call <code>TestIds.lsf_init(git_repo, publish_flag)</code> before you kick off any lsf jobs. IMPORTANT: <code>git_repo</code> and <code>publish_flag</code> are not tied to your configure method declarations
+2) Call <code>TestIds.lsf_shutdown(publish_flag)</code> after you kick off all the jobs and you Origen.lsf.wait_for_completion. IMPORTANT: <code>publish_flag</code> are not tied to your configure method declarations</p>
+
+    <p>The downside of this implementation is that the repo will be locked until all LSF jobs are complete. It is recommended that you only run in publish mode when you are trying to release an application version.</p>
+
+    <div class="language-ruby highlighter-coderay">
+<div class="CodeRay">
+  <div class="code"><pre><span style="color:#777"># User defined setup for LSF job submission</span>
+<span style="color:#777"># Example TestIds.lsf_init(Origen.app.config.test_ids_repo, !(Origen.mode.debug?))</span>
+<span style="color:#036;font-weight:bold">TestIds</span>.lsf_init(git_repo, publish_flag)
+
+<span style="color:#777"># Submit all LSF jobs</span>
+
+<span style="color:#036;font-weight:bold">Origen</span>.lsf.wait_for_completion
+<span style="color:#777"># Example TestIds.lsf_shutdown(!(Origen.mode.debug?))</span>
+<span style="color:#036;font-weight:bold">TestIds</span>.lsf_shutdown(publish_flag)
+</pre></div>
+</div>
+    </div>
 
     <div>    
   <a class="anchor" name="Notes_on_Duplicates"></a>          
