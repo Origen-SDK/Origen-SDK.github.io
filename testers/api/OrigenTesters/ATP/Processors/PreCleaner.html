@@ -6,7 +6,7 @@
 <title>
   Class: OrigenTesters::ATP::Processors::PreCleaner
   
-    &mdash; Origen Testers 0.50.0
+    &mdash; Origen Testers 0.51.0
   
 </title>
 
@@ -217,7 +217,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Make all IDs lower cased symbols.</p>
+<p>Make all IDs lower cased symbols unless literal_flags is set.</p>
 </div></span>
   
 </li>
@@ -243,7 +243,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Make all ID references use the lower case symbols.</p>
+<p>Make all ID references use the lower case symbols unless literal_flags is set.</p>
 </div></span>
   
 </li>
@@ -352,16 +352,16 @@
       <pre class="lines">
 
 
-60
-61
-62
-63
-64
-65
-66</pre>
+70
+71
+72
+73
+74
+75
+76</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/atp/processors/pre_cleaner.rb', line 60</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/atp/processors/pre_cleaner.rb', line 70</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_clean'>clean</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_id'>id</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'>Array</span><span class='rparen'>)</span>
@@ -394,19 +394,19 @@
       <pre class="lines">
 
 
-34
-35
-36
-37
-38
-39
-40
-41
-42
-43</pre>
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/atp/processors/pre_cleaner.rb', line 34</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/atp/processors/pre_cleaner.rb', line 44</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_on_group'>on_group</span><span class='lparen'>(</span><span class='id identifier rubyid_node'>node</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_id'>id</span> <span class='op'>=</span> <span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_children'>children</span><span class='period'>.</span><span class='id identifier rubyid_find'>find</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_n'>n</span><span class='op'>|</span> <span class='id identifier rubyid_n'>n</span><span class='period'>.</span><span class='id identifier rubyid_type'>type</span> <span class='op'>==</span> <span class='symbol'>:id</span> <span class='rbrace'>}</span>
@@ -435,7 +435,7 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Make all IDs lower cased symbols</p>
+<p>Make all IDs lower cased symbols unless literal_flags is set</p>
 
 
   </div>
@@ -449,17 +449,25 @@
       <pre class="lines">
 
 
-12
 13
 14
-15</pre>
+15
+16
+17
+18
+19
+20</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/atp/processors/pre_cleaner.rb', line 12</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/atp/processors/pre_cleaner.rb', line 13</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_on_id'>on_id</span><span class='lparen'>(</span><span class='id identifier rubyid_node'>node</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_id'>id</span> <span class='op'>=</span> <span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_to_a'>to_a</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span>
-  <span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_updated'>updated</span><span class='lparen'>(</span><span class='kw'>nil</span><span class='comma'>,</span> <span class='lbracket'>[</span><span class='id identifier rubyid_clean'>clean</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='rparen'>)</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_tester'>tester</span><span class='period'>.</span><span class='id identifier rubyid_literal_flags'>literal_flags</span>
+    <span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_updated'>updated</span><span class='lparen'>(</span><span class='kw'>nil</span><span class='comma'>,</span> <span class='lbracket'>[</span><span class='id identifier rubyid_id'>id</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+  <span class='kw'>else</span>
+    <span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_updated'>updated</span><span class='lparen'>(</span><span class='kw'>nil</span><span class='comma'>,</span> <span class='lbracket'>[</span><span class='id identifier rubyid_clean'>clean</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='rparen'>)</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -482,7 +490,7 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Make all ID references use the lower case symbols</p>
+<p>Make all ID references use the lower case symbols unless literal_flags is set</p>
 
 
   </div>
@@ -496,17 +504,25 @@
       <pre class="lines">
 
 
-18
-19
-20
-21</pre>
+24
+25
+26
+27
+28
+29
+30
+31</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/atp/processors/pre_cleaner.rb', line 18</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/atp/processors/pre_cleaner.rb', line 24</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_on_if_failed'>on_if_failed</span><span class='lparen'>(</span><span class='id identifier rubyid_node'>node</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_children'>children</span> <span class='op'>=</span> <span class='op'>*</span><span class='id identifier rubyid_node'>node</span>
-  <span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_updated'>updated</span><span class='lparen'>(</span><span class='kw'>nil</span><span class='comma'>,</span> <span class='lbracket'>[</span><span class='id identifier rubyid_clean'>clean</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='rparen'>)</span><span class='rbracket'>]</span> <span class='op'>+</span> <span class='id identifier rubyid_process_all'>process_all</span><span class='lparen'>(</span><span class='id identifier rubyid_children'>children</span><span class='rparen'>)</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_tester'>tester</span><span class='period'>.</span><span class='id identifier rubyid_literal_flags'>literal_flags</span>
+    <span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_updated'>updated</span><span class='lparen'>(</span><span class='kw'>nil</span><span class='comma'>,</span> <span class='lbracket'>[</span><span class='id identifier rubyid_id'>id</span><span class='rbracket'>]</span> <span class='op'>+</span> <span class='id identifier rubyid_process_all'>process_all</span><span class='lparen'>(</span><span class='id identifier rubyid_children'>children</span><span class='rparen'>)</span><span class='rparen'>)</span>
+  <span class='kw'>else</span>
+    <span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_updated'>updated</span><span class='lparen'>(</span><span class='kw'>nil</span><span class='comma'>,</span> <span class='lbracket'>[</span><span class='id identifier rubyid_clean'>clean</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='rparen'>)</span><span class='rbracket'>]</span> <span class='op'>+</span> <span class='id identifier rubyid_process_all'>process_all</span><span class='lparen'>(</span><span class='id identifier rubyid_children'>children</span><span class='rparen'>)</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -528,22 +544,22 @@
       <pre class="lines">
 
 
-46
-47
-48
-49
-50
-51
-52
-53
-54
-55
 56
 57
-58</pre>
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/atp/processors/pre_cleaner.rb', line 46</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/atp/processors/pre_cleaner.rb', line 56</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_on_test'>on_test</span><span class='lparen'>(</span><span class='id identifier rubyid_node'>node</span><span class='rparen'>)</span>
   <span class='comment'># Remove IDs nodes from test nodes if they refer to the ID of a parent group
@@ -568,9 +584,9 @@
 </div>
 
       <div id="footer">
-  Generated on Mon May 16 07:54:12 2022 by
+  Generated on Fri May 20 13:29:37 2022 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.26 (ruby-2.6.6).
+  0.9.26 (ruby-2.7.6).
 </div>
 
     </div>
