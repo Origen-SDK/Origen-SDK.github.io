@@ -465,34 +465,22 @@ a list of patterns or by configuring a test program generator flow to support si
 
       <p>If you were to run this:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>origen g my_pat_1 my_pat_2 -e environment/sim.rb
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">origen g my_pat_1 my_pat_2 -e environment/sim.rb
+</code></pre>
 
       <p>then it would run the two patterns as two independent simulations, creating two waveforms named after each pattern.</p>
 
       <p>They can be combined into a single simulation by adding a <code>--flow</code> option:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>origen g my_pat_1 my_pat_2 -e environment/sim.rb --flow my_flow
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">origen g my_pat_1 my_pat_2 -e environment/sim.rb --flow my_flow
+</code></pre>
 
       <p>This will simulate the given patterns back-back and dump them to a waveform named after the flow option, in this case “my_flow”.</p>
 
       <p>The list of patterns can also be supplied via a list file:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>origen g list/regression.list -e environment/sim.rb --flow regression
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">origen g list/regression.list -e environment/sim.rb --flow regression
+</code></pre>
 
       <div>    
   <a class="anchor" name="Simulating_a_Test_Program_Flow"></a>          
@@ -506,38 +494,30 @@ as if it were another ATE.</p>
       <p>The simulation tester driver has no concept of test methods, suites or instances, so its interface setup is very simple -
 once you have the pattern name simply pass that to the <code>test</code> method:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Example interface method</span>
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">func</span>(name, options = {})
-  <span style="color:#777"># Resolve the pattern name as required</span>
+      <pre><code class="language-ruby"># Example interface method
+def func(name, options = {})
+  # Resolve the pattern name as required
   pattern = extract_pattern_name(name, options)
 
-  <span style="color:#080;font-weight:bold">if</span> tester.sim?
+  if tester.sim?
     test(pattern, options)
 
-  <span style="color:#080;font-weight:bold">elsif</span> tester.v93k?
-    t = test_suites.add(<span style="color:#A60">:vreg_func</span>)
+  elsif tester.v93k?
+    t = test_suites.add(:vreg_func)
     t.test_method = test_methods.origen.functional_test
     t.pattern = pattern
     test(t, options)
 
-  <span style="color:#080;font-weight:bold">else</span>
-    fail <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">The test program interface has not been setup for </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>tester.class<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">!</span><span style="color:#710">"</span></span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  else
+    fail "The test program interface has not been setup for #{tester.class}!"
+  end
+end
+</code></pre>
 
       <p>To simulate the flow, run the program generator as normal but with the simulation environment selected:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>origen p program/my_flow.rb -e environment/sim.rb
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">origen p program/my_flow.rb -e environment/sim.rb
+</code></pre>
 
       <p>The generated wave will be named after the flow, <em>my_flow</em> in this example.</p>
 

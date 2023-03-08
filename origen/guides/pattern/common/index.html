@@ -465,17 +465,13 @@ some logic which cannot be automatically translated to other ATEs. In that case 
 the alternative implementation for other platforms on the application side,
 something like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">if</span> <span style="color:#d70">$tester</span>.uflex?
-  <span style="color:#777"># An implementation that uses a method that only exists on the UltraFLEX driver,</span>
-  <span style="color:#777"># this will make the test run more efficiently on that platform</span>
-<span style="color:#080;font-weight:bold">else</span>
-  <span style="color:#777"># Conventional implementation using the common API for all other platforms</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">if $tester.uflex?
+  # An implementation that uses a method that only exists on the UltraFLEX driver,
+  # this will make the test run more efficiently on that platform
+else
+  # Conventional implementation using the common API for all other platforms
+end
+</code></pre>
 
       <p>Of course some applications may only ever wish to target a specific ATE, in that case you
 can freely pick from the common and ATE-specific APIs.</p>
@@ -508,118 +504,82 @@ API docs:</p>
 
       <p>Generate a tester cycle or cycles:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$tester</span>.cycle
-<span style="color:#d70">$tester</span>.cycle <span style="color:#606">repeat</span>: <span style="color:#00D">1000</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">$tester.cycle
+$tester.cycle repeat: 1000
+</code></pre>
 
       <p>As this is such a commonly used method, there are some convenience methods available, this is
 equivalent to the above example:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#00D">1</span>.cycle
-<span style="color:#00D">1000</span>.cycles
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">1.cycle
+1000.cycles
+</code></pre>
 
       <p>A very common pattern when working at this level is to setup some pin states and
 then trigger a cycle:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>pin(<span style="color:#A60">:tdi</span>).drive(<span style="color:#00D">1</span>)
-<span style="color:#d70">$tester</span>.cycle
-pin(<span style="color:#A60">:tdi</span>).drive(<span style="color:#00D">0</span>)
-<span style="color:#d70">$tester</span>.cycle
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">pin(:tdi).drive(1)
+$tester.cycle
+pin(:tdi).drive(0)
+$tester.cycle
+</code></pre>
 
       <p>All of the pin state methods support a bang (<code>!</code>) variant which will automatically
 call a single cycle after setting the pin state, this is equivalent to the above:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>pin(<span style="color:#A60">:tdi</span>).drive!(<span style="color:#00D">1</span>)
-pin(<span style="color:#A60">:tdi</span>).drive!(<span style="color:#00D">0</span>)
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">pin(:tdi).drive!(1)
+pin(:tdi).drive!(0)
+</code></pre>
 
       <h5 id="waitoptions--">wait(options = {})</h5>
 
       <p>Repeats the last vector for the specified about of time. The time can be specified in cycles
 or a time, multiple arguments will be added together:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$tester</span>.wait <span style="color:#606">cycles</span>: <span style="color:#00D">1000</span>         <span style="color:#777"># Equivalent to $tester.cycle(repeat: 1000)</span>
-<span style="color:#d70">$tester</span>.wait <span style="color:#606">time_in_us</span>: <span style="color:#00D">1000</span>     <span style="color:#777"># Wait for 1000us</span>
-<span style="color:#d70">$tester</span>.wait <span style="color:#606">time_in_ms</span>: <span style="color:#00D">1</span>        <span style="color:#777"># Wait for 1ms</span>
+      <pre><code class="language-ruby">$tester.wait cycles: 1000         # Equivalent to $tester.cycle(repeat: 1000)
+$tester.wait time_in_us: 1000     # Wait for 1000us
+$tester.wait time_in_ms: 1        # Wait for 1ms
 
-<span style="color:#d70">$tester</span>.wait <span style="color:#606">time_in_ms</span>: <span style="color:#00D">1</span>, <span style="color:#606">time_in_us</span>: <span style="color:#00D">1000</span>, <span style="color:#606">cycles</span>: <span style="color:#00D">100</span>     <span style="color:#777"># Wait for 2ms + 100 cycles</span>
-</pre></div>
-</div>
-      </div>
+$tester.wait time_in_ms: 1, time_in_us: 1000, cycles: 100     # Wait for 2ms + 100 cycles
+</code></pre>
 
       <p>The wait method can also be called with additional arguments to generate a dynamic wait,
 i.e. a match loop.
 Here for example to wait for up to 2 seconds for the done pin to go high:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$tester</span>.wait <span style="color:#606">match</span>: <span style="color:#069">true</span>, <span style="color:#606">time_in_s</span>: <span style="color:#00D">2</span>, <span style="color:#606">pin</span>: pin(<span style="color:#A60">:done</span>), <span style="color:#606">state</span>: <span style="color:#A60">:high</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">$tester.wait match: true, time_in_s: 2, pin: pin(:done), state: :high
+</code></pre>
 
       <p>The above API is somewhat verbose, a cleaner one is available by supplying a block to generate
 the vectors which much pass for the match to resolve.
 This is equivalent to the previous example:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$tester</span>.wait <span style="color:#606">match</span>: <span style="color:#069">true</span>, <span style="color:#606">time_in_s</span>: <span style="color:#00D">2</span> <span style="color:#080;font-weight:bold">do</span>
-  pin(<span style="color:#A60">:done</span>).assert!(<span style="color:#00D">1</span>)
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">$tester.wait match: true, time_in_s: 2 do
+  pin(:done).assert!(1)
+end
+</code></pre>
 
       <p>This block form also allows much more complex match conditions to be described, here to wait
 for either the fail pin to go high, OR the done pin to go high:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$tester</span>.wait <span style="color:#606">match</span>: <span style="color:#069">true</span>, <span style="color:#606">time_in_s</span>: <span style="color:#00D">2</span> <span style="color:#080;font-weight:bold">do</span> |conditions, fail|
-  conditions.add <span style="color:#080;font-weight:bold">do</span>
-    pin(<span style="color:#A60">:done</span>).assert!(<span style="color:#00D">1</span>)
-  <span style="color:#080;font-weight:bold">end</span>
-  conditions.add <span style="color:#080;font-weight:bold">do</span>
-    pin(<span style="color:#A60">:fail</span>).assert!(<span style="color:#00D">1</span>)
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">$tester.wait match: true, time_in_s: 2 do |conditions, fail|
+  conditions.add do
+    pin(:done).assert!(1)
+  end
+  conditions.add do
+    pin(:fail).assert!(1)
+  end
+end
+</code></pre>
 
       <p>To AND these conditions would simply be:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$tester</span>.wait <span style="color:#606">match</span>: <span style="color:#069">true</span>, <span style="color:#606">time_in_s</span>: <span style="color:#00D">2</span> <span style="color:#080;font-weight:bold">do</span>
-  pin(<span style="color:#A60">:done</span>).assert(<span style="color:#00D">1</span>)
-  pin(<span style="color:#A60">:fail</span>).assert(<span style="color:#00D">1</span>)
-  <span style="color:#00D">1</span>.cycle
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">$tester.wait match: true, time_in_s: 2 do
+  pin(:done).assert(1)
+  pin(:fail).assert(1)
+  1.cycle
+end
+</code></pre>
 
       <h5 id="ignorefailspins">ignore_fails(*pins)</h5>
 
@@ -627,15 +587,11 @@ for either the fail pin to go high, OR the done pin to go high:</p>
 has the effect of temporarily setting the states of the given pins to
 don’t care.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Temporarily ignore mis-compares on the fail and data pins</span>
-<span style="color:#d70">$tester</span>.ignore_fails(pin(<span style="color:#A60">:fail</span>), pins(<span style="color:#A60">:data</span>)) <span style="color:#080;font-weight:bold">do</span>
-  <span style="color:#777"># Any vectors generated in here will force the state of the given pins to X</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># Temporarily ignore mis-compares on the fail and data pins
+$tester.ignore_fails(pin(:fail), pins(:data)) do
+  # Any vectors generated in here will force the state of the given pins to X
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Data_Capture"></a>          
@@ -652,44 +608,32 @@ a previous vector, passing in an offset option will allow you to do this.</p>
 
       <p>Here are some examples:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$tester</span>.cycle                        <span style="color:#777"># This is the vector that we want to capture</span>
-<span style="color:#d70">$tester</span>.store pin(<span style="color:#A60">:d0</span>), pin(<span style="color:#A60">:d1</span>)     <span style="color:#777"># Capture the data on the d0 and d1 pins</span>
+      <pre><code class="language-ruby">$tester.cycle                        # This is the vector that we want to capture
+$tester.store pin(:d0), pin(:d1)     # Capture the data on the d0 and d1 pins
 
-<span style="color:#d70">$tester</span>.cycle                        <span style="color:#777"># This one gets stored</span>
-<span style="color:#d70">$tester</span>.cycle
-<span style="color:#d70">$tester</span>.cycle
-<span style="color:#d70">$tester</span>.store pin(<span style="color:#A60">:d0</span>), pin(<span style="color:#A60">:d1</span>), <span style="color:#606">offset</span>: <span style="color:#00D">-2</span>  <span style="color:#777"># Just realized I need to capture that earlier vector</span>
-</pre></div>
-</div>
-      </div>
+$tester.cycle                        # This one gets stored
+$tester.cycle
+$tester.cycle
+$tester.store pin(:d0), pin(:d1), offset: -2  # Just realized I need to capture that earlier vector
+</code></pre>
 
       <p>Note that this API is for engineers who are writing protocol drivers, most test IP would be
 written at a higher level, e.g.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>atd_result.data.store!   <span style="color:#777"># Capture the value of the ATD result bits to the tester</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">atd_result.data.store!   # Capture the value of the ATD result bits to the tester
+</code></pre>
 
       <h5 id="storenextcyclepins">store_next_cycle(*pins)</h5>
 
       <p>Similar to the above, this API allows driver creators to indicate that the next vector,
 wherever that may be generated, should be captured:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$tester</span>.store_next_cycle pin(<span style="color:#A60">:d0</span>), pin(<span style="color:#A60">:d1</span>)
+      <pre><code class="language-ruby">$tester.store_next_cycle pin(:d0), pin(:d1)
 
-<span style="color:#777"># This is the vector that will be captured, in real life this could be done after returning</span>
-<span style="color:#777"># to a caller</span>
-<span style="color:#d70">$tester</span>.cycle  
-</pre></div>
-</div>
-      </div>
+# This is the vector that will be captured, in real life this could be done after returning
+# to a caller
+$tester.cycle  
+</code></pre>
 
       <h5 id="capturestyle">capture_style</h5>
 
@@ -697,35 +641,27 @@ wherever that may be generated, should be captured:</p>
 capture style is hram (history ram).  For UltraFlex digcap is additionally supported.  Change
 from the default like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># change capture style</span>
-<span style="color:#777"># if the digcap isn't support for the current tester, default behavior (hram) is used</span>
-tester.capture_style = <span style="color:#A60">:digcap</span>
+      <pre><code class="language-ruby"># change capture style
+# if the digcap isn't support for the current tester, default behavior (hram) is used
+tester.capture_style = :digcap
 
-<span style="color:#777"># change back to hram capture style</span>
-tester.capture_style = <span style="color:#A60">:hram</span>
+# change back to hram capture style
+tester.capture_style = :hram
 
-<span style="color:#777"># temporarily change the capture style for this cycle</span>
-tester.store_next_cycle pin(<span style="color:#A60">:d0</span>), <span style="color:#606">capture_style</span>: <span style="color:#A60">:digcap</span>
-</pre></div>
-</div>
-      </div>
+# temporarily change the capture style for this cycle
+tester.store_next_cycle pin(:d0), capture_style: :digcap
+</code></pre>
 
       <h5 id="configure-capture-memory">configure capture memory</h5>
 
       <p>Origen will create any instrument definitions required when capture memory is used.  However,
 it may be desirable to alter the configuration settings.  Here is an example of how to do this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># configure TDO as a 16-bit instrument (default size is the number of pins - 1 in this case)</span>
-tester.capture_memory <span style="color:#A60">:digcap</span> <span style="color:#080;font-weight:bold">do</span> |mem|
-  mem.pin <span style="color:#A60">:tdo</span>, <span style="color:#606">size</span>: <span style="color:#00D">16</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># configure TDO as a 16-bit instrument (default size is the number of pins - 1 in this case)
+tester.capture_memory :digcap do |mem|
+  mem.pin :tdo, size: 16
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Data_Source"></a>          
@@ -736,47 +672,39 @@ tester.capture_memory <span style="color:#A60">:digcap</span> <span style="color
       <p>Testers support different ways of modifying vector data during run time.  This practice is referred to
 here as “overlay”.  Overlay is requested through an optional argument to cycle:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># setup overlay parameters</span>
+      <pre><code class="language-ruby"># setup overlay parameters
 overlay_options = {}
-<span style="color:#777"># Required - what pin(s) are being overlayed?</span>
-overlay_options[<span style="color:#A60">:pins</span>] = dut.pin(<span style="color:#A60">:tdi</span>)
-<span style="color:#777"># Required - what is the overlay string? This will become a label or subroutine name</span>
-overlay_options[<span style="color:#A60">:overlay_str</span>] = ovl_reg[i].overlay_str
+# Required - what pin(s) are being overlayed?
+overlay_options[:pins] = dut.pin(:tdi)
+# Required - what is the overlay string? This will become a label or subroutine name
+overlay_options[:overlay_str] = ovl_reg[i].overlay_str
 
-tester.cycle <span style="color:#606">overlay</span>: overlay_options
+tester.cycle overlay: overlay_options
 
-<span style="color:#777"># Generate another overlay cycle, holding the same data as the previous cycle</span>
-overlay_options[<span style="color:#A60">:change_data</span>] = <span style="color:#069">false</span>
-tester.cycle <span style="color:#606">overlay</span>: overlay_options
+# Generate another overlay cycle, holding the same data as the previous cycle
+overlay_options[:change_data] = false
+tester.cycle overlay: overlay_options
 
-<span style="color:#777"># Now a new piece of data needs to be sent</span>
-overlay_options[<span style="color:#A60">:change_data</span>] = <span style="color:#069">true</span>
-tester.cycle <span style="color:#606">overlay</span>: overlay_options
-</pre></div>
-</div>
-      </div>
+# Now a new piece of data needs to be sent
+overlay_options[:change_data] = true
+tester.cycle overlay: overlay_options
+</code></pre>
 
       <h5 id="overlaystyle">overlay_style</h5>
 
       <p>The default overlay style is subroutine (vectors that will be modified are replaced
 by a call to a subroutine).  Change from the default like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># if requested sytle is not available for the current tester it will default to :subroutine</span>
-tester.overlay_style = <span style="color:#A60">:digsrc</span>
-tester.overlay_style = <span style="color:#A60">:subroutine</span>
-tester.overlay_style = <span style="color:#A60">:label</span>
-tester.overlay_style = <span style="color:#A60">:handshake</span>
+      <pre><code class="language-ruby"># if requested sytle is not available for the current tester it will default to :subroutine
+tester.overlay_style = :digsrc
+tester.overlay_style = :subroutine
+tester.overlay_style = :label
+tester.overlay_style = :handshake
 
-<span style="color:#777"># change the overlay style for this cycle only by adding :overlay_style to the overlay_options</span>
-overlay_options[<span style="color:#A60">:overlay_style</span>] = <span style="color:#A60">:label</span>
-tester.cycle <span style="color:#606">overlay</span>: overlay_options
-</pre></div>
-</div>
-      </div>
+# change the overlay style for this cycle only by adding :overlay_style to the overlay_options
+overlay_options[:overlay_style] = :label
+tester.cycle overlay: overlay_options
+</code></pre>
 
       <p>Not all overlay styles are supported on all testers and if the requested style is not supported a warning
 will be logged and it will fall back to the default style (:subroutine).</p>
@@ -799,14 +727,10 @@ will be logged and it will fall back to the default style (:subroutine).</p>
       <p>Origen will create any necessary instruments statements.  Add configuration information to source memory
 like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>tester.source_memory <span style="color:#080;font-weight:bold">do</span> |mem|
-  mem.pin <span style="color:#A60">:tdi</span>, <span style="color:#606">size</span>: <span style="color:#00D">32</span>, <span style="color:#606">format</span>: <span style="color:#A60">:binary</span>, <span style="color:#606">data_type</span>: <span style="color:#A60">:long</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">tester.source_memory do |mem|
+  mem.pin :tdi, size: 32, format: :binary, data_type: :long
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Subroutines"></a>          
@@ -817,33 +741,25 @@ like this:</p>
 
       <p>Use these methods to write a pattern subroutine:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$tester</span>.start_subroutine <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">wait_for_done</span><span style="color:#710">"</span></span>
-<span style="color:#d70">$tester</span>.wait <span style="color:#606">match</span>: <span style="color:#069">true</span>, <span style="color:#606">time_in_s</span>: <span style="color:#00D">2</span> <span style="color:#080;font-weight:bold">do</span>
-  pin(<span style="color:#A60">:done</span>).assert!(<span style="color:#00D">1</span>)
-<span style="color:#080;font-weight:bold">end</span>
-<span style="color:#d70">$tester</span>.end_subroutine
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">$tester.start_subroutine "wait_for_done"
+$tester.wait match: true, time_in_s: 2 do
+  pin(:done).assert!(1)
+end
+$tester.end_subroutine
+</code></pre>
 
       <h5 id="callsubroutinename-options--">call_subroutine(name, options = {})</h5>
 
       <p>Call a pattern subroutine, an offset can be given to retrospectively jump to a subroutine
 from a previous vector:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$tester</span>.call_subroutine <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">wait_for_done</span><span style="color:#710">"</span></span>
-<span style="color:#00D">1</span>.cycle
-<span style="color:#00D">1</span>.cycle    <span style="color:#777">#  A branch will also be made after completing this vector</span>
-<span style="color:#00D">1</span>.cycle
-<span style="color:#00D">1</span>.cycle
-<span style="color:#d70">$tester</span>.call_subroutine <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">wait_for_done</span><span style="color:#710">"</span></span>, <span style="color:#606">offset</span>: <span style="color:#00D">-2</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">$tester.call_subroutine "wait_for_done"
+1.cycle
+1.cycle    #  A branch will also be made after completing this vector
+1.cycle
+1.cycle
+$tester.call_subroutine "wait_for_done", offset: -2
+</code></pre>
 
       <div>    
   <a class="anchor" name="Loops_and_Branching"></a>          
@@ -854,36 +770,24 @@ from a previous vector:</p>
 
       <p>Inject an arbitrary label into the pattern:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$tester</span>.label <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">on_failed</span><span style="color:#710">"</span></span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">$tester.label "on_failed"
+</code></pre>
 
       <h5 id="branchtolabel">branch_to(label)</h5>
 
       <p>Branch to a label:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$tester</span>.branch_to <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">on_failed</span><span style="color:#710">"</span></span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">$tester.branch_to "on_failed"
+</code></pre>
 
       <h5 id="loopvectorsname-numberofloops">loop_vectors(name, number_of_loops)</h5>
 
       <p>Execute the vectors generated within the given block <em>n</em> times:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$tester</span>.loop_vectors(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">my_loop</span><span style="color:#710">"</span></span>, <span style="color:#00D">3</span>) <span style="color:#080;font-weight:bold">do</span>   <span style="color:#777"># Do this 3 times...</span>
-  <span style="color:#d70">$tester</span>.cycle
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">$tester.loop_vectors("my_loop", 3) do   # Do this 3 times...
+  $tester.cycle
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Miscellaneous"></a>          
@@ -894,12 +798,8 @@ from a previous vector:</p>
 
       <p>Setup to measure the frequency on the given pin:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$tester</span>.freq_count pin(<span style="color:#A60">:clk_out</span>)
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">$tester.freq_count pin(:clk_out)
+</code></pre>
 
       <h5 id="microcodecode-options--">microcode(code, options = {})</h5>
 
@@ -908,17 +808,13 @@ inherently coupling your logic to a specific test platform - so use sparingly!</
 
       <p>An offset can be given to apply the microcode to previously generated vectors.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$tester</span>.microcode <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">set_cpu (cpuC)</span><span style="color:#710">'</span></span>
-<span style="color:#00D">1</span>.cycle
-<span style="color:#00D">1</span>.cycle    <span style="color:#777"># cpuB will be set here </span>
-<span style="color:#00D">1</span>.cycle
-<span style="color:#00D">1</span>.cycle
-<span style="color:#d70">$tester</span>.microcode <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">set_cpu (cpuB)</span><span style="color:#710">'</span></span>, <span style="color:#606">offset</span>: <span style="color:#00D">-2</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">$tester.microcode 'set_cpu (cpuC)'
+1.cycle
+1.cycle    # cpuB will be set here 
+1.cycle
+1.cycle
+$tester.microcode 'set_cpu (cpuB)', offset: -2
+</code></pre>
 
       <h5 id="free-running-clock-on-existing-pin">Free-Running Clock on Existing Pin</h5>
 

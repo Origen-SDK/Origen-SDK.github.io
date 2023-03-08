@@ -473,24 +473,16 @@ track for you.</p>
 <code>SubBlock</code>, but that doesn’t have a base_address, registers, or anything like that, I can
 instantiate it as a component instead:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>component(<span style="color:#A60">:scan_helper</span>, <span style="color:#606">class_name</span>: <span style="color:#036;font-weight:bold">ScanHelper</span>)
-<span style="color:#777">#=&gt; ScanHelper instance with name :scan_helper</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">component(:scan_helper, class_name: ScanHelper)
+#=&gt; ScanHelper instance with name :scan_helper
+</code></pre>
 
       <p>I can then get this item as I would a <code>sub_block</code>, <code>fuse</code>, etc.:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>components[<span style="color:#A60">:scan_helper</span>] <span style="color:#777">#=&gt; ScanHelper instance</span>
+      <pre><code class="language-ruby">components[:scan_helper] #=&gt; ScanHelper instance
 
-<span style="color:#069">self</span>.scan_helper <span style="color:#777">#=&gt; ScanHelper instance</span>
-</pre></div>
-</div>
-      </div>
+self.scan_helper #=&gt; ScanHelper instance
+</code></pre>
 
       <div>    
   <a class="anchor" name="Component_API"></a>          
@@ -506,46 +498,38 @@ instantiate it as a component instead:</p>
 
       <p>You can add components in a few different ways:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>
-<span style="color:#777"># Add a component with default class Origen::Component::Default</span>
-component(<span style="color:#A60">:comp1</span>)
+      <pre><code class="language-ruby">
+# Add a component with default class Origen::Component::Default
+component(:comp1)
 
-<span style="color:#777"># Add another component. Notice the use component(s).</span>
-components(<span style="color:#A60">:comp2</span>)
+# Add another component. Notice the use component(s).
+components(:comp2)
 
-<span style="color:#777"># Add a component of class MyComponent</span>
-add_component(<span style="color:#A60">:mine</span>, <span style="color:#606">class_name</span>: <span style="color:#036;font-weight:bold">MyComponent</span>)
+# Add a component of class MyComponent
+add_component(:mine, class_name: MyComponent)
 
-<span style="color:#777"># Method add_components also works, as does using a string as the class name</span>
-add_components(<span style="color:#A60">:also_mine</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">MyComponent</span><span style="color:#710">'</span></span>)
+# Method add_components also works, as does using a string as the class name
+add_components(:also_mine, class_name: 'MyComponent')
 
-<span style="color:#777"># Add a component using block notation</span>
-add_components(<span style="color:#A60">:block_add</span>) <span style="color:#080;font-weight:bold">do</span> |comp|
-  comp.class_name <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">MyComponent</span><span style="color:#710">'</span></span>
-<span style="color:#080;font-weight:bold">end</span>
+# Add a component using block notation
+add_components(:block_add) do |comp|
+  comp.class_name 'MyComponent'
+end
 
-<span style="color:#777"># Add another one using block notation</span>
-components(<span style="color:#A60">:block_add_2</span>) <span style="color:#080;font-weight:bold">do</span> |c|
-  c.class_name <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">MyComponent</span><span style="color:#710">'</span></span>
-<span style="color:#080;font-weight:bold">end</span>
+# Add another one using block notation
+components(:block_add_2) do |c|
+  c.class_name 'MyComponent'
+end
 
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>Now, if we call just <code>components</code>, we’ll get the resulting Hash storing these. So,</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>
+      <pre><code class="language-ruby">
 components.keys
-<span style="color:#777">#=&gt; ["comp1", "comp2", "mine", "also_mine", "block_add", "block_add_2"]</span>
+#=&gt; ["comp1", "comp2", "mine", "also_mine", "block_add", "block_add_2"]
 
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>Notice the switch from <code>:comp1</code> to <code>"comp1"</code>. This is because the underlying <code>Hash</code>
 is <a href="http://api.rubyonrails.org/classes/ActiveSupport/HashWithIndifferentAccess.html">with_indifferent_access</a>.</p>
@@ -563,24 +547,20 @@ appendix number to each item.</p>
 
       <p>For example:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>
-add_component(<span style="color:#A60">:multiple</span>, <span style="color:#606">instances</span>: <span style="color:#00D">4</span>)
+      <pre><code class="language-ruby">
+add_component(:multiple, instances: 4)
 
 components.keys
-<span style="color:#777">#=&gt; ["multiple0", "multiple1", "multiple2", "multiple3"]</span>
+#=&gt; ["multiple0", "multiple1", "multiple2", "multiple3"]
 
-<span style="color:#777"># In addition, this will make an accessor for each one. So, the following are now defined:</span>
+# In addition, this will make an accessor for each one. So, the following are now defined:
 
-multiple0 <span style="color:#777">#=&gt; :multiple0 Component</span>
-multiple1 <span style="color:#777">#=&gt; :multiple1 Component</span>
-multiple2 <span style="color:#777">#=&gt; :multiple2 Component</span>
-multiple3 <span style="color:#777">#=&gt; :multiple3 Component</span>
+multiple0 #=&gt; :multiple0 Component
+multiple1 #=&gt; :multiple1 Component
+multiple2 #=&gt; :multiple2 Component
+multiple3 #=&gt; :multiple3 Component
 
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>You can pass other options in as well. Single options will be applied to all instances. A <i>single option</i> being
 either not an <code>Array</code> object, or an <code>Array</code> object of size 1.</p>
@@ -589,22 +569,18 @@ either not an <code>Array</code> object, or an <code>Array</code> object of size
 four instances of a component, Array index 0 will go to instance 0, Array index index 1 to instance 1, and so on. Providing
 an incompatible Array length will result in an <code>Origen::Componentable::Error</code>.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>
-add_component(<span style="color:#A60">:multiple</span>, <span style="color:#606">instances</span>: <span style="color:#00D">4</span>, <span style="color:#606">letter</span>: [<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">A</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">B</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">C</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">D</span><span style="color:#710">'</span></span>], <span style="color:#606">number</span>: <span style="color:#00D">0</span>)
+      <pre><code class="language-ruby">
+add_component(:multiple, instances: 4, letter: ['A', 'B', 'C', 'D'], number: 0)
 
-multiple0 <span style="color:#777">#=&gt; :multiple0 Component with parameters: letter: 'A', number: 0</span>
-multiple1 <span style="color:#777">#=&gt; :multiple1 Component with parameters: letter: 'B', number: 0</span>
-multiple2 <span style="color:#777">#=&gt; :multiple2 Component with parameters: letter: 'C', number: 0</span>
-multiple3 <span style="color:#777">#=&gt; :multiple3 Component with parameters: letter: 'D', number: 0</span>
+multiple0 #=&gt; :multiple0 Component with parameters: letter: 'A', number: 0
+multiple1 #=&gt; :multiple1 Component with parameters: letter: 'B', number: 0
+multiple2 #=&gt; :multiple2 Component with parameters: letter: 'C', number: 0
+multiple3 #=&gt; :multiple3 Component with parameters: letter: 'D', number: 0
 
-add_component(<span style="color:#A60">:more</span>, <span style="color:#606">instances</span>: <span style="color:#00D">3</span>, <span style="color:#606">letter</span>: [<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">A</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">B</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">C</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">D</span><span style="color:#710">'</span></span>], <span style="color:#606">number</span>: <span style="color:#00D">0</span>)
-<span style="color:#777">#=&gt; Origen::Componentable::Error</span>
+add_component(:more, instances: 3, letter: ['A', 'B', 'C', 'D'], number: 0)
+#=&gt; Origen::Componentable::Error
 
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>The corner case of wanting a static-sized array given to each instance can be overcome by embedding that Array in
 another Array of size 1. For example, the options <code>instance: 2, cores: [:cm0, :cm3, :cm4]</code> will result in
@@ -618,23 +594,19 @@ and results in both instances getting the option <code>cores: [:cm0, :cm3, :cm4]
 
       <p>You can copy and move components using these methods:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>
-copy_component(<span style="color:#A60">:comp1</span>, <span style="color:#A60">:comp1_copy</span>)
-<span style="color:#777"># Method copy_components is an alias</span>
+      <pre><code class="language-ruby">
+copy_component(:comp1, :comp1_copy)
+# Method copy_components is an alias
 
 components.keys
-<span style="color:#777">#=&gt; ["comp1", "comp2", "mine", "also_mine", "block_add", "block_add_2", "comp1_copy"]</span>
+#=&gt; ["comp1", "comp2", "mine", "also_mine", "block_add", "block_add_2", "comp1_copy"]
 
-move_component(<span style="color:#A60">:comp1_copy</span>, <span style="color:#A60">:comp1_moved</span>)
-<span style="color:#777"># Method move_components is an alias</span>
+move_component(:comp1_copy, :comp1_moved)
+# Method move_components is an alias
 
 components.keys
-<span style="color:#777">#=&gt; ["comp1", "comp2", "mine", "also_mine", "block_add", "block_add_2", "comp1_moved"]</span>
-</pre></div>
-</div>
-      </div>
+#=&gt; ["comp1", "comp2", "mine", "also_mine", "block_add", "block_add_2", "comp1_moved"]
+</code></pre>
 
       <p>Note that copying components will actually clone the component. So, you get an independent instance
 of the object that you copied from.</p>
@@ -647,32 +619,24 @@ of the object that you copied from.</p>
       <p>Listing the components will show you just the names. This is the equivalent of using
 <code>components.keys</code>:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>
+      <pre><code class="language-ruby">
 list_components
-<span style="color:#777">#=&gt; ["comp1", "comp2", "mine", "also_mine", "block_add", "block_add_2", "comp1_moved"]</span>
+#=&gt; ["comp1", "comp2", "mine", "also_mine", "block_add", "block_add_2", "comp1_moved"]
 
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>You can check if a component has been added using the <code>has_component?</code> method:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>
-has_component?(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">comp1</span><span style="color:#710">"</span></span>) <span style="color:#777">#=&gt; true</span>
-has_component?(<span style="color:#A60">:comp1</span>) <span style="color:#777">#=&gt; true</span>
+      <pre><code class="language-ruby">
+has_component?("comp1") #=&gt; true
+has_component?(:comp1) #=&gt; true
 
-has_component?(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">comp_dne</span><span style="color:#710">"</span></span>) <span style="color:#777">#=&gt; false</span>
-has_component?(<span style="color:#A60">:comp_dne</span>) <span style="color:#777">#=&gt; false</span>
+has_component?("comp_dne") #=&gt; false
+has_component?(:comp_dne) #=&gt; false
 
-<span style="color:#777"># component?(name) is an alias method name</span>
+# component?(name) is an alias method name
 
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <div>    
   <a class="anchor" name="Getting_Components"></a>          
@@ -682,16 +646,12 @@ has_component?(<span style="color:#A60">:comp_dne</span>) <span style="color:#77
       <p>You can get components using either the index notation or by utiliting the accessor given
 during the <code>add</code> process:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>
-components[<span style="color:#A60">:comp1</span>] <span style="color:#777">#=&gt; component at name :comp1</span>
+      <pre><code class="language-ruby">
+components[:comp1] #=&gt; component at name :comp1
 
-comp1 <span style="color:#777">#=&gt; same as calling components[:comp1]</span>
+comp1 #=&gt; same as calling components[:comp1]
 
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <div>    
   <a class="anchor" name="Querying_Added_Components"></a>          
@@ -700,17 +660,13 @@ comp1 <span style="color:#777">#=&gt; same as calling components[:comp1]</span>
 
       <p>There’s a method available that can query the current classes of the added components.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>
-components_of_class(<span style="color:#036;font-weight:bold">MyComponent</span>)
-<span style="color:#777">#=&gt; ["mine", "also_mine", "block_add"]</span>
+      <pre><code class="language-ruby">
+components_of_class(MyComponent)
+#=&gt; ["mine", "also_mine", "block_add"]
 
-<span style="color:#777"># components_instances_of and components_of_type are aliases</span>
+# components_instances_of and components_of_type are aliases
 
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <div>    
   <a class="anchor" name="Enumerating"></a>          
@@ -719,37 +675,29 @@ components_of_class(<span style="color:#036;font-weight:bold">MyComponent</span>
 
       <p>Component exposes two commonly used enumerable methods: <code>each</code> and <code>select</code></p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>
-<span style="color:#777"># All of these call the :each method</span>
+      <pre><code class="language-ruby">
+# All of these call the :each method
 
-components.each <span style="color:#080;font-weight:bold">do</span> |name, component|
-  <span style="color:#777"># do something</span>
-<span style="color:#080;font-weight:bold">end</span>
+components.each do |name, component|
+  # do something
+end
 
-each_component <span style="color:#080;font-weight:bold">do</span> |name, component|
-  <span style="color:#777"># do something</span>
-<span style="color:#080;font-weight:bold">end</span>
+each_component do |name, component|
+  # do something
+end
 
-all_components <span style="color:#080;font-weight:bold">do</span> |name, component|
-  <span style="color:#777"># do something</span>
-<span style="color:#080;font-weight:bold">end</span>
+all_components do |name, component|
+  # do something
+end
 
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>
-select_components <span style="color:#080;font-weight:bold">do</span> |name, component|
-  <span style="color:#777"># do something</span>
-<span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby">
+select_components do |name, component|
+  # do something
+end
 
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>You can use other enumerable methods provided by the <code>Hash</code> class by using
 <code>components._enumerable_method_</code></p>
@@ -762,43 +710,35 @@ select_components <span style="color:#080;font-weight:bold">do</span> |name, com
       <p>You can delete components that you’ve previously added. This will return the deleted item, or
 raise an exception if the name does not exist.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>
+      <pre><code class="language-ruby">
 list_components
-<span style="color:#777">#=&gt; ["comp1", "comp2", "mine", "also_mine", "block_add", "block_add_2", "comp1_moved"]</span>
+#=&gt; ["comp1", "comp2", "mine", "also_mine", "block_add", "block_add_2", "comp1_moved"]
 
-delete_component(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">comp1_moved</span><span style="color:#710">"</span></span>)
-<span style="color:#777">#=&gt; Component at comp1_moved</span>
+delete_component("comp1_moved")
+#=&gt; Component at comp1_moved
 
 list_components
-<span style="color:#777">#=&gt; ["comp1", "comp2", "mine", "also_mine", "block_add", "block_add_2"]</span>
+#=&gt; ["comp1", "comp2", "mine", "also_mine", "block_add", "block_add_2"]
 
-<span style="color:#777"># Methods delete_components, remove_component, and remove_components, are all aliases</span>
+# Methods delete_components, remove_component, and remove_components, are all aliases
 
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>You can also clear the entire component structure and start fresh. <strong>Note this this will
 not return any components.</strong></p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>
+      <pre><code class="language-ruby">
 list_components
-<span style="color:#777">#=&gt; ["comp1", "comp2", "mine", "also_mine", "block_add", "comp1_moved"]</span>
+#=&gt; ["comp1", "comp2", "mine", "also_mine", "block_add", "comp1_moved"]
 
 delete_all_components
 
 list_components
-<span style="color:#777">#=&gt; []</span>
+#=&gt; []
 
-<span style="color:#777"># Methods clear_components and remove_all_components are aliases</span>
+# Methods clear_components and remove_all_components are aliases
 
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <div class="alert alert-info">
   <strong>Info!</strong> Due to the way Component is implemented, it does not an API section. You can see the next
@@ -816,18 +756,14 @@ one try to put its own accessor on your model. If you find yourself not wanting 
 model, you can define a method <code>:disable_componentable_accessors(klass)</code> and have it return <code>true</code>
 if <code>klass</code> is of type <code>Origen::Component</code>. In other words:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">disable_componentable_accessors</span>(klass)
-  <span style="color:#080;font-weight:bold">if</span> klass == <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Component</span>
-    <span style="color:#069">true</span>
-  <span style="color:#080;font-weight:bold">else</span>
-    <span style="color:#069">false</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">def disable_componentable_accessors(klass)
+  if klass == Origen::Component
+    true
+  else
+    false
+  end
+end
+</code></pre>
 
       <div class="alert alert-warning">
   <strong>Warning!</strong> Returning a blanket <code>true</code> value will result in all <code>Componentable</code>

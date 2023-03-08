@@ -461,12 +461,8 @@ the variable <code>my_pattern_dir</code> will be assigned to an absolute
 path to the application’s pattern directory regardless of where the workspace
 owner has installed the application:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>my_pattern_dir = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.root<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">/pattern</span><span style="color:#710">"</span></span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">my_pattern_dir = "#{Origen.root}/pattern"
+</code></pre>
 
       <p>However things get a bit more complicated when writing a plugin, for example
 if the above code resides in a plugin do you mean the plugin’s pattern directory
@@ -493,46 +489,42 @@ those of the importing/top-level application.</p>
 
       <p>Here is a simple example to illustrate this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Lives in a plugin called 'atd_test'</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">ATDTest</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">ATD16</span>
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">root</span>
-      <span style="color:#036;font-weight:bold">Origen</span>.root
-    <span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby"># Lives in a plugin called 'atd_test'
+module ATDTest
+  class ATD16
+    def root
+      Origen.root
+    end
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">root!</span>
-      <span style="color:#036;font-weight:bold">Origen</span>.root!
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
+    def root!
+      Origen.root!
+    end
+  end
+end
 
-<span style="color:#777"># Lives in the top-level application</span>
-<span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">SoC</span>
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">atd</span>
-    <span style="color:#33B">@atd</span> ||= <span style="color:#036;font-weight:bold">ATDTest</span>::<span style="color:#036;font-weight:bold">ATD16</span>.new
-  <span style="color:#080;font-weight:bold">end</span>
+# Lives in the top-level application
+class SoC
+  def atd
+    @atd ||= ATDTest::ATD16.new
+  end
 
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">root</span>
-    <span style="color:#036;font-weight:bold">Origen</span>.root
-  <span style="color:#080;font-weight:bold">end</span>
+  def root
+    Origen.root
+  end
 
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">root!</span>
-    <span style="color:#036;font-weight:bold">Origen</span>.root!
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
+  def root!
+    Origen.root!
+  end
+end
    
-<span style="color:#777"># Say the top-level application has been installed to /proj/c28/workspace1</span>
-<span style="color:#d70">$dut</span> = <span style="color:#036;font-weight:bold">SoC</span>.new
+# Say the top-level application has been installed to /proj/c28/workspace1
+$dut = SoC.new
 
-<span style="color:#d70">$dut</span>.root       <span style="color:#777"># =&gt; "/prog/c28/workspace1"</span>
-<span style="color:#d70">$dut</span>.root!      <span style="color:#777"># =&gt; "/prog/c28/workspace1"</span>
-<span style="color:#d70">$dut</span>.atd.root   <span style="color:#777"># =&gt; "/prog/c28/workspace1"</span>
-<span style="color:#d70">$dut</span>.atd.root!  <span style="color:#777"># =&gt; "/home/thao/.origen/gems/atd_test"</span>
-</pre></div>
-</div>
-      </div>
+$dut.root       # =&gt; "/prog/c28/workspace1"
+$dut.root!      # =&gt; "/prog/c28/workspace1"
+$dut.atd.root   # =&gt; "/prog/c28/workspace1"
+$dut.atd.root!  # =&gt; "/home/thao/.origen/gems/atd_test"
+</code></pre>
 
       <div>    
   <a class="anchor" name="Origen.root(:plugin_name)"></a>          
@@ -546,20 +538,16 @@ plugin to <code>Origen.root</code>.</p>
       <p>An example use case of where this is useful is if you want to re-open and extend
 a class that is provided by a plugin:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Ensure the original is loaded</span>
-require <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.root(<span style="color:#A60">:atd_test</span>)<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">/lib/atd_test/atd16</span><span style="color:#710">"</span></span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">ATDTest</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">ATD16</span>
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">my_additional_method</span>
-      puts <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">hello</span><span style="color:#710">"</span></span>
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># Ensure the original is loaded
+require "#{Origen.root(:atd_test)}/lib/atd_test/atd16"
+module ATDTest
+  class ATD16
+    def my_additional_method
+      puts "hello"
+    end
+  end
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Origen.top"></a>          

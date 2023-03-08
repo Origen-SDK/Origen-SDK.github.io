@@ -489,18 +489,14 @@ are already registered as listeners.</p>
 
       <p>Additional custom classes can be registered by simply including the callbacks module:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">NVM</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">CallbackHandlers</span>
+      <pre><code class="language-ruby">module NVM
+  class CallbackHandlers
 
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Callbacks</span>
+    include Origen::Callbacks
 
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  end
+end
+</code></pre>
 
       <p>Note that listeners have to be object instances, so in the example above the listener is only
 registered when the application creates a new instance of <code>CallbackHandlers</code>.
@@ -532,21 +528,17 @@ as you would expect.</p>
 target loads so that they keep listening for the entire duration of an Origen thread.
 This can be achieved by including the <code>PersistentCallbacks</code> module instead:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">NVM</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">PersistentCallbackHandlers</span>
+      <pre><code class="language-ruby">module NVM
+  class PersistentCallbackHandlers
 
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">PersistentCallbacks</span>
+    include Origen::PersistentCallbacks
 
-  <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#777"># Instantiate an instance of this class immediately when this file is loaded, this object will</span>
-  <span style="color:#777"># then listen for the remainder of the Origen thread</span>
-  <span style="color:#036;font-weight:bold">PersistentCallbackHandlers</span>.new
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  end
+  # Instantiate an instance of this class immediately when this file is loaded, this object will
+  # then listen for the remainder of the Origen thread
+  PersistentCallbackHandlers.new
+end
+</code></pre>
 
       <p>A common use case is to use a persistent callback listener that implements <code>on_load_target</code> to
 implement common target behavior - i.e. implement logic that should run for every target.
@@ -563,41 +555,33 @@ listener.</p>
 
       <p>So at each callback point the Origen code is basically:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>listeners.each <span style="color:#080;font-weight:bold">do</span> |listener|
-  <span style="color:#080;font-weight:bold">if</span> listener.respond_to?(callback_x)
+      <pre><code class="language-ruby">listeners.each do |listener|
+  if listener.respond_to?(callback_x)
     listener.callback_x(arg_x, arg_y)
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>  
-</pre></div>
-</div>
-      </div>
+  end
+end  
+</code></pre>
 
       <p>So any listeners which don’t implement a specific callback are simply ignored.</p>
 
       <p>To enable the above callback our custom listener would be changed to:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">NVM</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">CallbackHandlers</span>
+      <pre><code class="language-ruby">module NVM
+  class CallbackHandlers
 
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Callbacks</span>
+    include Origen::Callbacks
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">callback_x</span>(arg_x, arg_y)
-      <span style="color:#080;font-weight:bold">if</span> arg_x == <span style="color:#A60">:ft_pattern</span>
-        puts <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Final test not supported yet!</span><span style="color:#710">"</span></span>
-        exit <span style="color:#00D">0</span>
-      <span style="color:#080;font-weight:bold">end</span>
-      <span style="color:#777"># Otherwise return to Origen</span>
-    <span style="color:#080;font-weight:bold">end</span>
+    def callback_x(arg_x, arg_y)
+      if arg_x == :ft_pattern
+        puts "Final test not supported yet!"
+        exit 0
+      end
+      # Otherwise return to Origen
+    end
 
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  end
+end
+</code></pre>
 
       <p>As mentioned the application is already registered as a listener, so the above <code>callback_x</code>
 method could be added to <code>config/application.rb</code> and it would be called at the appropriate
@@ -670,22 +654,18 @@ all objects instaniated by the target are guaranteed to be available.</p>
 
       <p>No return value is expected.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Callbacks</span>
+      <pre><code class="language-ruby">include Origen::Callbacks
 
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>
-  <span style="color:#777"># Would be creating a target instantiation order dependency by doing this here</span>
-  <span style="color:#777"># tester.do_something</span>
-<span style="color:#080;font-weight:bold">end</span>
+def initialize
+  # Would be creating a target instantiation order dependency by doing this here
+  # tester.do_something
+end
 
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">on_create</span>
-  <span style="color:#777"># But not here</span>
+def on_create
+  # But not here
   tester.do_something
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="on_load_target"></a>          
@@ -711,18 +691,14 @@ is instantiated.</p>
 
       <p>No return value is expected.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Callbacks</span>
+      <pre><code class="language-ruby">include Origen::Callbacks
 
-<span style="color:#777"># Automatically instantiate a RAM model whenever a DUT model is instantiated, the size will</span>
-<span style="color:#777"># be determined by the ram_size attribute of the DUT</span>
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">on_top_level_instantiated</span>(dut)
-  <span style="color:#d70">$ram</span> = <span style="color:#036;font-weight:bold">MyPlugin</span>::<span style="color:#036;font-weight:bold">RAM</span>.new <span style="color:#606">size</span>: dut.ram_size
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+# Automatically instantiate a RAM model whenever a DUT model is instantiated, the size will
+# be determined by the ram_size attribute of the DUT
+def on_top_level_instantiated(dut)
+  $ram = MyPlugin::RAM.new size: dut.ram_size
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="interactive_startup"></a>          
@@ -736,16 +712,12 @@ The target will already be loaded prior to calling.</p>
       <p>The intended use case is to give the application a chance to perform a device setup sequence in the
 case where the environment is connected to an Origen Link compatible tester driver.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># This is called automatically at the start of an interactive session (origen i)</span>
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">interactive_startup</span>
-  <span style="color:#777"># Run the regular pattern startup method upon opening the console to put the device in test mode</span>
-  startup <span style="color:#080;font-weight:bold">if</span> tester.link?
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># This is called automatically at the start of an interactive session (origen i)
+def interactive_startup
+  # Run the regular pattern startup method upon opening the console to put the device in test mode
+  startup if tester.link?
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="interactive_shutdown"></a>          
@@ -757,16 +729,12 @@ case where the environment is connected to an Origen Link compatible tester driv
       <p>The intended use case is to shutdown the device in the case where the environment is connected
 to an Origen Link compatible tester driver.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># This is called automatically at the end of an interactive session (origen i)</span>
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">interactive_shutdown</span>
-  <span style="color:#777"># Run the regular pattern shutdown method to put the device in reset</span>
-  shutdown <span style="color:#080;font-weight:bold">if</span> tester.link?
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># This is called automatically at the end of an interactive session (origen i)
+def interactive_shutdown
+  # Run the regular pattern shutdown method to put the device in reset
+  shutdown if tester.link?
+end
+</code></pre>
 
       <p><a class="anchor" name="environment_teardown"></a></p>
 
@@ -801,23 +769,19 @@ guaranteed to be called even if the thread crashes.</p>
 It takes an options hash as an argument with the recently changed mode being passed.  It can be used to change other DUT objects, 
 such as clocks and register settings.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">on_mode_changed</span>(options)
-  <span style="color:#080;font-weight:bold">if</span> options[<span style="color:#A60">:instance</span>] == <span style="color:#069">self</span>
-    <span style="color:#080;font-weight:bold">case</span> options[<span style="color:#A60">:mode</span>]
-    <span style="color:#080;font-weight:bold">when</span> <span style="color:#A60">:mode1</span>
-      clocks(<span style="color:#A60">:coreclk</span>).setpoint = <span style="color:#60E">1.2</span>.Ghz
-      clocks(<span style="color:#A60">:memclk</span>).setpoint = <span style="color:#00D">600</span>.Mhz
-    <span style="color:#080;font-weight:bold">when</span> <span style="color:#A60">:mode2</span>
-      clocks(<span style="color:#A60">:coreclk</span>).setpoint = <span style="color:#60E">1.0</span>.Ghz
-      clocks(<span style="color:#A60">:memclk</span>).setpoint = <span style="color:#00D">500</span>.Mhz
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">def on_mode_changed(options)
+  if options[:instance] == self
+    case options[:mode]
+    when :mode1
+      clocks(:coreclk).setpoint = 1.2.Ghz
+      clocks(:memclk).setpoint = 600.Mhz
+    when :mode2
+      clocks(:coreclk).setpoint = 1.0.Ghz
+      clocks(:memclk).setpoint = 500.Mhz
+    end
+  end
+end
+</code></pre>
 
       <p><a class="anchor" name="generation"></a></p>
 
@@ -902,14 +866,10 @@ callback for that.</p>
 
       <p>No return value is expected.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">before_top_level_reset</span>
-  <span style="color:#33B">@some_state_attribute</span> = <span style="color:#069">nil</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">def before_top_level_reset
+  @some_state_attribute = nil
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="on_top_level_reset"></a>          
@@ -921,14 +881,10 @@ top-level object and after the top-level has been shutdown.</p>
 
       <p>No return value is expected.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">on_top_level_reset</span>
-  <span style="color:#33B">@some_state_attribute</span> = <span style="color:#069">nil</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">def on_top_level_reset
+  @some_state_attribute = nil
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="on_top_level_reset!"></a>          
@@ -952,14 +908,10 @@ callback for that.</p>
 
       <p>No return value is expected.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">after_top_level_reset</span>
-  <span style="color:#33B">@some_state_attribute</span> = <span style="color:#069">nil</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">def after_top_level_reset
+  @some_state_attribute = nil
+end
+</code></pre>
 
       <p><a class="anchor" name="pattern_generation"></a></p>
 
@@ -988,15 +940,11 @@ that mode has already been entered.</p>
 
       <p>No return value is expected.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">startup</span>(options)
-  tester.set_timeset(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">nvmbist</span><span style="color:#710">"</span></span>, <span style="color:#00D">40</span>)
-  dut.pin(<span style="color:#A60">:reset</span>).drive!(<span style="color:#00D">1</span>)
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">def startup(options)
+  tester.set_timeset("nvmbist", 40)
+  dut.pin(:reset).drive!(1)
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="shutdown(options)"></a>          
@@ -1017,14 +965,10 @@ the top-level finally pulls reset.</p>
 
       <p>No return value is expected.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">shutdown</span>(options)
-  dut.pin(<span style="color:#A60">:reset</span>).drive!(<span style="color:#00D">0</span>)
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">def shutdown(options)
+  dut.pin(:reset).drive!(0)
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="before_pattern(pattern_name)"></a>          
@@ -1042,29 +986,25 @@ variants of your existing patterns without having to create a new pattern source
 
       <p>No return value is expected.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># If the requested pattern has 'trimmed' in the name then look for the equivalent</span>
-<span style="color:#777"># source file without 'trimmed' in the name.</span>
-<span style="color:#777"># The output pattern will still contain 'trimmed' in the name.</span>
-config.pattern_name_translator <span style="color:#080;font-weight:bold">do</span> |name|
-  <span style="color:#080;font-weight:bold">if</span> name =~ <span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#808">trimmed</span><span style="color:#404">/</span></span>
-    {<span style="color:#606">source</span>: name.gsub(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">trimmed_</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#710">"</span></span>), <span style="color:#606">output</span>: name}
-  <span style="color:#080;font-weight:bold">else</span>
+      <pre><code class="language-ruby"># If the requested pattern has 'trimmed' in the name then look for the equivalent
+# source file without 'trimmed' in the name.
+# The output pattern will still contain 'trimmed' in the name.
+config.pattern_name_translator do |name|
+  if name =~ /trimmed/
+    {source: name.gsub("trimmed_", ""), output: name}
+  else
     name
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
+  end
+end
 
-<span style="color:#777"># Setup the dut model differently if generating a pattern for a trimmed device</span>
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">before_pattern</span>(pattern_name)
-  <span style="color:#080;font-weight:bold">if</span> name =~ <span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#808">trimmed</span><span style="color:#404">/</span></span>
-    dut.apply_default_trims = <span style="color:#069">false</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
+# Setup the dut model differently if generating a pattern for a trimmed device
+def before_pattern(pattern_name)
+  if name =~ /trimmed/
+    dut.apply_default_trims = false
+  end
+end
 
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <div>    
   <a class="anchor" name="before_pattern_lookup(requested_pattern)"></a>          
@@ -1081,19 +1021,15 @@ of this pattern and move onto the next one.
 Origen will proceed to dispatch the pattern as normal
 if any other value is returned.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">before_pattern_lookup</span>(requested_pattern)
-  <span style="color:#080;font-weight:bold">if</span> requested_pattern =~ <span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#808">blk_1</span><span style="color:#404">/</span></span>
-    <span style="color:#777"># Only proceed with this pattern if the current target has a blk 1</span>
+      <pre><code class="language-ruby">def before_pattern_lookup(requested_pattern)
+  if requested_pattern =~ /blk_1/
+    # Only proceed with this pattern if the current target has a blk 1
     dut.has_blk1?
-  <span style="color:#080;font-weight:bold">else</span> <span style="color:#777"># Proceed as normal</span>
+  else # Proceed as normal
     requested_pattern
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  end
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="pattern_generated(path_to_generated_pattern)"></a>          
@@ -1110,25 +1046,21 @@ to have the plugin called after every pattern that is generated.</p>
 
       <p>No return value is expected.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">VirtualTester</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">PersistentCallbackHandlers</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">PersistentCallbacks</span>
+      <pre><code class="language-ruby">module VirtualTester
+  class PersistentCallbackHandlers
+    include Origen::PersistentCallbacks
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">pattern_generated</span>(path_to_generated_pattern)
-      <span style="color:#080;font-weight:bold">if</span> <span style="color:#d70">$vt_simulation_enabled</span>  <span style="color:#777"># Set this back when the command was launched or however you want to enable</span>
-        <span style="color:#036;font-weight:bold">VirtualTester</span>::<span style="color:#036;font-weight:bold">Runner</span>.new(path_to_generated_pattern)
-      <span style="color:#080;font-weight:bold">end</span>
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#777"># Instantiate an instance of this class immediately when this file is required, this object will</span>
-  <span style="color:#777"># then listen for the remainder of the Origen thread</span>
-  <span style="color:#036;font-weight:bold">PersistentCallbackHandlers</span>.new
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+    def pattern_generated(path_to_generated_pattern)
+      if $vt_simulation_enabled  # Set this back when the command was launched or however you want to enable
+        VirtualTester::Runner.new(path_to_generated_pattern)
+      end
+    end
+  end
+  # Instantiate an instance of this class immediately when this file is required, this object will
+  # then listen for the remainder of the Origen thread
+  PersistentCallbackHandlers.new
+end
+</code></pre>
 
       <p><a class="anchor" name="program_generation"></a></p>
 
@@ -1257,20 +1189,16 @@ it decides that the release should be aborted.</p>
       <p>Typically this hook would be used to launch the application’s test suite and if it fails
 abort the process, here is an example:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Ensure that all tests pass before allowing a release to continue</span>
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">validate_release</span>
-  <span style="color:#080;font-weight:bold">if</span> !system(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">origen specs</span><span style="color:#710">"</span></span>) || !system(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">origen examples</span><span style="color:#710">"</span></span>)
-    puts <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Sorry but you can't release with failing tests, please fix them and try again.</span><span style="color:#710">"</span></span>
-    exit <span style="color:#00D">1</span>
-  <span style="color:#080;font-weight:bold">else</span>
-    puts <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">All tests passing, proceeding with release process!</span><span style="color:#710">"</span></span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># Ensure that all tests pass before allowing a release to continue
+def validate_release
+  if !system("origen specs") || !system("origen examples")
+    puts "Sorry but you can't release with failing tests, please fix them and try again."
+    exit 1
+  else
+    puts "All tests passing, proceeding with release process!"
+  end
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="before_release_tag(identifier,_note,_type,_selector,_options)"></a>          
@@ -1330,18 +1258,14 @@ the application.</p>
 
       <p>No return value is expected.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Example of automatically deploying documents after a tag</span>
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">after_release_email</span>(tag, note, type, selector, options)
-  command = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">origen web compile --remote --api</span><span style="color:#710">"</span></span>
-  <span style="color:#036;font-weight:bold">Dir</span>.chdir <span style="color:#036;font-weight:bold">Origen</span>.root <span style="color:#080;font-weight:bold">do</span>
+      <pre><code class="language-ruby"># Example of automatically deploying documents after a tag
+def after_release_email(tag, note, type, selector, options)
+  command = "origen web compile --remote --api"
+  Dir.chdir Origen.root do
     system command
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  end
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="before_deploy_site"></a>          
@@ -1355,18 +1279,14 @@ before it is deployed.</p>
 
       <p>No return value is expected.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Generate a test coverage report and add it to the web site</span>
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">before_deploy_site</span>
-  <span style="color:#036;font-weight:bold">Dir</span>.chdir <span style="color:#036;font-weight:bold">Origen</span>.root <span style="color:#080;font-weight:bold">do</span>
-    system <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">origen specs -c</span><span style="color:#710">"</span></span>
-    system <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">mv </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.root<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">/coverage </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.root<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">/web/output/coverage</span><span style="color:#710">"</span></span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># Generate a test coverage report and add it to the web site
+def before_deploy_site
+  Dir.chdir Origen.root do
+    system "origen specs -c"
+    system "mv #{Origen.root}/coverage #{Origen.root}/web/output/coverage"
+  end
+end
+</code></pre>
 
       <p><a class="anchor" name="initializing_models"></a></p>
 
@@ -1394,33 +1314,29 @@ into the inherited modules and classes.</p>
 
       <p>For example:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">A</span>
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#069">self</span>.<span style="color:#06B;font-weight:bold">origen_model_init</span>(instance_of_caller)
-    puts <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">init module A - called by </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>instance_of_caller.class<span style="font-weight:bold;color:#666">}</span></span><span style="color:#710">"</span></span>
-  <span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby">module A
+  def self.origen_model_init(instance_of_caller)
+    puts "init module A - called by #{instance_of_caller.class}"
+  end
   
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">B</span>
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#069">self</span>.<span style="color:#06B;font-weight:bold">origen_model_init</span>(instance_of_caller)
-      puts <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">init class B in module A - called by </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>instance_of_caller.class<span style="font-weight:bold;color:#666">}</span></span><span style="color:#710">"</span></span>
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
+  class B
+    def self.origen_model_init(instance_of_caller)
+      puts "init class B in module A - called by #{instance_of_caller.class}"
+    end
+  end
+end
 
-<span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">Parent</span>
-  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
-  include <span style="color:#036;font-weight:bold">A</span>
-<span style="color:#080;font-weight:bold">end</span>
+class Parent
+  include Origen::Model
+  include A
+end
 
-<span style="color:#036;font-weight:bold">Parent</span>.new
-  <span style="color:#777">#=&gt; "init module A - called by Parent"</span>
-  <span style="color:#777">#=&gt; "init class B in module A - called by Parent" &lt;= this is called prior to any A::B initialization.</span>
-<span style="color:#777">#=&gt; Instance of Parent class</span>
+Parent.new
+  #=&gt; "init module A - called by Parent"
+  #=&gt; "init class B in module A - called by Parent" &lt;= this is called prior to any A::B initialization.
+#=&gt; Instance of Parent class
 
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>Note that included modules and classes do not need to mix in <code>Origen::Model</code>. Only the class including
 said modules and classes.</p>
@@ -1428,31 +1344,27 @@ said modules and classes.</p>
       <p>Again, this is for use in booting included classes and modules, not in booting the parent. <code>origen_model_init</code>
 will NOT be called in following and <code>pre_initialize</code> should be used:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>
-<span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">Parent</span>
-  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
-  include <span style="color:#036;font-weight:bold">A</span>
+      <pre><code class="language-ruby">
+class Parent
+  include Origen::Model
+  include A
   
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#069">self</span>.<span style="color:#06B;font-weight:bold">origen_model_init</span>(instance_of_caller)
-    puts <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">origen_model_init in Parent</span><span style="color:#710">"</span></span>
-  <span style="color:#080;font-weight:bold">end</span>
+  def self.origen_model_init(instance_of_caller)
+    puts "origen_model_init in Parent"
+  end
   
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#069">self</span>.<span style="color:#06B;font-weight:bold">pre_initialize</span>
-    puts <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">pre_initialize in Parent</span><span style="color:#710">"</span></span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
+  def self.pre_initialize
+    puts "pre_initialize in Parent"
+  end
+end
 
-<span style="color:#036;font-weight:bold">Parent</span>.new
-  <span style="color:#777">#=&gt; "init module A - called by Parent"</span>
-  <span style="color:#777">#=&gt; "init class B in module A - called by Parent"</span>
-  <span style="color:#777">#=&gt; "pre_initialize in Parent"</span>
-<span style="color:#777">#=&gt; Instance of Parent class</span>
+Parent.new
+  #=&gt; "init module A - called by Parent"
+  #=&gt; "init class B in module A - called by Parent"
+  #=&gt; "pre_initialize in Parent"
+#=&gt; Instance of Parent class
 
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <div style="position: relative">
   <hr>

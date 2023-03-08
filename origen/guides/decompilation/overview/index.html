@@ -568,17 +568,13 @@ The source above is available as a <code>String</code> already:
 <code>OrigenTesters::IGXLBasedTester.sample_direct_source</code>
 </div>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># A very basic, pre-defined .atp source for the J750 platform</span>
-src = <span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">IGXLBasedTester</span>.sample_direct_source
+      <pre><code class="language-ruby"># A very basic, pre-defined .atp source for the J750 platform
+src = OrigenTesters::IGXLBasedTester.sample_direct_source
 
-<span style="color:#777"># Decompile this source.</span>
-pat = <span style="color:#036;font-weight:bold">OrigenTesters</span>.decompile_text(src, <span style="color:#606">decompiler</span>: <span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">IGXLBasedTester</span>::<span style="color:#036;font-weight:bold">Pattern</span>)
-  <span style="color:#777">#=&gt; OrigenTesters::IGXLBasedTester::Pattern object</span>
-</pre></div>
-</div>
-      </div>
+# Decompile this source.
+pat = OrigenTesters.decompile_text(src, decompiler: OrigenTesters::IGXLBasedTester::Pattern)
+  #=&gt; OrigenTesters::IGXLBasedTester::Pattern object
+</code></pre>
 
       <p>Since we’ve specified that this is an <code>IGXLBasedTester</code> source, the <code>#decompile_text</code> method
 will use that as the target decompiler and return an object corresponding to
@@ -587,14 +583,10 @@ that specific platform’s decompiler: <code>OrigenTesters::IGXLBasedTester::Pat
       <p>If you have your own pattern source you’d rather compile, the <code>#decompile</code> method
 will accept a filename either as a <code>String</code> or <code>Pathname</code> object:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>pat = <span style="color:#036;font-weight:bold">OrigenTesters</span>.decompile(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">path/to/src.atp</span><span style="color:#710">'</span></span>)
-  <span style="color:#777">#=&gt; (for a source ending with .atp)</span>
-  <span style="color:#777">#=&gt; OrigenTesters::IGXLBasedTester::Pattern object</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">pat = OrigenTesters.decompile('path/to/src.atp')
+  #=&gt; (for a source ending with .atp)
+  #=&gt; OrigenTesters::IGXLBasedTester::Pattern object
+</code></pre>
 
       <div class="alert alert-info" role="alert">
 The decompiler will try to match the platform based on the extension of the given
@@ -617,18 +609,14 @@ filename. <a href="/origen/guides/decompilation/decompilerapi#Discerning_Platfor
 
       <p>There’s two methods available to retrieve the pins: <code>#pins</code> and <code>#pin_sizes</code>.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Return an array of pins, in the order they appear in the pattern</span>
+      <pre><code class="language-ruby"># Return an array of pins, in the order they appear in the pattern
 pat.pins
-  <span style="color:#777">#=&gt; [:tclk, :tdi, :tdo, :tms]</span>
+  #=&gt; [:tclk, :tdi, :tdo, :tms]
 
-<span style="color:#777"># Return the pin names and their respective size</span>
+# Return the pin names and their respective size
 pat.pin_sizes
-  <span style="color:#777">#=&gt; {:tclk=&gt;1, :tdi=&gt;1, :tdo=&gt;1, :tms=&gt;1}</span>
-</pre></div>
-</div>
-      </div>
+  #=&gt; {:tclk=&gt;1, :tdi=&gt;1, :tdo=&gt;1, :tms=&gt;1}
+</code></pre>
 
       <div>    
   <a class="anchor" name="Adding_Missing_Pins"></a>          
@@ -639,39 +627,31 @@ pat.pin_sizes
 missing pins to the current <code>dut</code>. The decompiled pattern has a built-in method
 to do just that:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Assume the current dut has no pins</span>
+      <pre><code class="language-ruby"># Assume the current dut has no pins
 dut.pins
-  <span style="color:#777">#=&gt; {}</span>
+  #=&gt; {}
 
 pat.add_pins
-  <span style="color:#777">#=&gt; [:tclk, :tdi, :tdo, :tms]</span>
+  #=&gt; [:tclk, :tdi, :tdo, :tms]
 
 dut.pins
-  <span style="color:#777">#=&gt; {:tclk=&gt;&lt;Origen::Pins::Pin:47378873549400&gt;, :tdi=&gt;&lt;Origen::Pins::Pin:47378873627180&gt;, :tdo=&gt;&lt;Origen::Pins::Pin:47378873622840&gt;, :tms=&gt;&lt;Origen::Pins::Pin:47378873659460&gt;}</span>
-</pre></div>
-</div>
-      </div>
+  #=&gt; {:tclk=&gt;&lt;Origen::Pins::Pin:47338339839940&gt;, :tdi=&gt;&lt;Origen::Pins::Pin:47338339860160&gt;, :tdo=&gt;&lt;Origen::Pins::Pin:47338339855680&gt;, :tms=&gt;&lt;Origen::Pins::Pin:47338339884320&gt;}
+</code></pre>
 
       <p><code>#add_pins</code> will return any pins it added to the <code>dut</code>. For example, if the <code>dut</code>
 already had all the pins from the pattern defined, <code>#add_pins</code> would’ve returned
 <code>an empty array</code>. Running the above a second time:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Assume the current dut has no pins</span>
+      <pre><code class="language-ruby"># Assume the current dut has no pins
 dut.pins
-  <span style="color:#777">#=&gt; {:tclk=&gt;&lt;Origen::Pins::Pin:47378873549400&gt;, :tdi=&gt;&lt;Origen::Pins::Pin:47378873627180&gt;, :tdo=&gt;&lt;Origen::Pins::Pin:47378873622840&gt;, :tms=&gt;&lt;Origen::Pins::Pin:47378873659460&gt;}</span>
+  #=&gt; {:tclk=&gt;&lt;Origen::Pins::Pin:47338339839940&gt;, :tdi=&gt;&lt;Origen::Pins::Pin:47338339860160&gt;, :tdo=&gt;&lt;Origen::Pins::Pin:47338339855680&gt;, :tms=&gt;&lt;Origen::Pins::Pin:47338339884320&gt;}
 
 pat.add_pins
-  <span style="color:#777">#=&gt; []</span>
+  #=&gt; []
 
 dut.pins
-  <span style="color:#777">#=&gt; {:tclk=&gt;&lt;Origen::Pins::Pin:47378873549400&gt;, :tdi=&gt;&lt;Origen::Pins::Pin:47378873627180&gt;, :tdo=&gt;&lt;Origen::Pins::Pin:47378873622840&gt;, :tms=&gt;&lt;Origen::Pins::Pin:47378873659460&gt;}</span>
-</pre></div>
-</div>
-      </div>
+  #=&gt; {:tclk=&gt;&lt;Origen::Pins::Pin:47338339839940&gt;, :tdi=&gt;&lt;Origen::Pins::Pin:47338339860160&gt;, :tdo=&gt;&lt;Origen::Pins::Pin:47338339855680&gt;, :tms=&gt;&lt;Origen::Pins::Pin:47338339884320&gt;}
+</code></pre>
 
       <div>    
   <a class="anchor" name="Vectors"></a>          
@@ -685,33 +665,25 @@ that acts as a placeholder for any <code>element type</code> that could appear.
 Each <code>vector body element</code> has a <code>type</code> associated with it to discern exactly
 what it is:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>pat.each_vector { |v| puts v.type }
-<span style="color:#A60">:start_label</span>
-<span style="color:#A60">:comment_block</span>
-<span style="color:#A60">:vector</span>
-<span style="color:#A60">:vector</span>
-<span style="color:#A60">:vector</span>
-  <span style="color:#777">#=&gt; nil</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">pat.each_vector { |v| puts v.type }
+:start_label
+:comment_block
+:vector
+:vector
+:vector
+  #=&gt; nil
+</code></pre>
 
       <p>Now that we have the <code>type</code>, we can access the underlying <code>element</code>.
 In the example below, we’ll check the <code>type</code> first and, in the event of a <code>:vector</code>,
 access the underlying <code>element</code> and print its repeat count and pin states.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>pat.each_vector { |v| puts <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">(</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>v.element.repeat<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">) </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>v.element.pin_states<span style="font-weight:bold;color:#666">}</span></span><span style="color:#710">"</span></span> <span style="color:#080;font-weight:bold">if</span> v.type == <span style="color:#A60">:vector</span> }
-(<span style="color:#00D">2</span>) [<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">X</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">X</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">X</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">X</span><span style="color:#710">"</span></span>]
-(<span style="color:#00D">5</span>) [<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">1</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">0</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">X</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">1</span><span style="color:#710">"</span></span>]
-(<span style="color:#00D">1</span>) [<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">X</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">X</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">X</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">X</span><span style="color:#710">"</span></span>]
-  <span style="color:#777">#=&gt; nil</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">pat.each_vector { |v| puts "(#{v.element.repeat}) #{v.element.pin_states}" if v.type == :vector }
+(2) ["X", "X", "X", "X"]
+(5) ["1", "0", "X", "1"]
+(1) ["X", "X", "X", "X"]
+  #=&gt; nil
+</code></pre>
 
       <div class="alert alert-info" role="alert">
 Note that <code>#each_vector</code> returns <code>nil</code>, <b>NOT</b> an
@@ -734,12 +706,8 @@ the vectors themselves, we can <code>execute</code> the pattern source. The <cod
 method will iterate through each vector, apply the pin states, and 
 cycle the tester <code>repeat</code> number of times.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>pat.execute
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">pat.execute
+</code></pre>
 
       <div style="position: relative">
   <hr>

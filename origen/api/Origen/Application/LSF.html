@@ -6,7 +6,7 @@
 <title>
   Class: Origen::Application::LSF
   
-    &mdash; Origen Core 0.60.7
+    &mdash; Origen Core 0.60.10
   
 </title>
 
@@ -371,14 +371,14 @@
       <pre class="lines">
 
 
-66
-67
-68
-69
-70</pre>
+76
+77
+78
+79
+80</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application/lsf.rb', line 66</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application/lsf.rb', line 76</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_configuration'>configuration</span>
   <span class='ivar'>@config</span> <span class='op'>||=</span> <span class='const'><span class='object_link'><a href="LSF/Configuration.html" title="Origen::Application::LSF::Configuration (class)">Configuration</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="LSF/Configuration.html#initialize-instance_method" title="Origen::Application::LSF::Configuration#initialize (method)">new</a></span></span>
@@ -426,12 +426,12 @@
       <pre class="lines">
 
 
-74
-75
-76</pre>
+84
+85
+86</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application/lsf.rb', line 74</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application/lsf.rb', line 84</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_configuration'>configuration</span>
   <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='period'>.</span><span class='id identifier rubyid_configuration'>configuration</span>
@@ -467,28 +467,28 @@
       <pre class="lines">
 
 
-152
-153
-154
-155
-156
-157
-158
-159
-160
-161
-162
-163
-164
-165</pre>
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application/lsf.rb', line 152</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application/lsf.rb', line 171</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_limit_job_submissions'>limit_job_submissions</span>
   <span class='ivar'>@local_job_count</span> <span class='op'>||=</span> <span class='int'>0</span>
   <span class='kw'>if</span> <span class='ivar'>@local_job_count</span> <span class='op'>==</span> <span class='int'>100</span>
-    <span class='kw'>while</span> <span class='id identifier rubyid_remote_jobs_count'>remote_jobs_count</span> <span class='op'>&gt;</span> <span class='int'>400</span>
+    <span class='kw'>while</span> <span class='id identifier rubyid_remote_jobs_count'>remote_jobs_count</span> <span class='op'>&gt;</span> <span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_max_jobs'>max_jobs</span>
       <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Waiting for submitted jobs count to fall below limit...</span><span class='tstring_end'>&#39;</span></span>
       <span class='id identifier rubyid_sleep'>sleep</span> <span class='int'>5</span>
     <span class='kw'>end</span>
@@ -519,18 +519,18 @@
       <pre class="lines">
 
 
-119
-120
-121
-122
-123
-124
-125
-126
-127</pre>
+129
+130
+131
+132
+133
+134
+135
+136
+137</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application/lsf.rb', line 119</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application/lsf.rb', line 129</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_queuing_job_ids'>queuing_job_ids</span>
   <span class='id identifier rubyid_ids'>ids</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
@@ -561,24 +561,42 @@
       <pre class="lines">
 
 
-139
-140
-141
-142
-143
-144
-145
-146
-147</pre>
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application/lsf.rb', line 139</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application/lsf.rb', line 149</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_remote_jobs_count'>remote_jobs_count</span>
   <span class='id identifier rubyid_i'>i</span> <span class='op'>=</span> <span class='int'>0</span>
   <span class='backtick'>`</span><span class='tstring_content'>bjobs 2&gt;&amp;1</span><span class='tstring_end'>`</span></span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\n</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_line'>line</span><span class='op'>|</span>
     <span class='kw'>if</span> <span class='id identifier rubyid_line'>line</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>^(\d+).*(RUN|PEND)</span><span class='regexp_end'>/</span></span>
-      <span class='id identifier rubyid_i'>i</span> <span class='op'>+=</span> <span class='int'>1</span>
+      <span class='kw'>if</span> <span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_queue_count_only'>queue_count_only</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_queue'>queue</span>
+        <span class='comment'># only count jobs for current queue, helpful for when
+</span>        <span class='comment'># you have a service account user that runs lsf for a
+</span>        <span class='comment'># lot of jobs in addition to origen jobs
+</span>        <span class='kw'>if</span> <span class='id identifier rubyid_line'>line</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_queue'>queue</span><span class='embexpr_end'>}</span><span class='regexp_end'>/</span></span>
+          <span class='id identifier rubyid_i'>i</span> <span class='op'>+=</span> <span class='int'>1</span>
+        <span class='kw'>end</span>
+      <span class='kw'>else</span>
+        <span class='id identifier rubyid_i'>i</span> <span class='op'>+=</span> <span class='int'>1</span>
+      <span class='kw'>end</span>
     <span class='kw'>end</span>
   <span class='kw'>end</span>
   <span class='id identifier rubyid_i'>i</span>
@@ -603,18 +621,18 @@
       <pre class="lines">
 
 
-129
-130
-131
-132
-133
-134
-135
-136
-137</pre>
+139
+140
+141
+142
+143
+144
+145
+146
+147</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application/lsf.rb', line 129</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application/lsf.rb', line 139</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_running_job_ids'>running_job_ids</span>
   <span class='id identifier rubyid_ids'>ids</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
@@ -656,16 +674,6 @@
       <pre class="lines">
 
 
-80
-81
-82
-83
-84
-85
-86
-87
-88
-89
 90
 91
 92
@@ -693,15 +701,25 @@
 114
 115
 116
-117</pre>
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/application/lsf.rb', line 80</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/application/lsf.rb', line 90</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_submit'>submit</span><span class='lparen'>(</span><span class='id identifier rubyid_command'>command</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='lbrace'>{</span>
     <span class='label'>dependents:</span> <span class='lbracket'>[</span><span class='rbracket'>]</span><span class='comma'>,</span>
-    <span class='label'>rerunnable:</span> <span class='kw'>true</span><span class='comma'>,</span>  <span class='comment'># Will rerun automatically if the execution host fails
+    <span class='label'>rerunnable:</span> <span class='kw'>true</span> <span class='comment'># Will rerun automatically if the execution host fails
 </span>  <span class='rbrace'>}</span><span class='period'>.</span><span class='id identifier rubyid_merge'>merge</span><span class='lparen'>(</span><span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span>
   <span class='id identifier rubyid_limit_job_submissions'>limit_job_submissions</span> <span class='kw'>do</span>
     <span class='id identifier rubyid_group'>group</span> <span class='op'>=</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='lbracket'>[</span><span class='symbol'>:group</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_group'>group</span>
@@ -724,7 +742,7 @@
     <span class='id identifier rubyid_cmd'>cmd</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>bsub -oo /dev/null </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_dependents'>dependents</span><span class='embexpr_end'>}</span><span class='tstring_content'> </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_rerunnable'>rerunnable</span><span class='embexpr_end'>}</span><span class='tstring_content'> </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_group'>group</span><span class='embexpr_end'>}</span><span class='tstring_content'> </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_project'>project</span><span class='embexpr_end'>}</span><span class='tstring_content'> </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_resource'>resource</span><span class='embexpr_end'>}</span><span class='tstring_content'> </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_queue'>queue</span><span class='embexpr_end'>}</span><span class='tstring_content'> </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_cores'>cores</span><span class='embexpr_end'>}</span><span class='tstring_content'> &#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_command'>command</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39;</span><span class='tstring_end'>&quot;</span></span>
     <span class='kw'>if</span> <span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_debug'>debug</span>
       <span class='id identifier rubyid_puts'>puts</span> <span class='id identifier rubyid_cmd'>cmd</span>
-      <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>496212</span><span class='tstring_end'>&#39;</span></span>  <span class='comment'># Return a dummy ID to keep the caller happy
+      <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>496212</span><span class='tstring_end'>&#39;</span></span> <span class='comment'># Return a dummy ID to keep the caller happy
 </span>    <span class='kw'>else</span>
       <span class='id identifier rubyid_output'>output</span> <span class='op'>=</span> <span class='backtick'>`</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_cmd'>cmd</span><span class='embexpr_end'>}</span><span class='tstring_end'>`</span></span>
       <span class='const'><span class='object_link'><a href="../../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_log'><span class='object_link'><a href="../../Origen.html#log-class_method" title="Origen.log (method)">log</a></span></span><span class='period'>.</span><span class='id identifier rubyid_info'>info</span> <span class='id identifier rubyid_output'>output</span><span class='period'>.</span><span class='id identifier rubyid_strip'>strip</span>
@@ -746,9 +764,9 @@
 </div>
 
       <div id="footer">
-  Generated on Fri Feb 11 10:52:59 2022 by
-  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.26 (ruby-2.6.0).
+  Generated on Wed Mar  8 10:08:43 2023 by
+  <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.9.28 (ruby-2.6.0).
 </div>
 
     </div>

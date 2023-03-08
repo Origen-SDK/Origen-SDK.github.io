@@ -500,12 +500,8 @@ set definition.</p>
 
       <p>To use the parameters API in an abstract class the following module can be included:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Parameters</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">include Origen::Parameters
+</code></pre>
 
       <p>However this is already included the <code>Origen::Model</code> and <code>Origen::TopLevel</code>
 modules and any class which includes those will already have access to this API.</p>
@@ -519,88 +515,64 @@ modules and any class which includes those will already have access to this API.
 context called <code>:default</code>, these are the values that will be enabled when
 a parameter context has not explicitly been set:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>define_params <span style="color:#A60">:default</span> <span style="color:#080;font-weight:bold">do</span> |params|
-  params.tprog = <span style="color:#00D">20</span>.uS
-  params.terase = <span style="color:#00D">100</span>.mS
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">define_params :default do |params|
+  params.tprog = 20.uS
+  params.terase = 100.mS
+end
+</code></pre>
 
       <p>Parameters can be organized into namespaces by simply writing them, no upfront definition
 is required and there is no limit to how deeply nested they can be:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>define_params <span style="color:#A60">:default</span> <span style="color:#080;font-weight:bold">do</span> |params|
-  params.program.time = <span style="color:#00D">20</span>.uS
-  params.erase.time = <span style="color:#00D">100</span>.mS
-  params.erase.pulse_count = <span style="color:#00D">10</span>
-  params.test.dc.vdd.min = <span style="color:#60E">1.5</span>
-  params.test.dc.vdd.max = <span style="color:#60E">2.5</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">define_params :default do |params|
+  params.program.time = 20.uS
+  params.erase.time = 100.mS
+  params.erase.pulse_count = 10
+  params.test.dc.vdd.min = 1.5
+  params.test.dc.vdd.max = 2.5
+end
+</code></pre>
 
       <p>Parameters are read back in application code via the <code>params</code> method:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>params.test.dc.vdd.min   <span style="color:#777"># =&gt; 1.5</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">params.test.dc.vdd.min   # =&gt; 1.5
+</code></pre>
 
       <p>Each namespace in the chain returns an object that can be used like a hash:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">print_erase_parameters</span>
-  params.erase.each <span style="color:#080;font-weight:bold">do</span> |name, value|
-    puts <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>name<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">: </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>value<span style="font-weight:bold;color:#666">}</span></span><span style="color:#710">"</span></span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby">def print_erase_parameters
+  params.erase.each do |name, value|
+    puts "#{name}: #{value}"
+  end
+end
 
-print_erase_parameters   <span style="color:#777"># =&gt; time: 0.1 </span>
-                         <span style="color:#777"># =&gt; pulse_count: 10</span>
-</pre></div>
-</div>
-      </div>
+print_erase_parameters   # =&gt; time: 0.1 
+                         # =&gt; pulse_count: 10
+</code></pre>
 
       <p>In some cases, it is useful to have one object access another’s parameters (e.g. a sub-block can
 reference the top-level parameters sets).  However, in this case the calling object may not necessarily
 be aware of which parameters have been created.  The <code>param?</code> method provides a quick 
 way to combine an existence test while attempting to retrieve the value of a specific parameter.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>param?(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">test.dc.vdd.min</span><span style="color:#710">'</span></span>)   <span style="color:#777"># =&gt; 1.5</span>
-param?(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">test.dc.vdd.nom</span><span style="color:#710">'</span></span>)   <span style="color:#777"># =&gt; nil</span>
+      <pre><code class="language-ruby">param?('test.dc.vdd.min')   # =&gt; 1.5
+param?('test.dc.vdd.nom')   # =&gt; nil
 
-<span style="color:#777"># Example to set bin using a top-level parameter or default to 12</span>
-<span style="color:#777">#   if the top-level parameter has not been set (i.e. does not exist)</span>
-my_block_bin = dut.param?(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">testprogram.bin.my_block</span><span style="color:#710">'</span></span>) || <span style="color:#00D">12</span>
-</pre></div>
-</div>
-      </div>
+# Example to set bin using a top-level parameter or default to 12
+#   if the top-level parameter has not been set (i.e. does not exist)
+my_block_bin = dut.param?('testprogram.bin.my_block') || 12
+</code></pre>
 
       <p>The current parameter context is set as follows:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>params.context        <span style="color:#777"># =&gt; :default</span>
-params = <span style="color:#A60">:probe</span>
-params.context        <span style="color:#777"># =&gt; :probe</span>
-with_params <span style="color:#A60">:ft</span> <span style="color:#080;font-weight:bold">do</span>
-  params.context      <span style="color:#777"># =&gt; :ft</span>
-<span style="color:#080;font-weight:bold">end</span>
-params.context        <span style="color:#777"># =&gt; :probe</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">params.context        # =&gt; :default
+params = :probe
+params.context        # =&gt; :probe
+with_params :ft do
+  params.context      # =&gt; :ft
+end
+params.context        # =&gt; :probe
+</code></pre>
 
       <div>    
   <a class="anchor" name="Tracking_the_Context_of_Another_Object"></a>          
@@ -610,43 +582,35 @@ params.context        <span style="color:#777"># =&gt; :probe</span>
       <p>The parameter context for a given object can be configured to automatically track that of another object by
 specifying a Ruby path to the object to be tracked as shown below:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># A short hand is available to track the parameter context from the top level ($dut)</span>
-<span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MyObject</span>
-  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
-  parameters_context <span style="color:#A60">:top</span>
-<span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby"># A short hand is available to track the parameter context from the top level ($dut)
+class MyObject
+  include Origen::Model
+  parameters_context :top
+end
 
-<span style="color:#777"># Or you can supply a path to the object in the form of a string, here the path reference is local to the MyObject</span>
-<span style="color:#777"># instance</span>
-<span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MyObject</span>
-  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
-  parameters_context <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">parent.mbist</span><span style="color:#710">'</span></span>
-<span style="color:#080;font-weight:bold">end</span>
+# Or you can supply a path to the object in the form of a string, here the path reference is local to the MyObject
+# instance
+class MyObject
+  include Origen::Model
+  parameters_context 'parent.mbist'
+end
 
-<span style="color:#777"># Or another example where the target object is found via the global scope</span>
-<span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MyObject</span>
-  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
-  parameters_context <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">$dut.pll</span><span style="color:#710">'</span></span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+# Or another example where the target object is found via the global scope
+class MyObject
+  include Origen::Model
+  parameters_context '$dut.pll'
+end
+</code></pre>
 
       <p>Then whenever the parameter context is set on the tracked object the same context name will be applied
 when referencing a parameter within the tracking object, for example:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$dut</span>.params.context           <span style="color:#777"># =&gt; :default</span>
-my_object.params.context      <span style="color:#777"># =&gt; :default</span>
-<span style="color:#d70">$dut</span>.params.context = <span style="color:#A60">:probe</span>
-<span style="color:#d70">$dut</span>.params.context           <span style="color:#777"># =&gt; :probe</span>
-my_object.params.context      <span style="color:#777"># =&gt; :probe</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">$dut.params.context           # =&gt; :default
+my_object.params.context      # =&gt; :default
+$dut.params.context = :probe
+$dut.params.context           # =&gt; :probe
+my_object.params.context      # =&gt; :probe
+</code></pre>
 
       <div>    
   <a class="anchor" name="Late_Defined_Parameters"></a>          
@@ -659,14 +623,10 @@ definition code is being executed.
 In that case the parameter can be defined as a function and Origen will hold off evaluating
 it until the last possible moment when it is first referenced:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>define_params <span style="color:#A60">:default</span> <span style="color:#080;font-weight:bold">do</span>  |params|
-  params.test.dc.vdd.min = -&gt; { <span style="color:#d70">$dut</span>.vdd * <span style="color:#60E">0.9</span> }
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">define_params :default do  |params|
+  params.test.dc.vdd.min = -&gt; { $dut.vdd * 0.9 }
+end
+</code></pre>
 
       <p>Such parameters will behave identically to standard parameters in all respects and consumers
 will not be able to tell if a given parameter originated from a function.</p>
@@ -687,149 +647,121 @@ entirely.  Local inheritance passes the name of another parameter set as a Symbo
 inherit from another object a String must be passed that starts with ‘dut’ or ‘top, and 
 is delimited by periods.  Here is how the string argument is parsed:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>str_arg = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">dut.ddr.default</span><span style="color:#710">'</span></span>
-arg_array = str_arg.split(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">.</span><span style="color:#710">'</span></span>)
-[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">dut</span><span style="color:#710">'</span></span>,top<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">].include?(arg_array[0]).should == true
-dut_path_to_object = arg_array[1..-2]    # =&gt; </span><span style="color:#710">'</span></span>ddr<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">
+      <pre><code class="language-ruby">str_arg = 'dut.ddr.default'
+arg_array = str_arg.split('.')
+['dut',top'].include?(arg_array[0]).should == true
+dut_path_to_object = arg_array[1..-2]    # =&gt; 'ddr'
 parameter_context = arg_array[-1].to_sym # =&gt; :default
-</span></span></pre></div>
-</div>
-      </div>
+</code></pre>
 
       <h5 id="local-inheritance">Local Inheritance</h5>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>define_params <span style="color:#A60">:ate</span>, <span style="color:#606">inherit</span>: <span style="color:#A60">:default</span> <span style="color:#080;font-weight:bold">do</span> |params|
-  params.erase.time = <span style="color:#00D">40</span>.mS
-<span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby">define_params :ate, inherit: :default do |params|
+  params.erase.time = 40.mS
+end
 
-define_params <span style="color:#A60">:probe</span>, <span style="color:#606">inherit</span>: <span style="color:#A60">:ate</span> <span style="color:#080;font-weight:bold">do</span> |params|
-  params.erase.time = <span style="color:#00D">20</span>.mS
-  params.erase.pulse_count = <span style="color:#00D">5</span>
-<span style="color:#080;font-weight:bold">end</span>
+define_params :probe, inherit: :ate do |params|
+  params.erase.time = 20.mS
+  params.erase.pulse_count = 5
+end
 
-define_params <span style="color:#A60">:ft</span>, <span style="color:#606">inherit</span>: <span style="color:#A60">:ate</span> <span style="color:#080;font-weight:bold">do</span> |params|
-  params.erase.pulse_count = <span style="color:#00D">7</span>
-<span style="color:#080;font-weight:bold">end</span>
+define_params :ft, inherit: :ate do |params|
+  params.erase.pulse_count = 7
+end
 
-with_params <span style="color:#A60">:probe</span> <span style="color:#080;font-weight:bold">do</span>
-  params.program.time        <span style="color:#777"># =&gt; 20uS (inherited from :default)</span>
-  params.erase.time          <span style="color:#777"># =&gt; 20ms</span>
-  params.erase.pulse_count   <span style="color:#777"># =&gt; 5</span>
-<span style="color:#080;font-weight:bold">end</span>
+with_params :probe do
+  params.program.time        # =&gt; 20uS (inherited from :default)
+  params.erase.time          # =&gt; 20ms
+  params.erase.pulse_count   # =&gt; 5
+end
 
-with_params <span style="color:#A60">:ft</span> <span style="color:#080;font-weight:bold">do</span>
-  params.program.time        <span style="color:#777"># =&gt; 20uS (inherited from :default)</span>
-  params.erase.time          <span style="color:#777"># =&gt; 40ms (inherited from :ate)</span>
-  params.erase.pulse_count   <span style="color:#777"># =&gt; 7</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+with_params :ft do
+  params.program.time        # =&gt; 20uS (inherited from :default)
+  params.erase.time          # =&gt; 40ms (inherited from :ate)
+  params.erase.pulse_count   # =&gt; 7
+end
+</code></pre>
 
       <h5 id="remote-inheritance">Remote Inheritance</h5>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>define_params <span style="color:#A60">:ate</span>, <span style="color:#606">inherit</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">dut.ddr.default</span><span style="color:#710">'</span></span> <span style="color:#080;font-weight:bold">do</span> |params|
-  params.erase.time = <span style="color:#00D">40</span>.mS
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">define_params :ate, inherit: 'dut.ddr.default' do |params|
+  params.erase.time = 40.mS
+end
+</code></pre>
 
       <p>Sometimes the parameter definition for a child context should be a function of the
 value from the parent, when defining a child context the parent can be accessed
 like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>define_params <span style="color:#A60">:ate</span>, <span style="color:#606">inherit</span>: <span style="color:#A60">:default</span> <span style="color:#080;font-weight:bold">do</span> |params, parent|
-  params.test.dc.vdd.min = parent.test.dc.vdd.min * <span style="color:#60E">0.9</span>
-  params.test.dc.vdd.max = parent.test.dc.vdd.max * <span style="color:#60E">1.1</span>
-<span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby">define_params :ate, inherit: :default do |params, parent|
+  params.test.dc.vdd.min = parent.test.dc.vdd.min * 0.9
+  params.test.dc.vdd.max = parent.test.dc.vdd.max * 1.1
+end
 
-params.context            <span style="color:#777"># =&gt; :default</span>
-params.test.dc.vdd.min    <span style="color:#777"># =&gt; 1.5</span>
-params.test.dc.vdd.max    <span style="color:#777"># =&gt; 2.5</span>
-params = <span style="color:#A60">:ate</span>
-params.test.dc.vdd.min    <span style="color:#777"># =&gt; 1.35</span>
-params.test.dc.vdd.max    <span style="color:#777"># =&gt; 2.75</span>
-</pre></div>
-</div>
-      </div>
+params.context            # =&gt; :default
+params.test.dc.vdd.min    # =&gt; 1.5
+params.test.dc.vdd.max    # =&gt; 2.5
+params = :ate
+params.test.dc.vdd.min    # =&gt; 1.35
+params.test.dc.vdd.max    # =&gt; 2.75
+</code></pre>
 
       <p>The context can also be explicitly supplied when fetching a parameter, this will
 override the parameter context that would otherwise be applied:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>params.context                  <span style="color:#777"># =&gt; :default</span>
-params.test.dc.vdd.min          <span style="color:#777"># =&gt; 1.5</span>
-params(<span style="color:#A60">:ate</span>).test.dc.vdd.min    <span style="color:#777"># =&gt; 1.35</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">params.context                  # =&gt; :default
+params.test.dc.vdd.min          # =&gt; 1.5
+params(:ate).test.dc.vdd.min    # =&gt; 1.35
+</code></pre>
 
       <h5 id="multiple-inheritance">Multiple Inheritance</h5>
 
       <p>Multiple inheritance is also supported by supplying an array of parent IDs (or remote paths)
 for the <code>:inherit</code> option:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>define_params <span style="color:#A60">:set1</span> <span style="color:#080;font-weight:bold">do</span> |params|
-  params.spec_a = <span style="color:#00D">10</span>.uA
-<span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby">define_params :set1 do |params|
+  params.spec_a = 10.uA
+end
 
-define_params <span style="color:#A60">:set2</span> <span style="color:#080;font-weight:bold">do</span> |params|
-  params.spec_b = <span style="color:#60E">2.5</span>
-<span style="color:#080;font-weight:bold">end</span>
+define_params :set2 do |params|
+  params.spec_b = 2.5
+end
 
-define_params <span style="color:#A60">:soc</span>, <span style="color:#606">inherit</span>: [<span style="color:#A60">:set1</span>, <span style="color:#A60">:set2</span>] <span style="color:#080;font-weight:bold">do</span> |params, parents|
-  params.spec_c = <span style="color:#00D">100</span>.mV
-  <span style="color:#777"># The parents is a Hash in this case if you need to reference upstream values:</span>
-  <span style="color:#777">#   parents  =&gt;  { set1: &lt;param set1&gt;, set2: &lt;param set2&gt; }</span>
-  params.spec_b = parents[<span style="color:#A60">:set2</span>].spec_b * <span style="color:#00D">2</span>
-<span style="color:#080;font-weight:bold">end</span>
+define_params :soc, inherit: [:set1, :set2] do |params, parents|
+  params.spec_c = 100.mV
+  # The parents is a Hash in this case if you need to reference upstream values:
+  #   parents  =&gt;  { set1: &lt;param set1&gt;, set2: &lt;param set2&gt; }
+  params.spec_b = parents[:set2].spec_b * 2
+end
 
-params = <span style="color:#A60">:soc</span>
-params.spec_a     <span style="color:#777"># =&gt; 10.uA</span>
-params.spec_b     <span style="color:#777"># =&gt; 5.0</span>
-params.spec_c     <span style="color:#777"># =&gt; 100.mV</span>
-</pre></div>
-</div>
-      </div>
+params = :soc
+params.spec_a     # =&gt; 10.uA
+params.spec_b     # =&gt; 5.0
+params.spec_c     # =&gt; 100.mV
+</code></pre>
 
       <p>The order of the parents specifies the order of precedence if multiple parents define the same parameter -
 those occuring later will override the value inherited from an earlier parent:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>define_params <span style="color:#A60">:set1</span> <span style="color:#080;font-weight:bold">do</span> |params|
-  params.spec_a = <span style="color:#00D">10</span>.uA
-<span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby">define_params :set1 do |params|
+  params.spec_a = 10.uA
+end
 
-define_params <span style="color:#A60">:set2</span> <span style="color:#080;font-weight:bold">do</span> |params|
-  params.spec_a = <span style="color:#00D">20</span>.uA
-<span style="color:#080;font-weight:bold">end</span>
+define_params :set2 do |params|
+  params.spec_a = 20.uA
+end
 
-define_params <span style="color:#A60">:soc1</span>, <span style="color:#606">inherit</span>: [<span style="color:#A60">:set1</span>, <span style="color:#A60">:set2</span>] <span style="color:#080;font-weight:bold">do</span> |params, parents|
-<span style="color:#080;font-weight:bold">end</span>
+define_params :soc1, inherit: [:set1, :set2] do |params, parents|
+end
 
-define_params <span style="color:#A60">:soc2</span>, <span style="color:#606">inherit</span>: [<span style="color:#A60">:set2</span>, <span style="color:#A60">:set1</span>] <span style="color:#080;font-weight:bold">do</span> |params, parents|
-<span style="color:#080;font-weight:bold">end</span>
+define_params :soc2, inherit: [:set2, :set1] do |params, parents|
+end
 
-params = <span style="color:#A60">:soc1</span>
-params.spec_a     <span style="color:#777"># =&gt; 20.uA</span>
-params = <span style="color:#A60">:soc2</span>
-params.spec_a     <span style="color:#777"># =&gt; 10.uA</span>
-</pre></div>
-</div>
-      </div>
+params = :soc1
+params.spec_a     # =&gt; 20.uA
+params = :soc2
+params.spec_a     # =&gt; 10.uA
+</code></pre>
 
       <div>    
   <a class="anchor" name="Live_Updating_Parameters"></a>          
@@ -839,31 +771,23 @@ params.spec_a     <span style="color:#777"># =&gt; 10.uA</span>
       <p>When a parameter is referenced a static value is returned which thereafter has no
 relationship to the current parameter context, for example:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>terase = params.erase.time
-params.erase.time                <span style="color:#777"># =&gt; 100ms</span>
-terase                           <span style="color:#777"># =&gt; 100ms</span>
-params = <span style="color:#A60">:probe</span>                 
-params.erase.time                <span style="color:#777"># =&gt; 20ms</span>
-terase                           <span style="color:#777"># =&gt; 100ms</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">terase = params.erase.time
+params.erase.time                # =&gt; 100ms
+terase                           # =&gt; 100ms
+params = :probe                 
+params.erase.time                # =&gt; 20ms
+terase                           # =&gt; 100ms
+</code></pre>
 
       <p>The above should not be surprising and is what would normally be expected, however
 through the magic of Ruby a live updating parameter can be returned by referring
 to it via <code>params.live</code>:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>terase = params.live.erase.time
-terase                           <span style="color:#777"># =&gt; 100ms</span>
-params = <span style="color:#A60">:probe</span>               
-terase                           <span style="color:#777"># =&gt; 20ms</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">terase = params.live.erase.time
+terase                           # =&gt; 100ms
+params = :probe               
+terase                           # =&gt; 20ms
+</code></pre>
 
       <p>This is an experimental feature and developers are encouraged to play around with it and
 report back on any useful applications that they may find for it.
@@ -881,20 +805,16 @@ each one is modelled by parameter contexts defined within the read controller.</
 that Origen stores register data at bit level a register cannot simply be written to a live
 parameter, however a dedicated API is provided for this case:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>reg <span style="color:#A60">:erase</span>, <span style="color:#00D">0x0</span> <span style="color:#080;font-weight:bold">do</span>
-  bits <span style="color:#00D">3</span>..<span style="color:#00D">0</span>, <span style="color:#A60">:pulses</span>
-<span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby">reg :erase, 0x0 do
+  bits 3..0, :pulses
+end
 
-erase.pulses.data    <span style="color:#777"># =&gt; 0</span>
+erase.pulses.data    # =&gt; 0
 erase.pulses.bind params.live.erase.pulse_count
-erase.pulses.data    <span style="color:#777"># =&gt; 10</span>
-params = <span style="color:#A60">:probe</span>
-erase.pulses.data    <span style="color:#777"># =&gt; 5</span>
-</pre></div>
-</div>
-      </div>
+erase.pulses.data    # =&gt; 10
+params = :probe
+erase.pulses.data    # =&gt; 5
+</code></pre>
 
       <p>In other words anytime that register gets written in the course of a pattern generation
 run its value will automatically track the current parameter context.</p>

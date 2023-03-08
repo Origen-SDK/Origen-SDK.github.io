@@ -458,26 +458,18 @@
       <p>All targets are defined by files that reside in the <code>target</code> directory.
 Targets are regular Ruby files and they should be simply named:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>&lt;identifier&gt;.rb
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">&lt;identifier&gt;.rb
+</code></pre>
 
       <p>Normally the target is used to select the target device and they are simply named after
 the device that they instantiate, e.g.</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>target
+      <pre><code class="language-text">target
 |-- eagle.rb
 |-- falcon.rb
 |-- vulture.rb
 `-- osprey.rb
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <div>    
   <a class="anchor" name="Creating_a_Target"></a>          
@@ -488,37 +480,29 @@ the device that they instantiate, e.g.</p>
 They are usually very concise and normally only instantiate the
 target device model, here are some examples:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># target/eagle.rb</span>
-<span style="color:#036;font-weight:bold">MyApp</span>::<span style="color:#036;font-weight:bold">Eagle</span>.new
+      <pre><code class="language-ruby"># target/eagle.rb
+MyApp::Eagle.new
 
-<span style="color:#777"># target/falcon.rb</span>
-<span style="color:#036;font-weight:bold">MyApp</span>::<span style="color:#036;font-weight:bold">Falcon</span>.new
-</pre></div>
-</div>
-      </div>
+# target/falcon.rb
+MyApp::Falcon.new
+</code></pre>
 
       <p>A common variation on this theme is to have different targets for different versions of
 the device that are available, or perhaps to configure the model differently for different
 types of test:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># target/eagle_1.rb</span>
-<span style="color:#036;font-weight:bold">MyApp</span>::<span style="color:#036;font-weight:bold">Eagle</span>.new(<span style="color:#606">version</span>: <span style="color:#00D">1</span>)
+      <pre><code class="language-ruby"># target/eagle_1.rb
+MyApp::Eagle.new(version: 1)
 
-<span style="color:#777"># target/eagle_2.rb</span>
-<span style="color:#036;font-weight:bold">MyApp</span>::<span style="color:#036;font-weight:bold">Eagle</span>.new(<span style="color:#606">version</span>: <span style="color:#00D">2</span>)
+# target/eagle_2.rb
+MyApp::Eagle.new(version: 2)
 
-<span style="color:#777"># target/falcon_func.rb</span>
-<span style="color:#036;font-weight:bold">MyApp</span>::<span style="color:#036;font-weight:bold">Falcon</span>.new(<span style="color:#606">configuration</span>: <span style="color:#A60">:func</span>)
+# target/falcon_func.rb
+MyApp::Falcon.new(configuration: :func)
 
-<span style="color:#777"># target/falcon_bist.rb</span>
-<span style="color:#036;font-weight:bold">MyApp</span>::<span style="color:#036;font-weight:bold">Falcon</span>.new(<span style="color:#606">configuration</span>: <span style="color:#A60">:bist</span>)
-</pre></div>
-</div>
-      </div>
+# target/falcon_bist.rb
+MyApp::Falcon.new(configuration: :bist)
+</code></pre>
 
       <div>    
   <a class="anchor" name="Setting_a_Default_Target"></a>          
@@ -533,12 +517,8 @@ builds something without really understanding what configuration they are target
       <p>A default is specified by creating a target file called <code>target/default.rb</code>,
 typically this is a symbolic link to another target file:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>ln -s target/falcon_bist.rb target/default.rb
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">ln -s target/falcon_bist.rb target/default.rb
+</code></pre>
 
       <div>    
   <a class="anchor" name="Getting_and_Setting_the_Target"></a>          
@@ -549,40 +529,28 @@ typically this is a symbolic link to another target file:</p>
 <code>origen target</code> command, or <code>origen t</code> for short, this will show
 you the content of the current target file:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>&gt; origen t
+      <pre><code class="language-text">&gt; origen t
 
 Current target: falcon_bist.rb
 **********************************************************************
   MyApp::Falcon.new(configuration: :bist)
 **********************************************************************
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>The target can be changed by running the same command and supplying the desired target:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>&gt; origen t target/falcon_func.rb
+      <pre><code class="language-text">&gt; origen t target/falcon_func.rb
 
 &gt; origen t falcon_bist
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>As shown above, a full path or any snippet which is enough to uniquely identify one of the available
 target files is sufficient.</p>
 
       <p>Additionally all Origen commands allow an override to be supplied at runtime:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>&gt; origen g my_pattern -t eagle_2
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">&gt; origen g my_pattern -t eagle_2
+</code></pre>
 
       <div style="position: relative">
   <hr>

@@ -472,13 +472,9 @@ mode, then it is loaded like any other Origen application.
 The first thing Origen does in this case is to load the plugin’s gem bundle, defined in its <code>Gemfile</code>,
 and then boot the plugin by loading <code>config/boot.rb</code>. Normally such a file will look like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># config/boot.rb</span>
-require <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">atd_test</span><span style="color:#710">'</span></span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># config/boot.rb
+require 'atd_test'
+</code></pre>
 
       <p>So by default this simply loads the plugin’s top-level file which in this example is
 <code>lib/atd_test.rb</code>.</p>
@@ -507,23 +503,19 @@ must never specify an absolute version of gems in its runtime dependencies.</str
 </li>
       </ul>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># atd_test.gemspec</span>
+      <pre><code class="language-ruby"># atd_test.gemspec
 
-<span style="color:#777"># Declare any dependencies that the plugin will need when it is running within a parent application.</span>
-<span style="color:#777"># Never specify an absolute version since that can easily conflict with other plugins if they did the</span>
-<span style="color:#777"># same. Instead specify a range, normally just a minimum version that you need.</span>
-spec.add_runtime_dependency <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">origen_jtag</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">&gt;= 1.1.0</span><span style="color:#710">"</span></span>
+# Declare any dependencies that the plugin will need when it is running within a parent application.
+# Never specify an absolute version since that can easily conflict with other plugins if they did the
+# same. Instead specify a range, normally just a minimum version that you need.
+spec.add_runtime_dependency "origen_jtag", "&gt;= 1.1.0"
 
-<span style="color:#777"># Declare any dependencies that the plugin need when running in standalone/development mode only, a</span>
-<span style="color:#777"># very common example is the documentation helpers plugin. This is only required to build the plugins</span>
-<span style="color:#777"># web pages, but it is not required at runtime.</span>
-<span style="color:#777"># Note that absolute version numbers are allowed here since this does not apply outside of this plugin.</span>
-spec.add_development_dependency <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">origen_doc_helpers</span><span style="color:#710">"</span></span>
-</pre></div>
-</div>
-      </div>
+# Declare any dependencies that the plugin need when running in standalone/development mode only, a
+# very common example is the documentation helpers plugin. This is only required to build the plugins
+# web pages, but it is not required at runtime.
+# Note that absolute version numbers are allowed here since this does not apply outside of this plugin.
+spec.add_development_dependency "origen_doc_helpers"
+</code></pre>
 
       <div>    
   <a class="anchor" name="Sharing_Models_and_Other_Lib_Code"></a>          
@@ -535,12 +527,8 @@ no special consideration is required to expose lib code to the parent applicatio
 In our example the parent application will be able to load
 any of our code like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>require <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">atd_test/atd_16b</span><span style="color:#710">'</span></span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">require 'atd_test/atd_16b'
+</code></pre>
 
       <p>However as noted above the plugin’s top-level file, <code>lib/atd_test.rb</code> will be automatically
 loaded, therefore it is the usual convention to have this file require everything else so that the parent
@@ -554,35 +542,27 @@ application does not need to manually require anything.</p>
       <p>To share source files, templates and commands the plugin must define <code>config.shared</code> in
 its <code>config/application.rb</code> file, here is an example that will share everything:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>config.shared = {
-  <span style="color:#A60">:patterns</span> =&gt; <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">pattern</span><span style="color:#710">"</span></span>,
-  <span style="color:#A60">:templates</span> =&gt; <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">templates</span><span style="color:#710">"</span></span>,
-  <span style="color:#A60">:programs</span> =&gt; <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">program</span><span style="color:#710">"</span></span>,
-  <span style="color:#A60">:command_launcher</span> =&gt; <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">config/shared_commands.rb</span><span style="color:#710">"</span></span>
+      <pre><code class="language-ruby">config.shared = {
+  :patterns =&gt; "pattern",
+  :templates =&gt; "templates",
+  :programs =&gt; "program",
+  :command_launcher =&gt; "config/shared_commands.rb"
 }
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>Access can be restricted by specifying a sub-directory, or by simply
 removing the given resource:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Only share a subset of patterns (those that live within the pattern/shared directory, those</span>
-<span style="color:#777"># in pattern/development for example would not be available to the host application)</span>
+      <pre><code class="language-ruby"># Only share a subset of patterns (those that live within the pattern/shared directory, those
+# in pattern/development for example would not be available to the host application)
 config.shared = {
-  <span style="color:#A60">:patterns</span> =&gt; <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">pattern/shared</span><span style="color:#710">"</span></span>,
-<span style="color:#777">#  :templates =&gt; "templates",</span>
-<span style="color:#777">#  :programs =&gt; "program",</span>
-<span style="color:#777">#  :command_launcher =&gt; "config/shared_commands.rb"</span>
-<span style="color:#777">#  :global_launcher =&gt; "config/global_commands.rb"</span>
+  :patterns =&gt; "pattern/shared",
+#  :templates =&gt; "templates",
+#  :programs =&gt; "program",
+#  :command_launcher =&gt; "config/shared_commands.rb"
+#  :global_launcher =&gt; "config/global_commands.rb"
 }
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <div>    
   <a class="anchor" name="Sharing_Templates"></a>          
@@ -616,23 +596,15 @@ current plugin.</p>
 called <code>atd_ramp.rb</code>, then
 it could be generated like this from the parent application workspace:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>origen pl atd_test
+      <pre><code class="language-text">origen pl atd_test
 origen g atd_ramp
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>Alternatively you can override the current plugin at runtime like this, this is
 equivalent to the above:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>origen g atd_ramp --plugin atd_test
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">origen g atd_ramp --plugin atd_test
+</code></pre>
 
       <p>Program generation source files work from exactly the same principles.</p>
 
@@ -640,13 +612,9 @@ equivalent to the above:</p>
 by a plugin, it is conventional for the plugin to provide custom commands to generate
 a complete set of patterns, e.g. something like this:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>origen atd_test:prod_pats   # Generate all production patterns from the ATD plugin
+      <pre><code class="language-text">origen atd_test:prod_pats   # Generate all production patterns from the ATD plugin
 origen atd_test:prod_prog   # Generate the production test program from the ATD plugin
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <div>    
   <a class="anchor" name="Sharing_Application_Commands"></a>          
@@ -673,36 +641,32 @@ that could be added by other plugins.
 In future Origen will automatically apply a plugin specific prefix to the commands like this,
 but until then all plugin developers are expected to be good citizens and add this manually.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># config/shared_commands.rb</span>
+      <pre><code class="language-ruby"># config/shared_commands.rb
 
-<span style="color:#777"># The requested command is passed in here as @command</span>
-<span style="color:#080;font-weight:bold">case</span> <span style="color:#33B">@command</span>
+# The requested command is passed in here as @command
+case @command
 
-<span style="color:#080;font-weight:bold">when</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">atd_test:j750</span><span style="color:#710">"</span></span>
-  require <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.root!<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">/lib/commands/j750</span><span style="color:#710">"</span></span>
-  <span style="color:#777"># Important to exit when a command has been fulfilled or else Origen core will try and execute it</span>
-  exit <span style="color:#00D">0</span>
+when "atd_test:j750"
+  require "#{Origen.root!}/lib/commands/j750"
+  # Important to exit when a command has been fulfilled or else Origen core will try and execute it
+  exit 0
 
-<span style="color:#777"># Add an additional option to the standard generate command, important to have no exit here</span>
-<span style="color:#080;font-weight:bold">when</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">generate</span><span style="color:#710">"</span></span>
-  <span style="color:#33B">@application_options</span> &lt;&lt; [<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">--md5</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Apply an MD5 checksum to pattern names</span><span style="color:#710">"</span></span>]
-  <span style="color:#036;font-weight:bold">Origen</span>.app!.md5 = <span style="color:#069">true</span> <span style="color:#080;font-weight:bold">if</span> <span style="color:#069">ARGV</span>.include?(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">--md5</span><span style="color:#710">"</span></span>)
+# Add an additional option to the standard generate command, important to have no exit here
+when "generate"
+  @application_options &lt;&lt; ["--md5", "Apply an MD5 checksum to pattern names"]
+  Origen.app!.md5 = true if ARGV.include?("--md5")
 
-<span style="color:#777"># Always leave an else clause to allow control to fall back through to the Origen command handler.</span>
-<span style="color:#777"># You probably want to also add the command details to the help shown via 'origen -h',</span>
-<span style="color:#777"># you can do this bb adding the required text to @plugin_commands before handing control back to</span>
-<span style="color:#777"># Origen.</span>
-<span style="color:#080;font-weight:bold">else</span>
-  <span style="color:#33B">@plugin_commands</span> &lt;&lt; <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&lt;&lt;-EOT</span></span><span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">
- atd_test:j750 Generate the ATD test program for J750</span><span style="color:#710">
-  EOT</span></span>
+# Always leave an else clause to allow control to fall back through to the Origen command handler.
+# You probably want to also add the command details to the help shown via 'origen -h',
+# you can do this bb adding the required text to @plugin_commands before handing control back to
+# Origen.
+else
+  @plugin_commands &lt;&lt; &lt;&lt;-EOT
+ atd_test:j750 Generate the ATD test program for J750
+  EOT
 
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Sharing_Global_Commands"></a>          

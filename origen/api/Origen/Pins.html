@@ -6,7 +6,7 @@
 <title>
   Module: Origen::Pins
   
-    &mdash; Origen Core 0.60.7
+    &mdash; Origen Core 0.60.10
   
 </title>
 
@@ -659,7 +659,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#all_pin_ids-instance_method" title="#all_pin_ids (instance method)">#<strong>all_pin_ids</strong>(type: nil, **options)  &#x21d2; Object </a>
+      <a href="#all_pin_ids-instance_method" title="#all_pin_ids (instance method)">#<strong>all_pin_ids</strong>(*options)  &#x21d2; Object </a>
     
 
     
@@ -2275,7 +2275,7 @@
       <div class="method_details ">
   <h3 class="signature " id="all_pin_ids-instance_method">
   
-    #<strong>all_pin_ids</strong>(type: nil, **options)  &#x21d2; <tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt> 
+    #<strong>all_pin_ids</strong>(*options)  &#x21d2; <tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt> 
   
 
   
@@ -2311,12 +2311,24 @@
 717
 718
 719
-720</pre>
+720
+721
+722
+723
+724
+725
+726</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/origen/pins.rb', line 696</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_all_pin_ids'>all_pin_ids</span><span class='lparen'>(</span><span class='label'>type:</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='op'>**</span><span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_all_pin_ids'>all_pin_ids</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_type'>type</span> <span class='op'>=</span> <span class='kw'>nil</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='period'>.</span><span class='id identifier rubyid_first'>first</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="../Hash.html" title="Hash (class)">Hash</a></span></span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='period'>.</span><span class='id identifier rubyid_first'>first</span>
+    <span class='id identifier rubyid_type'>type</span> <span class='op'>=</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='lbracket'>[</span><span class='symbol'>:type</span><span class='rbracket'>]</span>
+  <span class='kw'>end</span>
+
   <span class='kw'>case</span> <span class='id identifier rubyid_type'>type</span>
   <span class='kw'>when</span> <span class='symbol'>:power_pin</span><span class='comma'>,</span> <span class='symbol'>:power_pins</span>
     <span class='id identifier rubyid_dut'><span class='object_link'><a href="GlobalMethods.html#dut-instance_method" title="Origen::GlobalMethods#dut (method)">dut</a></span></span><span class='period'>.</span><span class='id identifier rubyid_pins'>pins</span><span class='lparen'>(</span><span class='label'>power_pin:</span> <span class='kw'>true</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_n'>n</span><span class='comma'>,</span> <span class='id identifier rubyid_p'>p</span><span class='op'>|</span> <span class='lbracket'>[</span><span class='id identifier rubyid_n'>n</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_p'>p</span><span class='period'>.</span><span class='id identifier rubyid_aliases'>aliases</span><span class='period'>.</span><span class='id identifier rubyid_keys'>keys</span><span class='rbracket'>]</span> <span class='rbrace'>}</span><span class='period'>.</span><span class='id identifier rubyid_flatten'>flatten</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_n'>n</span><span class='op'>|</span> <span class='lbracket'>[</span><span class='id identifier rubyid_n'>n</span><span class='comma'>,</span> <span class='id identifier rubyid_dut'><span class='object_link'><a href="GlobalMethods.html#dut-instance_method" title="Origen::GlobalMethods#dut (method)">dut</a></span></span><span class='period'>.</span><span class='id identifier rubyid_power_pin'>power_pin</span><span class='lparen'>(</span><span class='id identifier rubyid_n'>n</span><span class='rparen'>)</span><span class='rbracket'>]</span> <span class='rbrace'>}</span><span class='period'>.</span><span class='id identifier rubyid_to_h'>to_h</span>
@@ -2510,12 +2522,12 @@
       <pre class="lines">
 
 
-825
-826
-827</pre>
+831
+832
+833</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins.rb', line 825</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins.rb', line 831</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_delete_all_pins'>delete_all_pins</span>
   <span class='const'><span class='object_link'><a href="../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_pin_bank'><span class='object_link'><a href="../Origen.html#pin_bank-class_method" title="Origen.pin_bank (method)">pin_bank</a></span></span><span class='period'>.</span><span class='id identifier rubyid_send'>send</span> <span class='symbol'>:empty!</span>
@@ -2551,20 +2563,20 @@
       <pre class="lines">
 
 
-831
-832
-833
-834
-835
-836
 837
 838
 839
 840
-841</pre>
+841
+842
+843
+844
+845
+846
+847</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins.rb', line 831</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins.rb', line 837</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_delete_pin'>delete_pin</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_id'>id</span> <span class='op'>=</span> <span class='id identifier rubyid_id'>id</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span>
@@ -2689,17 +2701,17 @@ If you meant to define the ground_pin_group then use the add_ground_pin_group me
       <pre class="lines">
 
 
-795
-796
-797
-798
-799
-800
 801
-802</pre>
+802
+803
+804
+805
+806
+807
+808</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins.rb', line 795</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins.rb', line 801</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_ground_pins'>ground_pins</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_ids'>ids</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='lparen'>(</span><span class='id identifier rubyid_ids'>ids</span><span class='period'>.</span><span class='id identifier rubyid_pop'>pop</span> <span class='kw'>if</span> <span class='id identifier rubyid_ids'>ids</span><span class='period'>.</span><span class='id identifier rubyid_last'>last</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="../Hash.html" title="Hash (class)">Hash</a></span></span><span class='rparen'>)</span><span class='rparen'>)</span> <span class='op'>||</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
@@ -3109,16 +3121,16 @@ If you meant to define the other_pin_group then use the add_other_pin_group meth
       <pre class="lines">
 
 
-806
-807
-808
-809
-810
-811
-812</pre>
+812
+813
+814
+815
+816
+817
+818</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins.rb', line 806</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins.rb', line 812</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_other_pins'>other_pins</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_id'>id</span> <span class='kw'>if</span> <span class='id identifier rubyid_id'>id</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="../Hash.html" title="Hash (class)">Hash</a></span></span><span class='rparen'>)</span>
@@ -3514,12 +3526,6 @@ If you meant to define the pin_group then use the add_pin_group method instead.
       <pre class="lines">
 
 
-728
-729
-730
-731
-732
-733
 734
 735
 736
@@ -3567,10 +3573,16 @@ If you meant to define the pin_group then use the add_pin_group method instead.
 778
 779
 780
-781</pre>
+781
+782
+783
+784
+785
+786
+787</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins.rb', line 728</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins.rb', line 734</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_pins'>pins</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_ids'>ids</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid__block'>_block</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='lparen'>(</span><span class='id identifier rubyid_ids'>ids</span><span class='period'>.</span><span class='id identifier rubyid_pop'>pop</span> <span class='kw'>if</span> <span class='id identifier rubyid_ids'>ids</span><span class='period'>.</span><span class='id identifier rubyid_last'>last</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="../Hash.html" title="Hash (class)">Hash</a></span></span><span class='rparen'>)</span><span class='rparen'>)</span> <span class='op'>||</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
@@ -3738,16 +3750,16 @@ If you meant to define the power_pin_group then use the add_power_pin_group meth
       <pre class="lines">
 
 
-785
-786
-787
-788
-789
-790
-791</pre>
+791
+792
+793
+794
+795
+796
+797</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins.rb', line 785</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins.rb', line 791</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_power_pins'>power_pins</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_id'>id</span> <span class='kw'>if</span> <span class='id identifier rubyid_id'>id</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="../Hash.html" title="Hash (class)">Hash</a></span></span><span class='rparen'>)</span>
@@ -3868,16 +3880,16 @@ If you meant to define the virtual_pin_group then use the add_virtual_pin_group 
       <pre class="lines">
 
 
-816
-817
-818
-819
-820
-821
-822</pre>
+822
+823
+824
+825
+826
+827
+828</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/pins.rb', line 816</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/pins.rb', line 822</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_virtual_pins'>virtual_pins</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span> <span class='op'>=</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_id'>id</span> <span class='kw'>if</span> <span class='id identifier rubyid_id'>id</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="../Hash.html" title="Hash (class)">Hash</a></span></span><span class='rparen'>)</span>
@@ -3896,9 +3908,9 @@ If you meant to define the virtual_pin_group then use the add_virtual_pin_group 
 </div>
 
       <div id="footer">
-  Generated on Fri Feb 11 10:52:54 2022 by
-  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.26 (ruby-2.6.0).
+  Generated on Wed Mar  8 10:08:37 2023 by
+  <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.9.28 (ruby-2.6.0).
 </div>
 
     </div>

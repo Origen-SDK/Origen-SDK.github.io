@@ -493,12 +493,8 @@ fetch the latest versions of the generators.</p>
 
       <p>To create a new application generator run the following command:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>origen app_gen:new
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">origen app_gen:new
+</code></pre>
 
       <p>This will create a new generator within the <code>lib</code> directory and then update the top-level file in the <code>lib</code> directory
 to properly hook it into the <code>origen new</code> system.
@@ -507,12 +503,8 @@ selecting option 0 in the <code>origen new</code> command.</p>
 
       <p>You can test run your new generator by running the following command:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>origen app_gen:test
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">origen app_gen:test
+</code></pre>
 
       <p>This will build a new app in the application’s <code>tmp</code> directory, and when complete you can cd into that directory
 and run <code>origen -v</code> to verify that it can boot. At this point you can further interact with the application in the
@@ -524,26 +516,18 @@ answers to the questions that are given to the user when creating a new applicat
 
       <p>Within the top-level lib file you will see a set of test inputs something like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">TEST_INPUTS</span> = [
-  <span style="color:#777"># 0 - TestEngineering::MicroTestBlock</span>
-  [<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">1</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">0</span><span style="color:#710">'</span></span>, <span style="color:#A60">:default</span>, <span style="color:#A60">:default</span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">A cool plugin</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">yes</span><span style="color:#710">'</span></span>, <span style="color:#A60">:default</span>]
-] <span style="color:#777"># END_OF_TEST_INPUTS Don't remove this comment, it is used by the app_gen:new command!</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">TEST_INPUTS = [
+  # 0 - TestEngineering::MicroTestBlock
+  ['1', '0', :default, :default, 'A cool plugin', 'yes', :default]
+] # END_OF_TEST_INPUTS Don't remove this comment, it is used by the app_gen:new command!
+</code></pre>
 
       <p>The last item in the array will be a starter set of inputs that has been created for the new genrator that was just added.
 To test the new generator with these inputs supply the <code>-i</code> option and supply the index number of the set of inputs you
 wish to apply:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>origen app_gen:test -i 0
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">origen app_gen:test -i 0
+</code></pre>
       <p>Modify the inputs as required as you further develop the generator, making sure to add a value for any additional questions
 that you add. The <code>:default</code> keyword can be used for any questions which have a default option that you wish to select, this
 is equivalent to just pressing return in response to the given question.</p>
@@ -563,31 +547,19 @@ Supplying the <code>:default</code> keyword for this argument will execute the f
 
       <p>Alternatively you can specify your own set of operations by supplying an array of commands:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">1</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">0</span><span style="color:#710">'</span></span>, <span style="color:#A60">:default</span>, <span style="color:#A60">:default</span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">A cool plugin</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">yes</span><span style="color:#710">'</span></span>, [<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">origen -v</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">origen g my_pattern</span><span style="color:#710">'</span></span>]]
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">['1', '0', :default, :default, 'A cool plugin', 'yes', ['origen -v', 'origen g my_pattern']]
+</code></pre>
 
       <p>Within the array of custom commands you can also supply the <code>:default</code> and <code>:load_target</code> keywords to execute the default
 set of tests or the load target test respectively, for example:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">1</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">0</span><span style="color:#710">'</span></span>, <span style="color:#A60">:default</span>, <span style="color:#A60">:default</span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">A cool plugin</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">yes</span><span style="color:#710">'</span></span>, [<span style="color:#A60">:default</span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">origen g my_pattern</span><span style="color:#710">'</span></span>]]
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">['1', '0', :default, :default, 'A cool plugin', 'yes', [:default, 'origen g my_pattern']]
+</code></pre>
 
       <p>To run a regression test which will execute all sets of test inputs, run:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>origen app_gen:test -r
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">origen app_gen:test -r
+</code></pre>
 
       <p>You should find the generator file itself (the one created for you in a sub-folder of the <code>lib</code> directory) well commented
 and with pointers towards examples from existing generators.</p>
@@ -621,18 +593,14 @@ provided by the Ruby on Rails web application platform.</p>
 
       <p>The new application generators are organized into the following hierarchy:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>OrigenAppGenerators::Application
+      <pre><code class="language-text">OrigenAppGenerators::Application
   |
    -&gt; MyAppGenerators::Application (Mixes in MyAppGenerators::Base)
   |
    -&gt; OrigenAppGenerators::Plugin
         |
         -&gt; MyAppGenerators::Plugin (Mixes in MyAppGenerators::Base)
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p><strong>All generators must be a subclass of either <code>OrigenAppGenerators::Application</code>
 or <code>OrigenAppGenerators::Plugin</code> depending on whether the end application is intended to be a plugin or not.</strong></p>
@@ -658,46 +626,38 @@ Any methods that are marked as <code>protected</code> will not be called.</p>
 
       <p>For example when the following generator is executed:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">MyAppGenerators</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MyGenerator</span> &lt; <span style="color:#036;font-weight:bold">Application</span>
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">say_hello</span>
-      puts <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Hello</span><span style="color:#710">"</span></span> 
-    <span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby">module MyAppGenerators
+  class MyGenerator &lt; Application
+    def say_hello
+      puts "Hello" 
+    end
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">call_a_helper</span>
-      puts <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">About to call</span><span style="color:#710">"</span></span>
+    def call_a_helper
+      puts "About to call"
       a_helper_method
-      puts <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Returned from call</span><span style="color:#710">"</span></span>
-    <span style="color:#080;font-weight:bold">end</span>
+      puts "Returned from call"
+    end
 
     protected
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">a_helper_method</span>
-      puts <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Helper method called!</span><span style="color:#710">"</span></span>
-    <span style="color:#080;font-weight:bold">end</span>
+    def a_helper_method
+      puts "Helper method called!"
+    end
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">this_does_nothing</span>
-      puts <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Another method called!</span><span style="color:#710">"</span></span>
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+    def this_does_nothing
+      puts "Another method called!"
+    end
+  end
+end
+</code></pre>
 
       <p>Then you would see this:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>Hello
+      <pre><code class="language-text">Hello
 About to call
 Helper method called!
 Returned from call
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>Note that any methods defined by the parent classes will get called first. The
 parent <code>OrigenAppGenerators::Application</code> and <code>OrigenAppGenerators::Plugin</code> classes implement methods to get the user
@@ -721,31 +681,23 @@ practice what this means is that if you want to refer to the source file of what
 belonging to your generator’s parent classes.
 For example let’s say you make a test engineering generator that has the following class hierarchy:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>OrigenAppGenerators::Application
+      <pre><code class="language-text">OrigenAppGenerators::Application
   |
    -&gt; OrigenAppGenerators::Plugin
         |
          -&gt; MyAppGenerators::Plugin (Mixes in MyAppGenerators::Base)
               |
                -&gt; TestEngineering::TestBlock
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>Then the following source paths will be searched in this order:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>&lt;my_app_generators&gt;/templates/app_generators/test_engineering/test_block
+      <pre><code class="language-text">&lt;my_app_generators&gt;/templates/app_generators/test_engineering/test_block
 &lt;my_app_generators&gt;/templates/app_generators/plugin
 &lt;my_app_generators&gt;/templates/app_generators/base
 &lt;origen_app_generators&gt;/templates/app_generators/plugin
 &lt;origen_app_generators&gt;/templates/app_generators/application
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>This means that if you create a file called <code>config/application.rb</code> within
 <code>&lt;my_app_generators&gt;/templates/app_generators/test_engineering/test_block</code> then this will override the corresponding
@@ -817,25 +769,17 @@ or if the destination file name ends in <code>.erb</code>.</p>
 
       <p>Whole line Ruby is not enabled (a limitation imposed by Thor), therefore instead of this:</p>
 
-      <div class="language-eruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>% if x_is_true
+      <pre><code class="language-eruby">% if x_is_true
 Include something
 % end
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>You must do:</p>
 
-      <div class="language-eruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%</span> <span style="color:#080;font-weight:bold">if</span> x_is_true <span style="font-weight:bold;color:#666">-%&gt;</span></span>
+      <pre><code class="language-eruby">&lt;% if x_is_true -%&gt;
 Include something
-<span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%</span> <span style="color:#080;font-weight:bold">end</span> <span style="font-weight:bold;color:#666">-%&gt;</span></span>
-</pre></div>
-</div>
-      </div>
+&lt;% end -%&gt;
+</code></pre>
 
       <p>Access to variables collected by your generator at runtime is done by assigning them to instance
 variables (instead of the options hash used by the Origen compiler).</p>
@@ -843,21 +787,13 @@ variables (instead of the options hash used by the Origen compiler).</p>
       <p>So for example if you have your user input a product name, then you should assign that to an
 instance variable:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#33B">@product_name</span> = get_product_name
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">@product_name = get_product_name
+</code></pre>
 
       <p>Then in the template:</p>
 
-      <div class="language-eruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>The product name is <span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> <span style="color:#33B">@product_name</span> <span style="font-weight:bold;color:#666">%&gt;</span></span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-eruby">The product name is &lt;%= @product_name %&gt;
+</code></pre>
 
       <p>By convention, templates in this plugin do not end in <code>.erb</code> and this is reserved
 for files that would become <code>.erb</code> files in the end application.</p>
@@ -880,30 +816,26 @@ to <code>lib/origen_app_generators.rb</code>.</p>
       <p>As a quick example say you wanted to add a method to <code>config/application.rb</code>, this
 could be achieved by injecting it at the end of the class like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Always ensure the filelist has been rendered first</span>
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">generate_files</span>
+      <pre><code class="language-ruby"># Always ensure the filelist has been rendered first
+def generate_files
   build_filelist 
-<span style="color:#080;font-weight:bold">end</span>
+end
 
-<span style="color:#777"># Add a custom domain method to config/application.rb</span>
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">add_method_to_application</span>
-  <span style="color:#777"># Define a regular expression to define a point in the file where you want to inject, in this</span>
-  <span style="color:#777"># case the 'end' of the class definition (the only 'end' that occurs at the beginning of a line)</span>
-  end_of_class = <span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#808">^end</span><span style="color:#404">/</span></span>
-  <span style="color:#777"># Define the code snippet</span>
-  code = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&lt;&lt;-END</span></span><span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">
+# Add a custom domain method to config/application.rb
+def add_method_to_application
+  # Define a regular expression to define a point in the file where you want to inject, in this
+  # case the 'end' of the class definition (the only 'end' that occurs at the beginning of a line)
+  end_of_class = /^end/
+  # Define the code snippet
+  code = &lt;&lt;-END
   def some_domain_specific_method
     do_something
-  end  </span><span style="color:#710">
-  END</span></span>
-  <span style="color:#777"># Now inject it</span>
-  inject_into_file <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">config/application.rb</span><span style="color:#710">"</span></span>, code, <span style="color:#606">before</span>: end_of_class
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  end  
+  END
+  # Now inject it
+  inject_into_file "config/application.rb", code, before: end_of_class
+end
+</code></pre>
 
       <div style="position: relative">
   <hr>

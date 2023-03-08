@@ -464,14 +464,10 @@
 all Origen APIs for defining registers, pins, etc. and generally makes Origen aware of any instances of the
 model when you instantiate them.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MyModel</span>
-  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">class MyModel
+  include Origen::Model
+end
+</code></pre>
 
       <p>As a general rule <strong>include the <code>Origen::Model</code> module every time you create a new class in Origen</strong>,
 even if the model is
@@ -493,14 +489,10 @@ object for dispatch.</p>
 therefore it does not need to be specifically included in top-level model classes (although there is
 no harm from doing so).</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MySoCModel</span>
-  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">TopLevel</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">class MySoCModel
+  include Origen::TopLevel
+end
+</code></pre>
 
       <div class="alert alert-danger">
   <strong>Warning!</strong> While you can define multiple top-level models only one of them can be instantiated
@@ -511,14 +503,10 @@ no harm from doing so).</p>
 <code>Origen.top_level</code> or more simply <code>$dut</code>. All Origen developers can rely on this
 convention to access the current top-level object:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>soc = <span style="color:#036;font-weight:bold">MySoCModel</span>.new
-<span style="color:#036;font-weight:bold">Origen</span>.top_level == soc      <span style="color:#777"># =&gt; true</span>
-<span style="color:#d70">$dut</span> == soc                  <span style="color:#777"># =&gt; true</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">soc = MySoCModel.new
+Origen.top_level == soc      # =&gt; true
+$dut == soc                  # =&gt; true
+</code></pre>
 
       <div>    
   <a class="anchor" name="Modelling_Hierarchy_by_Example"></a>          
@@ -549,20 +537,16 @@ applications - e.g. an application concerned with testing the SRAM could re-use 
 their own namespace which
 we will call <code>SOC</code>. Here is how to define the top level model:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/soc/eagle_m352.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">SOC</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">EAGLE_M352</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">TopLevel</span>
+      <pre><code class="language-ruby"># lib/soc/eagle_m352.rb
+module SOC
+  class EAGLE_M352
+    include Origen::TopLevel
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options={})
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+    def initialize(options={})
+    end
+  end
+end
+</code></pre>
 
       <p>The initialize method will automatically be called by Ruby whenever a new instance of this class is
 instantiated - so this is a place to do any setup or initialization that is required whenever a new
@@ -580,24 +564,16 @@ additional arguments in future that we may not have thought about when first def
       <p>Our first model is now defined and we can now go and talk to it for the first time, to do so start
 an interactive Origen session from your terminal:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>origen i
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">origen i
+</code></pre>
 
       <p>This command loads up an interactive Ruby terminal and automatically loads Origen and your application, so we can
 now experiment with our models:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$dut</span> = <span style="color:#036;font-weight:bold">SOC</span>::<span style="color:#036;font-weight:bold">EAGLE_M352</span>.new
+      <pre><code class="language-ruby">$dut = SOC::EAGLE_M352.new
 
-<span style="color:#d70">$dut</span>.is_a?(<span style="color:#036;font-weight:bold">SOC</span>::<span style="color:#036;font-weight:bold">EAGLE_M352</span>)     <span style="color:#777"># =&gt; true</span>
-</pre></div>
-</div>
-      </div>
+$dut.is_a?(SOC::EAGLE_M352)     # =&gt; true
+</code></pre>
 
       <p>Above we simply instantiated a new instance of our class, and then asked it if it was an instance of
 <code>SOC::EAGLE_M352</code>, to which it replied: ‘yes’.</p>
@@ -610,40 +586,32 @@ now experiment with our models:</p>
       <p>Sub-blocks should be used to model IP blocks or indeed any sub-components within that IP, a generic sub-block
 can be declared very simply within the top-level’s initialize method:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/soc/eagle_m352.rb</span>
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options={})
-  sub_block <span style="color:#A60">:nvm</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># lib/soc/eagle_m352.rb
+def initialize(options={})
+  sub_block :nvm
+end
+</code></pre>
 
       <p>By default this will instantiate an object that includes all of the usual Origen APIs (regs, pins, etc.) and 
 this can then be decorated as required by the application (see example below). Most importantly this wires up
 everything internally such that the relationship between the child and the parent are known to Origen and it
 will automatically build an accessor to get the child module:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$dut</span> = <span style="color:#036;font-weight:bold">SOC</span>::<span style="color:#036;font-weight:bold">EAGLE_M352</span>.new
+      <pre><code class="language-ruby">$dut = SOC::EAGLE_M352.new
 
-<span style="color:#d70">$dut</span>.nvm         <span style="color:#777"># =&gt; Generic Origen object</span>
-<span style="color:#d70">$dut</span>.nvm.parent  <span style="color:#777"># =&gt; $dut</span>
+$dut.nvm         # =&gt; Generic Origen object
+$dut.nvm.parent  # =&gt; $dut
 
-<span style="color:#d70">$dut</span>.children    <span style="color:#777"># =&gt; {:nvm =&gt; &lt;object&gt;}</span>
+$dut.children    # =&gt; {:nvm =&gt; &lt;object&gt;}
 
-<span style="color:#777"># Decorate as required by calling Origen APIs on the object</span>
-<span style="color:#d70">$dut</span>.nvm.reg <span style="color:#A60">:reg1</span>, <span style="color:#00D">0x30</span> <span style="color:#080;font-weight:bold">do</span> |reg|
-  reg.bits <span style="color:#00D">31</span>..<span style="color:#00D">0</span>, <span style="color:#A60">:data</span>
-<span style="color:#080;font-weight:bold">end</span>
+# Decorate as required by calling Origen APIs on the object
+$dut.nvm.reg :reg1, 0x30 do |reg|
+  reg.bits 31..0, :data
+end
 
-<span style="color:#777"># The NVM now has a register available...</span>
-<span style="color:#d70">$dut</span>.nvm.reg1.write(<span style="color:#00D">0x1234</span>)
-</pre></div>
-</div>
-      </div>
+# The NVM now has a register available...
+$dut.nvm.reg1.write(0x1234)
+</code></pre>
 
       <p>The above approach is ideal where the models are being built from a 3rd party data source (e.g. standard XML)
 and all that is required is to get an Origen object representation of the same data.</p>
@@ -651,44 +619,36 @@ and all that is required is to get an Origen object representation of the same d
       <p>However in cases where more native richness is required you can supply a class for the object,
 let’s create a dedicated model for our NVM IP:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/nvm/nvm_m682.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">NVM</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">NVM_M682</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
+      <pre><code class="language-ruby"># lib/nvm/nvm_m682.rb
+module NVM
+  class NVM_M682
+    include Origen::Model
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options={})
-      <span style="color:#777"># Add an example register</span>
-      reg <span style="color:#A60">:reg1</span>, <span style="color:#00D">0x30</span> <span style="color:#080;font-weight:bold">do</span> |reg|
-        reg.bits <span style="color:#00D">31</span>..<span style="color:#00D">0</span>, <span style="color:#A60">:data</span>, <span style="color:#606">reset</span>: <span style="color:#00D">0xFFFF_FFFF</span>
-      <span style="color:#080;font-weight:bold">end</span>
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+    def initialize(options={})
+      # Add an example register
+      reg :reg1, 0x30 do |reg|
+        reg.bits 31..0, :data, reset: 0xFFFF_FFFF
+      end
+    end
+  end
+end
+</code></pre>
 
       <p>This follows the same pattern as our first model, note the use of the <code>NVM</code> namespace and the
 subsequent storage of the file in the <code>lib/nvm</code> directory rather than <code>lib/soc</code>.</p>
 
       <p>We can now refer to this class in our sub-block definition and verify that the register we added is available:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/soc/eagle_m352.rb</span>
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options={})
-  sub_block <span style="color:#A60">:nvm</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">NVM_M682</span><span style="color:#710">"</span></span>
-<span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby"># lib/soc/eagle_m352.rb
+def initialize(options={})
+  sub_block :nvm, class_name: "NVM_M682"
+end
 
 
-<span style="color:#d70">$dut</span> = <span style="color:#036;font-weight:bold">SOC</span>::<span style="color:#036;font-weight:bold">EAGLE_M352</span>.new
-<span style="color:#d70">$dut</span>.nvm.reg1.address        <span style="color:#777"># =&gt; 0x30</span>
-<span style="color:#d70">$dut</span>.nvm.reg1.data           <span style="color:#777"># =&gt; 0xFFFF_FFFF</span>
-</pre></div>
-</div>
-      </div>
+$dut = SOC::EAGLE_M352.new
+$dut.nvm.reg1.address        # =&gt; 0x30
+$dut.nvm.reg1.data           # =&gt; 0xFFFF_FFFF
+</code></pre>
 
       <div>    
   <a class="anchor" name="Adding_Sub_Block_Groups"></a>          
@@ -697,115 +657,99 @@ subsequent storage of the file in the <code>lib/nvm</code> directory rather than
 
       <p>If needing to add several similar sub blocks, a <code>sub_block_group</code> can be used.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/soc/eagle_m352.rb</span>
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options={})
-  sub_block_group <span style="color:#A60">:memories</span> <span style="color:#080;font-weight:bold">do</span>
-    sub_block <span style="color:#A60">:memory0</span>,        <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">MEMORY_128_B954</span><span style="color:#710">"</span></span>
-    sub_block <span style="color:#A60">:memory1</span>,        <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">MEMORY_64_B954</span><span style="color:#710">"</span></span>
-    sub_block <span style="color:#A60">:memory2</span>,        <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">MEMORY_32_B954</span><span style="color:#710">"</span></span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby"># lib/soc/eagle_m352.rb
+def initialize(options={})
+  sub_block_group :memories do
+    sub_block :memory0,        class_name: "MEMORY_128_B954"
+    sub_block :memory1,        class_name: "MEMORY_64_B954"
+    sub_block :memory2,        class_name: "MEMORY_32_B954"
+  end
+end
 
-<span style="color:#d70">$dut</span> = <span style="color:#036;font-weight:bold">SOC</span>::<span style="color:#036;font-weight:bold">EAGLE_M352</span>.new
-<span style="color:#d70">$dut</span>.memory0.class               <span style="color:#777"># MEMORY_128_B954</span>
-<span style="color:#d70">$dut</span>.memory1.class               <span style="color:#777"># MEMORY_64_B954</span>
-<span style="color:#d70">$dut</span>.memory2.class               <span style="color:#777"># MEMORY_32_B954</span>
-<span style="color:#d70">$dut</span>.memories.class              <span style="color:#777"># Array (Array of all 3 memory sub_blocks)</span>
+$dut = SOC::EAGLE_M352.new
+$dut.memory0.class               # MEMORY_128_B954
+$dut.memory1.class               # MEMORY_64_B954
+$dut.memory2.class               # MEMORY_32_B954
+$dut.memories.class              # Array (Array of all 3 memory sub_blocks)
 
-<span style="color:#777"># By default uses sub_block_group uses Array class, so all Array methods are available</span>
-memories                         <span style="color:#777"># =&gt; [&lt;memory 0 instance&gt;, &lt;memory 1 instance&gt;, &lt;memory 2 instance&gt;]</span>
-memories.size                    <span style="color:#777"># =&gt; 3</span>
-memories.first                   <span style="color:#777"># =&gt; &lt;memory 0 instance&gt;</span>
-</pre></div>
-</div>
-      </div>
+# By default uses sub_block_group uses Array class, so all Array methods are available
+memories                         # =&gt; [&lt;memory 0 instance&gt;, &lt;memory 1 instance&gt;, &lt;memory 2 instance&gt;]
+memories.size                    # =&gt; 3
+memories.first                   # =&gt; &lt;memory 0 instance&gt;
+</code></pre>
 
       <p>In addition, a custom container class can also be used instead of an Array to contain the sub_block objects if desired.
 To do this, pass the desired container class as follows:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/soc/eagle_m352.rb</span>
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options={})
-  sub_block_group <span style="color:#A60">:memories</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">MEMORIES_B294</span><span style="color:#710">"</span></span> <span style="color:#080;font-weight:bold">do</span>
-    sub_block <span style="color:#A60">:memory0</span>,        <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">MEMORY_128_B954</span><span style="color:#710">"</span></span>
-    sub_block <span style="color:#A60">:memory1</span>,        <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">MEMORY_64_B954</span><span style="color:#710">"</span></span>
-    sub_block <span style="color:#A60">:memory2</span>,        <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">MEMORY_32_B954</span><span style="color:#710">"</span></span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby"># lib/soc/eagle_m352.rb
+def initialize(options={})
+  sub_block_group :memories, class_name: "MEMORIES_B294" do
+    sub_block :memory0,        class_name: "MEMORY_128_B954"
+    sub_block :memory1,        class_name: "MEMORY_64_B954"
+    sub_block :memory2,        class_name: "MEMORY_32_B954"
+  end
+end
 
 
-<span style="color:#d70">$dut</span> = <span style="color:#036;font-weight:bold">SOC</span>::<span style="color:#036;font-weight:bold">EAGLE_M352</span>.new
-<span style="color:#d70">$dut</span>.memory0.class               <span style="color:#777"># MEMORY_128_B954</span>
-<span style="color:#d70">$dut</span>.memory1.class               <span style="color:#777"># MEMORY_64_B954</span>
-<span style="color:#d70">$dut</span>.memory2.class               <span style="color:#777"># MEMORY_32_B954</span>
-<span style="color:#d70">$dut</span>.memories.class              <span style="color:#777"># MEMORIES_B954 (custom class containing all 3 memory sub_blocks)</span>
+$dut = SOC::EAGLE_M352.new
+$dut.memory0.class               # MEMORY_128_B954
+$dut.memory1.class               # MEMORY_64_B954
+$dut.memory2.class               # MEMORY_32_B954
+$dut.memories.class              # MEMORIES_B954 (custom class containing all 3 memory sub_blocks)
 
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>The recommended way to create a custom container class is to sub-class the Array class, then add additional methods, like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/memories.rb</span>
-<span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MEMORIES_B294</span> &lt; ::<span style="color:#036;font-weight:bold">Array</span>
-  <span style="color:#777"># Example of a custom method to print the names of all contained memories</span>
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">print_ids</span>
-    <span style="color:#777"># Since this class is based on Array, we can use all Array methods like 'each'</span>
-    <span style="color:#777"># on the contained objects</span>
+      <pre><code class="language-ruby"># lib/memories.rb
+class MEMORIES_B294 &lt; ::Array
+  # Example of a custom method to print the names of all contained memories
+  def print_ids
+    # Since this class is based on Array, we can use all Array methods like 'each'
+    # on the contained objects
     each { |mem| puts mem.id }
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
+  end
+end
 
-<span style="color:#777"># All conventional Array methods are supported since we sub-classed Array</span>
-memories.size                   <span style="color:#777"># =&gt; 3</span>
-memories.first                  <span style="color:#777"># =&gt; &lt;memory 0 instance&gt;</span>
-memories.map { |mem| mem.id }   <span style="color:#777"># =&gt; [:memory0, :memory1, :memory2]</span>
+# All conventional Array methods are supported since we sub-classed Array
+memories.size                   # =&gt; 3
+memories.first                  # =&gt; &lt;memory 0 instance&gt;
+memories.map { |mem| mem.id }   # =&gt; [:memory0, :memory1, :memory2]
 
-<span style="color:#777"># Plus we have our custom method(s)</span>
+# Plus we have our custom method(s)
 memories.print_ids
 =&gt;
 memory0
 memory1
 memory2
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>If you do not sub-class Array, then you will need to be sure to define a <code>&lt;&lt;</code> push type method:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/memories.rb</span>
-<span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MEMORIES_B294</span>
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>
-    <span style="color:#33B">@sub_blocks</span> = {}
-  <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#777"># Example of a custom &lt;&lt; method to permit adding sub_blocks to container</span>
-  <span style="color:#777"># Required for use with sub_block_group</span>
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">&lt;&lt;</span>(sub_block)
-    <span style="color:#33B">@sub_blocks</span>[sub_block.id] = sub_block
-  <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#777"># Example of a custom method to print the names of all contained memories</span>
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">print_ids</span>
+      <pre><code class="language-ruby"># lib/memories.rb
+class MEMORIES_B294
+  def initialize
+    @sub_blocks = {}
+  end
+  # Example of a custom &lt;&lt; method to permit adding sub_blocks to container
+  # Required for use with sub_block_group
+  def &lt;&lt;(sub_block)
+    @sub_blocks[sub_block.id] = sub_block
+  end
+  # Example of a custom method to print the names of all contained memories
+  def print_ids
     each { |mem| puts mem.id }
-  <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#777"># Example of custom 'each' method</span>
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">each</span>
-    <span style="color:#33B">@sub_blocks</span>.each_value <span style="color:#080;font-weight:bold">do</span> |sub_block|
-      <span style="color:#080;font-weight:bold">yield</span> sub_block
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
+  end
+  # Example of custom 'each' method
+  def each
+    @sub_blocks.each_value do |sub_block|
+      yield sub_block
+    end
+  end
+end
 
-<span style="color:#777"># Drawback is you only have methods defined in this class.</span>
-</pre></div>
-</div>
-      </div>
+# Drawback is you only have methods defined in this class.
+</code></pre>
 
       <div>    
   <a class="anchor" name="Wash,_Rinse,_Repeat"></a>          
@@ -817,99 +761,95 @@ can be used within sub-blocks themselves with no limit on depth.</p>
 
       <p>Here are the complete set of initial stub models for the Eagle and it’s NVM module:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/soc/eagle_m352.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">SOC</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">EAGLE_M352</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">TopLevel</span>
+      <pre><code class="language-ruby"># lib/soc/eagle_m352.rb
+module SOC
+  class EAGLE_M352
+    include Origen::TopLevel
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options={})
-      sub_block <span style="color:#A60">:nvm</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">NVM_M682</span><span style="color:#710">"</span></span>
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
+    def initialize(options={})
+      sub_block :nvm, class_name: "NVM_M682"
+    end
+  end
+end
 
-<span style="color:#777"># lib/nvm/nvm_m682.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">NVM</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">NVM_M682</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
+# lib/nvm/nvm_m682.rb
+module NVM
+  class NVM_M682
+    include Origen::Model
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options={})
-      sub_block  <span style="color:#A60">:analog</span>,        <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">ANALOG_T921</span><span style="color:#710">"</span></span>
-      sub_block_group <span style="color:#A60">:memories</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">MEMORIES_B294</span><span style="color:#710">"</span></span> <span style="color:#080;font-weight:bold">do</span>
-        sub_block <span style="color:#A60">:memory0</span>,        <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">MEMORY_128_B954</span><span style="color:#710">"</span></span>
-        sub_block <span style="color:#A60">:memory1</span>,        <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">MEMORY_64_B954</span><span style="color:#710">"</span></span>
-        sub_block <span style="color:#A60">:memory2</span>,        <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">MEMORY_32_B954</span><span style="color:#710">"</span></span>
-      <span style="color:#080;font-weight:bold">end</span>
-      sub_block  <span style="color:#A60">:state_machine</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">CONTROL_D345</span><span style="color:#710">"</span></span>
-    <span style="color:#080;font-weight:bold">end</span>
+    def initialize(options={})
+      sub_block  :analog,        class_name: "ANALOG_T921"
+      sub_block_group :memories, class_name: "MEMORIES_B294" do
+        sub_block :memory0,        class_name: "MEMORY_128_B954"
+        sub_block :memory1,        class_name: "MEMORY_64_B954"
+        sub_block :memory2,        class_name: "MEMORY_32_B954"
+      end
+      sub_block  :state_machine, class_name: "CONTROL_D345"
+    end
 
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
+  end
+end
 
-<span style="color:#777"># lib/nvm/analog_t921.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">NVM</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">ANALOG_T921</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
+# lib/nvm/analog_t921.rb
+module NVM
+  class ANALOG_T921
+    include Origen::Model
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options={})
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
+    def initialize(options={})
+    end
+  end
+end
 
-<span style="color:#777"># lib/nvm/memory_128_b954.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">NVM</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MEMORY_128_B954</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
+# lib/nvm/memory_128_b954.rb
+module NVM
+  class MEMORY_128_B954
+    include Origen::Model
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options={})
-      <span style="color:#33B">@size_in_kB</span> = <span style="color:#00D">128</span>
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
+    def initialize(options={})
+      @size_in_kB = 128
+    end
+  end
+end
 
-<span style="color:#777"># lib/nvm/memory_64_b954.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">NVM</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MEMORY_64_B954</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
+# lib/nvm/memory_64_b954.rb
+module NVM
+  class MEMORY_64_B954
+    include Origen::Model
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options={})
-      <span style="color:#33B">@size_in_kB</span> = <span style="color:#00D">64</span>
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
+    def initialize(options={})
+      @size_in_kB = 64
+    end
+  end
+end
 
-<span style="color:#777"># lib/nvm/memory_32_b954.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">NVM</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MEMORY_32_B954</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
+# lib/nvm/memory_32_b954.rb
+module NVM
+  class MEMORY_32_B954
+    include Origen::Model
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options={})
-      <span style="color:#33B">@size_in_kB</span> = <span style="color:#00D">32</span>
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
+    def initialize(options={})
+      @size_in_kB = 32
+    end
+  end
+end
 
-<span style="color:#777"># lib/memories.rb</span>
-<span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MEMORIES_B294</span> &lt; ::<span style="color:#036;font-weight:bold">Array</span>
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">print_ids</span>
+# lib/memories.rb
+class MEMORIES_B294 &lt; ::Array
+  def print_ids
     each { |mem| puts mem.id }
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
+  end
+end
 
-<span style="color:#777"># file: lib/nvm/control_d345.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">NVM</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">CONTROL_D345</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
+# file: lib/nvm/control_d345.rb
+module NVM
+  class CONTROL_D345
+    include Origen::Model
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options={})
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+    def initialize(options={})
+    end
+  end
+end
+</code></pre>
 
       <p>A couple of points are worth noting from the above code:</p>
 
@@ -927,14 +867,10 @@ logic in the future.</li>
       <p>Even though we have not yet added any logic to our models they are starting to become useful,
 for example we can now ask the Eagle how many NVM memory blocks that it has:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$dut</span> = <span style="color:#036;font-weight:bold">SOC</span>::<span style="color:#036;font-weight:bold">EAGLE_M352</span>.new
+      <pre><code class="language-ruby">$dut = SOC::EAGLE_M352.new
 
-<span style="color:#d70">$dut</span>.nvm.memories.size    <span style="color:#777"># =&gt; 4</span>
-</pre></div>
-</div>
-      </div>
+$dut.nvm.memories.size    # =&gt; 4
+</code></pre>
 
       <div>    
   <a class="anchor" name="Overriding_and_Inheriting"></a>          
@@ -961,49 +897,33 @@ For example, lets say that your dut included a sub block called ‘dummy_block�
 <code>OtherApp::Block::BlockA</code> which was created in another app, and it instantiated a sub block
 called ‘dummy_sub’ of class <code>OtherApp::Block::BlockA::Sub1</code>.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># file: app/blocks/dut/my_dut/sub_blocks.rb</span>
-sub_block <span style="color:#A60">:dummy_block</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">OtherApp::Block::BlockA</span><span style="color:#710">'</span></span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># file: app/blocks/dut/my_dut/sub_blocks.rb
+sub_block :dummy_block, class_name: 'OtherApp::Block::BlockA'
+</code></pre>
 
       <p>Which you can now access dummy_sub via <code>dut.dummy_block.dummy_sub</code>. But now lets say that your
 application needs a different sub block under dummy block, <code>MyApp::DUT::MyDut::Sub2</code>.</p>
 
       <p>You could override the existing <code>dut.dummy_block.dummy_sub</code> like so:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># file: app/blocks/dut/my_dut/sub_blocks.rb</span>
-sub_block <span style="color:#A60">:dummy_block</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">OtherApp::Block::BlockA</span><span style="color:#710">'</span></span>
-dummy_block.sub_block <span style="color:#A60">:dummy_sub</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">MyApp::DUT::MyDut::Sub2</span><span style="color:#710">'</span></span>, <span style="color:#606">override</span>: <span style="color:#069">true</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># file: app/blocks/dut/my_dut/sub_blocks.rb
+sub_block :dummy_block, class_name: 'OtherApp::Block::BlockA'
+dummy_block.sub_block :dummy_sub, class_name: 'MyApp::DUT::MyDut::Sub2', override: true
+</code></pre>
 
       <h5 id="skiprequirefiles">skip_require_files</h5>
 
       <p>When overriding, previously instantiated subblocks have already initialzed some namespaces, which can result in some funny constant behavior:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">NamespaceA</span>::<span style="color:#036;font-weight:bold">B</span>::<span style="color:#036;font-weight:bold">C</span>
-=&gt;  <span style="color:#036;font-weight:bold">NameSpaceX</span>::<span style="color:#036;font-weight:bold">Y</span>::<span style="color:#036;font-weight:bold">Z</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">NamespaceA::B::C
+=&gt;  NameSpaceX::Y::Z
+</code></pre>
 
       <p>To get around this the override feature will require the relevant block files which returns the constant behavior back to sanity:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">NamespaceA</span>::<span style="color:#036;font-weight:bold">B</span>::<span style="color:#036;font-weight:bold">C</span>
-=&gt;  <span style="color:#036;font-weight:bold">NameSpaceA</span>::<span style="color:#036;font-weight:bold">B</span>::<span style="color:#036;font-weight:bold">C</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">NamespaceA::B::C
+=&gt;  NameSpaceA::B::C
+</code></pre>
 
       <p>However, there are many block files which aren’t meant to be required directly (e.g attributes.rb) as they could contain method calls which wouldn’t
 be available at the time they are required. So by default, these kinds of block files are skipped.
@@ -1011,12 +931,8 @@ Specifically: attributes.rb, parameters.rb, pins.rb, registers.rb, sub_blocks.rb
 
       <p>If you have other block files in your modeling that you need require to skip, you can do so by passing an array of files (without the extension) to the sub_block method as an option of <code>skip_require_files</code>:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>dummy_block.sub_block <span style="color:#A60">:dummy_sub</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">MyApp::DUT::MyDut::Sub2</span><span style="color:#710">'</span></span>, <span style="color:#606">override</span>: <span style="color:#069">true</span>, <span style="color:#606">skip_require_files</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">%w(</span><span style="color:#D20">file1 file2 file3</span><span style="color:#710">)</span></span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">dummy_block.sub_block :dummy_sub, class_name: 'MyApp::DUT::MyDut::Sub2', override: true, skip_require_files: %w(file1 file2 file3)
+</code></pre>
 
       <p>Note however that you’ll likely need to include the files that are skipped by default in your custom skip_require_files option as this will override the default array.</p>
 
@@ -1031,41 +947,29 @@ You can already mostly accomplish this the same way that derivatives operate by 
 definitions in your model.rb and controller.rb files of <code>MyApp::DUT::MyDut::Sub2</code> to inherit the class
 of <code>OtherApp::Block::BlockA::Sub1</code>’s model.rb and controller.rb:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># file: app/blocks/dut/my_dut/sub_blocks/sub2/model.rb</span>
-<span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MyAPP::DUT::MyDut::Sub2</span> &lt; <span style="color:#036;font-weight:bold">OtherApp</span>::<span style="color:#036;font-weight:bold">Block</span>::<span style="color:#036;font-weight:bold">BlockA</span>::<span style="color:#036;font-weight:bold">Sub1</span>
+      <pre><code class="language-ruby"># file: app/blocks/dut/my_dut/sub_blocks/sub2/model.rb
+class MyAPP::DUT::MyDut::Sub2 &lt; OtherApp::Block::BlockA::Sub1
 
-<span style="color:#777"># file: app/blocks/dut/my_dut/sub_blocks/sub2/controller.rb</span>
-<span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MyAPP::DUT::MyDut::Sub2Controller</span> &lt; <span style="color:#036;font-weight:bold">OtherApp</span>::<span style="color:#036;font-weight:bold">Block</span>::<span style="color:#036;font-weight:bold">BlockA</span>::<span style="color:#036;font-weight:bold">Sub1Controller</span>
-</pre></div>
-</div>
-      </div>
+# file: app/blocks/dut/my_dut/sub_blocks/sub2/controller.rb
+class MyAPP::DUT::MyDut::Sub2Controller &lt; OtherApp::Block::BlockA::Sub1Controller
+</code></pre>
 
       <p>But what this does not do, is inherit the block files (attributes.rb, parameters.rb, etc…) associated
 with <code>OtherApp::Block::BlockA::Sub1</code>. To do that, you can also pass the inherit option to <code>sub_block</code>, which
 will instruct the block loader to pick up those files as well:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># file: app/blocks/dut/my_dut/sub_blocks.rb</span>
-sub_block <span style="color:#A60">:dummy_block</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">OtherApp::Block::BlockA</span><span style="color:#710">'</span></span>
-dummy_block.sub_block <span style="color:#A60">:dummy_sub</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">MyApp::DUT::MyDut::Sub2</span><span style="color:#710">'</span></span>, <span style="color:#606">override</span>: <span style="color:#069">true</span>, <span style="color:#606">inherit</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">OtherApp::Block::BlockA</span><span style="color:#710">'</span></span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># file: app/blocks/dut/my_dut/sub_blocks.rb
+sub_block :dummy_block, class_name: 'OtherApp::Block::BlockA'
+dummy_block.sub_block :dummy_sub, class_name: 'MyApp::DUT::MyDut::Sub2', override: true, inherit: 'OtherApp::Block::BlockA'
+</code></pre>
 
       <h5 id="bug-and-feature-inheritance">Bug and Feature inheritance</h5>
 
       <p>By default, if the inherit option is passed it will attempt to propagate any features and bugs from the class specified in the inherit option to the sub block being defined.
 If you’d like to prevent either from happening, then you can pass either disable_bug_inheritance and/or disable_feature_inheritance options to the sub_block method:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>dummy_block.sub_block <span style="color:#A60">:dummy_sub</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">MyApp::DUT::MyDut::Sub2</span><span style="color:#710">'</span></span>, <span style="color:#606">override</span>: <span style="color:#069">true</span>, <span style="color:#606">inherit</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">OtherApp::Block::BlockA</span><span style="color:#710">'</span></span>, <span style="color:#606">disable_bug_inheritance</span>: <span style="color:#069">true</span>, <span style="color:#606">disable_feature_inheritance</span>: <span style="color:#069">true</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">dummy_block.sub_block :dummy_sub, class_name: 'MyApp::DUT::MyDut::Sub2', override: true, inherit: 'OtherApp::Block::BlockA', disable_bug_inheritance: true, disable_feature_inheritance: true
+</code></pre>
 
       <div style="position: relative">
   <hr>

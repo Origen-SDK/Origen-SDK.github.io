@@ -468,36 +468,28 @@ generation.</p>
   <h3><a href="#Creating_a_flow_entry_with_multiple_Use-Limit_lines">Creating a flow entry with multiple Use-Limit lines</a></h3>          
 </div>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>  functional <span style="color:#A60">:test2</span>, <span style="color:#606">sbin</span>: <span style="color:#00D">101</span>, <span style="color:#606">number</span>: <span style="color:#00D">20020</span>,
-    <span style="color:#606">sub_tests</span>: [
-      sub_test(<span style="color:#A60">:limit_name1</span>, <span style="color:#606">lo</span>: <span style="color:#00D">-2</span>, <span style="color:#606">hi</span>: <span style="color:#00D">2</span>),
-      sub_test(<span style="color:#A60">:limit_name2</span>, <span style="color:#606">lo</span>: <span style="color:#00D">-1</span>, <span style="color:#606">hi</span>: <span style="color:#00D">1</span>)
+      <pre><code class="language-ruby">  functional :test2, sbin: 101, number: 20020,
+    sub_tests: [
+      sub_test(:limit_name1, lo: -2, hi: 2),
+      sub_test(:limit_name2, lo: -1, hi: 1)
     ]
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>  <span style="color:#777"># Another example using a custom instance</span>
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">sar_cal_test</span>(name, options = {})
+      <pre><code class="language-ruby">  # Another example using a custom instance
+  def sar_cal_test(name, options = {})
     ti = test_instances.sar_tests.sar_cal name
-    <span style="color:#777"># ...</span>
+    # ...
     
-    <span style="color:#777"># Assign fixed limits</span>
-    options[<span style="color:#A60">:sub_tests</span>] = [
-      sub_test(<span style="color:#A60">:source_gain</span>, <span style="color:#606">lo</span>: <span style="color:#60E">0.99</span>, <span style="color:#606">hi</span>: <span style="color:#60E">1.01</span>),
-      sub_test(<span style="color:#A60">:source_offset</span>, <span style="color:#606">lo</span>: <span style="color:#60E">-0.001</span>, <span style="color:#606">hi</span>: <span style="color:#60E">0.001</span>)
+    # Assign fixed limits
+    options[:sub_tests] = [
+      sub_test(:source_gain, lo: 0.99, hi: 1.01),
+      sub_test(:source_offset, lo: -0.001, hi: 0.001)
     ]
     
-    <span style="color:#777"># add the test to the flow</span>
+    # add the test to the flow
     flow.test ti, options
-  <span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  end
+</code></pre>
 
       <div style="position: relative">
   <hr>

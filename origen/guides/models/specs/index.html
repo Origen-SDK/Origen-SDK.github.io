@@ -514,33 +514,25 @@ attribute (sub_type) can further delineate a Spec but it is not required.  The b
 spec API can take two syntactical forms.  The first is a more traditional Ruby syntax
 and the second makes the API feel more like a custom DSL.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>spec <span style="color:#A60">:soc_vdd</span>, <span style="color:#A60">:dc</span> <span style="color:#080;font-weight:bold">do</span> |spec|
-  spec.symbol = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Vdd</span><span style="color:#710">"</span></span>
-  spec.description = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Soc Core Power Supply</span><span style="color:#710">"</span></span>
-  spec.min = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">1.00.V - 50.mV</span><span style="color:#710">"</span></span>
-  spec.max = <span style="color:#60E">1.05</span>
-  spec.unit = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">V</span><span style="color:#710">"</span></span>
-  spec.audience = <span style="color:#A60">:external</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">spec :soc_vdd, :dc do |spec|
+  spec.symbol = "Vdd"
+  spec.description = "Soc Core Power Supply"
+  spec.min = "1.00.V - 50.mV"
+  spec.max = 1.05
+  spec.unit = "V"
+  spec.audience = :external
+end
+</code></pre>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>spec <span style="color:#A60">:soc_vdd</span>, <span style="color:#A60">:dc</span> <span style="color:#080;font-weight:bold">do</span>
-  symbol <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Vdd</span><span style="color:#710">"</span></span>
-  description <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Soc Core Power Supply</span><span style="color:#710">"</span></span>
-  min <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">1.00.V - 50.mV</span><span style="color:#710">"</span></span>
-  max <span style="color:#60E">1.05</span>
-  unit <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">V</span><span style="color:#710">"</span></span>
-  audience <span style="color:#A60">:external</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">spec :soc_vdd, :dc do
+  symbol "Vdd"
+  description "Soc Core Power Supply"
+  min "1.00.V - 50.mV"
+  max 1.05
+  unit "V"
+  audience :external
+end
+</code></pre>
 
       <p>While the user can be free to add various attributes over time, they must assign a valid
 name and have valid limits to complete instantiation.  <strong>A valid name must not start with
@@ -565,17 +557,13 @@ are not symetrical.</p>
       <p>During spec limit assignment the user just can either input a numeric value, a symbol or
 a string.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>[<span style="color:#00D">1</span>] pry()&gt; <span style="color:#33B">@ip</span>.specs(<span style="color:#A60">:ip_setup_time</span>).min
-=&gt; <span style="color:#777">#&lt;struct Origen::Specs::Spec::Limit exp="250.ps + 25.ps", maturity=nil, value=2.7e-10&gt;</span>
-[<span style="color:#00D">2</span>] pry()&gt; <span style="color:#33B">@ip</span>.specs(<span style="color:#A60">:ip_setup_time</span>).min.exp
-=&gt; <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">250.ps + 25.ps</span><span style="color:#710">"</span></span>
-[<span style="color:#00D">3</span>] pry()&gt; <span style="color:#33B">@ip</span>.specs(<span style="color:#A60">:ip_setup_time</span>).min.value
-=&gt; <span style="color:#60E">2.7e-10</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">[1] pry()&gt; @ip.specs(:ip_setup_time).min
+=&gt; #&lt;struct Origen::Specs::Spec::Limit exp="250.ps + 25.ps", maturity=nil, value=2.7e-10&gt;
+[2] pry()&gt; @ip.specs(:ip_setup_time).min.exp
+=&gt; "250.ps + 25.ps"
+[3] pry()&gt; @ip.specs(:ip_setup_time).min.value
+=&gt; 2.7e-10
+</code></pre>
 
       <p>The Spec model will save the original user input as an expression and will
 attempt to evaluate the string to a numeric value or lookup the symbol within the
@@ -587,19 +575,15 @@ the user intends for the Spec to be available to all modes of the defining objec
 user, of course, can specify a mode as shown below.  The Spec API will only return
 specs that match that specified mode instead of returning globally defined specs.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>spec <span style="color:#A60">:soc_vdd</span>, <span style="color:#A60">:dc</span>, <span style="color:#A60">:mymode</span> <span style="color:#080;font-weight:bold">do</span>
-  symbol <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Vdd</span><span style="color:#710">"</span></span>
-  description <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Soc Core Power Supply</span><span style="color:#710">"</span></span>
-  min <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">1.00.V - 50.mV</span><span style="color:#710">"</span></span>
-  max <span style="color:#60E">1.05</span>
-  unit <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">V</span><span style="color:#710">"</span></span>
-  audience <span style="color:#A60">:external</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">spec :soc_vdd, :dc, :mymode do
+  symbol "Vdd"
+  description "Soc Core Power Supply"
+  min "1.00.V - 50.mV"
+  max 1.05
+  unit "V"
+  audience :external
+end
+</code></pre>
 
       <p>Another thing to note about modes is that specs defined with no mode will be
 catalogued as :global if the owning object is Origen.top_level and :local for
@@ -618,27 +602,17 @@ ecosystem and other local specs to be contained inside the owning IP.</p>
       <p>If any of the options are nil it will not filter by that option when interrogating the
 spec database.  The API is:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>specs(<span style="color:#A60">:myspecname</span>, options)
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">specs(:myspecname, options)
+</code></pre>
 
       <p>In the example above a symbol is passed for the spec name but all four filter options
 can be a String, Number or a Regexp.  If an object defined three specs named :soc_vdd,
 :io_vdd, :pll_vdd the following call would occur.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>specs(<span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#808">vdd</span><span style="color:#404">/</span></span>,<span style="color:#606">verbose</span>: <span style="color:#069">true</span>)
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">specs(/vdd/,verbose: true)
+</code></pre>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>================================================================================================
+      <pre><code class="language-text">================================================================================================
 | IP: soc                                                                                      |
 ================================================================================================
 | Name    | Symbol | Mode    | Type | Parameter             | Min     | Max  | Unit | Audience |
@@ -647,9 +621,7 @@ can be a String, Number or a Regexp.  If an object defined three specs named :so
 | io_vdd  | OVdd   | :global | dc   | Soc IO Power Supply   | 1.45    | 1.55 | V    | external |
 | pll_vdd | AVdd   | :global | dc   | Soc PLL Power Supply  | 1.15    | 1.25 | V    | external |
 ------------------------------------------------------------------------------------------------
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>If the ‘verbose’ argument is not included, only an array of spec objects is returned.  If only a
 single spec is found a Spec object is returned instead of an array of a single spec.  The console
@@ -675,46 +647,40 @@ outside the model in which they are defined.  A spec with a global mode is acces
 everywhere but will be overwritten is defined both globally and locally.  Here is an
 example where a spec is defined within three modes.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">SoC_With_Specs</span>
-  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">TopLevel</span>
+      <pre><code class="language-ruby">class SoC_With_Specs
+  include Origen::TopLevel
 
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>
-    sub_block <span style="color:#A60">:ip_with_specs</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">IP_With_Specs</span><span style="color:#710">"</span></span>, <span style="color:#606">base_address</span>: <span style="color:#00D">0x1000_0000</span>
-    add_mode <span style="color:#A60">:default</span>
-    add_mode <span style="color:#A60">:low_power</span>
-    add_mode <span style="color:#A60">:high_performance</span>
+  def initialize
+    sub_block :ip_with_specs, class_name: "IP_With_Specs", base_address: 0x1000_0000
+    add_mode :default
+    add_mode :low_power
+    add_mode :high_performance
 
-    modes.each <span style="color:#080;font-weight:bold">do</span> |mode|
-      <span style="color:#080;font-weight:bold">case</span> mode
-      <span style="color:#080;font-weight:bold">when</span> <span style="color:#A60">:default</span>
-        vdd_nom = <span style="color:#60E">1.0</span>.V
-      <span style="color:#080;font-weight:bold">when</span> <span style="color:#A60">:low_power</span>
-        vdd_nom = <span style="color:#60E">0.95</span>.V
-      <span style="color:#080;font-weight:bold">when</span> <span style="color:#A60">:high_performance</span>
-        vdd_nom = <span style="color:#60E">1.05</span>.V
-      <span style="color:#080;font-weight:bold">end</span>
-      spec <span style="color:#A60">:soc_vdd</span>, <span style="color:#A60">:dc</span>, mode <span style="color:#080;font-weight:bold">do</span>
-        symbol <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Vdd</span><span style="color:#710">"</span></span>
-        description <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Soc Core Power Supply</span><span style="color:#710">"</span></span>
-        min <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>vdd_nom<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20"> - 50.mV</span><span style="color:#710">"</span></span>
-        max <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>vdd_nom<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20"> + 50.mV</span><span style="color:#710">"</span></span>
-        audience <span style="color:#A60">:external</span>
-      <span style="color:#080;font-weight:bold">end</span>
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+    modes.each do |mode|
+      case mode
+      when :default
+        vdd_nom = 1.0.V
+      when :low_power
+        vdd_nom = 0.95.V
+      when :high_performance
+        vdd_nom = 1.05.V
+      end
+      spec :soc_vdd, :dc, mode do
+        symbol "Vdd"
+        description "Soc Core Power Supply"
+        min "#{vdd_nom} - 50.mV"
+        max "#{vdd_nom} + 50.mV"
+        audience :external
+      end
+    end
+  end
+end
+</code></pre>
 
       <p>Notice below how both the limit expression and value get changed based on the mode
 selection of the owning IP.</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>[8] pry()&gt; @dut.mode
+      <pre><code class="language-text">[8] pry()&gt; @dut.mode
 =&gt; high_performance
 [9] pry()&gt; @dut.specs(:soc_vdd).min.exp
 =&gt; "1.05 - 50.mV"
@@ -726,17 +692,13 @@ selection of the owning IP.</p>
 =&gt; 0.9
 [13] pry()&gt; @dut.specs(:soc_vdd).min.exp
 =&gt; "0.95 - 50.mV"
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>Specs have an audience attribute that can be set to :internal or :external.  They
 also have a read-only attribute called ‘limit_type’ which is either :single_sided
 or :double_sided.  Here are some attribute access examples:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>[7] pry()&gt; @ip.specs(:ip_setup_time).mode
+      <pre><code class="language-text">[7] pry()&gt; @ip.specs(:ip_setup_time).mode
 =&gt; :new_mode_with_altered_specs
 [8] pry()&gt; @ip.specs(:ip_setup_time).limit_type
 =&gt; :double_sided
@@ -752,21 +714,15 @@ or :double_sided.  Here are some attribute access examples:</p>
 =&gt; :internal
 [15] pry()&gt; @ip.specs(:ip_setup_time).description
 =&gt; "IP Setup Time with Double-Sided Limits"
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>The Origen::Specs::Spec class is available to all models and as such has a method ot find all specs
 that exist in the model itself or any child models.  This method is useful when trying to
 export the spec information of a model to other API.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>[<span style="color:#00D">2</span>] pry(<span style="color:#777">#&lt;RSpec::ExampleGroups::OrigenSpecsModule&gt;)&gt; @dut.find_specs.size</span>
-=&gt; <span style="color:#00D">8</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">[2] pry(#&lt;RSpec::ExampleGroups::OrigenSpecsModule&gt;)&gt; @dut.find_specs.size
+=&gt; 8
+</code></pre>
 
       <div style="position: relative">
   <hr>

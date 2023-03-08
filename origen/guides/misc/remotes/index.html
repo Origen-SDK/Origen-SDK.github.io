@@ -496,29 +496,25 @@ attribute.
 This accepts an array and any number of remotes can be added, here is an example
 that populates three remotes:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>config.remotes = [
+      <pre><code class="language-ruby">config.remotes = [
   {
-    <span style="color:#606">dir</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">source/include/v_ip_ate</span><span style="color:#710">"</span></span>,
-    <span style="color:#606">vault</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">sync://sync-15000:15000/v_ip_ate/compiler/include</span><span style="color:#710">"</span></span>,
-    <span style="color:#606">version</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">1.0.1</span><span style="color:#710">"</span></span>,
+    dir: "source/include/v_ip_ate",
+    vault: "sync://sync-15000:15000/v_ip_ate/compiler/include",
+    version: "1.0.1",
   },
   {
-    <span style="color:#606">dir</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">mydir</span><span style="color:#710">"</span></span>,
-    <span style="color:#606">vault</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">p4://myserver:myport//path/to/my/remote/file/myfile.xlsx</span><span style="color:#710">"</span></span>,
-    <span style="color:#606">tag</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">0.1.0</span><span style="color:#710">'</span></span>
+    dir: "mydir",
+    vault: "p4://myserver:myport//path/to/my/remote/file/myfile.xlsx",
+    tag: '0.1.0'
   },
   {
-    <span style="color:#606">dir</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">artwork</span><span style="color:#710">"</span></span>,
-    <span style="color:#606">rc_url</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">git@github.com:Origen-SDK/artwork.git</span><span style="color:#710">"</span></span>,
-    <span style="color:#606">version</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">master</span><span style="color:#710">"</span></span>,
-    <span style="color:#606">development</span>: <span style="color:#069">true</span>
+    dir: "artwork",
+    rc_url: "git@github.com:Origen-SDK/artwork.git",
+    version: "master",
+    development: true
   }  
 ]
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>Origen will populate all remotes defined by a top-level application. It will also populate all
 remotes defined by an application’s plugins, except for those which have been marked with
@@ -537,24 +533,16 @@ used by a top-level application.</p>
 of the receiving application.  For instance, in the above example, the v_ip_ate remote would be
 located at:</p>
 
-      <div class="language-code highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>.&lt;top&gt;_remotes_DO_NOT_HAND_MODIFY/source/include/v_ip_ate
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-code">.&lt;top&gt;_remotes_DO_NOT_HAND_MODIFY/source/include/v_ip_ate
+</code></pre>
 
       <p>Please note that the value of <code>dir</code> must be unique for each remote within the application.</p>
 
       <p>You can get a handle on the top-level remotes dir via the helper <code>Origen.app.remotes_dir</code>, as shown
 in this example:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>data = <span style="color:#036;font-weight:bold">File</span>.read(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.app.remotes_dir<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">/source/include/v_ip_ate</span><span style="color:#710">"</span></span>)
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">data = File.read("#{Origen.app.remotes_dir}/source/include/v_ip_ate")
+</code></pre>
 
       <div>    
   <a class="anchor" name="Origen_Does_the_Rest"></a>          
@@ -573,19 +561,15 @@ are fulfilled every time that the application is invoked.</p>
 different vs. working on a known good remote.  You can configure the receiving application to use
 a development workspace like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>config.remotes = [
+      <pre><code class="language-ruby">config.remotes = [
   {
-    <span style="color:#606">dir</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">source/include/v_ip_ate</span><span style="color:#710">"</span></span>,
-    <span style="color:#606">vault</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">sync://sync-15000:15000/v_ip_ate_c90lp/compiler/include</span><span style="color:#710">"</span></span>,
-    <span style="color:#606">version</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">v0.0.0.dev2</span><span style="color:#710">"</span></span>,
-    <span style="color:#606">path</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">/proj/thao/build.22/common_vip/v_ip_ate</span><span style="color:#710">"</span></span>,
+    dir: "source/include/v_ip_ate",
+    vault: "sync://sync-15000:15000/v_ip_ate_c90lp/compiler/include",
+    version: "v0.0.0.dev2",
+    path: "/proj/thao/build.22/common_vip/v_ip_ate",
   }
 ]
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>When a path reference is present Origen will override the vault/version reference and
 will setup up a symbolic link from the regular

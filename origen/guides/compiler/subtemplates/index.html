@@ -472,37 +472,27 @@ when it is working through a directory.</p>
 
       <p>Here is an example sub-template in file <code>app/templates/_sub_template.txt.erb</code>:</p>
 
-      <div class="language-eruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>This is a sub-template.
+      <pre><code class="language-eruby">This is a sub-template.
 
 % options[:x].times do
   You will see this X times
 % end  
 
-The value of Y is: <span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> options[<span style="color:#A60">:y</span>] <span style="font-weight:bold;color:#666">%&gt;</span></span>
-</pre></div>
-</div>
-      </div>
+The value of Y is: &lt;%= options[:y] %&gt;
+</code></pre>
 
       <p>Sub-templates are called from a top-level template by using the <code>render</code>
 method, here is an example top-level template that calls this sub-template, this file
 is <code>app/templates/example.txt.erb</code>:</p>
 
-      <div class="language-eruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>This is a top-level template
+      <pre><code class="language-eruby">This is a top-level template
 
-<span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> render <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">sub_template</span><span style="color:#710">'</span></span>, <span style="color:#606">x</span>: <span style="color:#00D">3</span>, <span style="color:#606">y</span>: <span style="color:#00D">10</span> <span style="font-weight:bold;color:#666">%&gt;</span></span>
-</pre></div>
-</div>
-      </div>
+&lt;%= render 'sub_template', x: 3, y: 10 %&gt;
+</code></pre>
 
       <p>This would compile to:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>This is a top-level template
+      <pre><code class="language-text">This is a top-level template
 
 This is a sub-template.
 
@@ -511,9 +501,7 @@ This is a sub-template.
   You will see this X times
 
 The value of Y is: 10
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p><code>import</code> can also be used as an alias for <code>render</code>, this may
 be more intuitive if the sub-template originates from a plugin for example.</p>
@@ -555,9 +543,7 @@ details - <a href="/origen/guides/libraries/creating">Sharing Templates</a></p>
 here is the above example re-written to add default values that will be used
 if the parent template does not specify one of both of the options:</p>
 
-      <div class="language-eruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>% # Default option values...
+      <pre><code class="language-eruby">% # Default option values...
 % options = {
 %  x: 5,
 %  y: 20,
@@ -568,20 +554,14 @@ This is a sub-template.
   You will see this X times
 % end  
 
-The value of Y is: <span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> options[<span style="color:#A60">:y</span>] <span style="font-weight:bold;color:#666">%&gt;</span></span>
-</pre></div>
-</div>
-      </div>
+The value of Y is: &lt;%= options[:y] %&gt;
+</code></pre>
 
       <p>Note:  There are reserved options keys that should not be altered when passing options
 to a sub-template, otherwise the compiler will not function correctly.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>[<span style="color:#A60">:scope</span>, <span style="color:#A60">:file</span>, <span style="color:#A60">:top_level_file</span>]
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">[:scope, :file, :top_level_file]
+</code></pre>
 
       <div>    
   <a class="anchor" name="Using_Sub-Templates_for_Layout"></a>          
@@ -594,51 +574,35 @@ from the sub-template.
 Define where the parent content should go using the <code>yield</code> keyword
 within the sub-template:</p>
 
-      <div class="language-eruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>This is some header content from the sub-template.
+      <pre><code class="language-eruby">This is some header content from the sub-template.
 
-<span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> <span style="color:#080;font-weight:bold">yield</span> <span style="font-weight:bold;color:#666">%&gt;</span></span>
+&lt;%= yield %&gt;
 
 This is some footer content from the sub-template.
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>Call in a parent template like this:</p>
 
-      <div class="language-eruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>% render "sub_template" do
+      <pre><code class="language-eruby">% render "sub_template" do
 
 This is some content from the parent template.
 
 % end
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>This will compile to:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>This is some header content from the sub-template.
+      <pre><code class="language-text">This is some header content from the sub-template.
 
 This is some content from the parent template.
 
 This is some footer content from the sub-template.
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>Options can be passed to the block form as you would expect:</p>
 
-      <div class="language-eruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>% render "sub_template", x: 5 do
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-eruby">% render "sub_template", x: 5 do
+</code></pre>
 
       <div>    
   <a class="anchor" name="Nesting"></a>          
@@ -657,28 +621,20 @@ layers of building blocks.</p>
       <p>Render will accept an <code>:indent</code> option to indent the compiled text
 by the given number of spaces:</p>
 
-      <div class="language-eruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> render <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">sub_template</span><span style="color:#710">'</span></span> <span style="font-weight:bold;color:#666">%&gt;</span></span>
-<span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> render <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">sub_template</span><span style="color:#710">'</span></span>, <span style="color:#606">indent</span>: <span style="color:#00D">2</span> <span style="font-weight:bold;color:#666">%&gt;</span></span>
-<span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> render <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">sub_template</span><span style="color:#710">'</span></span>, <span style="color:#606">indent</span>: <span style="color:#00D">4</span> <span style="font-weight:bold;color:#666">%&gt;</span></span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-eruby">&lt;%= render 'sub_template' %&gt;
+&lt;%= render 'sub_template', indent: 2 %&gt;
+&lt;%= render 'sub_template', indent: 4 %&gt;
+</code></pre>
 
       <p>This would produce:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>Some lines from
+      <pre><code class="language-text">Some lines from
 the sub template
   Some lines from
   the sub template
     Some lines from
     the sub template
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <div>    
   <a class="anchor" name="A_Note_on_Performance"></a>          
@@ -717,12 +673,8 @@ program sheets.</p>
 model state into the sub-template are understood, the target refresh can be inhibited
 by using the following option:</p>
 
-      <div class="language-eruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> render <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">sub_template</span><span style="color:#710">'</span></span>, <span style="color:#606">preserve_target</span>: <span style="color:#069">true</span> <span style="font-weight:bold;color:#666">%&gt;</span></span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-eruby">&lt;%= render 'sub_template', preserve_target: true %&gt;
+</code></pre>
 
       <div style="position: relative">
   <hr>

@@ -467,13 +467,9 @@ in this section should be applicable across all supported platforms.</p>
 base class provides this interface. All supported platforms should return
 a class which inherits from this. For example,</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">IGXLBasedTester</span>::<span style="color:#036;font-weight:bold">Pattern</span>.ancestors.include?(<span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">Decompiler</span>::<span style="color:#036;font-weight:bold">Pattern</span>)
-  <span style="color:#777">#=&gt; true</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">OrigenTesters::IGXLBasedTester::Pattern.ancestors.include?(OrigenTesters::Decompiler::Pattern)
+  #=&gt; true
+</code></pre>
 
       <div>    
   <a class="anchor" name="Decompiling"></a>          
@@ -488,27 +484,19 @@ decompiler you want to use.</p>
       <p>To decompile a source from the <code>J750</code>, we’ll instantiate a new
 <code>OrigenTesters::IGXLBasedTester::Pattern</code> class:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>pat = <span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">IGXLBasedTester</span>::<span style="color:#036;font-weight:bold">Pattern</span>.new(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">path/to/src.atp</span><span style="color:#710">'</span></span>)
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">pat = OrigenTesters::IGXLBasedTester::Pattern.new('path/to/src.atp')
+</code></pre>
 
       <p>Instantiating the decompiler <strong>does not</strong> automatically decompile it. However,
 a call to <code>#decompile</code> will do just that.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>pat.decompiled?
-  <span style="color:#777">#=&gt; false</span>
+      <pre><code class="language-ruby">pat.decompiled?
+  #=&gt; false
 
 pat.decompile
 pat.decompiled?
-  <span style="color:#777">#=&gt; true</span>
-</pre></div>
-</div>
-      </div>
+  #=&gt; true
+</code></pre>
 
       <div class="alert alert-success" role="alert">
 Recall that <code>#decompile</code> on the 
@@ -526,28 +514,22 @@ Recall that <code>#decompile</code> on the
 you’ll want to decompile a text source directly. Indicate this by providing
 the <code>direct_source: true</code> option during instantiation:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>direct_pat = <span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">IGXLBasedTester</span>::<span style="color:#036;font-weight:bold">Pattern</span>.new(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">path/to/src.atp</span><span style="color:#710">'</span></span>, <span style="color:#606">direct_source</span>: <span style="color:#069">true</span>)
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">direct_pat = OrigenTesters::IGXLBasedTester::Pattern.new('path/to/src.atp', direct_source: true)
+</code></pre>
 
       <p>The decompiled pattern will keep track of its source and whether it was direct
 or not:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>pat.direct_source?
-  <span style="color:#777">#=&gt; false</span>
+      <pre><code class="language-ruby">pat.direct_source?
+  #=&gt; false
 pat.source
-  <span style="color:#777">#=&gt; /home/origen_stuff/origen_testers/approved/j750/decompiler/sample/sample.atp</span>
+  #=&gt; /home/origen_stuff/origen_testers/approved/j750/decompiler/sample/sample.atp
 
 direct_pat.direct_source?
-  <span style="color:#777">#=&gt; true</span>
+  #=&gt; true
 direct_pat.source
-  <span style="color:#777">#=&gt;</span>
-<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">// Sample pattern text for the J750
+  #=&gt;
+"// Sample pattern text for the J750
 // Source located at: lib/origen_testers/igxl_based_tester/decompiler
 
 import tset tp0;
@@ -562,10 +544,8 @@ start_label pattern_st:
 repeat 2 &gt; tp0 X X X X ; // First Vector
 repeat 5 &gt; tp0 1 0 X 1 ;
 end_module   &gt; tp0 X X X X ; // Last Vector
-}</span><span style="color:#710">"</span></span>
-</pre></div>
-</div>
-      </div>
+}"
+</code></pre>
 
       <div class="alert alert-warning" role="alert">
 The entire direct source is stored in the decompiler as the <code>source</code>,
@@ -589,21 +569,17 @@ for the class names of the actual decompiler implementations.
       <p>Both of these have been covered <a href="/origen/guides/decompilation/overview#Example_Decompilation">in the example</a>,
 but for a quick review:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Add any missing pins to the DUT, returning the pins that were added</span>
+      <pre><code class="language-ruby"># Add any missing pins to the DUT, returning the pins that were added
 dut.pins
-  <span style="color:#777">#=&gt; {}</span>
+  #=&gt; {}
 pat.add_pins
-  <span style="color:#777">#=&gt; [:tclk, :tdi, :tdo, :tms]</span>
+  #=&gt; [:tclk, :tdi, :tdo, :tms]
 dut.pins
-  <span style="color:#777">#=&gt; {:tclk=&gt;&lt;Origen::Pins::Pin:47378869069920&gt;, :tdi=&gt;&lt;Origen::Pins::Pin:47378869095820&gt;, :tdo=&gt;&lt;Origen::Pins::Pin:47378869226260&gt;, :tms=&gt;&lt;Origen::Pins::Pin:47378869302720&gt;}</span>
+  #=&gt; {:tclk=&gt;&lt;Origen::Pins::Pin:47338332630600&gt;, :tdi=&gt;&lt;Origen::Pins::Pin:47338332682100&gt;, :tdo=&gt;&lt;Origen::Pins::Pin:47338332696880&gt;, :tms=&gt;&lt;Origen::Pins::Pin:47338332822440&gt;}
 
-<span style="color:#777"># Execute the vectors</span>
+# Execute the vectors
 pat.execute
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <div>    
   <a class="anchor" name="Sections"></a>          
@@ -616,45 +592,33 @@ the pattern is divided into sections: the <code>frontmatter</code>, the <code>pi
       <p>The <code>frontmatter</code> and <code>pinlist</code> are parsed fully, stored in memory, and can be
 accessed directly.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Access the pattern's frontmatter</span>
+      <pre><code class="language-ruby"># Access the pattern's frontmatter
 pat.frontmatter
-  <span style="color:#777">#=&gt; #&lt;OrigenTesters::Decompiler::Pattern::Frontmatter:0x0000562e81520e08&gt;</span>
+  #=&gt; #&lt;OrigenTesters::Decompiler::Pattern::Frontmatter:0x0000561ba0fc8bb0&gt;
 
-<span style="color:#777"># Retrieve the pattern header</span>
+# Retrieve the pattern header
 pat.frontmatter.pattern_header
-  <span style="color:#777">#=&gt; ["// Sample pattern text for the J750", "// Source located at: lib/origen_testers/igxl_based_tester/decompiler"]</span>
-</pre></div>
-</div>
-      </div>
+  #=&gt; ["// Sample pattern text for the J750", "// Source located at: lib/origen_testers/igxl_based_tester/decompiler"]
+</code></pre>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Access the pattern's pinlist</span>
+      <pre><code class="language-ruby"># Access the pattern's pinlist
 pat.pinlist
-  <span style="color:#777">#=&gt; #&lt;OrigenTesters::Decompiler::Pattern::Pinlist:0x0000562e8153f128&gt;</span>
+  #=&gt; #&lt;OrigenTesters::Decompiler::Pattern::Pinlist:0x0000561ba0fce010&gt;
 
-<span style="color:#777"># pat.pinlist.pins</span>
-  <span style="color:#777">#=&gt; [:tclk, :tdi, :tdo, :tms]</span>
-</pre></div>
-</div>
-      </div>
+# pat.pinlist.pins
+  #=&gt; [:tclk, :tdi, :tdo, :tms]
+</code></pre>
 
       <p>Methods to retrieve the pins are also available directly on the decompiled pattern:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Return an array of pins, in the order they appear in the pattern</span>
+      <pre><code class="language-ruby"># Return an array of pins, in the order they appear in the pattern
 pat.pins
-  <span style="color:#777">#=&gt; [:tclk, :tdi, :tdo, :tms]</span>
+  #=&gt; [:tclk, :tdi, :tdo, :tms]
 
-<span style="color:#777"># Return the pin names and their respective size</span>
+# Return the pin names and their respective size
 pat.pin_sizes
-  <span style="color:#777">#=&gt; {:tclk=&gt;1, :tdi=&gt;1, :tdo=&gt;1, :tms=&gt;1}</span>
-</pre></div>
-</div>
-      </div>
+  #=&gt; {:tclk=&gt;1, :tdi=&gt;1, :tdo=&gt;1, :tms=&gt;1}
+</code></pre>
 
       <p>See the <a href="https://origen-sdk.org/testers/api/OrigenTesters">OrigenTesters API</a>
 for full details on the <a href="https://origen-sdk.org/testers/api/OrigenTesters/Decompiler/Pattern/Frontmatter.html">Frontmatter</a>
@@ -669,29 +633,21 @@ but some methods are provided to programmatically check what’s available.
 <a href="/origen/guides/decompilation/overview#Example_Decompilation">For the example pattern</a>,
 using the <code>J750 decompiler</code>:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>pat.frontmatter.platform_nodes
-  <span style="color:#777">#=&gt; [:variable_assignments, :imports]</span>
+      <pre><code class="language-ruby">pat.frontmatter.platform_nodes
+  #=&gt; [:variable_assignments, :imports]
 
 pat.pinlist.platform_nodes
-  <span style="color:#777">#=&gt; []</span>
-</pre></div>
-</div>
-      </div>
+  #=&gt; []
+</code></pre>
 
       <p>Any <code>platform node</code> will have an accessor associated with it:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>pat.frontmatter.imports
-  <span style="color:#777">#=&gt; {"tp0"=&gt;"tset"}</span>
+      <pre><code class="language-ruby">pat.frontmatter.imports
+  #=&gt; {"tp0"=&gt;"tset"}
 
 pat.frontmatter.variable_assignments
-  <span style="color:#777">#=&gt; {"svm_only_file"=&gt;"no", "opcode_mode"=&gt;"extended", "compressed"=&gt;"yes"}</span>
-</pre></div>
-</div>
-      </div>
+  #=&gt; {"svm_only_file"=&gt;"no", "opcode_mode"=&gt;"extended", "compressed"=&gt;"yes"}
+</code></pre>
 
       <p>Obviously, these nodes are <em>decompiler specific</em>, but <u>what's less obvious is
 that the implementation, and return values, are not defined by the <code>universal API</code>.</u>
@@ -719,14 +675,10 @@ The first vector contains the initial state of the pattern, the initial timeset,
 and, in many text representations, the sizes of the pins in the pinlist. This
 vector is always available:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Access the first vector</span>
+      <pre><code class="language-ruby"># Access the first vector
 pat.first_vector
-  <span style="color:#777">#=&gt; OrigenTesters::Decompiler::Pattern::Vector</span>
-</pre></div>
-</div>
-      </div>
+  #=&gt; OrigenTesters::Decompiler::Pattern::Vector
+</code></pre>
 
       <p>An important observation is that this returns the <em>first vector</em>, <strong>not</strong> the
 first <em>vector body element</em>.</p>
@@ -748,18 +700,14 @@ for an example of such a pattern.
 and the <em>first timeset</em> directly.
 <a href="/origen/guides/decompilation/overview#Example_Decompilation">In the context of the example pattern</a>:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Retrieve the initial pin states</span>
+      <pre><code class="language-ruby"># Retrieve the initial pin states
 pat.initial_pin_states
-  <span style="color:#777">#=&gt; ["X", "X", "X", "X"]</span>
+  #=&gt; ["X", "X", "X", "X"]
 
-<span style="color:#777"># Retrieve the initial timeset</span>
+# Retrieve the initial timeset
 pat.initial_timeset
-  <span style="color:#777">#=&gt; tp0</span>
-</pre></div>
-</div>
-      </div>
+  #=&gt; tp0
+</code></pre>
 
       <div>    
   <a class="anchor" name="Vector_Body_Elements"></a>          
@@ -825,27 +773,19 @@ The decompiler will mash sequential comment lines in the pattern together to
 form a single <code>vector body element</code> of type <code>:comment block</code>. A shorthand
 method is provided to indicate when a <code>comment block</code> is encountered:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>vector_body_element.is_a_comment?
-  <span style="color:#777">#=&gt; true/false</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">vector_body_element.is_a_comment?
+  #=&gt; true/false
+</code></pre>
 
       <p>There’s only so much which can be done with comments. The main operation will be retrieving them:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>comment_block.comments
-  <span style="color:#777">#=&gt; [</span>
-  <span style="color:#777">#=&gt;   "Any comments in the block..."</span>
-  <span style="color:#777">#=&gt;   "Separated by newlines (or whatever the platform separator is)"</span>
-  <span style="color:#777">#=&gt;   "Will be its own array entry."</span>
-  <span style="color:#777">#=&gt; ]</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">comment_block.comments
+  #=&gt; [
+  #=&gt;   "Any comments in the block..."
+  #=&gt;   "Separated by newlines (or whatever the platform separator is)"
+  #=&gt;   "Will be its own array entry."
+  #=&gt; ]
+</code></pre>
 
       <p>Note that the comments are returned as an <code>Array</code> of all the comments mashed
 together. This is standard though, so a standalone, single-line comment will be an <code>Array</code>
@@ -862,13 +802,9 @@ but there’s not much more to <code>comment blocks</code> than that.</p>
       <p><code>Vectors</code>, on the other hand, have a bit more going on.These will have
 type <code>:vector</code> and a <code>vector body element</code> shorthand method is available here as well:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>vector_body_element.is_a_vector?
-  <span style="color:#777">#=&gt; true/false</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">vector_body_element.is_a_vector?
+  #=&gt; true/false
+</code></pre>
 
       <p>Any vector, from any platform,
 is expected to provide a <code>timeset</code>, <code>repeat</code>, <code>pin_states</code>, and <code>comment</code> accessor.
@@ -878,22 +814,18 @@ The <code>comment</code> in this case is a end-of-line comment, sharing the same
 Returning <a href="/origen/guides/decompilation/overview#Example_Decompilation">to the example pattern</a>,
 we can retrieve all this content from the <a href="#Initial_State">first vector</a>:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>pat.first_vector.timeset
-  <span style="color:#777">#=&gt; tp0</span>
+      <pre><code class="language-ruby">pat.first_vector.timeset
+  #=&gt; tp0
 
 pat.first_vector.pin_states
-  <span style="color:#777">#=&gt; ["X", "X", "X", "X"]</span>
+  #=&gt; ["X", "X", "X", "X"]
 
 pat.first_vector.repeat
-  <span style="color:#777">#=&gt; 2</span>
+  #=&gt; 2
 
 pat.first_vector.comment
-  <span style="color:#777">#=&gt; First Vector</span>
-</pre></div>
-</div>
-      </div>
+  #=&gt; First Vector
+</code></pre>
 
       <p>Every <code>vector</code> is expected to contain <em>at least</em> these accessors. Some may
 be empty, but the accessor should always <em>work</em> (no <code>undefined method...</code> errors).</p>
@@ -905,16 +837,12 @@ have a corresponding accessor. For example, the J750 registers
 <code>opcode</code> and <code>opcode_arguments</code> as platform nodes so, when we’ve decompiled
 using the <code>J750</code> decompiler, we’ll have access those as well:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>pat.first_vector.opcode
-  <span style="color:#777">#=&gt; repeat</span>
+      <pre><code class="language-ruby">pat.first_vector.opcode
+  #=&gt; repeat
 
 pat.first_vector.opcode_arguments
-  <span style="color:#777">#=&gt; ["2"]</span>
-</pre></div>
-</div>
-      </div>
+  #=&gt; ["2"]
+</code></pre>
 
       <p>Trying these platform nodes on other decompilers <strong>is not</strong> guaranteed to
 give you anything. <a href="/origen/guides/decompilation/platformspecifics">Check the platform specifics</a>
@@ -923,13 +851,9 @@ for any additional platform nodes placed on the <code>vector</code> type.</p>
       <p>You can also list the platform nodes
 programmatically using <code>#platform_nodes</code>:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>pat.first_vector.platform_nodes
-  <span style="color:#777">#=&gt; [:opcode, :opcode_arguments]</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">pat.first_vector.platform_nodes
+  #=&gt; [:opcode, :opcode_arguments]
+</code></pre>
 
       <h5 id="platform">Platform</h5>
 
@@ -938,27 +862,19 @@ geared towards handling different pattern sources or supporting various platform
 The <code>#decompiler</code> method will return the decompiler used (which is, not coincidentally,
 the <code>class</code> of the decompiled pattern object).</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>pat.decompiler
-  <span style="color:#777">#=&gt; OrigenTesters::IGXLBasedTester::Pattern</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">pat.decompiler
+  #=&gt; OrigenTesters::IGXLBasedTester::Pattern
+</code></pre>
 
       <p>In cases where decisions are made depending on the decompiler, the <code>#decompiler?(&lt;platform&gt;)</code>
 method queries if the decompiled pattern was decompiled using the given platform:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>pat.decompiler?(<span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">IGXLBasedTester</span>::<span style="color:#036;font-weight:bold">Pattern</span>)
-  <span style="color:#777">#=&gt; true</span>
+      <pre><code class="language-ruby">pat.decompiler?(OrigenTesters::IGXLBasedTester::Pattern)
+  #=&gt; true
 
-pat.decompiler?(<span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">SmartestBasedTester</span>::<span style="color:#036;font-weight:bold">Pattern</span>)
-  <span style="color:#777">#=&gt; false</span>
-</pre></div>
-</div>
-      </div>
+pat.decompiler?(OrigenTesters::SmartestBasedTester::Pattern)
+  #=&gt; false
+</code></pre>
 
       <p>Now that we have all the tools to deal with vector types and the underlying elements,
 we can begin to interface with the vector body itself.</p>
@@ -971,42 +887,34 @@ we can begin to interface with the vector body itself.</p>
       <p>The simplest operation is just to iterate through all the available vector body
 elements. The given block will be run for each one sequentially:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Iterate through all vector body elements, running the given block for each one.</span>
-<span style="color:#777"># For example, to print the type of each vector body element:</span>
+      <pre><code class="language-ruby"># Iterate through all vector body elements, running the given block for each one.
+# For example, to print the type of each vector body element:
 pat.each_vector { |v| puts v.type }
-<span style="color:#A60">:start_label</span>
-<span style="color:#A60">:comment_block</span>
-<span style="color:#A60">:vector</span>
-<span style="color:#A60">:vector</span>
-<span style="color:#A60">:vector</span>
+:start_label
+:comment_block
+:vector
+:vector
+:vector
 
-<span style="color:#777"># Do the above, but with the index</span>
-pat.each_vector_with_index { |v, i| puts <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Type at index </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>i<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">: </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>v.type<span style="font-weight:bold;color:#666">}</span></span><span style="color:#710">"</span></span> }
-<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Type at index 0: start_label</span><span style="color:#710">"</span></span>
-<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Type at index 1: comment_block</span><span style="color:#710">"</span></span>
-<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Type at index 2: vector</span><span style="color:#710">"</span></span>
-<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Type at index 3: vector</span><span style="color:#710">"</span></span>
-<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Type at index 4: vector</span><span style="color:#710">"</span></span>
-</pre></div>
-</div>
-      </div>
+# Do the above, but with the index
+pat.each_vector_with_index { |v, i| puts "Type at index #{i}: #{v.type}" }
+"Type at index 0: start_label"
+"Type at index 1: comment_block"
+"Type at index 2: vector"
+"Type at index 3: vector"
+"Type at index 4: vector"
+</code></pre>
 
       <p>This is the basis for working with the <code>vector body elements</code> section and from this
 more complex operations are derived. For example, to cycle the tester for each
 <code>vector</code> in the vector body:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>pat.each_vector <span style="color:#080;font-weight:bold">do</span> |v|
-  <span style="color:#080;font-weight:bold">if</span> v.is_a_vector?
-    tester.cycle(<span style="color:#606">repeat</span>: v.element.repeat)
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">pat.each_vector do |v|
+  if v.is_a_vector?
+    tester.cycle(repeat: v.element.repeat)
+  end
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="EnumerableExt"></a>          
@@ -1017,36 +925,32 @@ more complex operations are derived. For example, to cycle the tester for each
 <a href="https://ruby-doc.org/core-2.6.3/Enumerable.html">Enumerable</a> mixin cannot be used
 directly. However, some select <code>Enumerable</code> methods are implemented:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Collect all the vectors, after having run the given block.</span>
-<span style="color:#777"># For example, to collect all the types that appear in the example pattern:</span>
+      <pre><code class="language-ruby"># Collect all the vectors, after having run the given block.
+# For example, to collect all the types that appear in the example pattern:
 pat.collect { |v| v.type }
-  <span style="color:#777">#=&gt; [:start_label, :comment_block, :vector, :vector, :vector]</span>
+  #=&gt; [:start_label, :comment_block, :vector, :vector, :vector]
 
-<span style="color:#777"># Filting out duplicates...:</span>
+# Filting out duplicates...:
 pat.collect { |v| v.type }.uniq
-  <span style="color:#777">#=&gt; [:start_label, :comment_block, :vector]</span>
+  #=&gt; [:start_label, :comment_block, :vector]
 
-<span style="color:#777"># Find the first vector for which the block returns true.</span>
-<span style="color:#777"># For example, to find the first vector body element that is of type vector:</span>
+# Find the first vector for which the block returns true.
+# For example, to find the first vector body element that is of type vector:
 pat.find { |v| v.is_a_vector? }
-  <span style="color:#777">#=&gt; OrigenTesters::Decompiler::Pattern::VectorBodyElement</span>
+  #=&gt; OrigenTesters::Decompiler::Pattern::VectorBodyElement
 pat.find { |v| v.is_a_vector? }.type
-  <span style="color:#777">#=&gt; :vector</span>
+  #=&gt; :vector
 
-<span style="color:#777"># Find all the vectors for which the block returns true:</span>
-<span style="color:#777"># For example, to find the all vector body elements that are of type vector:</span>
+# Find all the vectors for which the block returns true:
+# For example, to find the all vector body elements that are of type vector:
 pat.find_all { |v| v.is_a_vector? }
-  <span style="color:#777">#=&gt; [OrigenTesters::Decompiler::Pattern::VectorBodyElement, OrigenTesters::Decompiler::Pattern::VectorBodyElement, OrigenTesters::Decompiler::Pattern::VectorBodyElement]</span>
+  #=&gt; [OrigenTesters::Decompiler::Pattern::VectorBodyElement, OrigenTesters::Decompiler::Pattern::VectorBodyElement, OrigenTesters::Decompiler::Pattern::VectorBodyElement]
 
-<span style="color:#777"># Find all the vectors after filting out those for which the block returns true:</span>
-<span style="color:#777"># For example, to find the all vector body elements that are NOT of type vector:</span>
+# Find all the vectors after filting out those for which the block returns true:
+# For example, to find the all vector body elements that are NOT of type vector:
 pat.reject { |v| v.is_a_vector? }
-  <span style="color:#777">#=&gt; [OrigenTesters::Decompiler::Pattern::VectorBodyElement, OrigenTesters::Decompiler::Pattern::VectorBodyElement]</span>
-</pre></div>
-</div>
-      </div>
+  #=&gt; [OrigenTesters::Decompiler::Pattern::VectorBodyElement, OrigenTesters::Decompiler::Pattern::VectorBodyElement]
+</code></pre>
 
       <p><a href="https://origen-sdk.org/testers/api/OrigenTesters/Decompiler/Pattern/EnumerableExt.html">See the API for a full listing.</a></p>
 
@@ -1065,25 +969,21 @@ for large patterns that contain thousands, or even hundreds of thousands, of vec
 at a specific index. The method <code>#vector_at(i)</code> decompiles and returns
 the vector at the index, <code>i</code>:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>pat.vector_at(<span style="color:#00D">3</span>)
-  <span style="color:#777">#=&gt; OrigenTesters::Decompiler::Pattern::VectorBodyElement</span>
+      <pre><code class="language-ruby">pat.vector_at(3)
+  #=&gt; OrigenTesters::Decompiler::Pattern::VectorBodyElement
 
-pat.vector_at(<span style="color:#00D">3</span>).type
-  <span style="color:#777">#=&gt; :vector</span>
+pat.vector_at(3).type
+  #=&gt; :vector
 
-pat.vector_at(<span style="color:#00D">3</span>).element
-  <span style="color:#777">#=&gt; OrigenTesters::Decompiler::Pattern::Vector</span>
+pat.vector_at(3).element
+  #=&gt; OrigenTesters::Decompiler::Pattern::Vector
 
-pat.vector_at(<span style="color:#00D">3</span>).element.repeat
-  <span style="color:#777">#=&gt; 5</span>
+pat.vector_at(3).element.repeat
+  #=&gt; 5
 
-pat.vector_at(<span style="color:#00D">4</span>).element.repeat
-  <span style="color:#777">#=&gt; 1</span>
-</pre></div>
-</div>
-      </div>
+pat.vector_at(4).element.repeat
+  #=&gt; 1
+</code></pre>
 
       <p><u>Observe that <code>#vector_at</code> is a bit of a misnomer</u>, as it actually
 returns the <code>vector body elements</code> at <code>i</code>, not necessary one of type <code>vector</code>.</p>
@@ -1151,41 +1051,29 @@ will tell you what other elements may be encountered.</p>
 it is platform-specific.
 <a href="/origen/guides/decompilation/overview#Example_Decompilation">Returning to the example pattern:</a></p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>pat.vector_at(<span style="color:#00D">0</span>).type
-  <span style="color:#777">#=&gt; :start_label</span>
-pat.vector_at(<span style="color:#00D">0</span>).is_platform_specific?
-  <span style="color:#777">#=&gt; true</span>
+      <pre><code class="language-ruby">pat.vector_at(0).type
+  #=&gt; :start_label
+pat.vector_at(0).is_platform_specific?
+  #=&gt; true
 
-pat.vector_at(<span style="color:#00D">1</span>).type
-  <span style="color:#777">#=&gt; :comment_block</span>
-pat.vector_at(<span style="color:#00D">1</span>).is_platform_specific?
-  <span style="color:#777">#=&gt; false</span>
-</pre></div>
-</div>
-      </div>
+pat.vector_at(1).type
+  #=&gt; :comment_block
+pat.vector_at(1).is_platform_specific?
+  #=&gt; false
+</code></pre>
 
       <p>For platform-specific nodes, same as <code>vectors</code>, the parsed nodes from the decompilation
 process are retrievable:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>pat.vector_at(<span style="color:#00D">0</span>).platform_nodes
-  <span style="color:#777">#=&gt; [:start_label]</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">pat.vector_at(0).platform_nodes
+  #=&gt; [:start_label]
+</code></pre>
 
       <p>Any <code>platform nodes</code> can be retrieved using the accessor:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>pat.vector_at(<span style="color:#00D">0</span>).start_label
-  <span style="color:#777">#=&gt; "pattern_st"</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">pat.vector_at(0).start_label
+  #=&gt; "pattern_st"
+</code></pre>
 
       <div class="alert alert-info" role="alert">
 Although these programmatic methods are provided, platform specifics should be documented and

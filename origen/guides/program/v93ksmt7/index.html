@@ -462,13 +462,9 @@ to SMT7.</p>
 
       <p>The SMT7 API is enabled by default when instantiating a V93K test environment:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># environment/v93k_smt7.rb</span>
-<span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">V93K</span>.new
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># environment/v93k_smt7.rb
+OrigenTesters::V93K.new
+</code></pre>
 
       <div>    
   <a class="anchor" name="Interface_Considerations"></a>          
@@ -483,16 +479,12 @@ to SMT7.</p>
       <p>SmarTest comes with a standard AC and DC test method library and Origen provides a built-in API to
 generate a test flow which uses those test methods, here are some examples:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Execute a functional test</span>
+      <pre><code class="language-ruby"># Execute a functional test
 test_method = test_methods.ac_tml.ac_test.functional_test
 
-<span style="color:#777"># A basic DC voltage measurement</span>
-test_method = test_methods.dc_tml.dc_test.general_pmu <span style="color:#606">force_mode</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">CURR</span><span style="color:#710">'</span></span>, <span style="color:#606">force_value</span>: <span style="color:#00D">100</span>.uA
-</pre></div>
-</div>
-      </div>
+# A basic DC voltage measurement
+test_method = test_methods.dc_tml.dc_test.general_pmu force_mode: 'CURR', force_value: 100.uA
+</code></pre>
 
       <p>Generally the parameter naming is the lower-cased and underscored version of the name that appears
 in the SMT documentation.</p>
@@ -521,14 +513,10 @@ with their own custom test method library, see <a href="/origen/guides/program/v
       <p>By default, a top-level <code>Flow.create</code> call in Origen will generate a standalone V93K testflow file which is
 internally wrapped by a flow group, like this:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>group &lt;FLOW_NAME&gt; {
+      <pre><code class="language-text">group &lt;FLOW_NAME&gt; {
   // Flow content here
 }
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>When such flows are imported into a master flow file, SmarTest does not provide a standard enable mechanism
 to control which sub-flows are executed.</p>
@@ -538,37 +526,25 @@ the top-level flow to easily enable/disable the execution of flow modules via fl
 
       <p>By enabling this feature in the target like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">V93K</span>.new(<span style="color:#606">add_flow_enable</span>: <span style="color:#A60">:enabled</span>)
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">OrigenTesters::V93K.new(add_flow_enable: :enabled)
+</code></pre>
 
       <p>the flow will now generate like this:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>group &lt;FLOW_NAME&gt; {
+      <pre><code class="language-text">group &lt;FLOW_NAME&gt; {
   if @&lt;FLOW_NAME&gt;_ENABLE == 1 {
     // Flow content here
   }
 }
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>The <code>@&lt;FLOW_NAME&gt;_ENABLE</code> variable will be initialized to 1 in the generated variables file for the given flow,
 meaning that the module will run by default if the top-level flow does nothing with this variable.</p>
 
       <p>Alternatively, the variable can be initialized to off like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">V93K</span>.new(<span style="color:#606">add_flow_enable</span>: <span style="color:#A60">:disabled</span>)
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">OrigenTesters::V93K.new(add_flow_enable: :disabled)
+</code></pre>
 
       <p>Meaning that by default, the module will not run and the top-level flow must always enable it by including
 <code>@&lt;FLOW_NAME&gt;_ENABLE = 1</code> before hitting the module.</p>
@@ -579,19 +555,15 @@ the default setting for a particular flow.</p>
 
       <p>Here is an example:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Flow</span>.create <span style="color:#606">interface</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">MyApp::Interface</span><span style="color:#710">'</span></span> <span style="color:#080;font-weight:bold">do</span>
+      <pre><code class="language-ruby">Flow.create interface: 'MyApp::Interface' do
 
-  <span style="color:#777"># Ensure that this flow is always generated with an enable word wrapper that is enabled by default</span>
-  <span style="color:#069">self</span>.add_flow_enable = <span style="color:#A60">:enabled</span>
+  # Ensure that this flow is always generated with an enable word wrapper that is enabled by default
+  self.add_flow_enable = :enabled
 
-  <span style="color:#777"># Some functional test</span>
-  func <span style="color:#A60">:blah</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  # Some functional test
+  func :blah
+end
+</code></pre>
 
       <p>This same API may be used to implement similar features on other platforms in future, but for now only the V93K is implemented.</p>
 
@@ -606,14 +578,10 @@ V93K master flow file.</p>
       <p>To prevent that from ever occurring, Origen will generate and append a unique signature to the end of
 all test names by default, for example:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>t = test_suites.add(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">my_test_name</span><span style="color:#710">"</span></span>, options)
+      <pre><code class="language-ruby">t = test_suites.add("my_test_name", options)
 
-t.name   <span style="color:#777"># =&gt; "my_test_name_E32ABE8"</span>
-</pre></div>
-</div>
-      </div>
+t.name   # =&gt; "my_test_name_E32ABE8"
+</code></pre>
 
       <p>Applications can override this default behavior by setting the corresponding test interface attribute,
 <code>unique_test_names</code>, to one of the following values:</p>
@@ -631,12 +599,8 @@ t.name   <span style="color:#777"># =&gt; "my_test_name_E32ABE8"</span>
       <p>This attribute can be set in the <a href="/origen/guides/runtime/environment">environment file</a> when instantiating
 the tester:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">V93K</span>.new <span style="color:#606">unique_test_names</span>: <span style="color:#069">nil</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">OrigenTesters::V93K.new unique_test_names: nil
+</code></pre>
 
       <p>This provides a single place to control the behavior within a <a href="/origen/guides/starting/architecture/#Monolithic_Application_Architecture">monolithic application architecture</a>.</p>
 
@@ -646,25 +610,17 @@ a given test flow module may be generated under a target/environment that is con
       <p>In that case, it is recommended to either set it at the flow-level, which will override any setting set at the
 environment-level:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># program/wt1_start.rb</span>
-<span style="color:#036;font-weight:bold">Flow</span>.create <span style="color:#606">interface</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">MyApp::Interface</span><span style="color:#710">'</span></span>, <span style="color:#606">unique_test_names</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">wt1</span><span style="color:#710">'</span></span> <span style="color:#080;font-weight:bold">do</span>
+      <pre><code class="language-ruby"># program/wt1_start.rb
+Flow.create interface: 'MyApp::Interface', unique_test_names: 'wt1' do
 
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+end
+</code></pre>
 
       <p>Or, it can be set directly within your interface logic which will take the highest precedence:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/my_app/interface.rb</span>
-<span style="color:#069">self</span>.unique_test_names = <span style="color:#A60">:flowname</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># lib/my_app/interface.rb
+self.unique_test_names = :flowname
+</code></pre>
 
       <div style="position: relative">
   <hr>

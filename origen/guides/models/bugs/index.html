@@ -505,63 +505,51 @@ of the analog that doesn’t have the bug then the workaround will be bypassed a
       <p>Here are some examples of adding bugs to the analog module within our example NVM module, note that bug
 method is a class method that must be called outside of the initialize (or any other) instance method:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># file: lib/nvm/analog_t921.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">NVM</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">ANALOG_T921</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
+      <pre><code class="language-ruby"># file: lib/nvm/analog_t921.rb
+module NVM
+  class ANALOG_T921
+    include Origen::Model
 
-    bug <span style="color:#A60">:low_vref</span>, <span style="color:#A60">:affected_version</span> =&gt; <span style="color:#00D">11</span>
-    bug <span style="color:#A60">:low_iref</span>, <span style="color:#A60">:affected_versions</span> =&gt; [<span style="color:#00D">11</span>, <span style="color:#00D">12</span>]
-    bug <span style="color:#A60">:dac_code</span>, <span style="color:#A60">:fixed_on_version</span> =&gt; <span style="color:#00D">12</span>
-    bug <span style="color:#A60">:unfixable</span>
+    bug :low_vref, :affected_version =&gt; 11
+    bug :low_iref, :affected_versions =&gt; [11, 12]
+    bug :dac_code, :fixed_on_version =&gt; 12
+    bug :unfixable
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options={})
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+    def initialize(options={})
+    end
+  end
+end
+</code></pre>
 
       <p>We have defined these bugs in terms of the affected versions and since our models already contain
 version information the presence of bugs will be modelled accurately.</p>
 
       <p>We can test this in the console:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># This will instantiate version 11 of the analog block</span>
-<span style="color:#d70">$dut</span> = <span style="color:#036;font-weight:bold">SOC</span>::<span style="color:#036;font-weight:bold">EAGLE_M352</span>.new(<span style="color:#606">version</span>: <span style="color:#00D">0</span>)
-<span style="color:#d70">$dut</span>.nvm.analog.has_bug?(<span style="color:#A60">:low_vref</span>)    <span style="color:#777"># =&gt; true</span>
-<span style="color:#d70">$dut</span>.nvm.analog.has_bug?(<span style="color:#A60">:low_iref</span>)    <span style="color:#777"># =&gt; true</span>
-<span style="color:#d70">$dut</span>.nvm.analog.has_bug?(<span style="color:#A60">:dac_code</span>)    <span style="color:#777"># =&gt; true</span>
-<span style="color:#d70">$dut</span>.nvm.analog.has_bug?(<span style="color:#A60">:unfixable</span>)   <span style="color:#777"># =&gt; true</span>
+      <pre><code class="language-ruby"># This will instantiate version 11 of the analog block
+$dut = SOC::EAGLE_M352.new(version: 0)
+$dut.nvm.analog.has_bug?(:low_vref)    # =&gt; true
+$dut.nvm.analog.has_bug?(:low_iref)    # =&gt; true
+$dut.nvm.analog.has_bug?(:dac_code)    # =&gt; true
+$dut.nvm.analog.has_bug?(:unfixable)   # =&gt; true
 
-<span style="color:#777"># This will instantiate version 12 of the analog block</span>
-<span style="color:#d70">$dut</span> = <span style="color:#036;font-weight:bold">SOC</span>::<span style="color:#036;font-weight:bold">EAGLE_M352</span>.new(<span style="color:#606">version</span>: <span style="color:#00D">1</span>)
-<span style="color:#d70">$dut</span>.nvm.analog.has_bug?(<span style="color:#A60">:low_vref</span>)    <span style="color:#777"># =&gt; false</span>
-<span style="color:#d70">$dut</span>.nvm.analog.has_bug?(<span style="color:#A60">:low_iref</span>)    <span style="color:#777"># =&gt; true</span>
-<span style="color:#d70">$dut</span>.nvm.analog.has_bug?(<span style="color:#A60">:dac_code</span>)    <span style="color:#777"># =&gt; false</span>
-<span style="color:#d70">$dut</span>.nvm.analog.has_bug?(<span style="color:#A60">:unfixable</span>)   <span style="color:#777"># =&gt; true</span>
-</pre></div>
-</div>
-      </div>
+# This will instantiate version 12 of the analog block
+$dut = SOC::EAGLE_M352.new(version: 1)
+$dut.nvm.analog.has_bug?(:low_vref)    # =&gt; false
+$dut.nvm.analog.has_bug?(:low_iref)    # =&gt; true
+$dut.nvm.analog.has_bug?(:dac_code)    # =&gt; false
+$dut.nvm.analog.has_bug?(:unfixable)   # =&gt; true
+</code></pre>
 
       <p>When we get to the point of implementing a template or source file we will then be able to deal with these
 bugs via logic like:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">if</span> <span style="color:#d70">$dut</span>.nvm.analog.has_bug?(<span style="color:#A60">:low_vref</span>)
-  <span style="color:#777"># Workaround the bug</span>
-<span style="color:#080;font-weight:bold">else</span>
-  <span style="color:#777"># Proceed as normal</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">if $dut.nvm.analog.has_bug?(:low_vref)
+  # Workaround the bug
+else
+  # Proceed as normal
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Recording_a_Feature"></a>          
@@ -570,38 +558,34 @@ bugs via logic like:</p>
 
       <p>Feature identification can be added in a similar way, this API also supports optionally adding descriptions:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># file: lib/nvm/analog_t921.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">NVM</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">ANALOG_T921</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
+      <pre><code class="language-ruby"># file: lib/nvm/analog_t921.rb
+module NVM
+  class ANALOG_T921
+    include Origen::Model
 
-    feature <span style="color:#A60">:feature1</span>
-    feature <span style="color:#A60">:feature2</span>, <span style="color:#A60">:description</span> =&gt;<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">feature2 description, this API for tools</span><span style="color:#710">"</span></span>
-    <span style="color:#777"># This is feature 3 description, this API is for humans</span>
-    <span style="color:#777"># and markdown should be used for formatting</span>
-    feature <span style="color:#A60">:feature3</span>
+    feature :feature1
+    feature :feature2, :description =&gt;"feature2 description, this API for tools"
+    # This is feature 3 description, this API is for humans
+    # and markdown should be used for formatting
+    feature :feature3
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options={})
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
+    def initialize(options={})
+    end
+  end
+end
 
-<span style="color:#d70">$dut</span> = <span style="color:#036;font-weight:bold">SOC</span>::<span style="color:#036;font-weight:bold">EAGLE_M352</span>.new(<span style="color:#606">version</span>: <span style="color:#00D">0</span>)
+$dut = SOC::EAGLE_M352.new(version: 0)
 
-<span style="color:#d70">$dut</span>.nvm.analog.has_feature?(<span style="color:#A60">:feature1</span>)    <span style="color:#777"># =&gt; true</span>
-<span style="color:#d70">$dut</span>.nvm.analog.has_feature?(<span style="color:#A60">:feature2</span>)    <span style="color:#777"># =&gt; true</span>
-<span style="color:#d70">$dut</span>.nvm.analog.has_feature?(<span style="color:#A60">:feature3</span>)    <span style="color:#777"># =&gt; true</span>
-<span style="color:#d70">$dut</span>.nvm.analog.has_feature?(<span style="color:#A60">:feature4</span>)    <span style="color:#777"># =&gt; false</span>
+$dut.nvm.analog.has_feature?(:feature1)    # =&gt; true
+$dut.nvm.analog.has_feature?(:feature2)    # =&gt; true
+$dut.nvm.analog.has_feature?(:feature3)    # =&gt; true
+$dut.nvm.analog.has_feature?(:feature4)    # =&gt; false
 
 
-<span style="color:#d70">$dut</span>.nvm.analog.feature(<span style="color:#A60">:feature1</span>).description    <span style="color:#777"># =&gt; []</span>
-<span style="color:#d70">$dut</span>.nvm.analog.feature(<span style="color:#A60">:feature2</span>).description    <span style="color:#777"># =&gt; ["feature2 description, this API for tools"]</span>
-<span style="color:#d70">$dut</span>.nvm.analog.feature(<span style="color:#A60">:feature3</span>).description    <span style="color:#777"># =&gt; ["This is feature 3...", "and markdown should be.."]</span>
-</pre></div>
-</div>
-      </div>
+$dut.nvm.analog.feature(:feature1).description    # =&gt; []
+$dut.nvm.analog.feature(:feature2).description    # =&gt; ["feature2 description, this API for tools"]
+$dut.nvm.analog.feature(:feature3).description    # =&gt; ["This is feature 3...", "and markdown should be.."]
+</code></pre>
 
       <p>Note that it is not currently possible to track features by version like it is for bugs, however it would not
 be very difficult to add this should the need arise.</p>

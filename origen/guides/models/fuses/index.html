@@ -465,53 +465,37 @@
 
       <p>Any other options passed during instantiation will be modeled as attributes of the fuse field.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>idcode_attrs = {
-  <span style="color:#606">customer_visible</span>: <span style="color:#069">true</span>,
-  <span style="color:#606">owner</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Ginty</span><span style="color:#710">'</span></span>,
-  <span style="color:#606">default_value</span>: <span style="color:#00D">0x0</span>
+      <pre><code class="language-ruby">idcode_attrs = {
+  customer_visible: true,
+  owner: 'Ginty',
+  default_value: 0x0
 }
 serial_id_attrs = {
-  <span style="color:#606">customer_visible</span>: <span style="color:#069">false</span>,
-  <span style="color:#606">owner</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Seth</span><span style="color:#710">'</span></span>,
-  <span style="color:#606">default_value</span>: <span style="color:#00D">0x0</span>
+  customer_visible: false,
+  owner: 'Seth',
+  default_value: 0x0
 }
-<span style="color:#d70">$dut</span>.fuse_field(<span style="color:#A60">:idcode</span>, <span style="color:#00D">0xDEADBEEF</span>, <span style="color:#00D">128</span>, idcode_attrs)
-<span style="color:#d70">$dut</span>.fuse_field(<span style="color:#A60">:serial_id</span>, <span style="color:#00D">0xF5F5F5F5</span>, <span style="color:#00D">64</span>, serial_id_attrs)
-</pre></div>
-</div>
-      </div>
+$dut.fuse_field(:idcode, 0xDEADBEEF, 128, idcode_attrs)
+$dut.fuse_field(:serial_id, 0xF5F5F5F5, 64, serial_id_attrs)
+</code></pre>
 
       <p>Accessing fuses behaves similarly to other Origen models, returning an array of fuse field names when
 calledwithout an argument.</p>
 
-      <div class="language-shell highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>$dut.fuses # =&gt; [:idcode, :serial_id]
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-shell">$dut.fuses # =&gt; [:idcode, :serial_id]
+</code></pre>
 
       <p>Given the potentially large number of fuses on SoCs, one may search for fuse fields using a regular expression.
 This can be handy when wanting to iterate around a desired collection of fuse fields, such as memory repair fuses.</p>
 
-      <div class="language-shell highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre> $dut.fuses(/code/) # =&gt; Array of size one containing the fuse field :idcode
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-shell"> $dut.fuses(/code/) # =&gt; Array of size one containing the fuse field :idcode
+</code></pre>
 
       <p>Attributes are accessed as any other model</p>
 
-      <div class="language-shell highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>$dut.fuses(:idcode).customer_visible # =&gt; true
+      <pre><code class="language-shell">$dut.fuses(:idcode).customer_visible # =&gt; true
 $dut.fuses(:idcode).owner            # =&gt; 'Ginty'
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>Fuses can be modeled within any class that includes Origen::SubBlocks, as is often the case, fuses are
 owned by individual IP or the top level device.</p>

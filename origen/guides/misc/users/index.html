@@ -462,14 +462,10 @@ of users.</p>
       <p>To access an object representing the current user simply call <code>User.current</code>
 and from there many attributes can be accessed:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">User</span>.current                <span style="color:#777"># =&gt; &lt;user object&gt;</span>
-<span style="color:#036;font-weight:bold">User</span>.current.name           <span style="color:#777"># =&gt; "John Doe"</span>
-<span style="color:#036;font-weight:bold">User</span>.current.email          <span style="color:#777"># =&gt; "johndoe@example.com"</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">User.current                # =&gt; &lt;user object&gt;
+User.current.name           # =&gt; "John Doe"
+User.current.email          # =&gt; "johndoe@example.com"
+</code></pre>
 
       <p>See the <a href="/origen/api/Origen/Users/User.html">User API</a> for a full list of available
 attributes.
@@ -478,13 +474,9 @@ Note that this is contingent on the current user setting up their name and email
 
       <p>User objects for 3rd parties can be created by supplying a name and/or email like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>thao = <span style="color:#036;font-weight:bold">User</span>.new(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">thao@example.com</span><span style="color:#710">"</span></span>)
-thao = <span style="color:#036;font-weight:bold">User</span>.new(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">thao@example.com</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Thao Huynh</span><span style="color:#710">"</span></span>)
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">thao = User.new("thao@example.com")
+thao = User.new("thao@example.com", "Thao Huynh")
+</code></pre>
 
       <div>    
   <a class="anchor" name="LDAP_Integration"></a>          
@@ -498,31 +490,19 @@ login name of the current Linux user as there ID.</p>
 
       <p>User objects can now be created by supplying a single ID argument:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>thao = <span style="color:#036;font-weight:bold">User</span>.new(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">b53254</span><span style="color:#710">"</span></span>)
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">thao = User.new("b53254")
+</code></pre>
 
       <p>To see the full information that is available for a user:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">User</span>.new(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">b53254</span><span style="color:#710">"</span></span>).display   <span style="color:#777"># =&gt; Prints a listing of all information available</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">User.new("b53254").display   # =&gt; Prints a listing of all information available
+</code></pre>
 
       <p>All attributes returned by your LDAP system will have accessors, in most cases these will
 return an array:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">User</span>.new(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">b53254</span><span style="color:#710">"</span></span>).country    <span style="color:#777"># =&gt; ["Vietnam"]</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">User.new("b53254").country    # =&gt; ["Vietnam"]
+</code></pre>
 
       <div>    
   <a class="anchor" name="Sending_Emails"></a>          
@@ -536,51 +516,39 @@ easily send emails from your application.</p>
       <p>An email can be sent to a given user by calling the <code>send</code> method on the user object,
 try this in the console to send yourself an email:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">User</span>.current.send <span style="color:#606">subject</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Hello</span><span style="color:#710">"</span></span>, <span style="color:#606">message</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Origen is cool!</span><span style="color:#710">"</span></span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">User.current.send subject: "Hello", message: "Origen is cool!"
+</code></pre>
 
       <p>Multi-line emails can be composed using Ruby’s multi-line string syntax:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>user = <span style="color:#036;font-weight:bold">User</span>.new(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">b53254</span><span style="color:#710">"</span></span>)
+      <pre><code class="language-ruby">user = User.new("b53254")
 
-user.send <span style="color:#606">subject</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Hello</span><span style="color:#710">"</span></span>, <span style="color:#606">message</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&lt;&lt;-END</span></span><span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">
-Hi </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>user.name<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">,
+user.send subject: "Hello", message: &lt;&lt;-END
+Hi #{user.name},
 
 This is just a short email, to say hello!
 
 Cheers,
-</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">User</span>.current.name<span style="font-weight:bold;color:#666">}</span></span><span style="color:#710">
-END</span></span>
-</pre></div>
-</div>
-      </div>
+#{User.current.name}
+END
+</code></pre>
 
       <p>Group emails can be sent by talking to the Origen mailer directly, an array of user objects or
 email addresses can be given to the <code>:to</code> option:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>message = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&lt;&lt;-END</span></span><span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">
+      <pre><code class="language-ruby">message = &lt;&lt;-END
 Hi All,
 
 Just to say have a nice day!
 
 Thanks,
-</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">User</span>.current.name<span style="font-weight:bold;color:#666">}</span></span><span style="color:#710">
-END</span></span>
+#{User.current.name}
+END
 
-distribution_list = [<span style="color:#036;font-weight:bold">User</span>.new(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">r49409</span><span style="color:#710">"</span></span>), <span style="color:#036;font-weight:bold">User</span>.new(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">r6aanf</span><span style="color:#710">"</span></span>)]
+distribution_list = [User.new("r49409"), User.new("r6aanf")]
 
-<span style="color:#036;font-weight:bold">Origen</span>.mailer.send_email(<span style="color:#606">subject</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Hello</span><span style="color:#710">"</span></span>, <span style="color:#606">to</span>: distribution_list, <span style="color:#606">body</span>: message)
-</pre></div>
-</div>
-      </div>
+Origen.mailer.send_email(subject: "Hello", to: distribution_list, body: message)
+</code></pre>
 
       <div>    
   <a class="anchor" name="Maillists"></a>          
@@ -592,48 +560,32 @@ should be located at <code>config/maillist_dev.txt</code> and <code>config/maill
 
       <p>Sample lists:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre># config/maillist_dev.txt
+      <pre><code class="language-text"># config/maillist_dev.txt
 #
 # Product team X  (handles commenting like this)
 first.last@company.com
 john.smith@company.com
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre># config/maillist_prod.txt
+      <pre><code class="language-text"># config/maillist_prod.txt
 #
 # Some other product team
 memory.expert@company.com       # Memory Test Lead (commenting like this is ok too)
 # Example of an ID only
 last.first
 x49509
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>To get a list of your application’s mailists:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.app.maillist_dev    <span style="color:#777"># =&gt; [&lt;first.last@company.com&gt;, &lt;john.smith@company.com&gt;]</span>
-<span style="color:#036;font-weight:bold">Origen</span>.app.maillist_prod   <span style="color:#777"># =&gt; [&lt;memory.expert@company.com&gt;, &lt;last.first@MYcompany.com&gt;, &lt;x49509@MYcompany.com&gt;]</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">Origen.app.maillist_dev    # =&gt; [&lt;first.last@company.com&gt;, &lt;john.smith@company.com&gt;]
+Origen.app.maillist_prod   # =&gt; [&lt;memory.expert@company.com&gt;, &lt;last.first@MYcompany.com&gt;, &lt;x49509@MYcompany.com&gt;]
+</code></pre>
 
       <p>You can pass the returned array directly to the send_email method:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.mailer.send_email(<span style="color:#606">subject</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Hello</span><span style="color:#710">"</span></span>, <span style="color:#606">to</span>: <span style="color:#036;font-weight:bold">Origen</span>.app.maillist_dev, <span style="color:#606">body</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Hello to all developers!</span><span style="color:#710">"</span></span>)
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">Origen.mailer.send_email(subject: "Hello", to: Origen.app.maillist_dev, body: "Hello to all developers!")
+</code></pre>
 
       <div class="alert alert-info">
   For a more in-depth look at the mailer and how it is setup, see the 

@@ -6,7 +6,7 @@
 <title>
   Class: Origen::ChipPackage
   
-    &mdash; Origen Core 0.60.7
+    &mdash; Origen Core 0.60.10
   
 </title>
 
@@ -281,7 +281,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Returns the value of attribute last_empty_char.</p>
+<p>attr_reader :group_list       # method is redefined further down.</p>
 </div></span>
   
 </li>
@@ -531,9 +531,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Returns the value of attribute types.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'></div></span>
   
 </li>
 
@@ -677,7 +675,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#generate_field-instance_method" title="#generate_field (instance method)">#<strong>generate_field</strong>(emptyChar = @last_empty_char)  &#x21d2; Object </a>
+      <a href="#generate_field-instance_method" title="#generate_field (instance method)">#<strong>generate_field</strong>(empty_char = @last_empty_char)  &#x21d2; Object </a>
     
 
     
@@ -837,7 +835,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#plot-instance_method" title="#plot (instance method)">#<strong>plot</strong>(pinName, marker = nil)  &#x21d2; Object </a>
+      <a href="#plot-instance_method" title="#plot (instance method)">#<strong>plot</strong>(pin_name, marker = nil)  &#x21d2; Object </a>
     
 
     
@@ -1278,7 +1276,7 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns the value of attribute last_empty_char.</p>
+<p>attr_reader :group_list       # method is redefined further down</p>
 
 
   </div>
@@ -1371,12 +1369,12 @@
       <pre class="lines">
 
 
-25
 26
-27</pre>
+27
+28</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 25</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 26</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_name'>name</span>
   <span class='ivar'>@name</span> <span class='op'>||</span> <span class='ivar'>@id</span>
@@ -1543,12 +1541,12 @@
       <pre class="lines">
 
 
-23
 24
-25</pre>
+25
+26</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 23</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 24</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_owner'>owner</span>
   <span class='ivar'>@owner</span>
@@ -1655,32 +1653,21 @@
   
 
   
-</h3><div class="docstring">
-  <div class="discussion">
-    
-<p>Returns the value of attribute types.</p>
-
-
-  </div>
-</div>
-<div class="tags">
-  
-
-</div><table class="source_code">
+</h3><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-9
-10
-11</pre>
+47
+48
+49</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 9</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 47</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_types'>types</span>
-  <span class='ivar'>@types</span>
+  <span class='ivar'>@types</span> <span class='op'>||</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1770,9 +1757,7 @@
 158
 159
 160
-161
-162
-163</pre>
+161</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 147</span>
@@ -1784,12 +1769,10 @@
     <span class='id identifier rubyid_pin_list'>pin_list</span> <span class='op'>=</span> <span class='id identifier rubyid_owner'>owner</span><span class='period'>.</span><span class='id identifier rubyid_ground_pins'>ground_pins</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid__ken'>_ken</span><span class='comma'>,</span> <span class='id identifier rubyid_pin'>pin</span><span class='op'>|</span> <span class='id identifier rubyid_pin'>pin</span> <span class='rbrace'>}</span>
     <span class='ivar'>@groups</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_marker'>marker</span><span class='embexpr_end'>}</span><span class='tstring_content'> - Ground</span><span class='tstring_end'>&quot;</span></span>
     <span class='id identifier rubyid_pin_list'>pin_list</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_item'>item</span><span class='op'>|</span>
-      <span class='kw'>begin</span>
-        <span class='id identifier rubyid_coordinates'>coordinates</span> <span class='op'>=</span> <span class='id identifier rubyid_coordinate'>coordinate</span><span class='lparen'>(</span><span class='id identifier rubyid_item'>item</span><span class='period'>.</span><span class='id identifier rubyid_location'>location</span><span class='rparen'>)</span>
-        <span class='ivar'>@field</span><span class='lbracket'>[</span><span class='id identifier rubyid_coordinates'>coordinates</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='id identifier rubyid_coordinates'>coordinates</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='id identifier rubyid_marker'>marker</span><span class='period'>.</span><span class='id identifier rubyid_green'>green</span> <span class='op'>+</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> </span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
-      <span class='kw'>rescue</span>
-        <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_item'>item</span><span class='embexpr_end'>}</span><span class='tstring_content'> doesn&#39;t appear to have a physical location in this configuration.</span><span class='tstring_end'>&quot;</span></span>
-      <span class='kw'>end</span>
+      <span class='id identifier rubyid_coordinates'>coordinates</span> <span class='op'>=</span> <span class='id identifier rubyid_coordinate'>coordinate</span><span class='lparen'>(</span><span class='id identifier rubyid_item'>item</span><span class='period'>.</span><span class='id identifier rubyid_location'>location</span><span class='rparen'>)</span>
+      <span class='ivar'>@field</span><span class='lbracket'>[</span><span class='id identifier rubyid_coordinates'>coordinates</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='id identifier rubyid_coordinates'>coordinates</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='id identifier rubyid_marker'>marker</span><span class='period'>.</span><span class='id identifier rubyid_green'>green</span> <span class='op'>+</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> </span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
+    <span class='kw'>rescue</span>
+      <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_item'>item</span><span class='embexpr_end'>}</span><span class='tstring_content'> doesn&#39;t appear to have a physical location in this configuration.</span><span class='tstring_end'>&quot;</span></span>
     <span class='kw'>end</span>
     <span class='id identifier rubyid_generate_field'>generate_field</span>
   <span class='kw'>end</span>
@@ -1818,7 +1801,6 @@
       <pre class="lines">
 
 
-124
 125
 126
 127
@@ -1839,7 +1821,7 @@
 142</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 124</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 125</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_add_power'>add_power</span><span class='lparen'>(</span><span class='id identifier rubyid_marker'>marker</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>P</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
   <span class='comment'># add_power can be called explicitly or by the .plot(&quot;power&quot;) method call.
@@ -1849,13 +1831,12 @@
     <span class='ivar'>@groups</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_marker'>marker</span><span class='embexpr_end'>}</span><span class='tstring_content'> - Power</span><span class='tstring_end'>&quot;</span></span>
     <span class='id identifier rubyid_pin_list'>pin_list</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_item'>item</span><span class='op'>|</span>
       <span class='comment'># puts items,owner.pins[items].location
-</span>      <span class='kw'>begin</span>
-        <span class='id identifier rubyid_coordinates'>coordinates</span> <span class='op'>=</span> <span class='id identifier rubyid_coordinate'>coordinate</span><span class='lparen'>(</span><span class='id identifier rubyid_item'>item</span><span class='period'>.</span><span class='id identifier rubyid_location'>location</span><span class='rparen'>)</span>
-        <span class='ivar'>@field</span><span class='lbracket'>[</span><span class='id identifier rubyid_coordinates'>coordinates</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='id identifier rubyid_coordinates'>coordinates</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='id identifier rubyid_marker'>marker</span><span class='period'>.</span><span class='id identifier rubyid_red'>red</span> <span class='op'>+</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> </span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
-      <span class='kw'>rescue</span>
-        <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_item'>item</span><span class='embexpr_end'>}</span><span class='tstring_content'> doesn&#39;t appear to have a physical location in this configuration.</span><span class='tstring_end'>&quot;</span></span>
-        <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Current package = </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_owner'>owner</span><span class='period'>.</span><span class='id identifier rubyid_package'>package</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
-      <span class='kw'>end</span>
+</span>
+      <span class='id identifier rubyid_coordinates'>coordinates</span> <span class='op'>=</span> <span class='id identifier rubyid_coordinate'>coordinate</span><span class='lparen'>(</span><span class='id identifier rubyid_item'>item</span><span class='period'>.</span><span class='id identifier rubyid_location'>location</span><span class='rparen'>)</span>
+      <span class='ivar'>@field</span><span class='lbracket'>[</span><span class='id identifier rubyid_coordinates'>coordinates</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='id identifier rubyid_coordinates'>coordinates</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='id identifier rubyid_marker'>marker</span><span class='period'>.</span><span class='id identifier rubyid_red'>red</span> <span class='op'>+</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> </span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
+    <span class='kw'>rescue</span>
+      <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_item'>item</span><span class='embexpr_end'>}</span><span class='tstring_content'> doesn&#39;t appear to have a physical location in this configuration.</span><span class='tstring_end'>&quot;</span></span>
+      <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Current package = </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_owner'>owner</span><span class='period'>.</span><span class='id identifier rubyid_package'>package</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
     <span class='kw'>end</span>
     <span class='id identifier rubyid_generate_field'>generate_field</span>
   <span class='kw'>end</span>
@@ -1880,18 +1861,18 @@
       <pre class="lines">
 
 
+166
+167
 168
 169
 170
 171
 172
 173
-174
-175
-176</pre>
+174</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 168</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 166</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_clear'>clear</span>
   <span class='comment'># clear removes all elements from the .field and .groups attributes.
@@ -1933,6 +1914,8 @@
       <pre class="lines">
 
 
+224
+225
 226
 227
 228
@@ -1947,11 +1930,10 @@
 237
 238
 239
-240
-241</pre>
+240</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 226</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 224</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_coordinate'>coordinate</span><span class='lparen'>(</span><span class='id identifier rubyid_location'>location</span><span class='rparen'>)</span>
   <span class='comment'>## Returns array of numerical equiv coordinates (e.g. &quot;AA11&quot; -&gt; [20,11])
@@ -1965,6 +1947,7 @@
   <span class='id identifier rubyid_row'>row</span> <span class='op'>=</span> <span class='id identifier rubyid_location'>location</span><span class='lbracket'>[</span><span class='int'>0</span><span class='op'>..</span><span class='id identifier rubyid_split_index'>split_index</span><span class='rbracket'>]</span>
   <span class='id identifier rubyid_column'>column</span> <span class='op'>=</span> <span class='id identifier rubyid_location'>location</span><span class='lbracket'>[</span><span class='id identifier rubyid_split_index'>split_index</span> <span class='op'>+</span> <span class='int'>1</span><span class='op'>..</span><span class='op'>-</span><span class='int'>1</span><span class='rbracket'>]</span>
   <span class='id identifier rubyid_fail'>fail</span> <span class='const'>ArgumentError</span><span class='comma'>,</span> <span class='id identifier rubyid_error'>error</span> <span class='kw'>unless</span> <span class='id identifier rubyid_row'>row</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span> <span class='op'>&gt;</span> <span class='int'>0</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_column'>column</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span> <span class='op'>&gt;</span> <span class='int'>0</span>
+
   <span class='comment'>## Now convert alphanumeric row to jedec equiv&#39; with to_row() method
 </span>  <span class='comment'># and return coordinates.
 </span>  <span class='id identifier rubyid_coordinates'>coordinates</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='id identifier rubyid_to_row'>to_row</span><span class='lparen'>(</span><span class='id identifier rubyid_row'>row</span><span class='rparen'>)</span><span class='comma'>,</span> <span class='id identifier rubyid_column'>column</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span> <span class='op'>-</span> <span class='int'>1</span><span class='rbracket'>]</span>
@@ -1977,7 +1960,7 @@
       <div class="method_details ">
   <h3 class="signature " id="generate_field-instance_method">
   
-    #<strong>generate_field</strong>(emptyChar = @last_empty_char)  &#x21d2; <tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt> 
+    #<strong>generate_field</strong>(empty_char = @last_empty_char)  &#x21d2; <tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt> 
   
 
   
@@ -2012,7 +1995,6 @@ for two things:
       <pre class="lines">
 
 
-99
 100
 101
 102
@@ -2034,25 +2016,26 @@ for two things:
 118
 119
 120
-121</pre>
+121
+122</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 99</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 100</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_generate_field'>generate_field</span><span class='lparen'>(</span><span class='id identifier rubyid_emptyChar'>emptyChar</span> <span class='op'>=</span> <span class='ivar'>@last_empty_char</span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_generate_field'>generate_field</span><span class='lparen'>(</span><span class='id identifier rubyid_empty_char'>empty_char</span> <span class='op'>=</span> <span class='ivar'>@last_empty_char</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_plottable'>plottable</span>
     <span class='id identifier rubyid_new_field'>new_field</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
     <span class='ivar'>@field</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_rows'>rows</span><span class='op'>|</span>
       <span class='id identifier rubyid_rows'>rows</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_items'>items</span><span class='op'>|</span>
         <span class='kw'>if</span> <span class='id identifier rubyid_items'>items</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span> <span class='op'>==</span> <span class='int'>0</span>
-          <span class='id identifier rubyid_items'>items</span><span class='period'>.</span><span class='id identifier rubyid_insert'>insert</span><span class='lparen'>(</span><span class='int'>0</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_emptyChar'>emptyChar</span><span class='embexpr_end'>}</span><span class='tstring_content'> </span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
-        <span class='kw'>elsif</span> <span class='id identifier rubyid_emptyChar'>emptyChar</span> <span class='op'>!=</span> <span class='ivar'>@last_empty_char</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_items'>items</span> <span class='op'>==</span> <span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_last_empty_char'>last_empty_char</span><span class='embexpr_end'>}</span><span class='tstring_content'> </span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
-          <span class='id identifier rubyid_items'>items</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_emptyChar'>emptyChar</span><span class='embexpr_end'>}</span><span class='tstring_content'> </span><span class='tstring_end'>&quot;</span></span>
+          <span class='id identifier rubyid_items'>items</span><span class='period'>.</span><span class='id identifier rubyid_insert'>insert</span><span class='lparen'>(</span><span class='int'>0</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_empty_char'>empty_char</span><span class='embexpr_end'>}</span><span class='tstring_content'> </span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+        <span class='kw'>elsif</span> <span class='id identifier rubyid_empty_char'>empty_char</span> <span class='op'>!=</span> <span class='ivar'>@last_empty_char</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_items'>items</span> <span class='op'>==</span> <span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_last_empty_char'>last_empty_char</span><span class='embexpr_end'>}</span><span class='tstring_content'> </span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
+          <span class='id identifier rubyid_items'>items</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_empty_char'>empty_char</span><span class='embexpr_end'>}</span><span class='tstring_content'> </span><span class='tstring_end'>&quot;</span></span>
         <span class='kw'>end</span>
       <span class='kw'>end</span>
       <span class='id identifier rubyid_new_field'>new_field</span><span class='period'>.</span><span class='id identifier rubyid_insert'>insert</span><span class='lparen'>(</span><span class='op'>-</span><span class='int'>1</span><span class='comma'>,</span> <span class='id identifier rubyid_rows'>rows</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='rparen'>)</span>
     <span class='kw'>end</span>
-    <span class='ivar'>@last_empty_char</span> <span class='op'>=</span> <span class='id identifier rubyid_emptyChar'>emptyChar</span>
+    <span class='ivar'>@last_empty_char</span> <span class='op'>=</span> <span class='id identifier rubyid_empty_char'>empty_char</span>
     <span class='id identifier rubyid_package'>package</span> <span class='op'>=</span> <span class='lparen'>(</span><span class='id identifier rubyid_owner'>owner</span><span class='period'>.</span><span class='id identifier rubyid_package'>package</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span><span class='rparen'>)</span> <span class='op'>?</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>No package chosen.</span><span class='tstring_end'>&#39;</span></span> <span class='op'>:</span> <span class='id identifier rubyid_owner'>owner</span><span class='period'>.</span><span class='id identifier rubyid_package'>package</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span>
     <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\nPin field: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_package'>package</span><span class='embexpr_end'>}</span><span class='tstring_content'>\n\n</span><span class='tstring_end'>&quot;</span></span>
     <span class='id identifier rubyid_group_display'>group_display</span> <span class='op'>=</span> <span class='ivar'>@groups</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\n</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
@@ -2082,17 +2065,17 @@ for two things:
       <pre class="lines">
 
 
+211
+212
 213
 214
 215
 216
 217
-218
-219
-220</pre>
+218</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 213</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 211</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_group_array'>group_array</span><span class='lparen'>(</span><span class='id identifier rubyid_grp'>grp</span><span class='rparen'>)</span>
   <span class='comment'># returns an array of pins belonging to the given group
@@ -2100,7 +2083,7 @@ for two things:
   <span class='id identifier rubyid_pin_list'>pin_list</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_compact!'>compact!</span>
   <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>No pins found under that group name.</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>unless</span> <span class='id identifier rubyid_pin_list'>pin_list</span><span class='period'>.</span><span class='id identifier rubyid_any?'>any?</span>
 <span class='kw'>rescue</span>
-  <span class='kw'>return</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
+  <span class='lbracket'>[</span><span class='rbracket'>]</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -2122,12 +2105,12 @@ for two things:
       <pre class="lines">
 
 
-30
 31
-32</pre>
+32
+33</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 30</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 31</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_id'>id</span>
   <span class='ivar'>@id</span> <span class='op'>||</span> <span class='id identifier rubyid_name'>name</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='period'>.</span><span class='id identifier rubyid_downcase'>downcase</span><span class='period'>.</span><span class='id identifier rubyid_gsub'>gsub</span><span class='lparen'>(</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>(\s|-)+</span><span class='regexp_end'>/</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>_</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span>
@@ -2152,12 +2135,12 @@ for two things:
       <pre class="lines">
 
 
-34
 35
-36</pre>
+36
+37</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 34</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 35</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_id='>id=</span><span class='lparen'>(</span><span class='id identifier rubyid_val'>val</span><span class='rparen'>)</span>
   <span class='ivar'>@id</span> <span class='op'>=</span> <span class='id identifier rubyid_val'>val</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='period'>.</span><span class='id identifier rubyid_gsub'>gsub</span><span class='lparen'>(</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>(\s|-)+</span><span class='regexp_end'>/</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>_</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_downcase'>downcase</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span>
@@ -2182,12 +2165,12 @@ for two things:
       <pre class="lines">
 
 
+253
 254
-255
-256</pre>
+255</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 254</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 253</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initial'>initial</span><span class='lparen'>(</span><span class='id identifier rubyid_test_string'>test_string</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_test_string'>test_string</span><span class='lbracket'>[</span><span class='int'>0</span><span class='comma'>,</span> <span class='int'>1</span><span class='rbracket'>]</span>
@@ -2234,13 +2217,13 @@ for two things:
       <pre class="lines">
 
 
+248
 249
 250
-251
-252</pre>
+251</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 249</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 248</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_letter?'>letter?</span><span class='lparen'>(</span><span class='id identifier rubyid_test_character'>test_character</span><span class='rparen'>)</span>
   <span class='comment'>## Returns nil if the &#39;test_character&#39; isn&#39;t a letter.
@@ -2270,23 +2253,23 @@ for two things:
       <pre class="lines">
 
 
+202
+203
 204
 205
 206
 207
-208
-209
-210</pre>
+208</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 204</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 202</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_list_groups'>list_groups</span>
   <span class='comment'># returns an array of group names assigned to the package
 </span>  <span class='id identifier rubyid_grps'>grps</span> <span class='op'>=</span> <span class='id identifier rubyid_owner'>owner</span><span class='period'>.</span><span class='id identifier rubyid_pins'>pins</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid__key'>_key</span><span class='comma'>,</span> <span class='id identifier rubyid_val'>val</span><span class='op'>|</span> <span class='id identifier rubyid_val'>val</span><span class='period'>.</span><span class='id identifier rubyid_group'>group</span> <span class='rbrace'>}</span>
   <span class='id identifier rubyid_grps'>grps</span><span class='period'>.</span><span class='id identifier rubyid_uniq!'>uniq!</span>
 <span class='kw'>rescue</span>
-  <span class='kw'>return</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
+  <span class='lbracket'>[</span><span class='rbracket'>]</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -2296,7 +2279,7 @@ for two things:
       <div class="method_details ">
   <h3 class="signature " id="plot-instance_method">
   
-    #<strong>plot</strong>(pinName, marker = nil)  &#x21d2; <tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt> 
+    #<strong>plot</strong>(pin_name, marker = nil)  &#x21d2; <tt><span class='object_link'><a href="../Object.html" title="Object (class)">Object</a></span></tt> 
   
 
   
@@ -2328,6 +2311,7 @@ for two things:
       <pre class="lines">
 
 
+266
 267
 268
 269
@@ -2373,56 +2357,51 @@ for two things:
 309
 310
 311
-312
-313
-314
-315</pre>
+312</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 267</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 266</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_plot'>plot</span><span class='lparen'>(</span><span class='id identifier rubyid_pinName'>pinName</span><span class='comma'>,</span> <span class='id identifier rubyid_marker'>marker</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_plot'>plot</span><span class='lparen'>(</span><span class='id identifier rubyid_pin_name'>pin_name</span><span class='comma'>,</span> <span class='id identifier rubyid_marker'>marker</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_prepare_plot'>prepare_plot</span> <span class='kw'>if</span> <span class='id identifier rubyid_field'>field</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
-  <span class='kw'>if</span> <span class='id identifier rubyid_plottable'>plottable</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_pinName'>pinName</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>ground</span><span class='regexp_end'>/</span></span> <span class='op'>=~</span> <span class='id identifier rubyid_pinName'>pinName</span><span class='period'>.</span><span class='id identifier rubyid_downcase'>downcase</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_plottable'>plottable</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_pin_name'>pin_name</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>ground</span><span class='regexp_end'>/</span></span> <span class='op'>=~</span> <span class='id identifier rubyid_pin_name'>pin_name</span><span class='period'>.</span><span class='id identifier rubyid_downcase'>downcase</span>
     <span class='id identifier rubyid_add_grounds'>add_grounds</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>G</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
-  <span class='kw'>elsif</span> <span class='id identifier rubyid_plottable'>plottable</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_pinName'>pinName</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>power</span><span class='regexp_end'>/</span></span> <span class='op'>=~</span> <span class='id identifier rubyid_pinName'>pinName</span><span class='period'>.</span><span class='id identifier rubyid_downcase'>downcase</span>
+  <span class='kw'>elsif</span> <span class='id identifier rubyid_plottable'>plottable</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_pin_name'>pin_name</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>power</span><span class='regexp_end'>/</span></span> <span class='op'>=~</span> <span class='id identifier rubyid_pin_name'>pin_name</span><span class='period'>.</span><span class='id identifier rubyid_downcase'>downcase</span>
     <span class='id identifier rubyid_add_power'>add_power</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>P</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
-  <span class='kw'>elsif</span> <span class='id identifier rubyid_plottable'>plottable</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_pinName'>pinName</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></span><span class='rparen'>)</span>
+  <span class='kw'>elsif</span> <span class='id identifier rubyid_plottable'>plottable</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_pin_name'>pin_name</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></span><span class='rparen'>)</span>
     <span class='id identifier rubyid_found_pins'>found_pins</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
-    <span class='id identifier rubyid_owner'>owner</span><span class='period'>.</span><span class='id identifier rubyid_pins'>pins</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_pin'>pin</span><span class='op'>|</span> <span class='id identifier rubyid_found_pins'>found_pins</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_pin'>pin</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span> <span class='kw'>if</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_pinName'>pinName</span><span class='embexpr_end'>}</span><span class='regexp_end'>/</span></span> <span class='op'>=~</span> <span class='id identifier rubyid_pin'>pin</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span> <span class='op'>||</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_pinName'>pinName</span><span class='embexpr_end'>}</span><span class='regexp_end'>/</span></span> <span class='op'>=~</span> <span class='id identifier rubyid_pin'>pin</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_group'>group</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span> <span class='rbrace'>}</span>
+    <span class='id identifier rubyid_owner'>owner</span><span class='period'>.</span><span class='id identifier rubyid_pins'>pins</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_pin'>pin</span><span class='op'>|</span> <span class='id identifier rubyid_found_pins'>found_pins</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_pin'>pin</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span> <span class='kw'>if</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_pin_name'>pin_name</span><span class='embexpr_end'>}</span><span class='regexp_end'>/</span></span> <span class='op'>=~</span> <span class='id identifier rubyid_pin'>pin</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span> <span class='op'>||</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_pin_name'>pin_name</span><span class='embexpr_end'>}</span><span class='regexp_end'>/</span></span> <span class='op'>=~</span> <span class='id identifier rubyid_pin'>pin</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_group'>group</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span> <span class='rbrace'>}</span>
     <span class='kw'>if</span> <span class='id identifier rubyid_found_pins'>found_pins</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span> <span class='op'>==</span> <span class='int'>1</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_marker'>marker</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
-      <span class='id identifier rubyid_marker'>marker</span> <span class='op'>=</span> <span class='id identifier rubyid_initial'>initial</span><span class='lparen'>(</span><span class='id identifier rubyid_pinName'>pinName</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='rparen'>)</span>
-      <span class='kw'>while</span> <span class='ivar'>@groups</span><span class='period'>.</span><span class='id identifier rubyid_index'>index</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_grpName'>grpName</span><span class='op'>|</span> <span class='id identifier rubyid_grpName'>grpName</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_marker'>marker</span><span class='embexpr_end'>}</span><span class='tstring_content'> -</span><span class='regexp_end'>/</span></span> <span class='rbrace'>}</span>
+      <span class='id identifier rubyid_marker'>marker</span> <span class='op'>=</span> <span class='id identifier rubyid_initial'>initial</span><span class='lparen'>(</span><span class='id identifier rubyid_pin_name'>pin_name</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='rparen'>)</span>
+      <span class='kw'>while</span> <span class='ivar'>@groups</span><span class='period'>.</span><span class='id identifier rubyid_index'>index</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_grp_name'>grp_name</span><span class='op'>|</span> <span class='id identifier rubyid_grp_name'>grp_name</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_marker'>marker</span><span class='embexpr_end'>}</span><span class='tstring_content'> -</span><span class='regexp_end'>/</span></span> <span class='rbrace'>}</span>
         <span class='id identifier rubyid_marker'>marker</span><span class='period'>.</span><span class='id identifier rubyid_next!'>next!</span>
         <span class='id identifier rubyid_marker'>marker</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>0</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>unless</span> <span class='id identifier rubyid_marker'>marker</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span> <span class='op'>&lt;</span> <span class='int'>2</span>
       <span class='kw'>end</span>
       <span class='id identifier rubyid_coordinates'>coordinates</span> <span class='op'>=</span> <span class='id identifier rubyid_coordinate'>coordinate</span><span class='lparen'>(</span><span class='id identifier rubyid_found_pins'>found_pins</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_location'>location</span><span class='rparen'>)</span>
       <span class='ivar'>@field</span><span class='lbracket'>[</span><span class='id identifier rubyid_coordinates'>coordinates</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='id identifier rubyid_coordinates'>coordinates</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='id identifier rubyid_marker'>marker</span><span class='period'>.</span><span class='id identifier rubyid_white_on_blue'>white_on_blue</span> <span class='op'>+</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> </span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
-      <span class='ivar'>@groups</span><span class='period'>.</span><span class='id identifier rubyid_delete_if'>delete_if</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_group'>group</span><span class='op'>|</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_pinName'>pinName</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='embexpr_end'>}</span><span class='regexp_end'>/</span></span> <span class='op'>=~</span> <span class='id identifier rubyid_group'>group</span> <span class='rbrace'>}</span>
+      <span class='ivar'>@groups</span><span class='period'>.</span><span class='id identifier rubyid_delete_if'>delete_if</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_group'>group</span><span class='op'>|</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_pin_name'>pin_name</span><span class='embexpr_end'>}</span><span class='regexp_end'>/</span></span> <span class='op'>=~</span> <span class='id identifier rubyid_group'>group</span> <span class='rbrace'>}</span>
       <span class='ivar'>@groups</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_marker'>marker</span><span class='embexpr_end'>}</span><span class='tstring_content'> - </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_found_pins'>found_pins</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'> - </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_found_pins'>found_pins</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_location'>location</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
     <span class='kw'>elsif</span> <span class='id identifier rubyid_found_pins'>found_pins</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span> <span class='op'>==</span> <span class='int'>1</span>
       <span class='id identifier rubyid_coordinates'>coordinates</span> <span class='op'>=</span> <span class='id identifier rubyid_coordinate'>coordinate</span><span class='lparen'>(</span><span class='id identifier rubyid_found_pins'>found_pins</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_location'>location</span><span class='rparen'>)</span>
       <span class='ivar'>@field</span><span class='lbracket'>[</span><span class='id identifier rubyid_coordinates'>coordinates</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='id identifier rubyid_coordinates'>coordinates</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='id identifier rubyid_marker'>marker</span><span class='period'>.</span><span class='id identifier rubyid_white_on_blue'>white_on_blue</span> <span class='op'>+</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> </span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
-      <span class='ivar'>@groups</span><span class='period'>.</span><span class='id identifier rubyid_delete_if'>delete_if</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_group'>group</span><span class='op'>|</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_pinName'>pinName</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='embexpr_end'>}</span><span class='regexp_end'>/</span></span> <span class='op'>=~</span> <span class='id identifier rubyid_group'>group</span> <span class='rbrace'>}</span>
+      <span class='ivar'>@groups</span><span class='period'>.</span><span class='id identifier rubyid_delete_if'>delete_if</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_group'>group</span><span class='op'>|</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_pin_name'>pin_name</span><span class='embexpr_end'>}</span><span class='regexp_end'>/</span></span> <span class='op'>=~</span> <span class='id identifier rubyid_group'>group</span> <span class='rbrace'>}</span>
       <span class='ivar'>@groups</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_marker'>marker</span><span class='embexpr_end'>}</span><span class='tstring_content'> - </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_found_pins'>found_pins</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'> - </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_found_pins'>found_pins</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_location'>location</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
     <span class='kw'>else</span>
       <span class='kw'>if</span> <span class='id identifier rubyid_marker'>marker</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
-        <span class='id identifier rubyid_marker'>marker</span> <span class='op'>=</span> <span class='id identifier rubyid_initial'>initial</span><span class='lparen'>(</span><span class='id identifier rubyid_pinName'>pinName</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='rparen'>)</span>
-        <span class='kw'>while</span> <span class='ivar'>@groups</span><span class='period'>.</span><span class='id identifier rubyid_index'>index</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_grpName'>grpName</span><span class='op'>|</span> <span class='id identifier rubyid_grpName'>grpName</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_marker'>marker</span><span class='embexpr_end'>}</span><span class='tstring_content'> -</span><span class='regexp_end'>/</span></span> <span class='rbrace'>}</span>
+        <span class='id identifier rubyid_marker'>marker</span> <span class='op'>=</span> <span class='id identifier rubyid_initial'>initial</span><span class='lparen'>(</span><span class='id identifier rubyid_pin_name'>pin_name</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='rparen'>)</span>
+        <span class='kw'>while</span> <span class='ivar'>@groups</span><span class='period'>.</span><span class='id identifier rubyid_index'>index</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_grp_name'>grp_name</span><span class='op'>|</span> <span class='id identifier rubyid_grp_name'>grp_name</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_marker'>marker</span><span class='embexpr_end'>}</span><span class='tstring_content'> -</span><span class='regexp_end'>/</span></span> <span class='rbrace'>}</span>
           <span class='id identifier rubyid_marker'>marker</span><span class='period'>.</span><span class='id identifier rubyid_next!'>next!</span>
           <span class='id identifier rubyid_marker'>marker</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>0</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>unless</span> <span class='id identifier rubyid_marker'>marker</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span> <span class='op'>&lt;</span> <span class='int'>2</span>
         <span class='kw'>end</span>
       <span class='kw'>end</span>
-      <span class='id identifier rubyid_reg_state'>reg_state</span> <span class='op'>=</span> <span class='id identifier rubyid_quote_regex'>quote_regex</span><span class='lparen'>(</span><span class='id identifier rubyid_pinName'>pinName</span><span class='rparen'>)</span>
+      <span class='id identifier rubyid_reg_state'>reg_state</span> <span class='op'>=</span> <span class='id identifier rubyid_quote_regex'>quote_regex</span><span class='lparen'>(</span><span class='id identifier rubyid_pin_name'>pin_name</span><span class='rparen'>)</span>
       <span class='id identifier rubyid_found_pins'>found_pins</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_item'>item</span><span class='op'>|</span>
-        <span class='kw'>begin</span>
-          <span class='id identifier rubyid_coordinates'>coordinates</span> <span class='op'>=</span> <span class='id identifier rubyid_coordinate'>coordinate</span><span class='lparen'>(</span><span class='id identifier rubyid_item'>item</span><span class='period'>.</span><span class='id identifier rubyid_location'>location</span><span class='rparen'>)</span>
-          <span class='ivar'>@field</span><span class='lbracket'>[</span><span class='id identifier rubyid_coordinates'>coordinates</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='id identifier rubyid_coordinates'>coordinates</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='id identifier rubyid_marker'>marker</span> <span class='op'>+</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> </span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
-          <span class='ivar'>@groups</span><span class='period'>.</span><span class='id identifier rubyid_delete_if'>delete_if</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_group'>group</span><span class='op'>|</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_marker'>marker</span><span class='embexpr_end'>}</span><span class='tstring_content'> - \&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_reg_state'>reg_state</span><span class='embexpr_end'>}</span><span class='tstring_content'>\&quot;</span><span class='tstring_end'>&quot;</span></span> <span class='op'>==</span> <span class='id identifier rubyid_group'>group</span> <span class='rbrace'>}</span>
-          <span class='ivar'>@groups</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_marker'>marker</span><span class='embexpr_end'>}</span><span class='tstring_content'> - \&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_pinName'>pinName</span><span class='embexpr_end'>}</span><span class='tstring_content'>\&quot;</span><span class='tstring_end'>&quot;</span></span>
-        <span class='kw'>rescue</span>
-          <span class='id identifier rubyid_raise'>raise</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\n</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_item'>item</span><span class='embexpr_end'>}</span><span class='tstring_content'> doesn&#39;t appear to have a physical location in this configuration.</span><span class='tstring_end'>&quot;</span></span>
-        <span class='kw'>end</span>
+        <span class='id identifier rubyid_coordinates'>coordinates</span> <span class='op'>=</span> <span class='id identifier rubyid_coordinate'>coordinate</span><span class='lparen'>(</span><span class='id identifier rubyid_item'>item</span><span class='period'>.</span><span class='id identifier rubyid_location'>location</span><span class='rparen'>)</span>
+        <span class='ivar'>@field</span><span class='lbracket'>[</span><span class='id identifier rubyid_coordinates'>coordinates</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='id identifier rubyid_coordinates'>coordinates</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='id identifier rubyid_marker'>marker</span> <span class='op'>+</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> </span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
+        <span class='ivar'>@groups</span><span class='period'>.</span><span class='id identifier rubyid_delete_if'>delete_if</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_group'>group</span><span class='op'>|</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_marker'>marker</span><span class='embexpr_end'>}</span><span class='tstring_content'> - \&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_reg_state'>reg_state</span><span class='embexpr_end'>}</span><span class='tstring_content'>\&quot;</span><span class='tstring_end'>&quot;</span></span> <span class='op'>==</span> <span class='id identifier rubyid_group'>group</span> <span class='rbrace'>}</span>
+        <span class='ivar'>@groups</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_marker'>marker</span><span class='embexpr_end'>}</span><span class='tstring_content'> - \&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_pin_name'>pin_name</span><span class='embexpr_end'>}</span><span class='tstring_content'>\&quot;</span><span class='tstring_end'>&quot;</span></span>
+      <span class='kw'>rescue</span>
+        <span class='id identifier rubyid_raise'>raise</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\n</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_item'>item</span><span class='embexpr_end'>}</span><span class='tstring_content'> doesn&#39;t appear to have a physical location in this configuration.</span><span class='tstring_end'>&quot;</span></span>
       <span class='kw'>end</span>
     <span class='kw'>end</span>
     <span class='id identifier rubyid_generate_field'>generate_field</span>
@@ -2450,6 +2429,9 @@ for two things:
       <pre class="lines">
 
 
+364
+365
+366
 367
 368
 369
@@ -2539,13 +2521,10 @@ for two things:
 453
 454
 455
-456
-457
-458
-459</pre>
+456</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 367</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 364</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_plot_ceo'>plot_ceo</span>
   <span class='id identifier rubyid_scramble'>scramble</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>         +....~~~~~:,,..::~~:,......,:~==~,,....,:~==~~::,:~~,.,               </span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
@@ -2681,6 +2660,9 @@ for two things:
       <pre class="lines">
 
 
+320
+321
+322
 323
 324
 325
@@ -2711,13 +2693,10 @@ for two things:
 350
 351
 352
-353
-354
-355
-356</pre>
+353</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 323</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 320</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_plot_coord'>plot_coord</span><span class='lparen'>(</span><span class='id identifier rubyid_coord'>coord</span><span class='comma'>,</span> <span class='id identifier rubyid_marker'>marker</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_prepare_plot'>prepare_plot</span> <span class='kw'>if</span> <span class='id identifier rubyid_field'>field</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
@@ -2727,20 +2706,20 @@ for two things:
       <span class='id identifier rubyid_owner'>owner</span><span class='period'>.</span><span class='id identifier rubyid_pins'>pins</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_pin'>pin</span><span class='op'>|</span> <span class='id identifier rubyid_found_pins'>found_pins</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_pin'>pin</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span> <span class='kw'>if</span> <span class='id identifier rubyid_coord'>coord</span> <span class='op'>==</span> <span class='id identifier rubyid_pin'>pin</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_location'>location</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span> <span class='rbrace'>}</span>
       <span class='kw'>if</span> <span class='id identifier rubyid_marker'>marker</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
         <span class='id identifier rubyid_marker'>marker</span> <span class='op'>=</span> <span class='id identifier rubyid_initial'>initial</span><span class='lparen'>(</span><span class='id identifier rubyid_coord'>coord</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='rparen'>)</span>
-        <span class='kw'>while</span> <span class='ivar'>@groups</span><span class='period'>.</span><span class='id identifier rubyid_index'>index</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_grpName'>grpName</span><span class='op'>|</span> <span class='id identifier rubyid_grpName'>grpName</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_marker'>marker</span><span class='embexpr_end'>}</span><span class='tstring_content'> -</span><span class='regexp_end'>/</span></span> <span class='rbrace'>}</span>
+        <span class='kw'>while</span> <span class='ivar'>@groups</span><span class='period'>.</span><span class='id identifier rubyid_index'>index</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_grp_name'>grp_name</span><span class='op'>|</span> <span class='id identifier rubyid_grp_name'>grp_name</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_marker'>marker</span><span class='embexpr_end'>}</span><span class='tstring_content'> -</span><span class='regexp_end'>/</span></span> <span class='rbrace'>}</span>
           <span class='id identifier rubyid_marker'>marker</span><span class='period'>.</span><span class='id identifier rubyid_next!'>next!</span>
           <span class='id identifier rubyid_marker'>marker</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>0</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>unless</span> <span class='id identifier rubyid_marker'>marker</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span> <span class='op'>&lt;</span> <span class='int'>2</span>
         <span class='kw'>end</span>
         <span class='id identifier rubyid_found_pins'>found_pins</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_pin'>pin</span><span class='op'>|</span>
           <span class='id identifier rubyid_coordinates'>coordinates</span> <span class='op'>=</span> <span class='id identifier rubyid_coordinate'>coordinate</span><span class='lparen'>(</span><span class='id identifier rubyid_pin'>pin</span><span class='period'>.</span><span class='id identifier rubyid_location'>location</span><span class='rparen'>)</span>
           <span class='ivar'>@field</span><span class='lbracket'>[</span><span class='id identifier rubyid_coordinates'>coordinates</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='id identifier rubyid_coordinates'>coordinates</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='id identifier rubyid_marker'>marker</span><span class='period'>.</span><span class='id identifier rubyid_white_on_blue'>white_on_blue</span> <span class='op'>+</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> </span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
-          <span class='ivar'>@groups</span><span class='period'>.</span><span class='id identifier rubyid_delete_if'>delete_if</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_group'>group</span><span class='op'>|</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_coord'>coord</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='embexpr_end'>}</span><span class='regexp_end'>/</span></span> <span class='op'>=~</span> <span class='id identifier rubyid_group'>group</span> <span class='rbrace'>}</span>
+          <span class='ivar'>@groups</span><span class='period'>.</span><span class='id identifier rubyid_delete_if'>delete_if</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_group'>group</span><span class='op'>|</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_coord'>coord</span><span class='embexpr_end'>}</span><span class='regexp_end'>/</span></span> <span class='op'>=~</span> <span class='id identifier rubyid_group'>group</span> <span class='rbrace'>}</span>
           <span class='ivar'>@groups</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_marker'>marker</span><span class='embexpr_end'>}</span><span class='tstring_content'> - </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_found_pins'>found_pins</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'> - </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_found_pins'>found_pins</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_location'>location</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
         <span class='kw'>end</span>
       <span class='kw'>else</span>
         <span class='id identifier rubyid_coordinates'>coordinates</span> <span class='op'>=</span> <span class='id identifier rubyid_coordinate'>coordinate</span><span class='lparen'>(</span><span class='id identifier rubyid_found_pins'>found_pins</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_location'>location</span><span class='rparen'>)</span>
         <span class='ivar'>@field</span><span class='lbracket'>[</span><span class='id identifier rubyid_coordinates'>coordinates</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='id identifier rubyid_coordinates'>coordinates</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='id identifier rubyid_marker'>marker</span><span class='period'>.</span><span class='id identifier rubyid_white_on_blue'>white_on_blue</span> <span class='op'>+</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> </span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
-        <span class='ivar'>@groups</span><span class='period'>.</span><span class='id identifier rubyid_delete_if'>delete_if</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_group'>group</span><span class='op'>|</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_coord'>coord</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='embexpr_end'>}</span><span class='regexp_end'>/</span></span> <span class='op'>=~</span> <span class='id identifier rubyid_group'>group</span> <span class='rbrace'>}</span>
+        <span class='ivar'>@groups</span><span class='period'>.</span><span class='id identifier rubyid_delete_if'>delete_if</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_group'>group</span><span class='op'>|</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_coord'>coord</span><span class='embexpr_end'>}</span><span class='regexp_end'>/</span></span> <span class='op'>=~</span> <span class='id identifier rubyid_group'>group</span> <span class='rbrace'>}</span>
         <span class='ivar'>@groups</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_marker'>marker</span><span class='embexpr_end'>}</span><span class='tstring_content'> - </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_found_pins'>found_pins</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'> - </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_found_pins'>found_pins</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_location'>location</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
       <span class='kw'>end</span>
       <span class='kw'>if</span> <span class='id identifier rubyid_found_pins'>found_pins</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span> <span class='op'>&gt;</span> <span class='int'>0</span>
@@ -2777,6 +2756,8 @@ for two things:
       <pre class="lines">
 
 
+176
+177
 178
 179
 180
@@ -2798,12 +2779,10 @@ for two things:
 196
 197
 198
-199
-200
-201</pre>
+199</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 178</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 176</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_plot_help'>plot_help</span>
   <span class='id identifier rubyid_prepare_plot'>prepare_plot</span> <span class='kw'>if</span> <span class='id identifier rubyid_field'>field</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
@@ -2813,16 +2792,16 @@ for two things:
   <span class='kw'>if</span> <span class='id identifier rubyid_plottable'>plottable</span>
     <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\nPLOTTING GROUPS:</span><span class='tstring_end'>&quot;</span></span>
     <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>$dut.package.list_groups &lt;-- to see available group names</span><span class='tstring_end'>&#39;</span></span>
-    <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>$dut.package.plot(\&quot;ddr_interface_1\&quot;)</span><span class='tstring_end'>&quot;</span></span>
+    <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>$dut.package.plot(&quot;ddr_interface_1&quot;)</span><span class='tstring_end'>&#39;</span></span>
     <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>$dut.package.plot_group(\&quot;serdes_1\&quot;,&#39;Z&#39;) &lt;--denotes custom legend marker, Z</span><span class='tstring_end'>&quot;</span></span>
     <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\nPLOTTING INDIVIDUAL PINS:</span><span class='tstring_end'>&quot;</span></span>
-    <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>$dut.package.plot(\&quot;d1_mdqs00\&quot;)</span><span class='tstring_end'>&quot;</span></span>
+    <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>$dut.package.plot(&quot;d1_mdqs00&quot;)</span><span class='tstring_end'>&#39;</span></span>
     <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\nPLOTTING WITH REGEXP:</span><span class='tstring_end'>&quot;</span></span>
-    <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>$dut.package.plot(\&quot;d1_mdqs\&quot;) &lt;-- Plot all controller 1 DQS pins.</span><span class='tstring_end'>&quot;</span></span>
-    <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>$dut.package.plot(\&quot;d1_mdqs0[0-9]\&quot;) &lt;-- Plot d1_mdqs00 - d1_mdqs09.</span><span class='tstring_end'>&quot;</span></span>
+    <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>$dut.package.plot(&quot;d1_mdqs&quot;) &lt;-- Plot all controller 1 DQS pins.</span><span class='tstring_end'>&#39;</span></span>
+    <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>$dut.package.plot(&quot;d1_mdqs0[0-9]&quot;) &lt;-- Plot d1_mdqs00 - d1_mdqs09.</span><span class='tstring_end'>&#39;</span></span>
     <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\nADDING POWER/GROUND:</span><span class='tstring_end'>&quot;</span></span>
-    <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>$dut.package.plot(\&quot;grounds\&quot;)</span><span class='tstring_end'>&quot;</span></span>
-    <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>$dut.package.plot(\&quot;power\&quot;)</span><span class='tstring_end'>&quot;</span></span>
+    <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>$dut.package.plot(&quot;grounds&quot;)</span><span class='tstring_end'>&#39;</span></span>
+    <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>$dut.package.plot(&quot;power&quot;)</span><span class='tstring_end'>&#39;</span></span>
     <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\nVIEW CURRENT PLOT\n</span><span class='tstring_end'>&quot;</span></span>
     <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>$dut.package.show</span><span class='tstring_end'>&#39;</span></span>
   <span class='kw'>else</span>
@@ -2868,7 +2847,6 @@ for two things:
       <pre class="lines">
 
 
-58
 59
 60
 61
@@ -2899,14 +2877,15 @@ for two things:
 86
 87
 88
-89</pre>
+89
+90</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 58</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 59</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_prepare_plot'>prepare_plot</span>
   <span class='ivar'>@plottable</span> <span class='op'>=</span> <span class='id identifier rubyid_types'>types</span><span class='period'>.</span><span class='id identifier rubyid_any?'>any?</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_x'>x</span><span class='op'>|</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>BGA</span><span class='regexp_end'>/i</span></span> <span class='op'>=~</span> <span class='id identifier rubyid_x'>x</span> <span class='rbrace'>}</span>
-  <span class='kw'>if</span>  <span class='ivar'>@plottable</span>
+  <span class='kw'>if</span> <span class='ivar'>@plottable</span>
     <span class='ivar'>@last_empty_char</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>.</span><span class='tstring_end'>&#39;</span></span>
     <span class='ivar'>@field</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
     <span class='ivar'>@groups</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
@@ -2918,7 +2897,7 @@ for two things:
     <span class='lparen'>(</span><span class='int'>1</span><span class='op'>..</span><span class='ivar'>@number_of_columns</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_item'>item</span><span class='op'>|</span> <span class='ivar'>@columns</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_item'>item</span> <span class='rbrace'>}</span>
     <span class='ivar'>@upper_axes</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
     <span class='ivar'>@lower_axes</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
-    <span class='ivar'>@columns</span><span class='period'>.</span><span class='id identifier rubyid_each_with_index'>each_with_index</span> <span class='kw'>do</span><span class='op'>|</span><span class='id identifier rubyid_column'>column</span><span class='comma'>,</span> <span class='id identifier rubyid_index'>index</span><span class='op'>|</span>
+    <span class='ivar'>@columns</span><span class='period'>.</span><span class='id identifier rubyid_each_with_index'>each_with_index</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_column'>column</span><span class='comma'>,</span> <span class='id identifier rubyid_index'>index</span><span class='op'>|</span>
       <span class='comment'># if index % 2 == 0
 </span>      <span class='kw'>if</span> <span class='id identifier rubyid_index'>index</span><span class='period'>.</span><span class='id identifier rubyid_even?'>even?</span>
         <span class='id identifier rubyid_temp'>temp</span> <span class='op'>=</span> <span class='id identifier rubyid_column'>column</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span>
@@ -2956,16 +2935,16 @@ for two things:
       <pre class="lines">
 
 
+356
+357
+358
 359
 360
 361
-362
-363
-364
-365</pre>
+362</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 359</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 356</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_quote_regex'>quote_regex</span><span class='lparen'>(</span><span class='id identifier rubyid_regex_statement'>regex_statement</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_with_escapes'>with_escapes</span> <span class='op'>=</span> <span class='id identifier rubyid_regex_statement'>regex_statement</span>
@@ -2994,14 +2973,14 @@ for two things:
       <pre class="lines">
 
 
+242
 243
 244
 245
-246
-247</pre>
+246</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 243</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 242</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_to_row'>to_row</span><span class='lparen'>(</span><span class='id identifier rubyid_alphanumeric_coord'>alphanumeric_coord</span><span class='rparen'>)</span>
   <span class='comment'>## This maps alpha row coordinate to its appropriate Jedec:
@@ -3028,12 +3007,12 @@ for two things:
       <pre class="lines">
 
 
-38
 39
-40</pre>
+40
+41</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 38</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 39</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_to_s'>to_s</span>
   <span class='id identifier rubyid_id'>id</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span>
@@ -3058,12 +3037,12 @@ for two things:
       <pre class="lines">
 
 
-42
 43
-44</pre>
+44
+45</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 42</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/chip_package.rb', line 43</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_to_sym'>to_sym</span>
   <span class='id identifier rubyid_to_s'>to_s</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span>
@@ -3078,9 +3057,9 @@ for two things:
 </div>
 
       <div id="footer">
-  Generated on Fri Feb 11 10:52:57 2022 by
-  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.26 (ruby-2.6.0).
+  Generated on Wed Mar  8 10:08:41 2023 by
+  <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.9.28 (ruby-2.6.0).
 </div>
 
     </div>

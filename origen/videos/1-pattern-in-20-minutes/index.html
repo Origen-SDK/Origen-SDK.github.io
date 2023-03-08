@@ -192,218 +192,190 @@
 
             <h5 id="ip-model-and-controller">IP Model and Controller</h5>
 
-            <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/atd_test/atd.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">ATDTest</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">ATD</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
+            <pre><code class="language-ruby"># lib/atd_test/atd.rb
+module ATDTest
+  class ATD
+    include Origen::Model
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options = {})
+    def initialize(options = {})
       instantiate_registers(options)
-    <span style="color:#080;font-weight:bold">end</span>
+    end
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">instantiate_registers</span>(options = {})
-      reg <span style="color:#A60">:sc1</span>, <span style="color:#00D">0x0</span>, <span style="color:#606">size</span>: <span style="color:#00D">32</span> <span style="color:#080;font-weight:bold">do</span> |reg|
-        reg.bit <span style="color:#00D">7</span>, <span style="color:#A60">:coco</span>, <span style="color:#606">access</span>: <span style="color:#A60">:ro</span>
-        reg.bit <span style="color:#00D">6</span>, <span style="color:#A60">:aien</span>
-        reg.bit <span style="color:#00D">5</span>, <span style="color:#A60">:diff</span>
-        reg.bit <span style="color:#00D">4</span>..<span style="color:#00D">0</span>, <span style="color:#A60">:adch</span>
-      <span style="color:#080;font-weight:bold">end</span>
+    def instantiate_registers(options = {})
+      reg :sc1, 0x0, size: 32 do |reg|
+        reg.bit 7, :coco, access: :ro
+        reg.bit 6, :aien
+        reg.bit 5, :diff
+        reg.bit 4..0, :adch
+      end
 
-      reg <span style="color:#A60">:r</span>, <span style="color:#00D">0x10</span>, <span style="color:#606">size</span>: <span style="color:#00D">32</span> <span style="color:#080;font-weight:bold">do</span> |reg|
-        reg.bit <span style="color:#00D">15</span>..<span style="color:#00D">0</span>, <span style="color:#A60">:d</span>
-      <span style="color:#080;font-weight:bold">end</span>
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-            </div>
+      reg :r, 0x10, size: 32 do |reg|
+        reg.bit 15..0, :d
+      end
+    end
+  end
+end
+</code></pre>
 
-            <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/atd_test/atd_controller.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">ATDTest</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">ATDController</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Controller</span>
+            <pre><code class="language-ruby"># lib/atd_test/atd_controller.rb
+module ATDTest
+  class ATDController
+    include Origen::Controller
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">convert</span>(channel)
-      ss <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Performing an ATD conversion on channel </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>channel<span style="font-weight:bold;color:#666">}</span></span><span style="color:#710">"</span></span>
+    def convert(channel)
+      ss "Performing an ATD conversion on channel #{channel}"
       sc1.adch.write!(channel)
-      tester.wait <span style="color:#606">time_in_us</span>: <span style="color:#00D">100</span>
-      sc1.coco.assert!(<span style="color:#00D">1</span>)
-      r.d <span style="color:#777"># Return the result bits</span>
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-            </div>
+      tester.wait time_in_us: 100
+      sc1.coco.assert!(1)
+      r.d # Return the result bits
+    end
+  end
+end
+</code></pre>
 
             <h5 id="test-pattern">Test Pattern</h5>
 
-            <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># pattern/atd_convert_ch10.rb</span>
-<span style="color:#036;font-weight:bold">Pattern</span>.create <span style="color:#080;font-weight:bold">do</span>
-  result = dut.atd0.convert(<span style="color:#00D">10</span>)
+            <pre><code class="language-ruby"># pattern/atd_convert_ch10.rb
+Pattern.create do
+  result = dut.atd0.convert(10)
   result.store!
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-            </div>
+end
+</code></pre>
 
             <h5 id="device-models-and-controllers">Device Models and Controllers</h5>
 
-            <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/atd_test/falcon.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">ATDTest</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">Falcon</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">TopLevel</span>
+            <pre><code class="language-ruby"># lib/atd_test/falcon.rb
+module ATDTest
+  class Falcon
+    include Origen::TopLevel
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options = {})
+    def initialize(options = {})
       instantiate_pins(options)
       instantiate_registers(options)
       instantiate_sub_blocks(options)
-    <span style="color:#080;font-weight:bold">end</span>
+    end
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">instantiate_pins</span>(options = {})
-      add_pin <span style="color:#A60">:tclk</span>
-      add_pin <span style="color:#A60">:tdi</span>
-      add_pin <span style="color:#A60">:tdo</span>
-      add_pin <span style="color:#A60">:tms</span>
-      add_pin <span style="color:#A60">:resetb</span>
-      add_pins <span style="color:#A60">:port_a</span>, <span style="color:#606">size</span>: <span style="color:#00D">8</span>
-    <span style="color:#080;font-weight:bold">end</span>
+    def instantiate_pins(options = {})
+      add_pin :tclk
+      add_pin :tdi
+      add_pin :tdo
+      add_pin :tms
+      add_pin :resetb
+      add_pins :port_a, size: 8
+    end
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">instantiate_registers</span>(options = {})
-    <span style="color:#080;font-weight:bold">end</span>
+    def instantiate_registers(options = {})
+    end
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">instantiate_sub_blocks</span>(options = {})
-      sub_block <span style="color:#A60">:atd</span>, <span style="color:#606">instances</span>: <span style="color:#00D">2</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">ATD</span><span style="color:#710">'</span></span>,
-        <span style="color:#606">base_address</span>: [<span style="color:#00D">0x1000_0000</span>, <span style="color:#00D">0x1000_1000</span>]
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-            </div>
+    def instantiate_sub_blocks(options = {})
+      sub_block :atd, instances: 2, class_name: 'ATD',
+        base_address: [0x1000_0000, 0x1000_1000]
+    end
+  end
+end
+</code></pre>
 
-            <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/atd_test/falcon_controller.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">ATDTest</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">FalconController</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Controller</span>
-    include <span style="color:#036;font-weight:bold">OrigenNexus</span>
+            <pre><code class="language-ruby"># lib/atd_test/falcon_controller.rb
+module ATDTest
+  class FalconController
+    include Origen::Controller
+    include OrigenNexus
 
-    <span style="color:#777"># Hook the Nexus module into the register API, any register read</span>
-    <span style="color:#777"># requests will use the Nexus by default</span>
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">read_register</span>(reg, options = {})
+    # Hook the Nexus module into the register API, any register read
+    # requests will use the Nexus by default
+    def read_register(reg, options = {})
       nexus.read_register(reg, options)
-    <span style="color:#080;font-weight:bold">end</span>
+    end
 
-    <span style="color:#777"># As above for write requests</span>
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">write_register</span>(reg, options = {})
+    # As above for write requests
+    def write_register(reg, options = {})
       nexus.write_register(reg, options)
-    <span style="color:#080;font-weight:bold">end</span>
+    end
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">startup</span>(options)
-      pp <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Enter test mode</span><span style="color:#710">'</span></span> <span style="color:#080;font-weight:bold">do</span>
-        tester.set_timeset(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">func_25mhz</span><span style="color:#710">'</span></span>, <span style="color:#00D">40</span>)   <span style="color:#777"># Where 40 is the period in ns</span>
-        pin(<span style="color:#A60">:tclk</span>).drive!(<span style="color:#00D">1</span>)
-        pin(<span style="color:#A60">:resetb</span>).drive!(<span style="color:#00D">1</span>)
-        nexus.jtag.write_ir(<span style="color:#00D">0x5</span>, <span style="color:#606">size</span>: <span style="color:#00D">8</span>)
-        nexus.jtag.write_dr(<span style="color:#00D">0x25</span>, <span style="color:#606">size</span>: <span style="color:#00D">16</span>)
-        tester.wait <span style="color:#606">time_in_us</span>: <span style="color:#00D">100</span>
-      <span style="color:#080;font-weight:bold">end</span>
-    <span style="color:#080;font-weight:bold">end</span>
+    def startup(options)
+      pp 'Enter test mode' do
+        tester.set_timeset('func_25mhz', 40)   # Where 40 is the period in ns
+        pin(:tclk).drive!(1)
+        pin(:resetb).drive!(1)
+        nexus.jtag.write_ir(0x5, size: 8)
+        nexus.jtag.write_dr(0x25, size: 16)
+        tester.wait time_in_us: 100
+      end
+    end
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">shutdown</span>(options)
-      pp <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Reset the device</span><span style="color:#710">'</span></span> <span style="color:#080;font-weight:bold">do</span>
-        pin(<span style="color:#A60">:resetb</span>).drive!(<span style="color:#00D">0</span>)
-        pin(<span style="color:#A60">:tclk</span>).drive!(<span style="color:#00D">0</span>)
-      <span style="color:#080;font-weight:bold">end</span>
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-            </div>
+    def shutdown(options)
+      pp 'Reset the device' do
+        pin(:resetb).drive!(0)
+        pin(:tclk).drive!(0)
+      end
+    end
+  end
+end
+</code></pre>
 
-            <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/atd_test/eagle.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">ATDTest</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">Eagle</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">TopLevel</span>
+            <pre><code class="language-ruby"># lib/atd_test/eagle.rb
+module ATDTest
+  class Eagle
+    include Origen::TopLevel
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options = {})
+    def initialize(options = {})
       instantiate_pins(options)
       instantiate_registers(options)
       instantiate_sub_blocks(options)
-    <span style="color:#080;font-weight:bold">end</span>
+    end
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">instantiate_pins</span>(options = {})
-      add_pin <span style="color:#A60">:swd_clk</span>
-      add_pin <span style="color:#A60">:swd_dio</span>
-      add_pin <span style="color:#A60">:tclk</span>
-      add_pin <span style="color:#A60">:resetb</span>
-      add_pins <span style="color:#A60">:port_a</span>, <span style="color:#606">size</span>: <span style="color:#00D">8</span>
-    <span style="color:#080;font-weight:bold">end</span>
+    def instantiate_pins(options = {})
+      add_pin :swd_clk
+      add_pin :swd_dio
+      add_pin :tclk
+      add_pin :resetb
+      add_pins :port_a, size: 8
+    end
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">instantiate_registers</span>(options = {})
-    <span style="color:#080;font-weight:bold">end</span>
+    def instantiate_registers(options = {})
+    end
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">instantiate_sub_blocks</span>(options = {})
-      sub_block <span style="color:#A60">:atd</span>, <span style="color:#606">instances</span>: <span style="color:#00D">2</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">ATD</span><span style="color:#710">'</span></span>
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-            </div>
+    def instantiate_sub_blocks(options = {})
+      sub_block :atd, instances: 2, class_name: 'ATD'
+    end
+  end
+end
+</code></pre>
 
-            <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/atd_test/eagle_controller.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">ATDTest</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">EagleController</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Controller</span>
-    include <span style="color:#036;font-weight:bold">OrigenARMDebug</span>
-    include <span style="color:#036;font-weight:bold">OrigenSWD</span>
+            <pre><code class="language-ruby"># lib/atd_test/eagle_controller.rb
+module ATDTest
+  class EagleController
+    include Origen::Controller
+    include OrigenARMDebug
+    include OrigenSWD
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">read_register</span>(reg, options = {})
+    def read_register(reg, options = {})
       arm_debug.read_register(reg, options)
-    <span style="color:#080;font-weight:bold">end</span>
+    end
 
-    <span style="color:#777"># As above for write requests</span>
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">write_register</span>(reg, options = {})
+    # As above for write requests
+    def write_register(reg, options = {})
       arm_debug.write_register(reg, options)
-    <span style="color:#080;font-weight:bold">end</span>
+    end
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">startup</span>(options)
-      pp <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Enter test mode</span><span style="color:#710">'</span></span> <span style="color:#080;font-weight:bold">do</span>
-        tester.set_timeset(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">func_25mhz</span><span style="color:#710">'</span></span>, <span style="color:#00D">40</span>)   <span style="color:#777"># Where 40 is the period in ns</span>
-        pin(<span style="color:#A60">:tclk</span>).drive!(<span style="color:#00D">1</span>)
-        pin(<span style="color:#A60">:resetb</span>).drive!(<span style="color:#00D">1</span>)
-        tester.wait <span style="color:#606">time_in_us</span>: <span style="color:#00D">100</span>
-      <span style="color:#080;font-weight:bold">end</span>
-    <span style="color:#080;font-weight:bold">end</span>
+    def startup(options)
+      pp 'Enter test mode' do
+        tester.set_timeset('func_25mhz', 40)   # Where 40 is the period in ns
+        pin(:tclk).drive!(1)
+        pin(:resetb).drive!(1)
+        tester.wait time_in_us: 100
+      end
+    end
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">shutdown</span>(options)
-      pp <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Reset the device</span><span style="color:#710">'</span></span> <span style="color:#080;font-weight:bold">do</span>
-        pin(<span style="color:#A60">:resetb</span>).drive!(<span style="color:#00D">0</span>)
-        pin(<span style="color:#A60">:tclk</span>).drive!(<span style="color:#00D">0</span>)
-      <span style="color:#080;font-weight:bold">end</span>
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-            </div>
+    def shutdown(options)
+      pp 'Reset the device' do
+        pin(:resetb).drive!(0)
+        pin(:tclk).drive!(0)
+      end
+    end
+  end
+end
+</code></pre>
 
           </div>
 <div role="tabpanel" class="tab-pane" id="comments">

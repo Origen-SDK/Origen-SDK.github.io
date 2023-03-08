@@ -490,57 +490,43 @@ that need this functionality.</p>
 
       <p>A more efficient implementation is therefore to add a runtime option:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># config/application.rb  </span>
-<span style="color:#777"># Add an attribute to disable md5 pattern names</span>
-attr_accessor <span style="color:#A60">:no_md5</span>  
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># config/application.rb  
+# Add an attribute to disable md5 pattern names
+attr_accessor :no_md5  
+</code></pre>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># config/commands.rb</span>
-<span style="color:#777"># Add an additional option to the standard command, important not</span>
-<span style="color:#777"># to exit here to allow the standard Origen command to run afterwards</span>
-<span style="color:#080;font-weight:bold">when</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">generate</span><span style="color:#710">"</span></span>
-  <span style="color:#777"># Option definitions must be pushed into the @application_options array, don't re-assign it!</span>
-  <span style="color:#33B">@application_options</span> &lt;&lt; [<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">--no_md5</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Don't apply the MD5 checksum to pattern names</span><span style="color:#710">"</span></span>]
+      <pre><code class="language-ruby"># config/commands.rb
+# Add an additional option to the standard command, important not
+# to exit here to allow the standard Origen command to run afterwards
+when "generate"
+  # Option definitions must be pushed into the @application_options array, don't re-assign it!
+  @application_options &lt;&lt; ["--no_md5", "Don't apply the MD5 checksum to pattern names"]
 
-  <span style="color:#777"># To specify a block to be executed by Origen's option parser (when the option is used), include </span>
-  <span style="color:#777"># a block as the last element</span>
-  <span style="color:#33B">@application_options</span> &lt;&lt; [<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">--compile</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Compile the pattern</span><span style="color:#710">"</span></span>, -&gt;(options) { options[<span style="color:#A60">:myapp_compile</span>] = <span style="color:#069">true</span> }]
-  <span style="color:#33B">@application_options</span> &lt;&lt; [<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">--compiler NAME</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Compiler to use</span><span style="color:#710">"</span></span>, -&gt;(options, compiler) { options[<span style="color:#A60">:myapp_compiler</span>] = compiler }]
+  # To specify a block to be executed by Origen's option parser (when the option is used), include 
+  # a block as the last element
+  @application_options &lt;&lt; ["--compile", "Compile the pattern", -&gt;(options) { options[:myapp_compile] = true }]
+  @application_options &lt;&lt; ["--compiler NAME", "Compiler to use", -&gt;(options, compiler) { options[:myapp_compiler] = compiler }]
 
-  <span style="color:#777"># Note that it is important not to delete the argument from ARGV, this is necessary to make Origen</span>
-  <span style="color:#777"># fully aware of it, so that it can be passed on to any additional jobs invoked from this process</span>
-  <span style="color:#036;font-weight:bold">Origen</span>.app.no_md5 = <span style="color:#069">true</span> <span style="color:#080;font-weight:bold">if</span> <span style="color:#069">ARGV</span>.include?(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">--no_md5</span><span style="color:#710">"</span></span>)
-  <span style="color:#777"># Don't exit here, allow the flow to fall through to Origen to implement the rest of the command</span>
-</pre></div>
-</div>
-      </div>
+  # Note that it is important not to delete the argument from ARGV, this is necessary to make Origen
+  # fully aware of it, so that it can be passed on to any additional jobs invoked from this process
+  Origen.app.no_md5 = true if ARGV.include?("--no_md5")
+  # Don't exit here, allow the flow to fall through to Origen to implement the rest of the command
+</code></pre>
 
       <p>In our application code we then implement something to the effect of:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">pattern_name</span>
-  <span style="color:#080;font-weight:bold">if</span> <span style="color:#036;font-weight:bold">Origen</span>.app.no_md5
-    <span style="color:#777"># code to generate original name </span>
-  <span style="color:#080;font-weight:bold">else</span>
-    <span style="color:#777"># code to generate with MD5</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">def pattern_name
+  if Origen.app.no_md5
+    # code to generate original name 
+  else
+    # code to generate with MD5
+  end
+end
+</code></pre>
 
       <p>Now when we run <code>origen g -h</code> we see our new option alongside the standard options:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>Usage: origen g [space separated patterns or lists] [options]
+      <pre><code class="language-text">Usage: origen g [space separated patterns or lists] [options]
     -t, --target NAME                Override the default target, NAME can be ...
     -l, --lsf [ACTION]               Submit jobs to the LSF, optionally specify ...
     -c, --continue                   Continue on error (to the next pattern)
@@ -551,9 +537,7 @@ attr_accessor <span style="color:#A60">:no_md5</span>
         --no_md5                     Don't apply the MD5 checksum to pattern names
 
     -h, --help                       Show this message
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <div style="position: relative">
   <hr>

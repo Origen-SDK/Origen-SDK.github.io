@@ -472,14 +472,10 @@ In that case nothing special is required to extract HDL path information and the
 <code>path</code> method available on all sub-blocks, registers and bits should do a
 good job:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$dut</span>.atd.path             <span style="color:#777"># =&gt; "mydut.atd"            (Where 'mydut' is the lowercased class name)</span>
-<span style="color:#d70">$dut</span>.atd.reg1.path        <span style="color:#777"># =&gt; "mydut.atd.reg1"  </span>
-<span style="color:#d70">$dut</span>.atd.reg1.data.path   <span style="color:#777"># =&gt; "mydut.atd.reg1[15:0]" (Where 'data' are some named bits in reg1)  </span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">$dut.atd.path             # =&gt; "mydut.atd"            (Where 'mydut' is the lowercased class name)
+$dut.atd.reg1.path        # =&gt; "mydut.atd.reg1"  
+$dut.atd.reg1.data.path   # =&gt; "mydut.atd.reg1[15:0]" (Where 'data' are some named bits in reg1)  
+</code></pre>
 
       <p>However in cases where that is not possible the following API exists to reconcile
 any differences.</p>
@@ -488,71 +484,55 @@ any differences.</p>
 instance variable within the
 given object, this can also be supplied at sub-block declaration time. e.g.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MyDut</span>
-  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">TopLevel</span>
+      <pre><code class="language-ruby">class MyDut
+  include Origen::TopLevel
 
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>
-    sub_block <span style="color:#A60">:atd</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">ATD</span><span style="color:#710">"</span></span>, <span style="color:#606">base</span>: <span style="color:#00D">0x1000_0000</span>, <span style="color:#606">path</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">atds.atd0</span><span style="color:#710">"</span></span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
+  def initialize
+    sub_block :atd, class_name: "ATD", base: 0x1000_0000, path: "atds.atd0"
+  end
+end
 
-<span style="color:#d70">$dut</span>.atd.reg1.data.path        <span style="color:#777"># =&gt; "mydut.atds.atd0.reg1[15:0]"</span>
-<span style="color:#d70">$dut</span>.atd.path = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">atds.atd1</span><span style="color:#710">"</span></span>
-<span style="color:#d70">$dut</span>.atd.reg1.data.path        <span style="color:#777"># =&gt; "mydut.atds.atd1.reg1[15:0]"</span>
-</pre></div>
-</div>
-      </div>
+$dut.atd.reg1.data.path        # =&gt; "mydut.atds.atd0.reg1[15:0]"
+$dut.atd.path = "atds.atd1"
+$dut.atd.reg1.data.path        # =&gt; "mydut.atds.atd1.reg1[15:0]"
+</code></pre>
 
       <p>Layers can be taken out of the hierarchy altogether by setting the path attribute to <code>:hidden</code>:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>sub_block <span style="color:#A60">:atd</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">ATD</span><span style="color:#710">"</span></span>, <span style="color:#606">base</span>: <span style="color:#00D">0x1000_0000</span>, <span style="color:#606">path</span>: <span style="color:#A60">:hidden</span>
+      <pre><code class="language-ruby">sub_block :atd, class_name: "ATD", base: 0x1000_0000, path: :hidden
 
-<span style="color:#d70">$dut</span>.atd.reg1.data.path        <span style="color:#777"># =&gt; "mydut.reg1[15:0]"</span>
-</pre></div>
-</div>
-      </div>
+$dut.atd.reg1.data.path        # =&gt; "mydut.reg1[15:0]"
+</code></pre>
 
       <p>Register and bit definitions can also be given a path override:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>reg <span style="color:#A60">:reg1</span>, <span style="color:#00D">0</span> <span style="color:#080;font-weight:bold">do</span> |reg|
-  reg.bits <span style="color:#00D">31</span>..<span style="color:#00D">0</span>, <span style="color:#A60">:data</span>
-<span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby">reg :reg1, 0 do |reg|
+  reg.bits 31..0, :data
+end
 
-reg <span style="color:#A60">:reg2</span>, <span style="color:#00D">0x4</span>, <span style="color:#606">path</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">reg2_reg</span><span style="color:#710">"</span></span> <span style="color:#080;font-weight:bold">do</span> |reg|
-  reg.bits <span style="color:#00D">31</span>..<span style="color:#00D">0</span>, <span style="color:#A60">:data</span>
-<span style="color:#080;font-weight:bold">end</span>
+reg :reg2, 0x4, path: "reg2_reg" do |reg|
+  reg.bits 31..0, :data
+end
 
-reg <span style="color:#A60">:reg3</span>, <span style="color:#00D">0xC</span>, <span style="color:#606">path</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">reg3_reg</span><span style="color:#710">"</span></span> <span style="color:#080;font-weight:bold">do</span> |reg|
-  reg.bits <span style="color:#00D">31</span>..<span style="color:#00D">0</span>, <span style="color:#A60">:data</span>, <span style="color:#606">path</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">data_reg</span><span style="color:#710">"</span></span>
-<span style="color:#080;font-weight:bold">end</span>
+reg :reg3, 0xC, path: "reg3_reg" do |reg|
+  reg.bits 31..0, :data, path: "data_reg"
+end
 
-reg1.data.path     <span style="color:#777"># =&gt; "mydut.atd.reg1[15:0]"</span>
-reg2.data.path     <span style="color:#777"># =&gt; "mydut.atd.reg2_reg[15:0]"</span>
-reg3.data.path     <span style="color:#777"># =&gt; "mydut.atd.data_reg"</span>
-</pre></div>
-</div>
-      </div>
+reg1.data.path     # =&gt; "mydut.atd.reg1[15:0]"
+reg2.data.path     # =&gt; "mydut.atd.reg2_reg[15:0]"
+reg3.data.path     # =&gt; "mydut.atd.data_reg"
+</code></pre>
 
       <p>Note that in the case of the path being given to the bits it bypasses the
 register altogether, to include the register prefix the bit path name with
 a <code>.</code></p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>reg <span style="color:#A60">:reg3</span>, <span style="color:#00D">0xC</span>, <span style="color:#606">path</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">reg3_reg</span><span style="color:#710">"</span></span> <span style="color:#080;font-weight:bold">do</span> |reg|
-  reg.bits <span style="color:#00D">31</span>..<span style="color:#00D">0</span>, <span style="color:#A60">:data</span>, <span style="color:#606">path</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">.data_reg</span><span style="color:#710">"</span></span>
-<span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby">reg :reg3, 0xC, path: "reg3_reg" do |reg|
+  reg.bits 31..0, :data, path: ".data_reg"
+end
 
-reg3.data.path     <span style="color:#777"># =&gt; "mydut.atd.reg3_reg.data_reg"</span>
-</pre></div>
-</div>
-      </div>
+reg3.data.path     # =&gt; "mydut.atd.reg3_reg.data_reg"
+</code></pre>
 
       <div>    
   <a class="anchor" name="Absolute_Paths"></a>          
@@ -566,18 +546,14 @@ place of the <code>path</code> attribute for any of the examples above.</p>
       <p>When resolving paths from a child object the final path will be returned
 immediately when an absolute path is encountered, this is best shown by example:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>sub_block <span style="color:#A60">:sub1</span>
-sub_block <span style="color:#A60">:sub2</span>, <span style="color:#606">path</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">memory_block.ram</span><span style="color:#710">"</span></span>
-sub_block <span style="color:#A60">:sub3</span>, <span style="color:#606">abs_path</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">p2.flash</span><span style="color:#710">"</span></span>
+      <pre><code class="language-ruby">sub_block :sub1
+sub_block :sub2, path: "memory_block.ram"
+sub_block :sub3, abs_path: "p2.flash"
 
-sub1.reg1.path      <span style="color:#777"># =&gt; "p1.sub1.reg1" (where p1 is the path of the parent)</span>
-sub2.reg1.path      <span style="color:#777"># =&gt; "p1.memory_block.ram.reg1"</span>
-sub3.reg1.path      <span style="color:#777"># =&gt; "p2.flash.reg1"</span>
-</pre></div>
-</div>
-      </div>
+sub1.reg1.path      # =&gt; "p1.sub1.reg1" (where p1 is the path of the parent)
+sub2.reg1.path      # =&gt; "p1.memory_block.ram.reg1"
+sub3.reg1.path      # =&gt; "p2.flash.reg1"
+</code></pre>
 
       <p>Registers and bits will also accept <code>abs_path</code> in place of <code>path</code>.</p>
 

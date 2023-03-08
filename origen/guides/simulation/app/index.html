@@ -486,60 +486,44 @@ to use different pin names in the ATE patterns you can define these as aliases a
 <a href="/origen/guides/pattern/pins/#Controlling_the_Pattern_Pin_Order"><code>pin_pattern_order</code> statement</a>
 to choose the alias instead of the h/ware names:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">MyApp</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MyDUT</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">TopLevel</span>
+      <pre><code class="language-ruby">module MyApp
+  class MyDUT
+    include Origen::TopLevel
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options = {})
-      import <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">my_dut</span><span style="color:#710">'</span></span>, <span style="color:#606">dir</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.root!<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">/vendor/pins</span><span style="color:#710">"</span></span>, <span style="color:#606">namespace</span>: <span style="color:#069">nil</span>
+    def initialize(options = {})
+      import 'my_dut', dir: "#{Origen.root!}/vendor/pins", namespace: nil
 
-      <span style="color:#777"># Add aliases if you want to use different names in your application and in ATE patterns</span>
-      add_pin_alias <span style="color:#A60">:resetn</span>, <span style="color:#A60">:reset_neg_async</span>
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      # Add aliases if you want to use different names in your application and in ATE patterns
+      add_pin_alias :resetn, :reset_neg_async
+    end
+  end
+end
+</code></pre>
 
       <p>Alternatively, if you already have your pins defined manually in the application and you need to
 reconcile these with what they are called in the design, then you can add the <code>rtl_name</code> attribute
 to your definition:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>add_pin <span style="color:#A60">:resetn</span>, <span style="color:#606">rtl_name</span>: <span style="color:#A60">:reset_neg_async</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">add_pin :resetn, rtl_name: :reset_neg_async
+</code></pre>
 
       <p>Once you have your pins defined, you can immediately create a pattern and simulate it
 to see if you can see the pins wiggling!</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># pattern/sign_of_life.rb</span>
+      <pre><code class="language-ruby"># pattern/sign_of_life.rb
 
-<span style="color:#036;font-weight:bold">Pattern</span>.create <span style="color:#080;font-weight:bold">do</span>
-  <span style="color:#00D">10</span>.times <span style="color:#080;font-weight:bold">do</span>
-    dut.pin(<span style="color:#A60">:my_pin</span>).drive!(<span style="color:#00D">1</span>)
-    dut.pin(<span style="color:#A60">:my_pin</span>).drive!(<span style="color:#00D">0</span>)
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+Pattern.create do
+  10.times do
+    dut.pin(:my_pin).drive!(1)
+    dut.pin(:my_pin).drive!(0)
+  end
+end
+</code></pre>
 
       <p>To simulate it:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>origen g sign_of_life -e environment/sim.rb
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">origen g sign_of_life -e environment/sim.rb
+</code></pre>
 
       <div>    
   <a class="anchor" name="Simulation_Startup"></a>          
@@ -558,18 +542,14 @@ cared about in the pattern.</p>
 simulation starting and before the pattern or flow creation gets underway - i.e. it will be
 called before the regular <code>startup</code> callback.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">simulation_startup</span>
-  <span style="color:#777"># Drive these power pins to 1, these are not included in the ATE patterns and will be handled</span>
-  <span style="color:#777"># be a power supply on the tester</span>
-  pin(<span style="color:#A60">:vdd</span>).drive(<span style="color:#00D">1</span>)
-  pin(<span style="color:#A60">:vddc</span>).drive(<span style="color:#00D">1</span>)
-  pin(<span style="color:#A60">:vss</span>).drive(<span style="color:#00D">0</span>)
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">def simulation_startup
+  # Drive these power pins to 1, these are not included in the ATE patterns and will be handled
+  # be a power supply on the tester
+  pin(:vdd).drive(1)
+  pin(:vddc).drive(1)
+  pin(:vss).drive(0)
+end
+</code></pre>
 
       <p><strong>Note that if multiple patterns are being generated back-back in a single simulation, then the
 <code>simulation_startup</code> will only be called once at the very start of the simulation. In contrast,
@@ -582,14 +562,10 @@ the <code>startup</code> method will be called at the start of every individual 
 
       <p>Any simulation-specific code in your application can be gated as shown below:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">if</span> tester.sim?
-  <span style="color:#777"># Only executed when simulating</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">if tester.sim?
+  # Only executed when simulating
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Starting_the_Simulator_in_an_Interactive_Session"></a>          
@@ -602,16 +578,12 @@ the <code>startup</code> method will be called at the start of every individual 
       <p>If you want this to happen automatically every time you start an interactive session when
 the simulation environment is selected, add this to the <a href="/origen/guides/misc/callbacks/#interactive_startup">interactive startup callback</a>:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">interactive_startup</span>
-  <span style="color:#777"># Always start the simulator immediately if I open an interactive session with the</span>
-  <span style="color:#777"># simulation environment selected</span>
-  tester.start <span style="color:#080;font-weight:bold">if</span> tester.sim?
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">def interactive_startup
+  # Always start the simulator immediately if I open an interactive session with the
+  # simulation environment selected
+  tester.start if tester.sim?
+end
+</code></pre>
 
       <p>See <a href="/origen/guides/simulation/debugging">the debugging guide</a> for details about APIs
 that are useful when interacting with your DUT in a live ad-hoc simulation from the console.</p>

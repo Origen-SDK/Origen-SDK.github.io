@@ -469,12 +469,8 @@ automatically to any supported platform.</p>
 
       <p>UltraFlex supports <code>:digsrc</code> as a <code>tester.overlay_style</code> set like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>  tester.overlay_style = <span style="color:#A60">:digsrc</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">  tester.overlay_style = :digsrc
+</code></pre>
 
       <p>By default Origen will automatically place the digsrc start opcode at the beginning of the resulting pattern
 when <code>:digsrc</code> overlay is used. In some cases (like when the pattern is used in a pattern set that has already started
@@ -483,13 +479,23 @@ the instrument in a previous pattern, or possibly in svm_patterns) this behavior
       <p>The insertion of this start opcode can be disabled by placing the following code <strong>before</strong> any overlay operations
 for a given pin.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>  tester.digsrc_skip_start <span style="color:#A60">:pin_or_group_name</span> <span style="color:#080;font-weight:bold">if</span> tester.ultraflex?
-  <span style="color:#777"># Overlay operations can happen after this point</span>
-</pre></div>
+      <pre><code class="language-ruby">  tester.digsrc_skip_start :pin_or_group_name if tester.ultraflex?
+  # Overlay operations can happen after this point
+</code></pre>
+
+      <div>    
+  <a class="anchor" name="Digital_Instrument"></a>          
+  <h3><a href="#Digital_Instrument">Digital Instrument</a></h3>          
 </div>
-      </div>
+
+      <p>The default digital instrument used is hsdm. This can be changed with either a create option or through an accessor:</p>
+
+      <pre><code class="language-ruby">  # Instantiate with a different digital instrument
+  OrigenTesters::UltraFLEX.new(digital_instrument: 'hsdmq')
+  
+  # set the digital instrument after instantiation
+  tester.digital_instrument = 'hsdmq'
+</code></pre>
 
       <div style="position: relative">
   <hr>

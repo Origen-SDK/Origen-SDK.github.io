@@ -498,28 +498,24 @@ will be covered is <i>how</i> Origen can help you when you choose to exit the pr
 <code>Origen.app!</code> should be used instead. See <a href="/origen/guides/plugins/app/#Am_I_the_Current_Application_or_Plugin?">here</a> 
 for additional information.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.app!.name
-  <span style="color:#777">#=&gt; my_app</span>
+      <pre><code class="language-ruby">Origen.app!.name
+  #=&gt; my_app
 
 fail
-  <span style="color:#777">#=&gt; RuntimeError with no message</span>
+  #=&gt; RuntimeError with no message
 
-<span style="color:#777"># Just fail the application, without adding details:</span>
-<span style="color:#036;font-weight:bold">Origen</span>.app!.fail
-  <span style="color:#777">#=&gt; RuntimeError with message: 'Fail in my_app'</span>
+# Just fail the application, without adding details:
+Origen.app!.fail
+  #=&gt; RuntimeError with message: 'Fail in my_app'
 
-<span style="color:#777"># Fail the application with some context:</span>
-<span style="color:#036;font-weight:bold">Origen</span>.app!.fail(<span style="color:#606">message</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">An unknown condition occured!</span><span style="color:#710">'</span></span>)
-  <span style="color:#777">#=&gt; RuntimeError with message: 'Fail in my_app: An unknown condition occured!'</span>
+# Fail the application with some context:
+Origen.app!.fail(message: 'An unknown condition occured!')
+  #=&gt; RuntimeError with message: 'Fail in my_app: An unknown condition occured!'
 
-<span style="color:#777"># Fail the application with some context and a custom exception:</span>
-<span style="color:#036;font-weight:bold">Origen</span>.app!.fail(<span style="color:#606">message</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">An unknown condition occured!</span><span style="color:#710">'</span></span>, <span style="color:#606">exception_class</span>: <span style="color:#036;font-weight:bold">StandardError</span>)
-  <span style="color:#777">#=&gt; StandardError with message: 'Fail in my_app: An unknown condition occured!'</span>
-</pre></div>
-</div>
-      </div>
+# Fail the application with some context and a custom exception:
+Origen.app!.fail(message: 'An unknown condition occured!', exception_class: StandardError)
+  #=&gt; StandardError with message: 'Fail in my_app: An unknown condition occured!'
+</code></pre>
 
       <p>Note that <code>exception_class</code> should be a <code>class object</code> (of type <code>class</code>), <b>not</b> an instance of the class.</p>
 
@@ -531,36 +527,28 @@ instead of using the exception message to convey information.</p>
 then <code>Origen.app.fail!</code> behaves identically to <code>Origen.app.fail</code>. The intention is give a user-facing API a clean exit while displaying in the
 familiar Origen-logger format, while allowing users to generate more useful bug reports, or just for the curious user themselves to get more information.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.debugger_enabled?
-  <span style="color:#777">#=&gt; false</span>
+      <pre><code class="language-ruby">Origen.debugger_enabled?
+  #=&gt; false
 
-<span style="color:#036;font-weight:bold">Origen</span>.app!.name
-  <span style="color:#777">#=&gt; :my_app</span>
+Origen.app!.name
+  #=&gt; :my_app
 
-<span style="color:#036;font-weight:bold">Origen</span>.app.fail!(<span style="color:#606">message</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">An unknown condition occured!</span><span style="color:#710">'</span></span>)
-  <span style="color:#777">#=&gt; [ERROR]      0.009[0.009]    || Fail in my_app: An unknown condition occured!</span>
-  <span style="color:#777">#=&gt; *Process Terminates*</span>
-</pre></div>
-</div>
-      </div>
+Origen.app.fail!(message: 'An unknown condition occured!')
+  #=&gt; [ERROR]      0.009[0.009]    || Fail in my_app: An unknown condition occured!
+  #=&gt; *Process Terminates*
+</code></pre>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.debugger_enabled?
-  <span style="color:#777">#=&gt; true</span>
+      <pre><code class="language-ruby">Origen.debugger_enabled?
+  #=&gt; true
 
-<span style="color:#036;font-weight:bold">Origen</span>.app!.name
-  <span style="color:#777">#=&gt; :my_app</span>
+Origen.app!.name
+  #=&gt; :my_app
 
-<span style="color:#036;font-weight:bold">Origen</span>.app.fail!(<span style="color:#606">message</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">An unknown condition occured!</span><span style="color:#710">'</span></span>)
-  <span style="color:#777">#=&gt; RuntimeError with message: Fail in my_app: An unknown condition occured!</span>
-  <span style="color:#777">#=&gt; *Process terminates with #raise instead of #exit*</span>
-  <span style="color:#777">#=&gt; *Exception and stack trace printed to console*</span>
-</pre></div>
-</div>
-      </div>
+Origen.app.fail!(message: 'An unknown condition occured!')
+  #=&gt; RuntimeError with message: Fail in my_app: An unknown condition occured!
+  #=&gt; *Process terminates with #raise instead of #exit*
+  #=&gt; *Exception and stack trace printed to console*
+</code></pre>
 
       <p>By default, the <code>status</code> of a process exited with <code>Origen.app.fail!</code> will be <code>1</code>. You can provide an option <code>exit_status</code>
 to exit with that status instead.</p>

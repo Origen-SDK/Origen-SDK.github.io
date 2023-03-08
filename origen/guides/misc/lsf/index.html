@@ -489,16 +489,12 @@ at the same time.</p>
 
       <p>To detect if code is running remotely or not you can use <code>Origen.running_remotely?</code>:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">if</span> <span style="color:#036;font-weight:bold">Origen</span>.running_remotely?
-  <span style="color:#777"># Branch to handle something differently to account for parallel execution</span>
-<span style="color:#080;font-weight:bold">else</span>
-  <span style="color:#777"># Conventional execution where the code is executing single-threaded locally </span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">if Origen.running_remotely?
+  # Branch to handle something differently to account for parallel execution
+else
+  # Conventional execution where the code is executing single-threaded locally 
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Main_API"></a>          
@@ -511,31 +507,23 @@ for full details.</p>
       <p>All jobs submitted to the LSF through Origen will be monitored, to abandon monitoring of
 existing jobs the queue can be cleared like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Clear the LSF monitor queue</span>
-<span style="color:#036;font-weight:bold">Origen</span>.lsf.clear_all
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># Clear the LSF monitor queue
+Origen.lsf.clear_all
+</code></pre>
 
       <p>Jobs are submitted like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Submit any Origen commands to the queue like this, you should always supply a target</span>
-<span style="color:#036;font-weight:bold">Origen</span>.lsf.submit_origen_job <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">generate bistcom -t p2_debug</span><span style="color:#710">"</span></span> 
-<span style="color:#036;font-weight:bold">Origen</span>.lsf.submit_origen_job <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">compile templates/j750 -t p3_debug</span><span style="color:#710">"</span></span> 
+      <pre><code class="language-ruby"># Submit any Origen commands to the queue like this, you should always supply a target
+Origen.lsf.submit_origen_job "generate bistcom -t p2_debug" 
+Origen.lsf.submit_origen_job "compile templates/j750 -t p3_debug" 
 
-<span style="color:#777"># Any application-specific Origen commands will work in the same way</span>
-<span style="color:#036;font-weight:bold">Origen</span>.lsf.submit_origen_job <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">my_custom_command -t p2_debug</span><span style="color:#710">"</span></span> 
+# Any application-specific Origen commands will work in the same way
+Origen.lsf.submit_origen_job "my_custom_command -t p2_debug" 
 
-<span style="color:#777"># Any non-origen commands can also be submitted and monitored using the more generic submit_job</span>
-<span style="color:#777"># method. The job will be considered passed/failed based on standard unix result codes</span>
-<span style="color:#036;font-weight:bold">Origen</span>.lsf.submit_job <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">cd path/to/some/dir &amp;&amp; do_something</span><span style="color:#710">"</span></span>
-</pre></div>
-</div>
-      </div>
+# Any non-origen commands can also be submitted and monitored using the more generic submit_job
+# method. The job will be considered passed/failed based on standard unix result codes
+Origen.lsf.submit_job "cd path/to/some/dir &amp;&amp; do_something"
+</code></pre>
 
       <p>If a call to <code>submit_origen_job</code> will invoke the same command to that from which the
 submission is being made then Origen will automatically forward any command options that were
@@ -543,9 +531,7 @@ passed to the parent process. This also applies to custom commands.</p>
 
       <p>The jobs can then be monitored from the command line with the <code>origen l</code> command:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>&gt; origen l
+      <pre><code class="language-text">&gt; origen l
 
 LSF Status
 ----------
@@ -560,9 +546,7 @@ Common tasks
 ------------
 
 Reset the LSF manager (clear all jobs): origen lsf -c -t all
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>Origen will automatically re-launch any lost jobs and the common tasks section will tell
 you what command to run if you want to re-launch any failed jobs.</p>
@@ -570,16 +554,12 @@ you what command to run if you want to re-launch any failed jobs.</p>
       <p>You can also wait for job completion within the Ruby/Origen thread from which they were
 launched:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Wait for jobs to complete, this will automatically re-try lost jobs and optionally can</span>
-<span style="color:#777"># retry any failed jobs (should never really be required though, any failures due to the</span>
-<span style="color:#777"># remote host going down or similar will automatically re-try silently).</span>
-<span style="color:#036;font-weight:bold">Origen</span>.lsf.wait_for_completion  <span style="color:#777"># By default lost jobs will retry up to 10 times</span>
-<span style="color:#036;font-weight:bold">Origen</span>.lsf.wait_for_completion(<span style="color:#606">max_fail_retries</span>: <span style="color:#00D">1</span>)  <span style="color:#777"># Retry all failures once</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># Wait for jobs to complete, this will automatically re-try lost jobs and optionally can
+# retry any failed jobs (should never really be required though, any failures due to the
+# remote host going down or similar will automatically re-try silently).
+Origen.lsf.wait_for_completion  # By default lost jobs will retry up to 10 times
+Origen.lsf.wait_for_completion(max_fail_retries: 1)  # Retry all failures once
+</code></pre>
 
       <div>    
   <a class="anchor" name="Advanced_Scheduling"></a>          
@@ -591,41 +571,29 @@ API allows for such dependencies to be managed using job IDs.</p>
 
       <p>First capture the job ID of the parent job(s) when it is launched:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Each submission will return a job id which you can capture</span>
-id = <span style="color:#036;font-weight:bold">Origen</span>.lsf.submit_origen_job <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">generate global_subs -t p2_debug</span><span style="color:#710">"</span></span> 
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># Each submission will return a job id which you can capture
+id = Origen.lsf.submit_origen_job "generate global_subs -t p2_debug" 
+</code></pre>
 
       <p>You can deal with the dependency resolution at Origen level by waiting for the
 individual jobs to complete:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Wait for the parent job(s) to complete</span>
-<span style="color:#036;font-weight:bold">Origen</span>.lsf.wait_for_completion <span style="color:#606">id</span>: id
-<span style="color:#036;font-weight:bold">Origen</span>.lsf.wait_for_completion <span style="color:#606">ids</span>: [id1, id2]
+      <pre><code class="language-ruby"># Wait for the parent job(s) to complete
+Origen.lsf.wait_for_completion id: id
+Origen.lsf.wait_for_completion ids: [id1, id2]
 
-<span style="color:#777"># Now launch the dependent jobs</span>
-</pre></div>
-</div>
-      </div>
+# Now launch the dependent jobs
+</code></pre>
 
       <p>The LSF itself has a mechanism for resolving such dependencies and that functionality
 is exposed via a <code>:depends</code> option when submitting jobs:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Dependencies can also be resolved automatically by supplying a depends argument when</span>
-<span style="color:#777"># submitting, for example the 3rd job here will only run once the first two have completed</span>
-id1 = <span style="color:#036;font-weight:bold">Origen</span>.lsf.submit_origen_job <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">g overlay_subs -t p2_debug</span><span style="color:#710">"</span></span> 
-id2 = <span style="color:#036;font-weight:bold">Origen</span>.lsf.submit_origen_job <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">g global_subs -t p2_debug</span><span style="color:#710">"</span></span> 
-<span style="color:#036;font-weight:bold">Origen</span>.lsf.submit_origen_job <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">g master_subs -t p2_debug</span><span style="color:#710">"</span></span>, <span style="color:#606">depends</span>: [id1, id2]
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># Dependencies can also be resolved automatically by supplying a depends argument when
+# submitting, for example the 3rd job here will only run once the first two have completed
+id1 = Origen.lsf.submit_origen_job "g overlay_subs -t p2_debug" 
+id2 = Origen.lsf.submit_origen_job "g global_subs -t p2_debug" 
+Origen.lsf.submit_origen_job "g master_subs -t p2_debug", depends: [id1, id2]
+</code></pre>
 
       <div style="position: relative">
   <hr>

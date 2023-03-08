@@ -483,25 +483,21 @@ dedicated method that is called upon initialization.</p>
 
       <p>Here is an example of how to define some JTAG interface pins in an SoC model:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MySoC</span>
-  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">TopLevel</span>
+      <pre><code class="language-ruby">class MySoC
+  include Origen::TopLevel
 
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options={})
+  def initialize(options={})
     instantiate_pins(options)
-  <span style="color:#080;font-weight:bold">end</span>
+  end
 
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">instantiate_pins</span>(options={})
-    add_pin <span style="color:#A60">:tclk</span>, <span style="color:#606">reset</span>: <span style="color:#A60">:drive_hi</span>, <span style="color:#606">meta</span>: { <span style="color:#606">max_freq</span>: <span style="color:#00D">15</span>.Mhz }
-    add_pin <span style="color:#A60">:tdi</span>, <span style="color:#606">direction</span>: <span style="color:#A60">:input</span>
-    add_pin <span style="color:#A60">:tdo</span>, <span style="color:#606">direction</span>: <span style="color:#A60">:output</span>
-    add_pin <span style="color:#A60">:tms</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  def instantiate_pins(options={})
+    add_pin :tclk, reset: :drive_hi, meta: { max_freq: 15.Mhz }
+    add_pin :tdi, direction: :input
+    add_pin :tdo, direction: :output
+    add_pin :tms
+  end
+end
+</code></pre>
 
       <p>Some points to note in the above code:</p>
 
@@ -522,94 +518,74 @@ option.</li>
 
       <p>Pins are accessed via the <code>pin</code> method:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Select a single pin</span>
-<span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:tdi</span>)
-  <span style="color:#777">#=&gt; &lt;pin object&gt;</span>
+      <pre><code class="language-ruby"># Select a single pin
+$dut.pin(:tdi)
+  #=&gt; &lt;pin object&gt;
 
-<span style="color:#777"># Select multiple pins</span>
-<span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:tdi</span>, <span style="color:#A60">:tdo</span>, <span style="color:#A60">:tclk</span>)
-  <span style="color:#777">#=&gt; [&lt;pin object&gt;, &lt;pin object&gt;, &lt;pin object&gt;]</span>
-</pre></div>
-</div>
-      </div>
+# Select multiple pins
+$dut.pin(:tdi, :tdo, :tclk)
+  #=&gt; [&lt;pin object&gt;, &lt;pin object&gt;, &lt;pin object&gt;]
+</code></pre>
 
       <p>Note that pins can be accessed locally from any object that includes the <code>Origen::Model</code> module:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:tdi</span>) == <span style="color:#d70">$dut</span>.memories.rambist.pin(<span style="color:#A60">:tdi</span>)   <span style="color:#777"># =&gt; true</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">$dut.pin(:tdi) == $dut.memories.rambist.pin(:tdi)   # =&gt; true
+</code></pre>
 
       <p>However references to pins within a sub-block would typically use an alias that reflected the pin function related to
 that sub-block.</p>
 
       <p>Pin aliases are added like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>has_pin?(<span style="color:#A60">:tdi</span>)               <span style="color:#777"># =&gt; true</span>
-has_pin?(<span style="color:#A60">:bisti</span>)             <span style="color:#777"># =&gt; false</span>
+      <pre><code class="language-ruby">has_pin?(:tdi)               # =&gt; true
+has_pin?(:bisti)             # =&gt; false
 
-add_pin_alias <span style="color:#A60">:bisti</span>, <span style="color:#A60">:tdi</span>
+add_pin_alias :bisti, :tdi
 
-has_pin?(<span style="color:#A60">:bisti</span>)             <span style="color:#777"># =&gt; true</span>
-pin(<span style="color:#A60">:bisti</span>) == pin(<span style="color:#A60">:tdi</span>)     <span style="color:#777"># =&gt; true</span>
-</pre></div>
-</div>
-      </div>
+has_pin?(:bisti)             # =&gt; true
+pin(:bisti) == pin(:tdi)     # =&gt; true
+</code></pre>
 
       <p>Or called directly on the pin:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>pin(<span style="color:#A60">:tdi</span>).add_alias(<span style="color:#A60">:bisti</span>)
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">pin(:tdi).add_alias(:bisti)
+</code></pre>
 
       <p>For applications which have many, many pins <code>pin groups</code> (discussed below) can
 help organize them logically. However, multiple pins can also be selected
 by providing either a block and one or more <code>Regexp</code>s:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Find all pins matching /porta/</span>
-dut.pins(<span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#808">porta</span><span style="color:#404">/</span></span>)
-  <span style="color:#777">#=&gt; [&lt;pin object&gt;, ...]</span>
-dut.pins(<span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#808">porta</span><span style="color:#404">/</span></span>).map(&amp;<span style="color:#A60">:name</span>)
-  <span style="color:#777">#=&gt; [:porta31, :porta30, ...]</span>
+      <pre><code class="language-ruby"># Find all pins matching /porta/
+dut.pins(/porta/)
+  #=&gt; [&lt;pin object&gt;, ...]
+dut.pins(/porta/).map(&amp;:name)
+  #=&gt; [:porta31, :porta30, ...]
 
-<span style="color:#777"># Find all pins matching /porta/ or /portc/</span>
-dut.pins(<span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#808">porta</span><span style="color:#404">/</span></span>, <span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#808">clk</span><span style="color:#404">/</span></span>)
-  <span style="color:#777">#=&gt; [&lt;pin object&gt;, ...]</span>
-dut.pins(<span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#808">porta</span><span style="color:#404">/</span></span>, <span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#808">clk</span><span style="color:#404">/</span></span>).map(&amp;<span style="color:#A60">:name</span>)
-  <span style="color:#777">#=&gt; [:porta31, :porta30, ..., :tclk]</span>
+# Find all pins matching /porta/ or /portc/
+dut.pins(/porta/, /clk/)
+  #=&gt; [&lt;pin object&gt;, ...]
+dut.pins(/porta/, /clk/).map(&amp;:name)
+  #=&gt; [:porta31, :porta30, ..., :tclk]
 
-<span style="color:#777"># Retrieve all pins matching /porta/ and :tdi, :tdo</span>
-dut.pins(<span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#808">porta</span><span style="color:#404">/</span></span>, <span style="color:#A60">:tdi</span>, <span style="color:#A60">:tdo</span>)
-  <span style="color:#777">#=&gt; [&lt;pin object&gt;, ...]</span>
-dut.pins(<span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#808">porta</span><span style="color:#404">/</span></span>, <span style="color:#A60">:tdi</span>, <span style="color:#A60">:tdo</span>).map(&amp;<span style="color:#A60">:name</span>)
-  <span style="color:#777">#=&gt; [:porta31, :porta30, ..., :tdi, :tdo]</span>
+# Retrieve all pins matching /porta/ and :tdi, :tdo
+dut.pins(/porta/, :tdi, :tdo)
+  #=&gt; [&lt;pin object&gt;, ...]
+dut.pins(/porta/, :tdi, :tdo).map(&amp;:name)
+  #=&gt; [:porta31, :porta30, ..., :tdi, :tdo]
 
-<span style="color:#777"># Retrieve all pins for which the block is true</span>
-<span style="color:#777"># (Find all even-indexed pins for porta)</span>
-dut.pins { |n, p| n.to_s.start_with?(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">porta</span><span style="color:#710">'</span></span>) &amp;&amp; (n.to_s.gsub(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">porta</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#710">'</span></span>).to_i % <span style="color:#00D">2</span> == <span style="color:#00D">0</span>) }
-  <span style="color:#777">#=&gt; [&lt;pin object&gt;, ...]</span>
-dut.pins { |n, p| n.to_s.start_with?(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">porta</span><span style="color:#710">'</span></span>) &amp;&amp; (n.to_s.gsub(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">porta</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#710">'</span></span>).to_i % <span style="color:#00D">2</span> == <span style="color:#00D">0</span>) }.map(&amp;<span style="color:#A60">:name</span>)
-  <span style="color:#777">#=&gt; [:porta30, :porta28, :porta26, ...]</span>
+# Retrieve all pins for which the block is true
+# (Find all even-indexed pins for porta)
+dut.pins { |n, p| n.to_s.start_with?('porta') &amp;&amp; (n.to_s.gsub('porta', '').to_i % 2 == 0) }
+  #=&gt; [&lt;pin object&gt;, ...]
+dut.pins { |n, p| n.to_s.start_with?('porta') &amp;&amp; (n.to_s.gsub('porta', '').to_i % 2 == 0) }.map(&amp;:name)
+  #=&gt; [:porta30, :porta28, :porta26, ...]
 
-<span style="color:#777"># Retrieve all pins for which /clk/ matches OR the block is true</span>
-dut.pins(<span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#808">clk</span><span style="color:#404">/</span></span>) { |n, p| n.to_s.start_with?(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">porta</span><span style="color:#710">'</span></span>) &amp;&amp; (n.to_s.gsub(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">porta</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#710">'</span></span>).to_i % <span style="color:#00D">2</span> == <span style="color:#00D">0</span>) }
-  <span style="color:#777">#=&gt; [&lt;pin object&gt;, ...]</span>
-dut.pins(<span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#808">clk</span><span style="color:#404">/</span></span>) { |n, p| n.to_s.start_with?(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">porta</span><span style="color:#710">'</span></span>) &amp;&amp; (n.to_s.gsub(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">porta</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#710">'</span></span>).to_i % <span style="color:#00D">2</span> == <span style="color:#00D">0</span>) }.map(&amp;<span style="color:#A60">:name</span>)
-  <span style="color:#777">#=&gt; [:porta30, :porta28, :porta26, ..., :tclk]</span>
-</pre></div>
-</div>
-      </div>
+# Retrieve all pins for which /clk/ matches OR the block is true
+dut.pins(/clk/) { |n, p| n.to_s.start_with?('porta') &amp;&amp; (n.to_s.gsub('porta', '').to_i % 2 == 0) }
+  #=&gt; [&lt;pin object&gt;, ...]
+dut.pins(/clk/) { |n, p| n.to_s.start_with?('porta') &amp;&amp; (n.to_s.gsub('porta', '').to_i % 2 == 0) }.map(&amp;:name)
+  #=&gt; [:porta30, :porta28, :porta26, ..., :tclk]
+</code></pre>
 
       <div>    
   <a class="anchor" name="Defining_Pin_Groups"></a>          
@@ -627,13 +603,9 @@ give much concern as to whether it is dealing with one or the other.</p>
 
       <p>Pin groups are defined in a similar manner to single pins:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>add_pins <span style="color:#A60">:porta</span>, <span style="color:#606">size</span>: <span style="color:#00D">32</span>
-add_pins <span style="color:#A60">:portb</span>, <span style="color:#606">size</span>: <span style="color:#00D">16</span>, <span style="color:#606">endian</span>: <span style="color:#A60">:little</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">add_pins :porta, size: 32
+add_pins :portb, size: 16, endian: :little
+</code></pre>
 
       <p>Some points to note in the above code:</p>
 
@@ -652,122 +624,82 @@ order that data is applied in a test pattern.</li>
 
       <p>Pin groups can be looked up like regular pins, or via a dedicated method if it makes application code clearer:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>pins(<span style="color:#A60">:porta</span>)               <span style="color:#777"># =&gt; &lt;pin collection&gt;</span>
-pin_group(<span style="color:#A60">:porta</span>)          <span style="color:#777"># =&gt; &lt;pin collection&gt;</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">pins(:porta)               # =&gt; &lt;pin collection&gt;
+pin_group(:porta)          # =&gt; &lt;pin collection&gt;
+</code></pre>
 
       <p>A pin group is a regular Ruby array and can be iterated on and so on:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>pins(<span style="color:#A60">:porta</span>).size          <span style="color:#777"># =&gt; 32</span>
+      <pre><code class="language-ruby">pins(:porta).size          # =&gt; 32
 
-pins(<span style="color:#A60">:porta</span>).each <span style="color:#080;font-weight:bold">do</span> |pin|
-  <span style="color:#777"># Do this for pin :porta0, :porta1, etc.</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+pins(:porta).each do |pin|
+  # Do this for pin :porta0, :porta1, etc.
+end
+</code></pre>
 
       <p>Within a pin group individual pins can be addressed via a local index:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>pins(<span style="color:#A60">:porta</span>)[<span style="color:#00D">0</span>] == pins(<span style="color:#A60">:porta0</span>)   <span style="color:#777"># =&gt; true</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">pins(:porta)[0] == pins(:porta0)   # =&gt; true
+</code></pre>
 
       <p>The reverse is achieved using the <code>index</code> method and providing a <code>context</code> option:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>pins(<span style="color:#A60">:porta0</span>).index(<span style="color:#606">context</span>: <span style="color:#A60">:porta</span>)
-  <span style="color:#777">#=&gt; 0</span>
+      <pre><code class="language-ruby">pins(:porta0).index(context: :porta)
+  #=&gt; 0
 
-pins(<span style="color:#A60">:porta1</span>).index(<span style="color:#606">context</span>: <span style="color:#A60">:porta</span>)
-  <span style="color:#777">#=&gt; 1</span>
-</pre></div>
-</div>
-      </div>
+pins(:porta1).index(context: :porta)
+  #=&gt; 1
+</code></pre>
 
       <p>If no context is given, Origen attempts to discern any implicit indexing, using
 the appendix of the pin, if it ends in a numeral.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>pins(<span style="color:#A60">:porta7</span>).index
-  <span style="color:#777">#=&gt; 7</span>
+      <pre><code class="language-ruby">pins(:porta7).index
+  #=&gt; 7
   
-pin(<span style="color:#A60">:tclk</span>).index
-  <span style="color:#777">#=&gt; nil</span>
-</pre></div>
-</div>
-      </div>
+pin(:tclk).index
+  #=&gt; nil
+</code></pre>
 
       <p>Anonymous pin groups can be composed from a range of indexes at runtime:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>pins(<span style="color:#A60">:porta</span>).data                 <span style="color:#777"># =&gt; 0x0000_0000</span>
-pins(<span style="color:#A60">:porta</span>)[<span style="color:#00D">0</span>,<span style="color:#00D">1</span>,<span style="color:#00D">2</span>,<span style="color:#00D">3</span>].drive(<span style="color:#00D">0xF</span>)
-pins(<span style="color:#A60">:porta</span>).data                 <span style="color:#777"># =&gt; 0x0000_000F</span>
-pins(<span style="color:#A60">:porta</span>)[<span style="color:#00D">8</span>..<span style="color:#00D">15</span>].drive(<span style="color:#00D">0x55</span>)
-pins(<span style="color:#A60">:porta</span>).data                 <span style="color:#777"># =&gt; 0x0000_550F  </span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">pins(:porta).data                 # =&gt; 0x0000_0000
+pins(:porta)[0,1,2,3].drive(0xF)
+pins(:porta).data                 # =&gt; 0x0000_000F
+pins(:porta)[8..15].drive(0x55)
+pins(:porta).data                 # =&gt; 0x0000_550F  
+</code></pre>
 
       <p>Pin groups can be composed from any arbitrary group of existing pins using the <code>add_pin_group</code> method:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># The first argument is the ID for the new pin group, followed by the IDs of the pins it should contain</span>
-add_pin_group <span style="color:#A60">:jtag</span>, <span style="color:#A60">:tdi</span>, <span style="color:#A60">:tdo</span>, <span style="color:#A60">:tclk</span>, <span style="color:#A60">:tms</span>
+      <pre><code class="language-ruby"># The first argument is the ID for the new pin group, followed by the IDs of the pins it should contain
+add_pin_group :jtag, :tdi, :tdo, :tclk, :tms
 
-pins(<span style="color:#A60">:jtag</span>).size   <span style="color:#777"># =&gt; 4</span>
-</pre></div>
-</div>
-      </div>
+pins(:jtag).size   # =&gt; 4
+</code></pre>
 
       <p>Pin groups can be aliased in the same way as pins, for readability the method <code>add_pin_group_alias</code>
 can be used, although internally it is the same as <code>add_pin_alias</code>:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>add_pin_group_alias <span style="color:#A60">:porta</span>, <span style="color:#A60">:data</span>
+      <pre><code class="language-ruby">add_pin_group_alias :porta, :data
 
-pin_group(<span style="color:#A60">:data</span>).dont_care  <span style="color:#777"># Can now be used as if it were a regular first class pin group</span>
-</pre></div>
-</div>
-      </div>
+pin_group(:data).dont_care  # Can now be used as if it were a regular first class pin group
+</code></pre>
 
       <p>It is possible to alias a single pin within a pin group, in that case a pin number argument
 must be supplied to <code>add_pin_alias</code>:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>add_pin_alias <span style="color:#A60">:moda</span>, <span style="color:#A60">:porta</span>, <span style="color:#606">pin</span>: <span style="color:#00D">4</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">add_pin_alias :moda, :porta, pin: 4
+</code></pre>
 
       <p>It is also possible to create a pin group from a subset of pins of a regular pin group, simply
 pass in a range or an array of pin indexes to <code>add_pin_group_alias</code>:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>add_pin_group_alias <span style="color:#A60">:data_byte_0</span>, <span style="color:#A60">:porta</span>, <span style="color:#606">pins</span>: [<span style="color:#00D">7</span>..<span style="color:#00D">0</span>]
-add_pin_group_alias <span style="color:#A60">:data_byte_1</span>, <span style="color:#A60">:porta</span>, <span style="color:#606">pins</span>: [<span style="color:#00D">8</span>,<span style="color:#00D">9</span>,<span style="color:#00D">10</span>,<span style="color:#00D">11</span>,<span style="color:#00D">12</span>,<span style="color:#00D">13</span>,<span style="color:#00D">14</span>,<span style="color:#00D">15</span>]
+      <pre><code class="language-ruby">add_pin_group_alias :data_byte_0, :porta, pins: [7..0]
+add_pin_group_alias :data_byte_1, :porta, pins: [8,9,10,11,12,13,14,15]
 
-pins(<span style="color:#A60">:data_byte_0</span>).dont_care  <span style="color:#777"># Can now be used as if it were a regular first class pin group</span>
-</pre></div>
-</div>
-      </div>
+pins(:data_byte_0).dont_care  # Can now be used as if it were a regular first class pin group
+</code></pre>
 
       <div>    
   <a class="anchor" name="Mask_Generation"></a>          
@@ -778,35 +710,27 @@ pins(<span style="color:#A60">:data_byte_0</span>).dont_care  <span style="color
 pin may arise. Origen can help here by generating masks to set or clear a pin
 within a given context. The context works the same here as when using <code>index</code>:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Generate a mask which sets only :porta4 in the context of :porta</span>
-dut.pin(<span style="color:#A60">:porta4</span>).mask(<span style="color:#606">context</span>: <span style="color:#A60">:porta</span>)
-  <span style="color:#777">#=&gt; 0b10000</span>
+      <pre><code class="language-ruby"># Generate a mask which sets only :porta4 in the context of :porta
+dut.pin(:porta4).mask(context: :porta)
+  #=&gt; 0b10000
 
-dut.pin(<span style="color:#A60">:porta4</span>).clr_mask(<span style="color:#606">context</span>: <span style="color:#A60">:porta</span>)
-  <span style="color:#777">#=&gt; 0b1111_1111_1111_1111_1111_1111_1110_1111</span>
-</pre></div>
-</div>
-      </div>
+dut.pin(:porta4).clr_mask(context: :porta)
+  #=&gt; 0b1111_1111_1111_1111_1111_1111_1110_1111
+</code></pre>
 
       <p>Implicit masks work similarly, but the size of the <code>clear mask</code> is not known.
 A <code>:size</code> option can be given to set the size of the generated mask:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>dut.pin(<span style="color:#A60">:porta4</span>).mask
-  <span style="color:#777">#=&gt; 0b10000</span>
+      <pre><code class="language-ruby">dut.pin(:porta4).mask
+  #=&gt; 0b10000
 
-dut.pin(<span style="color:#A60">:porta4</span>).clr_mask
-  <span style="color:#777">#=&gt; 0b1111</span>
-  <span style="color:#777">#=&gt; (0b0_1111)</span>
+dut.pin(:porta4).clr_mask
+  #=&gt; 0b1111
+  #=&gt; (0b0_1111)
 
-dut.pin(<span style="color:#A60">:porta4</span>).clr_mask(<span style="color:#606">size</span>: <span style="color:#00D">32</span>)
-  <span style="color:#777">#=&gt; 0b1111_1111_1111_1111_1111_1111_1110_1111</span>
-</pre></div>
-</div>
-      </div>
+dut.pin(:porta4).clr_mask(size: 32)
+  #=&gt; 0b1111_1111_1111_1111_1111_1111_1110_1111
+</code></pre>
 
       <div>    
   <a class="anchor" name="Power_and_Ground_Pin_Modelling"></a>          
@@ -815,63 +739,47 @@ dut.pin(<span style="color:#A60">:porta4</span>).clr_mask(<span style="color:#60
 
       <p>The API supports modelling power and ground pins as follows:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>add_pin <span style="color:#A60">:pinx</span>
+      <pre><code class="language-ruby">add_pin :pinx
 
-add_power_pin <span style="color:#A60">:vdd1</span>
-add_power_pin <span style="color:#A60">:vdd2</span>
+add_power_pin :vdd1
+add_power_pin :vdd2
 
-add_ground_pin <span style="color:#A60">:gnd1</span>
-add_ground_pin <span style="color:#A60">:gnd2</span>
-add_ground_pin <span style="color:#A60">:gnd3</span>
+add_ground_pin :gnd1
+add_ground_pin :gnd2
+add_ground_pin :gnd3
 
-add_power_pin_group <span style="color:#A60">:vdd</span>, <span style="color:#A60">:vdd1</span>, <span style="color:#A60">:vdd2</span>
+add_power_pin_group :vdd, :vdd1, :vdd2
 
-add_ground_pin_group <span style="color:#A60">:gnd</span>, <span style="color:#A60">:gnd1</span>, <span style="color:#A60">:gnd2</span>, <span style="color:#A60">:gnd3</span>
-</pre></div>
-</div>
-      </div>
+add_ground_pin_group :gnd, :gnd1, :gnd2, :gnd3
+</code></pre>
 
       <p>This will cause these pins to be stored in separate collections to make pattern and other content generation easier:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Based on the above example</span>
-pins.size           <span style="color:#777"># =&gt; 1</span>
-power_pins.size     <span style="color:#777"># =&gt; 2</span>
-ground_pins.size    <span style="color:#777"># =&gt; 3</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># Based on the above example
+pins.size           # =&gt; 1
+power_pins.size     # =&gt; 2
+ground_pins.size    # =&gt; 3
+</code></pre>
 
       <p>Power and ground pin lookup should be done via dedicated methods:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>power_pin(<span style="color:#A60">:vdd1</span>)
-ground_pins(<span style="color:#A60">:gnd</span>)
+      <pre><code class="language-ruby">power_pin(:vdd1)
+ground_pins(:gnd)
 
-ground_pin_groups.each <span style="color:#080;font-weight:bold">do</span> |id, group|
-  <span style="color:#777"># Do this for each ground pin group</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+ground_pin_groups.each do |id, group|
+  # Do this for each ground pin group
+end
+</code></pre>
 
       <p>Power pins have some dedicated attributes that can be defined, in additional to the generic meta-data hash supported
 by all pins:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>add_power_pin <span style="color:#A60">:vddio</span>, <span style="color:#606">voltage</span>: <span style="color:#00D">3</span>, <span style="color:#606">current_limit</span>: <span style="color:#00D">50</span>.mA, <span style="color:#606">meta</span>: { <span style="color:#606">min_voltage</span>: <span style="color:#60E">1.5</span> }
+      <pre><code class="language-ruby">add_power_pin :vddio, voltage: 3, current_limit: 50.mA, meta: { min_voltage: 1.5 }
 
-power_pin(<span style="color:#A60">:vddio</span>).voltage             <span style="color:#777"># =&gt; 3</span>
-power_pin(<span style="color:#A60">:vddio</span>).current_limit       <span style="color:#777"># =&gt; 50E-03</span>
-power_pin(<span style="color:#A60">:vddio</span>).meta[<span style="color:#A60">:min_voltage</span>]  <span style="color:#777"># =&gt; 1.5</span>
-</pre></div>
-</div>
-      </div>
+power_pin(:vddio).voltage             # =&gt; 3
+power_pin(:vddio).current_limit       # =&gt; 50E-03
+power_pin(:vddio).meta[:min_voltage]  # =&gt; 1.5
+</code></pre>
 
       <div>    
   <a class="anchor" name="Virtual_Pin_Modelling"></a>          
@@ -886,40 +794,28 @@ associated with the SoC, such as:</p>
         <li>Tester channels to control components on the DIB</li>
       </ul>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>add_virtual_pin(<span style="color:#A60">:virtual1</span>, <span style="color:#606">type</span>: <span style="color:#A60">:utility_pin</span>)
-add_virtual_pin(<span style="color:#A60">:virtual2</span>, <span style="color:#606">type</span>: <span style="color:#A60">:utility_pin</span>)
-add_virtual_pin(<span style="color:#A60">:virtual3</span>, <span style="color:#606">type</span>: <span style="color:#A60">:relay_pin</span>)
+      <pre><code class="language-ruby">add_virtual_pin(:virtual1, type: :utility_pin)
+add_virtual_pin(:virtual2, type: :utility_pin)
+add_virtual_pin(:virtual3, type: :relay_pin)
 
-add_virtual_pin_group <span style="color:#A60">:utility</span>, <span style="color:#A60">:virtual1</span>, <span style="color:#A60">:virtual2</span>
-add_virtual_pin_group <span style="color:#A60">:relay</span>, <span style="color:#A60">:virtual3</span>
-</pre></div>
-</div>
-      </div>
+add_virtual_pin_group :utility, :virtual1, :virtual2
+add_virtual_pin_group :relay, :virtual3
+</code></pre>
 
       <p>This will cause these pins to be stored in separate collections to make content generation easier:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Based on the above example</span>
-virtual_pins.size           <span style="color:#777"># =&gt; 3</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># Based on the above example
+virtual_pins.size           # =&gt; 3
+</code></pre>
 
       <p>Virtual pin lookup should be done via a dedicated method:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>virtual_pin(<span style="color:#A60">:virtual1</span>)
+      <pre><code class="language-ruby">virtual_pin(:virtual1)
 
-virtual_pin_groups.each <span style="color:#080;font-weight:bold">do</span> |id, group|
-  <span style="color:#777"># Do this for each virtual pin group</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+virtual_pin_groups.each do |id, group|
+  # Do this for each virtual pin group
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Changing_Data_State"></a>          
@@ -931,42 +827,38 @@ for full details of what methods are available.</p>
 
       <p>Here are a few examples of working with pins:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Make the tester drive a value on a pin</span>
-pin(<span style="color:#A60">:tdi</span>).drive_hi
+      <pre><code class="language-ruby"># Make the tester drive a value on a pin
+pin(:tdi).drive_hi
 
-<span style="color:#777"># Equivalent to above, this form is better when serially applying data in a loop...</span>
-pin(<span style="color:#A60">:tdi</span>).drive(<span style="color:#00D">1</span>)  
-<span style="color:#777"># ...like this...</span>
-reg(<span style="color:#A60">:data</span>).shift_out_left <span style="color:#080;font-weight:bold">do</span> |bit|
-  pin(<span style="color:#A60">:porta</span>).drive(bit.data)
-<span style="color:#080;font-weight:bold">end</span>
+# Equivalent to above, this form is better when serially applying data in a loop...
+pin(:tdi).drive(1)  
+# ...like this...
+reg(:data).shift_out_left do |bit|
+  pin(:porta).drive(bit.data)
+end
 
-<span style="color:#777"># Asserting that a pin drives a certain value has various aliases, these are all equivalent</span>
-pin(<span style="color:#A60">:tdo</span>).assert(<span style="color:#00D">1</span>)
-pin(<span style="color:#A60">:tdo</span>).compare(<span style="color:#00D">1</span>)
-pin(<span style="color:#A60">:tdo</span>).expect(<span style="color:#00D">1</span>)
+# Asserting that a pin drives a certain value has various aliases, these are all equivalent
+pin(:tdo).assert(1)
+pin(:tdo).compare(1)
+pin(:tdo).expect(1)
 
-<span style="color:#777"># Current state can be queried</span>
-pin(<span style="color:#A60">:tdo</span>).driving?    <span style="color:#777"># false</span>
-pin(<span style="color:#A60">:tdo</span>).comparing?  <span style="color:#777"># true</span>
-pin(<span style="color:#A60">:tdo</span>).dont_care
-pin(<span style="color:#A60">:tdo</span>).comparing?  <span style="color:#777"># false</span>
+# Current state can be queried
+pin(:tdo).driving?    # false
+pin(:tdo).comparing?  # true
+pin(:tdo).dont_care
+pin(:tdo).comparing?  # false
 
-pin(<span style="color:#A60">:tms</span>).drive_lo
-pin(<span style="color:#A60">:tms</span>).toggle
+pin(:tms).drive_lo
+pin(:tms).toggle
 
-<span style="color:#777"># Pin groups support the same methods as pins</span>
-pins(<span style="color:#A60">:porta</span>).drive(<span style="color:#00D">0x55</span>)   <span style="color:#777"># 01010101</span>
-pins(<span style="color:#A60">:porta</span>).assert(<span style="color:#00D">0x55</span>)  <span style="color:#777"># LHLHLHLH</span>
-pins(<span style="color:#A60">:porta</span>).dont_care     <span style="color:#777"># XXXXXXXX</span>
+# Pin groups support the same methods as pins
+pins(:porta).drive(0x55)   # 01010101
+pins(:porta).assert(0x55)  # LHLHLHLH
+pins(:porta).dont_care     # XXXXXXXX
 
-<span style="color:#777"># Individual pins within a pin group can be accessed by index</span>
-pins(<span style="color:#A60">:porta</span>)[<span style="color:#00D">1</span>].drive(<span style="color:#00D">0</span>)   <span style="color:#777"># XXXXXX0X</span>
-</pre></div>
-</div>
-      </div>
+# Individual pins within a pin group can be accessed by index
+pins(:porta)[1].drive(0)   # XXXXXX0X
+</code></pre>
 
       <div>    
   <a class="anchor" name="Bang_(!)_Methods"></a>          
@@ -975,25 +867,17 @@ pins(<span style="color:#A60">:porta</span>)[<span style="color:#00D">1</span>].
 
       <p>Almost all pin methods have a bang form, for example:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>pin(<span style="color:#A60">:tdi</span>).drive!(<span style="color:#00D">1</span>)
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">pin(:tdi).drive!(1)
+</code></pre>
 
       <p>The bang methods will set the state on the pin in the same way as the regular method but
 will then automatically fire off a tester cycle to generate a vector.</p>
 
       <p>In other words the above is the shorthand equivalent of:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>pin(<span style="color:#A60">:tdi</span>).drive(<span style="color:#00D">1</span>)
-<span style="color:#d70">$tester</span>.cycle
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">pin(:tdi).drive(1)
+$tester.cycle
+</code></pre>
 
       <div>    
   <a class="anchor" name="Pin_Availability_by_Package"></a>          
@@ -1005,76 +889,64 @@ which can be used to gate their availability.</p>
 
       <p>Here is an example:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Initially define the available packages at the top level before adding any pins</span>
+      <pre><code class="language-ruby"># Initially define the available packages at the top level before adding any pins
 
-<span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MySoC</span>
-  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">TopLevel</span>
+class MySoC
+  include Origen::TopLevel
 
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>
-    add_package <span style="color:#A60">:pkg1</span>
-    add_package <span style="color:#A60">:pkg2</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  def initialize
+    add_package :pkg1
+    add_package :pkg2
+  end
+end
+</code></pre>
 
       <p>Pins can then be defined by package:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>add_pin <span style="color:#A60">:pin1</span>, <span style="color:#606">packages</span>: <span style="color:#A60">:all</span>
-add_pin <span style="color:#A60">:pin2</span>                           <span style="color:#777"># No constraint is equivalent to :all</span>
-add_pin <span style="color:#A60">:pin3</span>, <span style="color:#606">package</span>: <span style="color:#A60">:pkg2</span>
-add_pin <span style="color:#A60">:pin4</span>, <span style="color:#606">packages</span>: [<span style="color:#A60">:pkg1</span>, <span style="color:#A60">:pkg2</span>]
+      <pre><code class="language-ruby">add_pin :pin1, packages: :all
+add_pin :pin2                           # No constraint is equivalent to :all
+add_pin :pin3, package: :pkg2
+add_pin :pin4, packages: [:pkg1, :pkg2]
 
-<span style="color:#777"># Pins can also be added within a package scope, these will add to :pkg1 only</span>
-with_package <span style="color:#A60">:pkg1</span> <span style="color:#080;font-weight:bold">do</span>
-  add_pin <span style="color:#A60">:pin5</span>
-  add_pin <span style="color:#A60">:pin6</span>
-<span style="color:#080;font-weight:bold">end</span>
+# Pins can also be added within a package scope, these will add to :pkg1 only
+with_package :pkg1 do
+  add_pin :pin5
+  add_pin :pin6
+end
 
-<span style="color:#777"># All pins are available when the package is set to nil, no package represents the die</span>
-package              <span style="color:#777"># =&gt; nil</span>
-pins.size            <span style="color:#777"># =&gt; 6</span>
-package = <span style="color:#A60">:pkg1</span>
-pins.size            <span style="color:#777"># =&gt; 5 (no pin3)</span>
-has_pin?(<span style="color:#A60">:pin3</span>)      <span style="color:#777"># =&gt; false</span>
-package = <span style="color:#A60">:pkg2</span>
-pins.size            <span style="color:#777"># =&gt; 4 (no pin5 or pin6)</span>
-has_pin?(<span style="color:#A60">:pin3</span>)      <span style="color:#777"># =&gt; true</span>
-</pre></div>
-</div>
-      </div>
+# All pins are available when the package is set to nil, no package represents the die
+package              # =&gt; nil
+pins.size            # =&gt; 6
+package = :pkg1
+pins.size            # =&gt; 5 (no pin3)
+has_pin?(:pin3)      # =&gt; false
+package = :pkg2
+pins.size            # =&gt; 4 (no pin5 or pin6)
+has_pin?(:pin3)      # =&gt; true
+</code></pre>
 
       <p>Pin groups can contain different sets of pins in different packages:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>add_pin(<span style="color:#A60">:pin1</span>)
-add_pin(<span style="color:#A60">:pin2</span>)
-add_pin(<span style="color:#A60">:pin3</span>)
+      <pre><code class="language-ruby">add_pin(:pin1)
+add_pin(:pin2)
+add_pin(:pin3)
 
-add_pin_group <span style="color:#A60">:g1</span>, <span style="color:#A60">:pin1</span>, <span style="color:#A60">:pin2</span>,        <span style="color:#606">package</span>: <span style="color:#A60">:pkg1</span>
-add_pin_group <span style="color:#A60">:g1</span>, <span style="color:#A60">:pin1</span>, <span style="color:#A60">:pin2</span>, <span style="color:#A60">:pin3</span>, <span style="color:#606">package</span>: <span style="color:#A60">:pkg2</span>
+add_pin_group :g1, :pin1, :pin2,        package: :pkg1
+add_pin_group :g1, :pin1, :pin2, :pin3, package: :pkg2
 
-has_pins?(<span style="color:#A60">:g1</span>)      <span style="color:#777"># =&gt; false</span>
-pin_groups.size     <span style="color:#777"># =&gt; 0</span>
+has_pins?(:g1)      # =&gt; false
+pin_groups.size     # =&gt; 0
 
-package = <span style="color:#A60">:pkg1</span>
-has_pins?(<span style="color:#A60">:g1</span>)      <span style="color:#777"># =&gt; true</span>
-pins(<span style="color:#A60">:g1</span>).size      <span style="color:#777"># =&gt; 2</span>
-pin_groups.size     <span style="color:#777"># =&gt; 1</span>
+package = :pkg1
+has_pins?(:g1)      # =&gt; true
+pins(:g1).size      # =&gt; 2
+pin_groups.size     # =&gt; 1
 
-package = <span style="color:#A60">:pkg2</span>
-has_pins?(<span style="color:#A60">:g1</span>)      <span style="color:#777"># =&gt; true</span>
-pins(<span style="color:#A60">:g1</span>).size      <span style="color:#777"># =&gt; 3</span>
-pin_groups.size     <span style="color:#777"># =&gt; 1</span>
-</pre></div>
-</div>
-      </div>
+package = :pkg2
+has_pins?(:g1)      # =&gt; true
+pins(:g1).size      # =&gt; 3
+pin_groups.size     # =&gt; 1
+</code></pre>
 
       <div>    
   <a class="anchor" name="Package_Attributes"></a>          
@@ -1086,66 +958,50 @@ can be set to specific values per package.</p>
 
       <p>Here is an example of how to set the pin location by package:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># At definition time</span>
-add_pin <span style="color:#A60">:pin1</span>, <span style="color:#606">packages</span>: {<span style="color:#606">pkg1</span>: {<span style="color:#606">location</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">A2</span><span style="color:#710">"</span></span>}, <span style="color:#606">pkg2</span>: {<span style="color:#606">location</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">A3</span><span style="color:#710">"</span></span>}}
-add_pin <span style="color:#A60">:pin2</span>
+      <pre><code class="language-ruby"># At definition time
+add_pin :pin1, packages: {pkg1: {location: "A2"}, pkg2: {location: "A3"}}
+add_pin :pin2
 
-<span style="color:#777"># Or later</span>
-pins(<span style="color:#A60">:pin2</span>).add_location <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">A5</span><span style="color:#710">"</span></span>, <span style="color:#606">package</span>: <span style="color:#A60">:pkg1</span>
-pins(<span style="color:#A60">:pin2</span>).add_location <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">B2</span><span style="color:#710">"</span></span>, <span style="color:#606">package</span>: <span style="color:#A60">:pkg2</span>
+# Or later
+pins(:pin2).add_location "A5", package: :pkg1
+pins(:pin2).add_location "B2", package: :pkg2
 
-package = <span style="color:#A60">:pkg1</span>
-pins(<span style="color:#A60">:pin1</span>).location       <span style="color:#777"># =&gt; "A2"</span>
-pins(<span style="color:#A60">:pin2</span>).location       <span style="color:#777"># =&gt; "A5"</span>
+package = :pkg1
+pins(:pin1).location       # =&gt; "A2"
+pins(:pin2).location       # =&gt; "A5"
 
-package = <span style="color:#A60">:pkg2</span>
-pins(<span style="color:#A60">:pin1</span>).location       <span style="color:#777"># =&gt; "A3"</span>
-pins(<span style="color:#A60">:pin2</span>).location       <span style="color:#777"># =&gt; "B2"</span>
-</pre></div>
-</div>
-      </div>
+package = :pkg2
+pins(:pin1).location       # =&gt; "A3"
+pins(:pin2).location       # =&gt; "B2"
+</code></pre>
 
       <p>A context can also be supplied when reading such attributes to override the current context:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>package = <span style="color:#A60">:pkg1</span>
-pins(<span style="color:#A60">:pin1</span>).location                   <span style="color:#777"># =&gt; "A2"</span>
-pins(<span style="color:#A60">:pin1</span>).location(<span style="color:#606">package</span>: <span style="color:#A60">:pkg2</span>)   <span style="color:#777"># =&gt; "A3"</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">package = :pkg1
+pins(:pin1).location                   # =&gt; "A2"
+pins(:pin1).location(package: :pkg2)   # =&gt; "A3"
+</code></pre>
 
       <p>Origen will automatically create an alias for the given location (a lower cased symbol) that is scoped to the package.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>package = <span style="color:#A60">:pkg1</span>
-has_pin?(<span style="color:#A60">:a2</span>)              <span style="color:#777"># =&gt; true</span>
-has_pin?(<span style="color:#A60">:a3</span>)              <span style="color:#777"># =&gt; false</span>
-package = <span style="color:#A60">:pkg2</span>
-has_pin?(<span style="color:#A60">:a2</span>)              <span style="color:#777"># =&gt; false</span>
-has_pin?(<span style="color:#A60">:a3</span>)              <span style="color:#777"># =&gt; true</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">package = :pkg1
+has_pin?(:a2)              # =&gt; true
+has_pin?(:a3)              # =&gt; false
+package = :pkg2
+has_pin?(:a2)              # =&gt; false
+has_pin?(:a3)              # =&gt; true
+</code></pre>
 
       <p>Certain types of metadata only become available at distinct times in a product lifecycle, for example Device Interface Board (DIB) information.
 Depending on when the pin model is constructed the user can specify the DIB metadata in two ways:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># All at once</span>
-<span style="color:#d70">$dut</span>.add_pin <span style="color:#A60">:tdi</span>, <span style="color:#606">packages</span>: { <span style="color:#606">bga</span>: { <span style="color:#606">location</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">BF2</span><span style="color:#710">'</span></span>, <span style="color:#606">dib_meta</span>: { <span style="color:#606">channel</span>: <span style="color:#00D">100106</span>, <span style="color:#606">connection</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">PE117.08</span><span style="color:#710">"</span></span>, <span style="color:#606">slot</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">PE117</span><span style="color:#710">"</span></span>, <span style="color:#606">spring_pin</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">08</span><span style="color:#710">"</span></span> } } }
+      <pre><code class="language-ruby"># All at once
+$dut.add_pin :tdi, packages: { bga: { location: 'BF2', dib_meta: { channel: 100106, connection: "PE117.08", slot: "PE117", spring_pin: "08" } } }
 
-<span style="color:#777"># Over time</span>
-<span style="color:#d70">$dut</span>.add_pin <span style="color:#A60">:tdi</span>, <span style="color:#606">packages</span>: { <span style="color:#606">bga</span>: { <span style="color:#606">location</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">BF2</span><span style="color:#710">'</span></span> } }
-<span style="color:#d70">$dut</span>.pins(<span style="color:#A60">:tdi</span>).add_dib_meta <span style="color:#A60">:bga</span>, { <span style="color:#606">channel</span>: <span style="color:#00D">100106</span>, <span style="color:#606">connection</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">PE117.08</span><span style="color:#710">"</span></span>, <span style="color:#606">slot</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">PE117</span><span style="color:#710">"</span></span>, <span style="color:#606">spring_pin</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">08</span><span style="color:#710">"</span></span> }
-</pre></div>
-</div>
-      </div>
+# Over time
+$dut.add_pin :tdi, packages: { bga: { location: 'BF2' } }
+$dut.pins(:tdi).add_dib_meta :bga, { channel: 100106, connection: "PE117.08", slot: "PE117", spring_pin: "08" }
+</code></pre>
 
       <div>    
   <a class="anchor" name="Updating_packages_for_pins_already_defined."></a>          
@@ -1154,17 +1010,13 @@ Depending on when the pin model is constructed the user can specify the DIB meta
 
       <p>There might be a need to update the packages for a pin that has already been defined. This can now be done as follows:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$dut</span>.add_pin <span style="color:#A60">:p1</span>
-<span style="color:#d70">$dut</span>.add_package: package1
-<span style="color:#d70">$dut</span>.add_package: package2
-<span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:p1</span>).packages <span style="color:#777"># =&gt; {}</span>
-<span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:p1</span>).update_packages <span style="color:#A60">:packages</span> =&gt; [<span style="color:#A60">:package1</span>, <span style="color:#A60">:package2</span>]
-<span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:p1</span>).packages <span style="color:#777"># =&gt; {:package1=&gt;{}, :package2=&gt;{}}</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">$dut.add_pin :p1
+$dut.add_package: package1
+$dut.add_package: package2
+$dut.pin(:p1).packages # =&gt; {}
+$dut.pin(:p1).update_packages :packages =&gt; [:package1, :package2]
+$dut.pin(:p1).packages # =&gt; {:package1=&gt;{}, :package2=&gt;{}}
+</code></pre>
 
       <div>    
   <a class="anchor" name="Pin_Functions"></a>          
@@ -1187,49 +1039,45 @@ Look at the meta data in the example below to see this in action.</p>
 
       <p>Here is an example of adding a function:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MySoC</span>
-  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">TopLevel</span>
+      <pre><code class="language-ruby">class MySoC
+  include Origen::TopLevel
 
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>
-    add_pin <span style="color:#A60">:pin1</span>
-    add_pin <span style="color:#A60">:pin2</span>, <span style="color:#606">meta</span>: { <span style="color:#606">vol</span>: <span style="color:#60E">0.4</span>, <span style="color:#606">voh</span>: <span style="color:#60E">0.6</span> }   <span style="color:#777"># Example of default meta data</span>
+  def initialize
+    add_pin :pin1
+    add_pin :pin2, meta: { vol: 0.4, voh: 0.6 }   # Example of default meta data
 
-    <span style="color:#777"># Define some pin functions</span>
-    pin(<span style="color:#A60">:pin1</span>).add_function <span style="color:#A60">:nvm_fail</span>, <span style="color:#606">direction</span>: <span style="color:#A60">:output</span>
-    pin(<span style="color:#A60">:pin2</span>).add_function <span style="color:#A60">:nvm_done</span>, <span style="color:#606">direction</span>: <span style="color:#A60">:output</span>, <span style="color:#606">meta</span>: { <span style="color:#606">voh</span>: <span style="color:#60E">0.7</span> }  <span style="color:#777"># Override some of the meta data</span>
-    pin(<span style="color:#A60">:pin1</span>).add_function <span style="color:#A60">:tdi</span>, <span style="color:#606">direction</span>: <span style="color:#A60">:input</span>
-    pin(<span style="color:#A60">:pin2</span>).add_function <span style="color:#A60">:tdo</span>, <span style="color:#606">direction</span>: <span style="color:#A60">:output</span>
+    # Define some pin functions
+    pin(:pin1).add_function :nvm_fail, direction: :output
+    pin(:pin2).add_function :nvm_done, direction: :output, meta: { voh: 0.7 }  # Override some of the meta data
+    pin(:pin1).add_function :tdi, direction: :input
+    pin(:pin2).add_function :tdo, direction: :output
 
-    <span style="color:#777"># Add some groupings that are associated with specific pin functions</span>
-    add_pin_group <span style="color:#A60">:jtag</span>, <span style="color:#A60">:tdi</span>, <span style="color:#A60">:tdo</span>
-    add_pin_group <span style="color:#A60">:nvm</span>,  <span style="color:#A60">:nvm_fail</span>, <span style="color:#A60">:nvm_done</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
+    # Add some groupings that are associated with specific pin functions
+    add_pin_group :jtag, :tdi, :tdo
+    add_pin_group :nvm,  :nvm_fail, :nvm_done
+  end
+end
 
-<span style="color:#d70">$dut</span> = <span style="color:#036;font-weight:bold">MySoC</span>.new
+$dut = MySoC.new
 
-<span style="color:#777"># The name used to look up a pin now returns the pin with a thin wrapper around it</span>
-<span style="color:#777"># which defines its current function:</span>
-<span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:nvm_fail</span>).direction    <span style="color:#777"># =&gt; :output</span>
-<span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:nvm_done</span>).direction    <span style="color:#777"># =&gt; :output</span>
-<span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:tdi</span>).direction         <span style="color:#777"># =&gt; :input</span>
-<span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:tdo</span>).direction         <span style="color:#777"># =&gt; :output</span>
+# The name used to look up a pin now returns the pin with a thin wrapper around it
+# which defines its current function:
+$dut.pin(:nvm_fail).direction    # =&gt; :output
+$dut.pin(:nvm_done).direction    # =&gt; :output
+$dut.pin(:tdi).direction         # =&gt; :input
+$dut.pin(:tdo).direction         # =&gt; :output
 
-<span style="color:#777"># If a function name is given when defining a pin group, the pin will always have</span>
-<span style="color:#777"># that function when it is accessed through the resultant group</span>
-<span style="color:#d70">$dut</span>.pins(<span style="color:#A60">:jtag</span>)[<span style="color:#00D">0</span>].direction    <span style="color:#777"># =&gt; :output</span>
-<span style="color:#d70">$dut</span>.pins(<span style="color:#A60">:jtag</span>)[<span style="color:#00D">1</span>].direction    <span style="color:#777"># =&gt; :input</span>
-<span style="color:#d70">$dut</span>.pins(<span style="color:#A60">:nvm</span>)[<span style="color:#00D">0</span>].direction     <span style="color:#777"># =&gt; :output</span>
-<span style="color:#d70">$dut</span>.pins(<span style="color:#A60">:nvm</span>)[<span style="color:#00D">1</span>].direction     <span style="color:#777"># =&gt; :output</span>
+# If a function name is given when defining a pin group, the pin will always have
+# that function when it is accessed through the resultant group
+$dut.pins(:jtag)[0].direction    # =&gt; :output
+$dut.pins(:jtag)[1].direction    # =&gt; :input
+$dut.pins(:nvm)[0].direction     # =&gt; :output
+$dut.pins(:nvm)[1].direction     # =&gt; :output
 
-<span style="color:#777"># The pin's meta data can be overridden by function</span>
-<span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:tdo</span>).meta         <span style="color:#777"># =&gt; { vol: 0.4, voh: 0.6 }</span>
-<span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:nvm_done</span>).meta    <span style="color:#777"># =&gt; { vol: 0.4, voh: 0.7 }</span>
-</pre></div>
-</div>
-      </div>
+# The pin's meta data can be overridden by function
+$dut.pin(:tdo).meta         # =&gt; { vol: 0.4, voh: 0.6 }
+$dut.pin(:nvm_done).meta    # =&gt; { vol: 0.4, voh: 0.7 }
+</code></pre>
 
       <div>    
   <a class="anchor" name="Pin_Clock_Functionality"></a>          
@@ -1245,84 +1093,64 @@ will be automatically handled.  See the Pin Clock API below.</p>
       <p>Enable the clock functionality on a given pin.  Does not start the clock, only sets up
 its internally tracked parameters.  Clock can be specified in cycles, time, or frequency</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:pin1</span>).enable_clock(<span style="color:#606">period_in_ns</span>: <span style="color:#00D">200</span>)       <span style="color:#777"># create free-running clock with 200ns period</span>
-<span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:pin2</span>).enable_clock(<span style="color:#606">frequency_in_khz</span>: <span style="color:#00D">32</span>)    <span style="color:#777"># create 32Khz free-running clock</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">$dut.pin(:pin1).enable_clock(period_in_ns: 200)       # create free-running clock with 200ns period
+$dut.pin(:pin2).enable_clock(frequency_in_khz: 32)    # create 32Khz free-running clock
+</code></pre>
 
       <h5 id="startclockoptions--">start_clock(options = {})</h5>
 
       <p>Start an existing clock or create and start a free-running clock on a given pin</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:pin2</span>).start_clock                           <span style="color:#777"># start up existing clock pin2</span>
-<span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:pin3</span>).start_clock(<span style="color:#606">period_in_us</span>: <span style="color:#00D">2</span>)          <span style="color:#777"># create and start clock with 2us period</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">$dut.pin(:pin2).start_clock                           # start up existing clock pin2
+$dut.pin(:pin3).start_clock(period_in_us: 2)          # create and start clock with 2us period
+</code></pre>
 
       <h5 id="stopclock-pauseclock">stop_clock, pause_clock</h5>
 
       <p>Stop the clock running on a given pin</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:pin1</span>).stop_clock                            <span style="color:#777"># stop clock on pin1</span>
-<span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:pin2</span>).pause_clock                           <span style="color:#777"># stop clock on pin2</span>
-<span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:pin3</span>).pause_clock                           <span style="color:#777"># stop clock on pin3</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">$dut.pin(:pin1).stop_clock                            # stop clock on pin1
+$dut.pin(:pin2).pause_clock                           # stop clock on pin2
+$dut.pin(:pin3).pause_clock                           # stop clock on pin3
+</code></pre>
 
       <h5 id="resumeclockoptions--">resume_clock(options = {})</h5>
 
       <p>Restart an existing clock.  Can be restarted with existing parameters or restarted with a new clock setup</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:pin2</span>).resume_clock                         <span style="color:#777"># resume clocking on pin2 with existing clock setup</span>
-<span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:pin3</span>).resume_clock(<span style="color:#606">period_in_ns</span>: <span style="color:#00D">100</span>)      <span style="color:#777"># resume clocking on pin3 with new clock parameters</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">$dut.pin(:pin2).resume_clock                         # resume clocking on pin2 with existing clock setup
+$dut.pin(:pin3).resume_clock(period_in_ns: 100)      # resume clocking on pin3 with new clock parameters
+</code></pre>
 
       <p>Some addtional examples:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>
-<span style="color:#777"># Create timeset with 2-ns period</span>
-<span style="color:#d70">$tester</span>.set_timeset(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">ts_50Mhz</span><span style="color:#710">'</span></span>, <span style="color:#00D">20</span>)      <span style="color:#777"># timeset period is 20ns</span>
+      <pre><code class="language-ruby">
+# Create timeset with 2-ns period
+$tester.set_timeset('ts_50Mhz', 20)      # timeset period is 20ns
 
-<span style="color:#777"># In this example, we enable (without immediately starting) a clock pin with</span>
-<span style="color:#777">#   100ns period and then pause, resume, and stop later in the pattern.</span>
-<span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:pin1</span>).enable_clock(<span style="color:#606">period_in_ns</span>: <span style="color:#00D">100</span>)
-<span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:pin1</span>).start_clock
+# In this example, we enable (without immediately starting) a clock pin with
+#   100ns period and then pause, resume, and stop later in the pattern.
+$dut.pin(:pin1).enable_clock(period_in_ns: 100)
+$dut.pin(:pin1).start_clock
 ...
-<span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:pin1</span>).pause_clock
+$dut.pin(:pin1).pause_clock
 ...
-<span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:pin1</span>).resume_clock
+$dut.pin(:pin1).resume_clock
 ...
-<span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:pin1</span>).stop_clock
+$dut.pin(:pin1).stop_clock
 ...
 
-<span style="color:#777"># In this example, we start free-running clock with 200ns period, then later stop</span>
-<span style="color:#777">#   and restart with a different (100ns period) setup.</span>
-<span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:pin2</span>).start_clock(<span style="color:#606">period_in_ns</span>: <span style="color:#00D">200</span>)
+# In this example, we start free-running clock with 200ns period, then later stop
+#   and restart with a different (100ns period) setup.
+$dut.pin(:pin2).start_clock(period_in_ns: 200)
 ...
-<span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:pin2</span>).stop_clock
+$dut.pin(:pin2).stop_clock
 ...
-<span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:pin2</span>).start_clock(<span style="color:#606">period_in_ns</span>: <span style="color:#00D">100</span>)
+$dut.pin(:pin2).start_clock(period_in_ns: 100)
 ...
-<span style="color:#d70">$dut</span>.pin(<span style="color:#A60">:pin2</span>).stop_clock
+$dut.pin(:pin2).stop_clock
 ...
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <div style="position: relative">
   <hr>

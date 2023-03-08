@@ -458,26 +458,18 @@
       <p>All environments are defined by files that reside in the <code>environment</code> directory.
 Environments are regular Ruby files and they should be simply named:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>&lt;identifier&gt;.rb
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">&lt;identifier&gt;.rb
+</code></pre>
 
       <p>In a test engineering application where the environment is used to select the target test platform,
 they are normally named after the tester, e.g.</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>environment
+      <pre><code class="language-text">environment
 |-- j750.rb
 |-- uflex.rb
 |-- v93k.rb
 `-- jlink.rb
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <div>    
   <a class="anchor" name="Creating_an_Environment"></a>          
@@ -488,32 +480,24 @@ they are normally named after the tester, e.g.</p>
 They are usually very concise and in a test engineering application would normally only instantiate the
 target tester driver, here are some examples:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># environment/j750.rb</span>
-<span style="color:#d70">$tester</span> = <span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">J750</span>.new
+      <pre><code class="language-ruby"># environment/j750.rb
+$tester = OrigenTesters::J750.new
 
-<span style="color:#777"># environment/v93k.rb</span>
-<span style="color:#d70">$tester</span> = <span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">V93K</span>.new
+# environment/v93k.rb
+$tester = OrigenTesters::V93K.new
 
-<span style="color:#777"># environment/jlink.rb</span>
-<span style="color:#d70">$tester</span> = <span style="color:#036;font-weight:bold">OrigenDebuggers</span>::<span style="color:#036;font-weight:bold">JLink</span>.new
-</pre></div>
-</div>
-      </div>
+# environment/jlink.rb
+$tester = OrigenDebuggers::JLink.new
+</code></pre>
 
       <p>If the given driver supports configuration options, then you may have some variations
 for a given platform - e.g. <code>j750_probe.rb</code> to configure the driver slightly differently
 for generating probe test patterns:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># environment/j750_probe.rb</span>
-<span style="color:#d70">$tester</span> = <span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">J750</span>.new
-<span style="color:#d70">$tester</span>.available_power_supplies = <span style="color:#00D">64</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># environment/j750_probe.rb
+$tester = OrigenTesters::J750.new
+$tester.available_power_supplies = 64
+</code></pre>
 
       <div>    
   <a class="anchor" name="Setting_a_Default_Environment"></a>          
@@ -528,12 +512,8 @@ builds something without really understanding what configuration they are target
       <p>A default is specified by creating an environment file called <code>environment/default.rb</code>,
 typically this is a symbolic link to another environment file:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>ln -s environment/j750.rb environment/default.rb
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">ln -s environment/j750.rb environment/default.rb
+</code></pre>
 
       <div>    
   <a class="anchor" name="Getting_and_Setting_the_Environment"></a>          
@@ -544,40 +524,28 @@ typically this is a symbolic link to another environment file:</p>
 <code>origen environment</code> command, or <code>origen e</code> for short, this will show
 you the content of the current environment file:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>&gt; origen e
+      <pre><code class="language-text">&gt; origen e
 
 Current environment: j750.rb
 **********************************************************************
   $tester = OrigenTesters::J750.new
 **********************************************************************
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>The environment can be changed by running the same command and supplying the desired environment:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>&gt; origen e environment/j750.rb
+      <pre><code class="language-text">&gt; origen e environment/j750.rb
 
 &gt; origen e v93k
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>As shown above, a full path or any snippet which is enough to uniquely identify one of the available
 environment files is sufficient.</p>
 
       <p>Additionally all Origen commands allow an override to be supplied at runtime:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>&gt; origen g my_pattern -e jlink
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">&gt; origen g my_pattern -e jlink
+</code></pre>
 
       <div style="position: relative">
   <hr>

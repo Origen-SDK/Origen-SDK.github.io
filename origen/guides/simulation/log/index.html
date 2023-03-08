@@ -471,12 +471,8 @@ and this will also cause the simulation result to be classed as a FAIL.</p>
       <p>If your simulation produces STDERR output which you don’t care about (and which you don’t want to make your
 simulation FAIL), then you can configure OrigenSim to ignore all STDERR messages via:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">OrigenSim</span>.fail_on_stderr = <span style="color:#069">false</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">OrigenSim.fail_on_stderr = false
+</code></pre>
 
       <p>Alternatively, a safer solution is to declare which specific messages on STDERR should be ignored.
 For example, say that in an early design build the ADC is not configured correctly and this results
@@ -487,12 +483,8 @@ not want our simulations to FAIL because of it.</p>
       <p>In such a case you can add strings to the <code>stderr_string_exceptions</code> array and any STDERR lines which contain
 the given text will be ignored:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">OrigenSim</span>.stderr_string_exceptions &lt;&lt; <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">invalid adc config</span><span style="color:#710">'</span></span>    <span style="color:#777"># Case in-sensitive match</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">OrigenSim.stderr_string_exceptions &lt;&lt; 'invalid adc config'    # Case in-sensitive match
+</code></pre>
 
       <p><strong>Note that in all of these cases the given text is considered to be case-insensitive when considering if
 it matches a log line.</strong></p>
@@ -500,22 +492,14 @@ it matches a log line.</strong></p>
       <p>If you need case-sensitivity (or more generally need more control of exactly what is considered to be a match), you can
 supply a regular expression instead of a string for all of the cases discussed here:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">OrigenSim</span>.stderr_string_exceptions &lt;&lt; <span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#808">invalid adc config</span><span style="color:#404">/</span></span>    <span style="color:#777"># Case sensitive match</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">OrigenSim.stderr_string_exceptions &lt;&lt; /invalid adc config/    # Case sensitive match
+</code></pre>
 
       <p>Similarly, if you find that the default of matching for <em>ERROR</em> in STDOUT messages is being overly aggressive,
 exceptions can be added in a similar way:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">OrigenSim</span>.error_string_exceptions &lt;&lt; <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">uninitialized value in ROM at</span><span style="color:#710">'</span></span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">OrigenSim.error_string_exceptions &lt;&lt; 'uninitialized value in ROM at'
+</code></pre>
 
       <p>This means that a log line resembling <code>ERROR uninitialized value in ROM at 0x1000</code> will not fail the simulation,
 but the line <code>ERROR uninitialized value in RAM at 0x2000</code> will fail.</p>
@@ -523,78 +507,58 @@ but the line <code>ERROR uninitialized value in RAM at 0x2000</code> will fail.<
       <p>On the other hand, if you find that simply matching for <em>ERROR</em> is not catching some cases which you would
 like to cause a FAIL, you can add additional strings to watch out for like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">OrigenSim</span>.error_strings &lt;&lt; <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">FAILED</span><span style="color:#710">'</span></span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">OrigenSim.error_strings &lt;&lt; 'FAILED'
+</code></pre>
 
       <p>If you want to remove ‘ERROR’ from the list of error strings (in there by default), you can assign a new array
 instance:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">OrigenSim</span>.error_strings &lt;&lt; <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">FAILED</span><span style="color:#710">'</span></span>
+      <pre><code class="language-ruby">OrigenSim.error_strings &lt;&lt; 'FAILED'
 
-<span style="color:#036;font-weight:bold">OrigenSim</span>.error_strings  <span style="color:#777"># =&gt; ['ERROR', 'FAILED']</span>
+OrigenSim.error_strings  # =&gt; ['ERROR', 'FAILED']
 
-<span style="color:#036;font-weight:bold">OrigenSim</span>.error_strings = [<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">FAILED</span><span style="color:#710">'</span></span>]
+OrigenSim.error_strings = ['FAILED']
 
-<span style="color:#036;font-weight:bold">OrigenSim</span>.error_strings  <span style="color:#777"># =&gt; ['FAILED']</span>
-</pre></div>
-</div>
-      </div>
+OrigenSim.error_strings  # =&gt; ['FAILED']
+</code></pre>
 
       <p>Similar variables exist to configure what you want to catch as a warning:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">OrigenSim</span>.warning_strings            <span style="color:#777"># =&gt; ['WARNING']</span>
+      <pre><code class="language-ruby">OrigenSim.warning_strings            # =&gt; ['WARNING']
 
-<span style="color:#036;font-weight:bold">OrigenSim</span>.warning_string_exceptions  <span style="color:#777"># =&gt; []</span>
-</pre></div>
-</div>
-      </div>
+OrigenSim.warning_string_exceptions  # =&gt; []
+</code></pre>
 
       <p>and also to match any output lines that you simply want to be shown in the console by default:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">OrigenSim</span>.log_string  <span style="color:#777"># =&gt; []</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">OrigenSim.log_string  # =&gt; []
+</code></pre>
 
       <p>It is conventional to do all such configuration like this with <code>environment/sim.rb</code>, where you can decide
 to make it global (applies to all targets), target-specific, or a combination of both:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># environment/sim.rb</span>
+      <pre><code class="language-ruby"># environment/sim.rb
 
-<span style="color:#777"># Will apply to all targets</span>
-<span style="color:#036;font-weight:bold">OrigenSim</span>.error_strings &lt;&lt; <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">FAILED</span><span style="color:#710">'</span></span>
+# Will apply to all targets
+OrigenSim.error_strings &lt;&lt; 'FAILED'
 
-<span style="color:#080;font-weight:bold">case</span> <span style="color:#036;font-weight:bold">Origen</span>.target.name
+case Origen.target.name
 
-<span style="color:#080;font-weight:bold">when</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">my_dut1</span><span style="color:#710">"</span></span>
-  <span style="color:#036;font-weight:bold">OrigenSim</span>.cadence <span style="color:#080;font-weight:bold">do</span> |sim|
-    <span style="color:#777"># Configuration of Cadence simulator to be used for DUT1 here</span>
-  <span style="color:#080;font-weight:bold">end</span>
+when "my_dut1"
+  OrigenSim.cadence do |sim|
+    # Configuration of Cadence simulator to be used for DUT1 here
+  end
 
-  <span style="color:#777"># Known problem with this specific DUT only</span>
-  <span style="color:#036;font-weight:bold">OrigenSim</span>.error_string_exceptions &lt;&lt; <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">uninitialized value in ROM at</span><span style="color:#710">'</span></span>
+  # Known problem with this specific DUT only
+  OrigenSim.error_string_exceptions &lt;&lt; 'uninitialized value in ROM at'
 
-<span style="color:#080;font-weight:bold">when</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">my_dut2</span><span style="color:#710">"</span></span>
-  <span style="color:#036;font-weight:bold">OrigenSim</span>.synopsys <span style="color:#080;font-weight:bold">do</span> |sim|
-    <span style="color:#777"># Configuration of Synopsys simulator to be used for DUT2 here</span>
-  <span style="color:#080;font-weight:bold">end</span>
+when "my_dut2"
+  OrigenSim.synopsys do |sim|
+    # Configuration of Synopsys simulator to be used for DUT2 here
+  end
 
-<span style="color:#777"># ...</span>
-</pre></div>
-</div>
-      </div>
+# ...
+</code></pre>
 
       <div style="position: relative">
   <hr>

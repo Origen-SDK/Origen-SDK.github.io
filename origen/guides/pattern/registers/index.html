@@ -500,25 +500,21 @@ module then see if it (or its controller) has a <code>write_register</code> meth
       <p>What this all means is that within a controller you will build your
 test logic from methods that look like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">measure_vref</span>(setting=<span style="color:#069">nil</span>)
-  <span style="color:#080;font-weight:bold">if</span> setting
-    ss <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Measure the Vref voltage for setting </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>setting<span style="font-weight:bold;color:#666">}</span></span><span style="color:#710">"</span></span>
+      <pre><code class="language-ruby">def measure_vref(setting=nil)
+  if setting
+    ss "Measure the Vref voltage for setting #{setting}"
     vref.level.write(setting)
-  <span style="color:#080;font-weight:bold">else</span>
-    ss <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Measure the default Vref voltage</span><span style="color:#710">"</span></span>
-  <span style="color:#080;font-weight:bold">end</span>
-  vref.test_enable.write!(<span style="color:#00D">1</span>)
-<span style="color:#080;font-weight:bold">end</span>
+  else
+    ss "Measure the default Vref voltage"
+  end
+  vref.test_enable.write!(1)
+end
 
-<span style="color:#777"># From a pattern call like this:</span>
-<span style="color:#036;font-weight:bold">Pattern</span>.create <span style="color:#080;font-weight:bold">do</span>
-  <span style="color:#d70">$dut</span>.nvm.measure_vref(<span style="color:#00D">5</span>)
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+# From a pattern call like this:
+Pattern.create do
+  $dut.nvm.measure_vref(5)
+end
+</code></pre>
 
       <p>The actual mechanism for how the registers are written is abstracted away from the
 test logic itself and therefore the test logic is generally independent from the communication
@@ -537,63 +533,55 @@ to working well within a plugin-based environment.</p>
       <p>Define registers in the child models that own them and create test methods to manipulate them
 in the controller:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">NVM</span>
-  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
+      <pre><code class="language-ruby">class NVM
+  include Origen::Model
 
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>
-    reg <span style="color:#A60">:vref</span>, <span style="color:#00D">0x0003</span>, <span style="color:#606">size</span>: <span style="color:#00D">16</span> <span style="color:#080;font-weight:bold">do</span> |reg|
-      reg.bit <span style="color:#00D">15</span>,   <span style="color:#A60">:test_enable</span>
-      reg.bit <span style="color:#00D">7</span>..<span style="color:#00D">0</span>, <span style="color:#A60">:level</span>
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
+  def initialize
+    reg :vref, 0x0003, size: 16 do |reg|
+      reg.bit 15,   :test_enable
+      reg.bit 7..0, :level
+    end
+  end
+end
 
-<span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">NVMController</span>
-  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Controller</span>
+class NVMController
+  include Origen::Controller
 
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">measure_vref</span>(setting=<span style="color:#069">nil</span>)
-    <span style="color:#080;font-weight:bold">if</span> setting
-      ss <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Measure the Vref voltage for setting </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>setting<span style="font-weight:bold;color:#666">}</span></span><span style="color:#710">"</span></span>
+  def measure_vref(setting=nil)
+    if setting
+      ss "Measure the Vref voltage for setting #{setting}"
       vref.level.write(setting)
-    <span style="color:#080;font-weight:bold">else</span>
-      ss <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Measure the default Vref voltage</span><span style="color:#710">"</span></span>
-    <span style="color:#080;font-weight:bold">end</span>
-    vref.test_enable.write!(<span style="color:#00D">1</span>)
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+    else
+      ss "Measure the default Vref voltage"
+    end
+    vref.test_enable.write!(1)
+  end
+end
+</code></pre>
 
       <p>Defer how to actually write the register to the top-level SoC controller and normally this would
 be done via one of the available protocol plugins.
 Here for example is an SoC which will write the register via the <a href="http://origen-sdk.org/nexus">Nexus protocol</a>:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MySoC</span>
-  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">TopLevel</span>  <span style="color:#777"># Indicate to Origen that this model represents a top-level device object</span>
-<span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby">class MySoC
+  include Origen::TopLevel  # Indicate to Origen that this model represents a top-level device object
+end
 
-<span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MySoCController</span>
-  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Controller</span>
-  include <span style="color:#036;font-weight:bold">Nexus</span>
+class MySoCController
+  include Origen::Controller
+  include Nexus
 
-  <span style="color:#777"># Process register reads using the Nexus protocol</span>
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">read_register</span>(reg, options={})
+  # Process register reads using the Nexus protocol
+  def read_register(reg, options={})
     nexus.read_register(reg, options)
-  <span style="color:#080;font-weight:bold">end</span>
+  end
 
-  <span style="color:#777"># As above for write requests</span>
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">write_register</span>(reg, options={})
+  # As above for write requests
+  def write_register(reg, options={})
     nexus.write_register(reg, options)
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  end
+end
+</code></pre>
 
       <p>And that is all that is required, Origen takes care of the hook up and the behind the scenes
 communication to make it all work.</p>
@@ -609,12 +597,8 @@ still work although the generated pattern would look completely different.</p>
 
       <p>All registers support bit level updates, we have seen an example of this already:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>vref.test_enable.write!(<span style="color:#00D">1</span>)
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">vref.test_enable.write!(1)
+</code></pre>
 
       <p>What this will do is update the value held by the given bits and then send the parent
 register object to the <code>write_register</code> method for processing.
@@ -628,12 +612,8 @@ However in the case of performing a bit-level read things get a bit more interes
       <p>The equivalent read operation will update the data values of the bits in the same way, but
 it will also set a flag on those bits marking that they have been requested for read.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>vref.test_enable.read!(<span style="color:#00D">1</span>)
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">vref.test_enable.read!(1)
+</code></pre>
 
       <p>The protocol driver can then look out for this flag when generating the readout vectors
 and only enable a compare on the vectors that correspond to the bits marked for read.
@@ -644,17 +624,13 @@ can mentally disregard the state of all bits except the ones that you care about
 
       <p>The same is true for store (meaning capture the value on the tester) or overlay operations:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Capture the value of the level bits</span>
+      <pre><code class="language-ruby"># Capture the value of the level bits
 vref.level.store!
 
-<span style="color:#777"># Dynamically overlay the value written to the level bits</span>
-vref.level.overlay(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">vref_setting</span><span style="color:#710">"</span></span>)
+# Dynamically overlay the value written to the level bits
+vref.level.overlay("vref_setting")
 vref.write!
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <div>    
   <a class="anchor" name="Combining_Multiple_Bit_Level_Accesses_Into_A_Single_Transaction"></a>          
@@ -665,37 +641,25 @@ vref.write!
 transaction by making multiple bit-level calls to <code>read</code> (or <code>write</code>), followed by a single
 register-level <code>read!</code> (or <code>write!</code>) operation:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>my_reg.my_bits_x.read(<span style="color:#00D">1</span>)
-my_reg.my_bits_z.read(<span style="color:#00D">0b101</span>)
+      <pre><code class="language-ruby">my_reg.my_bits_x.read(1)
+my_reg.my_bits_z.read(0b101)
 my_reg.read!
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>Sometimes you will see application code that combines the final transaction request with the
 final bit-level operation, this will do the same thing as the above example:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>my_reg.my_bits_x.read(<span style="color:#00D">1</span>)
-my_reg.my_bits_z.read!(<span style="color:#00D">0b101</span>)
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">my_reg.my_bits_x.read(1)
+my_reg.my_bits_z.read!(0b101)
+</code></pre>
 
       <p>If you prefer, an equivalent block form API is also available, this is equivalent to the above example:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>my_reg.read! <span style="color:#080;font-weight:bold">do</span> |reg|
-  reg.my_bits_x.read(<span style="color:#00D">1</span>)
-  reg.my_bits_z.read(<span style="color:#00D">0b101</span>)
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">my_reg.read! do |reg|
+  reg.my_bits_x.read(1)
+  reg.my_bits_z.read(0b101)
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Writing_a_Driver"></a>          
@@ -708,101 +672,89 @@ but here are some basic pointers on good driver design.</p>
 
       <p>All drivers should implement read and write register methods:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">write_register</span>(reg, options={})
-<span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby">def write_register(reg, options={})
+end
 
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">read_register</span>(reg, options={})
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+def read_register(reg, options={})
+end
+</code></pre>
 
       <p>The write methods are usually fairly simple, here is a basic example of how to do a parallel
 and a serial protocol write:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Writing on a parallel port, let's say we have a 16-bit register and the</span>
-<span style="color:#777"># data needs to be written on a pin group called data which is 8-bits</span>
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">write_register</span>(reg, options={})
-  pin(<span style="color:#A60">:din</span>).drive(<span style="color:#00D">1</span>)   <span style="color:#777"># Let's say when this pin is high data is captured</span>
-  <span style="color:#777"># Drive the data in MSB -&gt; LSB order</span>
-  pins(<span style="color:#A60">:data</span>).drive!(reg[<span style="color:#00D">15</span>..<span style="color:#00D">8</span>].data)
-  pins(<span style="color:#A60">:data</span>).drive!(reg[<span style="color:#00D">7</span>..<span style="color:#00D">0</span>].data)
-  pin(<span style="color:#A60">:din</span>).drive(<span style="color:#00D">0</span>)   <span style="color:#777"># Turn off capture</span>
-<span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby"># Writing on a parallel port, let's say we have a 16-bit register and the
+# data needs to be written on a pin group called data which is 8-bits
+def write_register(reg, options={})
+  pin(:din).drive(1)   # Let's say when this pin is high data is captured
+  # Drive the data in MSB -&gt; LSB order
+  pins(:data).drive!(reg[15..8].data)
+  pins(:data).drive!(reg[7..0].data)
+  pin(:din).drive(0)   # Turn off capture
+end
 
-<span style="color:#777"># Writing on a serial port, same as above only this time the :data port is</span>
-<span style="color:#777"># only 1-bit wide</span>
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">read_register</span>(reg, options={})
-  pin(<span style="color:#A60">:din</span>).drive(<span style="color:#00D">1</span>)   <span style="color:#777"># Let's say when this pin is high data is captured</span>
-  <span style="color:#777"># Drive the data in MSB -&gt; LSB order</span>
-  reg.shift_out_left <span style="color:#080;font-weight:bold">do</span> |bit|
-    pin(<span style="color:#A60">:data</span>).drive!(bit.data)
-  <span style="color:#080;font-weight:bold">end</span>
-  pin(<span style="color:#A60">:din</span>).drive(<span style="color:#00D">0</span>)   <span style="color:#777"># Turn off capture</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+# Writing on a serial port, same as above only this time the :data port is
+# only 1-bit wide
+def read_register(reg, options={})
+  pin(:din).drive(1)   # Let's say when this pin is high data is captured
+  # Drive the data in MSB -&gt; LSB order
+  reg.shift_out_left do |bit|
+    pin(:data).drive!(bit.data)
+  end
+  pin(:din).drive(0)   # Turn off capture
+end
+</code></pre>
 
       <p>Read methods are usually a bit more involved to implement the bit-specific read and
 capture operations.
 Here is a parallel and serial protocol example which supports bit-level read operations:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Reading on a parallel port, let's say we have a 16-bit register and the</span>
-<span style="color:#777"># data needs to be read on a pin group called data which is 8-bits</span>
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">write_register</span>(reg, options={})
-  pin(<span style="color:#A60">:dout</span>).drive(<span style="color:#00D">1</span>)   <span style="color:#777"># Let's say when this pin is high data is presented</span>
+      <pre><code class="language-ruby"># Reading on a parallel port, let's say we have a 16-bit register and the
+# data needs to be read on a pin group called data which is 8-bits
+def write_register(reg, options={})
+  pin(:dout).drive(1)   # Let's say when this pin is high data is presented
 
-  <span style="color:#777"># Compare the data in MSB</span>
-  <span style="color:#00D">8</span>.times <span style="color:#080;font-weight:bold">do</span> |i|
-    bit = reg.bit(i + <span style="color:#00D">8</span>)
-    <span style="color:#080;font-weight:bold">if</span> bit.is_to_be_read?
-      pins(<span style="color:#A60">:data</span>)[i].assert(bit.data)
-    <span style="color:#080;font-weight:bold">else</span>
-      pins(<span style="color:#A60">:data</span>)[i].dont_care
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#d70">$tester</span>.cycle
+  # Compare the data in MSB
+  8.times do |i|
+    bit = reg.bit(i + 8)
+    if bit.is_to_be_read?
+      pins(:data)[i].assert(bit.data)
+    else
+      pins(:data)[i].dont_care
+    end
+  end
+  $tester.cycle
 
-  <span style="color:#777"># Now the data in LSB</span>
-  <span style="color:#00D">8</span>.times <span style="color:#080;font-weight:bold">do</span> |i|
+  # Now the data in LSB
+  8.times do |i|
     bit = reg.bit(i)
-    <span style="color:#080;font-weight:bold">if</span> bit.is_to_be_read?
-      pins(<span style="color:#A60">:data</span>)[i].assert(bit.data)
-    <span style="color:#080;font-weight:bold">else</span>
-      pins(<span style="color:#A60">:data</span>)[i].dont_care
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#d70">$tester</span>.cycle
+    if bit.is_to_be_read?
+      pins(:data)[i].assert(bit.data)
+    else
+      pins(:data)[i].dont_care
+    end
+  end
+  $tester.cycle
 
-  pin(<span style="color:#A60">:dout</span>).drive(<span style="color:#00D">0</span>)   <span style="color:#777"># Turn off read out</span>
-<span style="color:#080;font-weight:bold">end</span>
+  pin(:dout).drive(0)   # Turn off read out
+end
 
-<span style="color:#777"># Reading on a serial port, same as above only this time the :data port is</span>
-<span style="color:#777"># only 1-bit wide</span>
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">read_register</span>(reg, options={})
-  pin(<span style="color:#A60">:dout</span>).drive(<span style="color:#00D">1</span>)   <span style="color:#777"># Let's say when this pin is high data is presented</span>
+# Reading on a serial port, same as above only this time the :data port is
+# only 1-bit wide
+def read_register(reg, options={})
+  pin(:dout).drive(1)   # Let's say when this pin is high data is presented
 
-  <span style="color:#777"># Drive the data in MSB -&gt; LSB order</span>
-  reg.shift_out_left <span style="color:#080;font-weight:bold">do</span> |bit|
-    <span style="color:#080;font-weight:bold">if</span> bit.is_to_be_read?
-      pin(<span style="color:#A60">:data</span>).assert!(bit.data)
-    <span style="color:#080;font-weight:bold">else</span>
-      pin(<span style="color:#A60">:data</span>).dont_care!
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
+  # Drive the data in MSB -&gt; LSB order
+  reg.shift_out_left do |bit|
+    if bit.is_to_be_read?
+      pin(:data).assert!(bit.data)
+    else
+      pin(:data).dont_care!
+    end
+  end
 
-  pin(<span style="color:#A60">:dout</span>).drive(<span style="color:#00D">0</span>)   <span style="color:#777"># Turn off read out</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  pin(:dout).drive(0)   # Turn off read out
+end
+</code></pre>
 
       <div style="position: relative">
   <hr>

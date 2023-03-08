@@ -192,172 +192,160 @@
   <h4><a href="#Code">Code</a></h4>          
 </div>
 
-            <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/atd_test/test_program/interface.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">ATDTest</span>
-  <span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">TestProgram</span>
-    <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">Interface</span>
-      include <span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">ProgramGenerators</span>
+            <pre><code class="language-ruby"># lib/atd_test/test_program/interface.rb
+module ATDTest
+  module TestProgram
+    class Interface
+      include OrigenTesters::ProgramGenerators
 
-      <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">func</span>(name, options={})
+      def func(name, options={})
         name = test_name(name, options)
-        <span style="color:#777"># Create the test</span>
-        <span style="color:#080;font-weight:bold">if</span> tester.j750?
+        # Create the test
+        if tester.j750?
           ins = test_instances.functional(name)
-        <span style="color:#080;font-weight:bold">else</span>
+        else
           ins = test_suites.add(name, options)
           ins.test_method = test_methods.ac_tml.functional_test(options)
-        <span style="color:#080;font-weight:bold">end</span>
+        end
         apply_conditions(ins, options)
-        <span style="color:#777"># Create the pattern set entry</span>
+        # Create the pattern set entry
         pname = pattern_name(name, options)
-        <span style="color:#080;font-weight:bold">if</span> tester.j750?
-          patset_name = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>name<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">_pset</span><span style="color:#710">"</span></span>
-          pat = patsets.add(patset_name, <span style="color:#606">pattern</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">patterns/ATD/</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>pname<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">.PAT</span><span style="color:#710">"</span></span>)
+        if tester.j750?
+          patset_name = "#{name}_pset"
+          pat = patsets.add(patset_name, pattern: "patterns/ATD/#{pname}.PAT")
           ins.pattern = patset_name
-        <span style="color:#080;font-weight:bold">else</span>
+        else
           ins.pattern = pname
-        <span style="color:#080;font-weight:bold">end</span>
+        end
 
-        <span style="color:#777"># Insert the test into the flow</span>
+        # Insert the test into the flow
         test(ins, options)
-      <span style="color:#080;font-weight:bold">end</span>
+      end
 
-      <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">para</span>(name, options={})
+      def para(name, options={})
         name = test_name(name, options)
-        <span style="color:#777"># Create the test</span>
-        <span style="color:#080;font-weight:bold">if</span> tester.j750?
+        # Create the test
+        if tester.j750?
           ins = test_instances.ppmu(name, options)
-        <span style="color:#080;font-weight:bold">else</span>
+        else
           ins = test_suites.add(name, options)
           ins.test_method = test_methods.dc_tml.general_pmu(options)
-        <span style="color:#080;font-weight:bold">end</span>
+        end
         apply_conditions(ins, options)
-        <span style="color:#777"># Create the pattern set entry</span>
-        <span style="color:#080;font-weight:bold">if</span> tester.j750?
-          patset_name = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>name<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">_pset</span><span style="color:#710">"</span></span>
-          pat = patsets.add(patset_name, <span style="color:#606">pattern</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">patterns/ATD/</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>pattern_name(name, options)<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">.PAT</span><span style="color:#710">"</span></span>)
+        # Create the pattern set entry
+        if tester.j750?
+          patset_name = "#{name}_pset"
+          pat = patsets.add(patset_name, pattern: "patterns/ATD/#{pattern_name(name, options)}.PAT")
           ins.pattern = patset_name
-        <span style="color:#080;font-weight:bold">else</span>
-        <span style="color:#080;font-weight:bold">end</span>
+        else
+        end
 
-        <span style="color:#777"># Insert the test into the flow</span>
+        # Insert the test into the flow
         test(ins, options)
-      <span style="color:#080;font-weight:bold">end</span>
+      end
 
-      <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">apply_conditions</span>(ins, options={})
-        <span style="color:#080;font-weight:bold">if</span> tester.j750?
-          ins.ac_category = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Spec</span><span style="color:#710">"</span></span>
-          ins.ac_selector = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Default</span><span style="color:#710">"</span></span>
-          ins.dc_category = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Spec</span><span style="color:#710">"</span></span>
-          <span style="color:#080;font-weight:bold">if</span> options[<span style="color:#A60">:vdd</span>]
-            <span style="color:#080;font-weight:bold">if</span> options[<span style="color:#A60">:vdd</span>] == <span style="color:#A60">:max</span>
-              ins.dc_selector = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Max</span><span style="color:#710">"</span></span>
-            <span style="color:#080;font-weight:bold">elsif</span> options[<span style="color:#A60">:vdd</span>] == <span style="color:#A60">:min</span>
-              ins.dc_selector = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Min</span><span style="color:#710">"</span></span>
-            <span style="color:#080;font-weight:bold">elsif</span> options[<span style="color:#A60">:vdd</span>] == <span style="color:#A60">:nom</span>
-              ins.dc_selector = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Default</span><span style="color:#710">"</span></span>
-            <span style="color:#080;font-weight:bold">else</span>
-              fail <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Unknown vdd selector: </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>options[<span style="color:#A60">:vdd</span>]<span style="font-weight:bold;color:#666">}</span></span><span style="color:#710">"</span></span>
-            <span style="color:#080;font-weight:bold">end</span>
-          <span style="color:#080;font-weight:bold">else</span>
-            ins.dc_selector = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Default</span><span style="color:#710">"</span></span>
-          <span style="color:#080;font-weight:bold">end</span>
-          ins.time_sets = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Tim</span><span style="color:#710">"</span></span>
-          ins.pin_levels = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Lvl</span><span style="color:#710">"</span></span>
-        <span style="color:#080;font-weight:bold">else</span>
-          ins.level_equation = <span style="color:#00D">14</span>
-          ins.level_spec = <span style="color:#00D">1</span>
-          ins.level_set = <span style="color:#00D">1</span>
-        <span style="color:#080;font-weight:bold">end</span>
-      <span style="color:#080;font-weight:bold">end</span>
+      def apply_conditions(ins, options={})
+        if tester.j750?
+          ins.ac_category = "Spec"
+          ins.ac_selector = "Default"
+          ins.dc_category = "Spec"
+          if options[:vdd]
+            if options[:vdd] == :max
+              ins.dc_selector = "Max"
+            elsif options[:vdd] == :min
+              ins.dc_selector = "Min"
+            elsif options[:vdd] == :nom
+              ins.dc_selector = "Default"
+            else
+              fail "Unknown vdd selector: #{options[:vdd]}"
+            end
+          else
+            ins.dc_selector = "Default"
+          end
+          ins.time_sets = "Tim"
+          ins.pin_levels = "Lvl"
+        else
+          ins.level_equation = 14
+          ins.level_spec = 1
+          ins.level_set = 1
+        end
+      end
 
-      <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">test_name</span>(name, options={})
-        <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">atd_</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>name<span style="font-weight:bold;color:#666">}</span></span><span style="color:#710">"</span></span>
-      <span style="color:#080;font-weight:bold">end</span>
+      def test_name(name, options={})
+        "atd_#{name}"
+      end
 
-      <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">pattern_name</span>(name, options={})
-        <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>name<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">_pattern</span><span style="color:#710">"</span></span>
-      <span style="color:#080;font-weight:bold">end</span>
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-            </div>
+      def pattern_name(name, options={})
+        "#{name}_pattern"
+      end
+    end
+  end
+end
+</code></pre>
 
-            <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># program/sort1.rb</span>
-<span style="color:#036;font-weight:bold">Flow</span>.create <span style="color:#606">interface</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">ATDTest::TestProgram::Interface</span><span style="color:#710">"</span></span> <span style="color:#080;font-weight:bold">do</span>
+            <pre><code class="language-ruby"># program/sort1.rb
+Flow.create interface: "ATDTest::TestProgram::Interface" do
 
-  <span style="color:#777"># This func will do something</span>
-  <span style="color:#777">#</span>
-  <span style="color:#777"># * Some bullets</span>
-  <span style="color:#777"># * About this test</span>
-  func <span style="color:#A60">:test_a</span>, <span style="color:#606">bin</span>: <span style="color:#00D">3</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">100</span>, <span style="color:#606">number</span>: <span style="color:#00D">1000</span>, <span style="color:#606">vdd</span>: <span style="color:#A60">:max</span>
+  # This func will do something
+  #
+  # * Some bullets
+  # * About this test
+  func :test_a, bin: 3, softbin: 100, number: 1000, vdd: :max
 
-  func <span style="color:#A60">:test_b</span>, <span style="color:#606">bin</span>: <span style="color:#00D">3</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">101</span>, <span style="color:#606">number</span>: <span style="color:#00D">1010</span>, <span style="color:#606">id</span>: <span style="color:#A60">:test1</span>
+  func :test_b, bin: 3, softbin: 101, number: 1010, id: :test1
 
-  func <span style="color:#A60">:test_c</span>, <span style="color:#606">if_failed</span>: <span style="color:#A60">:test1</span>
+  func :test_c, if_failed: :test1
 
-  func <span style="color:#A60">:test_d</span>
+  func :test_d
 
-  if_job <span style="color:#A60">:p1</span> <span style="color:#080;font-weight:bold">do</span>
-    para <span style="color:#A60">:p1_test1</span>, <span style="color:#606">id</span>: <span style="color:#A60">:p11</span>, <span style="color:#606">lo_limit</span>: <span style="color:#00D">10</span>.mV, <span style="color:#606">hi_limit</span>: <span style="color:#00D">20</span>.mV
-    func <span style="color:#A60">:p1_test2</span>, <span style="color:#606">id</span>: <span style="color:#A60">:p12</span>
-    func <span style="color:#A60">:p1_test3</span>, <span style="color:#606">if_all_failed</span>: [<span style="color:#A60">:p11</span>, <span style="color:#A60">:p12</span>]
-    if_enable <span style="color:#A60">:bitmap</span> <span style="color:#080;font-weight:bold">do</span>
-      func <span style="color:#A60">:bitmap_test</span>
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
+  if_job :p1 do
+    para :p1_test1, id: :p11, lo_limit: 10.mV, hi_limit: 20.mV
+    func :p1_test2, id: :p12
+    func :p1_test3, if_all_failed: [:p11, :p12]
+    if_enable :bitmap do
+      func :bitmap_test
+    end
+  end
 
-  if_job <span style="color:#A60">:p2</span> <span style="color:#080;font-weight:bold">do</span>
-    func <span style="color:#A60">:p2_test1</span>, <span style="color:#606">id</span>: <span style="color:#A60">:p21</span>, <span style="color:#606">vdd</span>: <span style="color:#A60">:min</span>
-    func <span style="color:#A60">:p2_test2</span>, <span style="color:#606">id</span>: <span style="color:#A60">:p22</span>
-    func <span style="color:#A60">:p2_test3</span>, <span style="color:#606">if_any_passed</span>: [<span style="color:#A60">:p21</span>, <span style="color:#A60">:p22</span>]
-  <span style="color:#080;font-weight:bold">end</span>
+  if_job :p2 do
+    func :p2_test1, id: :p21, vdd: :min
+    func :p2_test2, id: :p22
+    func :p2_test3, if_any_passed: [:p21, :p22]
+  end
 
-  group <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">200Mhz Tests</span><span style="color:#710">"</span></span>, <span style="color:#606">id</span>: <span style="color:#A60">:g200</span> <span style="color:#080;font-weight:bold">do</span>
-    func <span style="color:#A60">:test200_1</span>
-    func <span style="color:#A60">:test200_2</span>
-    func <span style="color:#A60">:test200_3</span>
-  <span style="color:#080;font-weight:bold">end</span>
+  group "200Mhz Tests", id: :g200 do
+    func :test200_1
+    func :test200_2
+    func :test200_3
+  end
 
-  group <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">100Mhz Tests</span><span style="color:#710">"</span></span>, <span style="color:#606">if_failed</span>: <span style="color:#A60">:g200</span>, <span style="color:#606">id</span>: <span style="color:#A60">:g100</span> <span style="color:#080;font-weight:bold">do</span>
-    func <span style="color:#A60">:test100_1</span>, <span style="color:#606">bin</span>: <span style="color:#00D">5</span>
-    func <span style="color:#A60">:test100_2</span>, <span style="color:#606">bin</span>: <span style="color:#00D">5</span>
-    func <span style="color:#A60">:test100_3</span>, <span style="color:#606">bin</span>: <span style="color:#00D">5</span>
-  <span style="color:#080;font-weight:bold">end</span>
+  group "100Mhz Tests", if_failed: :g200, id: :g100 do
+    func :test100_1, bin: 5
+    func :test100_2, bin: 5
+    func :test100_3, bin: 5
+  end
 
-  if_job <span style="color:#A60">:p2</span> <span style="color:#080;font-weight:bold">do</span>
-    import <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">atd_tests</span><span style="color:#710">"</span></span>, <span style="color:#606">instances</span>: <span style="color:#00D">4</span>
-  <span style="color:#080;font-weight:bold">end</span>
+  if_job :p2 do
+    import "atd_tests", instances: 4
+  end
 
-  pass <span style="color:#00D">2</span>, <span style="color:#606">if_ran</span>: <span style="color:#A60">:g100</span>
+  pass 2, if_ran: :g100
 
-  pass <span style="color:#00D">1</span>
+  pass 1
 
 
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-            </div>
+end
+</code></pre>
 
-            <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># program/_atd_tests.rb</span>
-<span style="color:#036;font-weight:bold">Flow</span>.create <span style="color:#080;font-weight:bold">do</span> |options|
+            <pre><code class="language-ruby"># program/_atd_tests.rb
+Flow.create do |options|
 
-  options[<span style="color:#A60">:instances</span>].times <span style="color:#080;font-weight:bold">do</span> |i|
-    func <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">atd_ramp_</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>i<span style="font-weight:bold;color:#666">}</span></span><span style="color:#710">"</span></span> 
-  <span style="color:#080;font-weight:bold">end</span>
+  options[:instances].times do |i|
+    func "atd_ramp_#{i}" 
+  end
 
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-            </div>
+end
+</code></pre>
 
           </div>
 <div role="tabpanel" class="tab-pane" id="comments">

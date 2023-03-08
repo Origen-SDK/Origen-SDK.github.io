@@ -504,9 +504,7 @@ be incorporated into the design build process.</p>
       <p>To check if this is available, run the <code>origen</code> command outside of an application workspace, you should
 see something like this:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>&gt; origen
+      <pre><code class="language-text">&gt; origen
 
 Usage: origen COMMAND [ARGS]
 
@@ -520,20 +518,14 @@ The following global commands are provided by plugins:
  sim:build          Build an Origen testbench and simulator extension for a given design
 
 Many commands can be run with -h (or --help) for more information.
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>Note the <code>sim:build</code> command is noted as being provided by a plugin at the bottom. If you don’t see that
 then it means that OrigenSim needs to be installed into your global Ruby, if you have the required admin
 rights you can do this by simply executing:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>gem install origen_sim
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">gem install origen_sim
+</code></pre>
 
       <p>If you don’t have the required permission then speak to your system administrator to have them do this.
 More detailed information on how to manage your globally available plugins like this can be found in
@@ -545,12 +537,8 @@ to <a href="/origen/guides/starting/installing">the guide on how to install Orig
       <p>Once you have verified that you have the <code>sim:build</code> command available, execute it by supplying the
 path to your top-level Verilog file like this:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>origen sim:build path/to/my_top_level.v
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">origen sim:build path/to/my_top_level.v
+</code></pre>
 
       <p><strong>It is highly recommended that you supply a stub model here, all that Origen needs to know about is the
 top-level pin interface and reducing the amount of superfluous design code will reduce the chance
@@ -558,9 +546,7 @@ of parse errors during this step.</strong></p>
 
       <p>For example, something like this is sufficient to be able to generate an Origen test bench:</p>
 
-      <div class="language-verilog highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>module my_dut(
+      <pre><code class="language-verilog">module my_dut(
   input tck, tdi, tms, trstn,
   input rstn,
   input [31:0] din,
@@ -576,9 +562,7 @@ of parse errors during this step.</strong></p>
 );
 
 endmodule
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>If you find that it does choke on your design files please do enter a ticket describing the code
 which failed to parse here - <a href="https://github.com/Origen-SDK/origen_verilog/issues">https://github.com/Origen-SDK/origen_verilog/issues</a></p>
@@ -591,48 +575,28 @@ directive rules, though at the time of writing it does not evaluate Verilog para
 
       <p>For example if your code contained something like this:</p>
 
-      <div class="language-verilog highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>output [`DATA_WIDTH-1:0] dout;
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-verilog">output [`DATA_WIDTH-1:0] dout;
+</code></pre>
 
       <p>Then you can define it on the command line like this:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>origen sim:build path/to/my_dut.v --define DATA_WIDTH=8
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">origen sim:build path/to/my_dut.v --define DATA_WIDTH=8
+</code></pre>
 
       <p>Multiple defines should be specified like this:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>origen sim:build path/to/my_dut.v --define DATA_WIDTH=8 --define WREAL
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">origen sim:build path/to/my_dut.v --define DATA_WIDTH=8 --define WREAL
+</code></pre>
 
       <p>Multiple files can be passed in, for example to include defines contained in a file rather than via the command line:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>origen sim:build path/to/my_defines.v path/to/my_top_level.v
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">origen sim:build path/to/my_defines.v path/to/my_top_level.v
+</code></pre>
 
       <p>If you prefer, it also works by supplying the source file directory path(s) separately:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>origen sim:build my_defines.v my_top_level.v -s path/to
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">origen sim:build my_defines.v my_top_level.v -s path/to
+</code></pre>
 
       <p>Run <code>origen sim:build -h</code> to see the additional switches that are supported.</p>
 
@@ -641,9 +605,7 @@ building the testbench.</p>
 
       <p>Once you see a message like this, you are ready to move onto the next step:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>-----------------------------------------------------------
+      <pre><code class="language-text">-----------------------------------------------------------
 
 Testbench and VPI extension created!
 
@@ -653,9 +615,7 @@ This file can be imported into an Origen top-level DUT model to define the pins:
 
 See above for what to do now to create an Origen-enabled simulation object for your particular simulator.
 
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <div>    
   <a class="anchor" name="Building_the_Design"></a>          
@@ -668,9 +628,7 @@ should be removed from the build process before we go any further.</p>
       <p>The output from the previous step contains compiler-specific instructions on what files and switches
 should be added to your build command, here for example for Cadence:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>-----------------------------------------------------------
+      <pre><code class="language-text">-----------------------------------------------------------
 Cadence (irun)
 -----------------------------------------------------------
 
@@ -689,9 +647,7 @@ The following files should then be used for Origen integration:
 
   /home/nxa21353/Code/my_origen/origen/my_design_top.rb
   INCA_libs/ (created by irun)
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>At the time of writing Cadence, Synopsys and Icarus Verilog simulators are supported.</p>
 
@@ -712,13 +668,9 @@ this case for Cadence the <code>INCA_libs</code> directory and an Origen file th
 in your model (optional, you can define them in the model by hand or any other way you like), then check it
 into your application’s <code>vendor</code> directory and import it within your model’s <code>initialize</code> method like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Import pin definitions as extracted from the design</span>
-import <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">my_top_level</span><span style="color:#710">'</span></span>, <span style="color:#606">dir</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.root!<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">/vendor/wherever/i/like</span><span style="color:#710">"</span></span>, <span style="color:#606">namespace</span>: <span style="color:#069">nil</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># Import pin definitions as extracted from the design
+import 'my_top_level', dir: "#{Origen.root!}/vendor/wherever/i/like", namespace: nil
+</code></pre>
 
       <p>Note that <code>'my_top_level'</code> corresponds to the name of the file.</p>
 

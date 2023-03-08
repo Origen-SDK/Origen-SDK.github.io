@@ -188,74 +188,66 @@
   <h4><a href="#Code">Code</a></h4>          
 </div>
 
-            <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># program/sort1.rb</span>
-<span style="color:#036;font-weight:bold">Flow</span>.create <span style="color:#080;font-weight:bold">do</span>
+            <pre><code class="language-ruby"># program/sort1.rb
+Flow.create do
 
-  <span style="color:#777"># This test will do something</span>
-  <span style="color:#777">#</span>
-  <span style="color:#777"># * Some bullets</span>
-  <span style="color:#777"># * About this test</span>
-  test <span style="color:#A60">:test_a</span>, <span style="color:#606">bin</span>: <span style="color:#00D">3</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">100</span>, <span style="color:#606">number</span>: <span style="color:#00D">1000</span>
+  # This test will do something
+  #
+  # * Some bullets
+  # * About this test
+  test :test_a, bin: 3, softbin: 100, number: 1000
 
-  test <span style="color:#A60">:test_b</span>, <span style="color:#606">bin</span>: <span style="color:#00D">3</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">101</span>, <span style="color:#606">number</span>: <span style="color:#00D">1010</span>, <span style="color:#606">id</span>: <span style="color:#A60">:test1</span>
+  test :test_b, bin: 3, softbin: 101, number: 1010, id: :test1
 
-  test <span style="color:#A60">:test_c</span>, <span style="color:#606">if_failed</span>: <span style="color:#A60">:test1</span>
+  test :test_c, if_failed: :test1
 
-  if_job <span style="color:#A60">:p1</span> <span style="color:#080;font-weight:bold">do</span>
-    test <span style="color:#A60">:p1_test1</span>, <span style="color:#606">id</span>: <span style="color:#A60">:p11</span>
-    test <span style="color:#A60">:p1_test2</span>, <span style="color:#606">id</span>: <span style="color:#A60">:p12</span>
-    test <span style="color:#A60">:p1_test3</span>, <span style="color:#606">if_all_failed</span>: [<span style="color:#A60">:p11</span>, <span style="color:#A60">:p12</span>]
-    if_enable <span style="color:#A60">:bitmap</span> <span style="color:#080;font-weight:bold">do</span>
-      test <span style="color:#A60">:bitmap_test</span>
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
+  if_job :p1 do
+    test :p1_test1, id: :p11
+    test :p1_test2, id: :p12
+    test :p1_test3, if_all_failed: [:p11, :p12]
+    if_enable :bitmap do
+      test :bitmap_test
+    end
+  end
 
-  if_job <span style="color:#A60">:p2</span> <span style="color:#080;font-weight:bold">do</span>
-    test <span style="color:#A60">:p2_test1</span>, <span style="color:#606">id</span>: <span style="color:#A60">:p21</span>
-    test <span style="color:#A60">:p2_test2</span>, <span style="color:#606">id</span>: <span style="color:#A60">:p22</span>
-    test <span style="color:#A60">:p2_test3</span>, <span style="color:#606">if_any_passed</span>: [<span style="color:#A60">:p21</span>, <span style="color:#A60">:p22</span>]
-  <span style="color:#080;font-weight:bold">end</span>
+  if_job :p2 do
+    test :p2_test1, id: :p21
+    test :p2_test2, id: :p22
+    test :p2_test3, if_any_passed: [:p21, :p22]
+  end
 
-  group <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">200Mhz Tests</span><span style="color:#710">"</span></span>, <span style="color:#606">id</span>: <span style="color:#A60">:g200</span> <span style="color:#080;font-weight:bold">do</span>
-    test <span style="color:#A60">:test200_1</span>
-    test <span style="color:#A60">:test200_2</span>
-    test <span style="color:#A60">:test200_3</span>
-  <span style="color:#080;font-weight:bold">end</span>
+  group "200Mhz Tests", id: :g200 do
+    test :test200_1
+    test :test200_2
+    test :test200_3
+  end
 
-  group <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">100Mhz Tests</span><span style="color:#710">"</span></span>, <span style="color:#606">if_failed</span>: <span style="color:#A60">:g200</span>, <span style="color:#606">id</span>: <span style="color:#A60">:g100</span> <span style="color:#080;font-weight:bold">do</span>
-    test <span style="color:#A60">:test100_1</span>, <span style="color:#606">bin</span>: <span style="color:#00D">5</span>
-    test <span style="color:#A60">:test100_2</span>, <span style="color:#606">bin</span>: <span style="color:#00D">5</span>
-    test <span style="color:#A60">:test100_3</span>, <span style="color:#606">bin</span>: <span style="color:#00D">5</span>
-  <span style="color:#080;font-weight:bold">end</span>
+  group "100Mhz Tests", if_failed: :g200, id: :g100 do
+    test :test100_1, bin: 5
+    test :test100_2, bin: 5
+    test :test100_3, bin: 5
+  end
 
-  if_job <span style="color:#A60">:p2</span> <span style="color:#080;font-weight:bold">do</span>
-    import <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">atd_tests</span><span style="color:#710">"</span></span>, <span style="color:#606">instances</span>: <span style="color:#00D">4</span>
-  <span style="color:#080;font-weight:bold">end</span>
+  if_job :p2 do
+    import "atd_tests", instances: 4
+  end
 
-  pass <span style="color:#00D">2</span>, <span style="color:#606">if_ran</span>: <span style="color:#A60">:g100</span>
+  pass 2, if_ran: :g100
 
-  pass <span style="color:#00D">1</span>
+  pass 1
 
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-            </div>
+end
+</code></pre>
 
-            <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># program/_atd_tests.rb</span>
-<span style="color:#036;font-weight:bold">Flow</span>.create <span style="color:#080;font-weight:bold">do</span> |options|
+            <pre><code class="language-ruby"># program/_atd_tests.rb
+Flow.create do |options|
 
-  options[<span style="color:#A60">:instances</span>].times <span style="color:#080;font-weight:bold">do</span> |i|
-    test <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">atd_ramp_</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>i<span style="font-weight:bold;color:#666">}</span></span><span style="color:#710">"</span></span> 
-  <span style="color:#080;font-weight:bold">end</span>
+  options[:instances].times do |i|
+    test "atd_ramp_#{i}" 
+  end
 
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-            </div>
+end
+</code></pre>
 
           </div>
 <div role="tabpanel" class="tab-pane" id="comments">

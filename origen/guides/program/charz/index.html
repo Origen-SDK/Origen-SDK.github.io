@@ -464,16 +464,12 @@ This guide covers aspects of the Characterization (charz) API.</p>
 
       <p>The Charz API is enabled by including the Charz module in your interface:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># app/lib/my_app/interface.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">MyApp</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">Interface</span>
-    include <span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">ProgramGenerators</span>
-    include <span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">Charz</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># app/lib/my_app/interface.rb
+module MyApp
+  class Interface
+    include OrigenTesters::ProgramGenerators
+    include OrigenTesters::Charz
+</code></pre>
 
       <p>Note this guide assumes the audience is familiar with interface creation and custom test methods, and will not go into detail explaining those topics.</p>
 
@@ -497,18 +493,14 @@ The data stored within a routine will be used in combination with the options us
 
       <p>The interface adds charz routines by calling the <code>add_charz_routine</code> method:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>add_charz_routine <span style="color:#A60">:vmin</span> <span style="color:#080;font-weight:bold">do</span> |routine|
-  routine.name = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">cz_vmin_vdd</span><span style="color:#710">'</span></span>
-  routine.start = <span style="color:#60E">1.0</span>.V
-  routine.stop = <span style="color:#60E">0.5</span>.V
-  routine.res = <span style="color:#00D">5</span>.mV
-  routine.spec = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">VDD</span><span style="color:#710">'</span></span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">add_charz_routine :vmin do |routine|
+  routine.name = 'cz_vmin_vdd'
+  routine.start = 1.0.V
+  routine.stop = 0.5.V
+  routine.res = 5.mV
+  routine.spec = 'VDD'
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Charz_Profiles"></a>          
@@ -520,17 +512,13 @@ The data stored within a routine will be used in combination with the options us
       <p>The interface adds charz profiles by calling the <code>add_charz_profile</code> method. To create a profile that contains previously defined vmin and vmax search routines, whose resulting searches
 only run if the production test failed, and sets the vmax search routine to only run if the ‘VmaxEnable’ variable is set:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>add_charz_profile <span style="color:#A60">:fail_searches</span> <span style="color:#080;font-weight:bold">do</span> |profile|
-  profile.name = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">fail_searches</span><span style="color:#710">'</span></span>
-  profile.on_result = <span style="color:#A60">:on_fail</span>
-  profile.routines = [<span style="color:#A60">:vmin</span>, <span style="color:#A60">:vmax</span>]
-  profile.enables = { [<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">$VmaxEnable</span><span style="color:#710">'</span></span>] =&gt; [<span style="color:#A60">:vmax</span>] }
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">add_charz_profile :fail_searches do |profile|
+  profile.name = 'fail_searches'
+  profile.on_result = :on_fail
+  profile.routines = [:vmin, :vmax]
+  profile.enables = { ['$VmaxEnable'] =&gt; [:vmax] }
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Charz_Session"></a>          
@@ -564,34 +552,30 @@ The charz routines and profiles will need to be added, and your flow methods wil
       <p>As long as the desired routines and profiles exist in the interface’s @charz_routines and @charz_profiles hashes, the rest of the API will work as expected.
 One option is to add them during the interface initialization:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># app/lib/my_app/interface.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">MyApp</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">Interface</span>
-    include <span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">ProgramGenerators</span>
-    include <span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">Charz</span>
+      <pre><code class="language-ruby"># app/lib/my_app/interface.rb
+module MyApp
+  class Interface
+    include OrigenTesters::ProgramGenerators
+    include OrigenTesters::Charz
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">add_charz</span>
-      add_charz_routine <span style="color:#A60">:my_routine</span> <span style="color:#080;font-weight:bold">do</span> |routine|
-        routine.name = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">cz_vmin_vdd</span><span style="color:#710">'</span></span>
-        routine.start = <span style="color:#60E">1.0</span>.V
-        routine.stop = <span style="color:#60E">0.5</span>.V
-        routine.res = <span style="color:#00D">5</span>.mV
-        routine.spec = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">VDD</span><span style="color:#710">'</span></span>
-      <span style="color:#080;font-weight:bold">end</span>
-      add_charz_profile <span style="color:#A60">:my_profile</span> <span style="color:#080;font-weight:bold">do</span> |profile|
-        profile.name = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">vmin_search</span><span style="color:#710">'</span></span>
-        profile.routines = [<span style="color:#A60">:vmin</span>]
-      <span style="color:#080;font-weight:bold">end</span>
-    <span style="color:#080;font-weight:bold">end</span>
+    def add_charz
+      add_charz_routine :my_routine do |routine|
+        routine.name = 'cz_vmin_vdd'
+        routine.start = 1.0.V
+        routine.stop = 0.5.V
+        routine.res = 5.mV
+        routine.spec = 'VDD'
+      end
+      add_charz_profile :my_profile do |profile|
+        profile.name = 'vmin_search'
+        profile.routines = [:vmin]
+      end
+    end
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options = {})
+    def initialize(options = {})
       add_charz
-    <span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+    end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Configuring_Existing_Flow_Methods"></a>          
@@ -602,55 +586,47 @@ One option is to add them during the interface initialization:</p>
 
       <p>Lets take a simplistic example functional flow method defined in <code>MyApp::Interface</code>:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># V93K SMT7 example</span>
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">func</span>(name, options = {})
+      <pre><code class="language-ruby"># V93K SMT7 example
+def func(name, options = {})
   tm = test_methods.ac_tml.ac_test.functional_test
   ts = test_suites.run(name, options)
   ts.test_method = tm
-  ts.pattern = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">example</span><span style="color:#710">'</span></span>
+  ts.pattern = 'example'
   flow.test ts, options
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+end
+</code></pre>
 
       <p>And now we’ll add the ability for this flow method to generate a charz test as well:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># V93K SMT7 example</span>
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">func</span>(name, options = {})
-  <span style="color:#080;font-weight:bold">if</span> options[<span style="color:#A60">:routine</span>]
+      <pre><code class="language-ruby"># V93K SMT7 example
+def func(name, options = {})
+  if options[:routine]
     tm = test_methods.ac_tml.ac_test.spec_search
-  <span style="color:#080;font-weight:bold">else</span>
+  else
     tm = test_methods.ac_tml.ac_test.functional_test
-  <span style="color:#080;font-weight:bold">end</span>
+  end
   ts = test_suites.run(name, options)
   ts.test_method = tm
-  ts.pattern = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">example</span><span style="color:#710">'</span></span>
+  ts.pattern = 'example'
 
-  <span style="color:#080;font-weight:bold">if</span> options[<span style="color:#A60">:routine</span>]
-    ts.spec = options[<span style="color:#A60">:routine</span>].spec
-    ts.min = options[<span style="color:#A60">:routine</span>].stop
-    ts.max = options[<span style="color:#A60">:routine</span>].start
-    ts.resolution = options[<span style="color:#A60">:routine</span>].res
-  <span style="color:#080;font-weight:bold">end</span>
+  if options[:routine]
+    ts.spec = options[:routine].spec
+    ts.min = options[:routine].stop
+    ts.max = options[:routine].start
+    ts.resolution = options[:routine].res
+  end
 
   flow.test ts, options
 
-  <span style="color:#080;font-weight:bold">unless</span> options[<span style="color:#A60">:charz_test</span>]
-    insert_charz_tests(options.merge(<span style="color:#606">parent_test_name</span>: name, <span style="color:#606">charz_test</span>: <span style="color:#069">true</span>)) <span style="color:#080;font-weight:bold">do</span> |options|
-      charz_name = <span style="color:#A60"><span style="color:#A60">:</span><span style="color:#740">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>name<span style="font-weight:bold;color:#666">}</span></span><span style="color:#A60">_</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>charz_routines[options[<span style="color:#A60">:current_routine</span>]].name<span style="font-weight:bold;color:#666">}</span></span><span style="color:#740">"</span></span>
-      options[<span style="color:#A60">:routine</span>] = charz_routines[options[<span style="color:#A60">:current_routine</span>]]
+  unless options[:charz_test]
+    insert_charz_tests(options.merge(parent_test_name: name, charz_test: true)) do |options|
+      charz_name = :"#{name}_#{charz_routines[options[:current_routine]].name}"
+      options[:routine] = charz_routines[options[:current_routine]]
       func(charz_name, options)
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+    end
+  end
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="#insert_charz_tests"></a>          
@@ -680,20 +656,16 @@ Routines in the current session are yielded one at a time, with their id being r
 that take routine as an input. This can really streamline the process, for example if you combine the charz flow methods plugin with a central flow entry point method called by
 all flow methods, then the implementation becomes:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">add_to_flow</span>(ts, options = {})
+      <pre><code class="language-ruby">def add_to_flow(ts, options = {})
   flow.test ts, options
 
-  <span style="color:#080;font-weight:bold">unless</span> options[<span style="color:#A60">:charz_test</span>]
-    insert_charz_tests(options.merge(<span style="color:#606">parent_test_name</span>: name, <span style="color:#606">charz_test</span>: <span style="color:#069">true</span>)) <span style="color:#080;font-weight:bold">do</span> |options|
+  unless options[:charz_test]
+    insert_charz_tests(options.merge(parent_test_name: name, charz_test: true)) do |options|
       insert_current_charz_test(options)
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+    end
+  end
+end
+</code></pre>
 
       <p>Where insert_current_charz_test is a method defined in the company charz flow method plugin.</p>
 
@@ -704,34 +676,30 @@ all flow methods, then the implementation becomes:</p>
 
       <p>Now that the interface has charz routines and profiles, lets look at how to use the API within the flow itself:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Flow</span>.create(<span style="color:#606">interface</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">MyApp:Interface</span><span style="color:#710">'</span></span>) <span style="color:#080;font-weight:bold">do</span>
+      <pre><code class="language-ruby">Flow.create(interface: 'MyApp:Interface') do
 
-  <span style="color:#777"># regular non charz test</span>
-  func <span style="color:#A60">:my_test1</span>
+  # regular non charz test
+  func :my_test1
 
-  <span style="color:#777"># create charz test variants of my_test2 following the production</span>
-  <span style="color:#777"># version of my_test2 using the routines in :my_profile</span>
-  charz_on <span style="color:#A60">:my_profile</span> <span style="color:#080;font-weight:bold">do</span>
-    func <span style="color:#A60">:my_test2</span>
-  <span style="color:#080;font-weight:bold">end</span>
+  # create charz test variants of my_test2 following the production
+  # version of my_test2 using the routines in :my_profile
+  charz_on :my_profile do
+    func :my_test2
+  end
 
-  <span style="color:#777"># conditional charz enablement</span>
-  <span style="color:#777"># besides dut.enable_charz? check, identical to above</span>
-  charz_on <span style="color:#A60">:my_profile</span> <span style="color:#080;font-weight:bold">if</span> dut.enable_charz?
-  func <span style="color:#A60">:my_test3</span>
-  charz_off <span style="color:#080;font-weight:bold">if</span> dut.enable_charz?
+  # conditional charz enablement
+  # besides dut.enable_charz? check, identical to above
+  charz_on :my_profile if dut.enable_charz?
+  func :my_test3
+  charz_off if dut.enable_charz?
 
-  <span style="color:#777"># override session values at the flow level</span>
-  charz_on <span style="color:#A60">:my_profile</span>, <span style="color:#606">placement</span>: <span style="color:#A60">:eof</span> <span style="color:#080;font-weight:bold">do</span>
-    func <span style="color:#A60">:my_test4</span>
-  <span style="color:#080;font-weight:bold">end</span>
+  # override session values at the flow level
+  charz_on :my_profile, placement: :eof do
+    func :my_test4
+  end
 
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+end
+</code></pre>
 
       <div style="position: relative">
   <hr>

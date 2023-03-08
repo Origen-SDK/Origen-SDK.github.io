@@ -479,18 +479,14 @@ cycle represents.</p>
       <p>Normally this would be initialized within the startup method before generating any
 vectors as shown below:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MySoCController</span>
-  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Controller</span>
+      <pre><code class="language-ruby">class MySoCController
+  include Origen::Controller
 
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">startup</span>(options)
-    <span style="color:#d70">$tester</span>.set_timeset(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">mode_entry</span><span style="color:#710">"</span></span>, <span style="color:#00D">40</span>)
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  def startup(options)
+    $tester.set_timeset("mode_entry", 40)
+  end
+end
+</code></pre>
 
       <p>The first argument is the name of the timeset, this should correspond to
 how the timeset will be named within the test program, and the second argument
@@ -500,34 +496,26 @@ is the cycle period in nano-seconds.</p>
 with the supplied timeset and subsequent vectors will return to the previous timeset
 automatically.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$tester</span>.set_timeset(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">bist_50mhz</span><span style="color:#710">"</span></span>, <span style="color:#00D">20</span>) <span style="color:#080;font-weight:bold">do</span>
-  <span style="color:#777"># Any cycles generated in here will use 20ns for the period</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">$tester.set_timeset("bist_50mhz", 20) do
+  # Any cycles generated in here will use 20ns for the period
+end
+</code></pre>
 
       <p>The arguments can also be supplied as a single array, or not at all. In the latter case
 the existing timeset will simply be preserved. This is useful if you have timesets that
 can be conditionally set based on the target.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Target 1</span>
-<span style="color:#d70">$dut</span>.readout_timeset = [<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">readout</span><span style="color:#710">"</span></span>, <span style="color:#00D">120</span>]
-<span style="color:#777"># Target 2</span>
-<span style="color:#d70">$dut</span>.readout_timeset = <span style="color:#069">false</span>
+      <pre><code class="language-ruby"># Target 1
+$dut.readout_timeset = ["readout", 120]
+# Target 2
+$dut.readout_timeset = false
 
-<span style="color:#777"># This code is compatible with both targets, in the first case the timeset will switch</span>
-<span style="color:#777"># over, in the second case the existing timeset will be preserved.</span>
-<span style="color:#d70">$tester</span>.set_timeset(<span style="color:#d70">$dut</span>.readout_timeset) <span style="color:#080;font-weight:bold">do</span>
-  <span style="color:#777"># Generate readout vectors...</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+# This code is compatible with both targets, in the first case the timeset will switch
+# over, in the second case the existing timeset will be preserved.
+$tester.set_timeset($dut.readout_timeset) do
+  # Generate readout vectors...
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Creating_a_Timing_Set"></a>          
@@ -547,43 +535,27 @@ in the test patterns.</p>
 
       <p>Wait for specific number of cycles:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$tester</span>.wait(<span style="color:#606">cycles</span>: <span style="color:#00D">1000</span>)
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">$tester.wait(cycles: 1000)
+</code></pre>
 
       <p>Wait for a period of time:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$tester</span>.wait(<span style="color:#606">time_in_us</span>: <span style="color:#00D">500</span>)
-<span style="color:#d70">$tester</span>.wait(<span style="color:#606">time_in_ms</span>: <span style="color:#00D">10</span>)
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">$tester.wait(time_in_us: 500)
+$tester.wait(time_in_ms: 10)
+</code></pre>
 
       <p>A shorthand for the above cases is available:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#00D">500</span>.us!  <span style="color:#777"># Wait for 500us</span>
-<span style="color:#00D">10</span>.ms!   <span style="color:#777"># Wait for 10ms</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">500.us!  # Wait for 500us
+10.ms!   # Wait for 10ms
+</code></pre>
 
       <p>Multiple times specified in different units will be added together, this can be useful
 if the delay is based on a complex calculation:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Wait for 500us + 100 cycles</span>
-<span style="color:#d70">$tester</span>.wait(<span style="color:#606">time_in_us</span>: <span style="color:#00D">500</span>, <span style="color:#606">cycles</span>: <span style="color:#00D">100</span>)
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># Wait for 500us + 100 cycles
+$tester.wait(time_in_us: 500, cycles: 100)
+</code></pre>
 
       <div>    
   <a class="anchor" name="Waiting_for_an_Event"></a>          
@@ -601,20 +573,16 @@ wait for the required condition to resolve.</p>
 
       <p>Here are some examples:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Wait for up to 1 second for the done bit to be set</span>
-<span style="color:#d70">$tester</span>.wait(<span style="color:#606">match</span>: <span style="color:#069">true</span>, <span style="color:#606">time_in_s</span>: <span style="color:#00D">1</span>) <span style="color:#080;font-weight:bold">do</span>
-  reg(<span style="color:#A60">:status_reg</span>).bit(<span style="color:#A60">:done</span>).read!(<span style="color:#00D">1</span>)
-<span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby"># Wait for up to 1 second for the done bit to be set
+$tester.wait(match: true, time_in_s: 1) do
+  reg(:status_reg).bit(:done).read!(1)
+end
 
-<span style="color:#777"># Wait for up to 1 second for the done pin to be set</span>
-<span style="color:#d70">$tester</span>.wait(<span style="color:#606">match</span>: <span style="color:#069">true</span>, <span style="color:#606">time_in_s</span>: <span style="color:#00D">1</span>) <span style="color:#080;font-weight:bold">do</span>
-  pin(<span style="color:#A60">:done</span>).assert!(<span style="color:#00D">1</span>)
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+# Wait for up to 1 second for the done pin to be set
+$tester.wait(match: true, time_in_s: 1) do
+  pin(:done).assert!(1)
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Complex_Timing"></a>          
@@ -635,12 +603,8 @@ be defined and therefore the waveforms being applied to the pins can be changed 
 the timeset.
 The API to change the timeset is the same as that already discussed above:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>tester.set_timeset(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">func</span><span style="color:#710">'</span></span>, <span style="color:#00D">100</span>)
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">tester.set_timeset('func', 100)
+</code></pre>
 
       <p>The period of the timeset can be referenced in the wave definitions to make the waveforms
 keep the same shape with different period settings.</p>
@@ -648,53 +612,41 @@ keep the same shape with different period settings.</p>
       <p>Here is the most basic timeset definition, this will give all pins a default waveform which
 drives for the whole period on drive cycles, and strobes at 50% of compare cycles:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Simple definition, all pins have default waves</span>
-add_timeset <span style="color:#A60">:t1</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># Simple definition, all pins have default waves
+add_timeset :t1
+</code></pre>
 
       <p>Here is a more complex definition, which changes the default compare for all pins to be at
 25% of the period, and which adds a unique drive wave to the :tck pin to create a clock:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Complex definition, defines an alternative default compare wave and specific timing for :tck</span>
-timeset <span style="color:#A60">:func</span> <span style="color:#080;font-weight:bold">do</span> |t|
-  t.compare_wave <span style="color:#080;font-weight:bold">do</span> |w|
-    w.compare <span style="color:#A60">:data</span>, <span style="color:#606">at</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">period / 4</span><span style="color:#710">"</span></span>
-  <span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby"># Complex definition, defines an alternative default compare wave and specific timing for :tck
+timeset :func do |t|
+  t.compare_wave do |w|
+    w.compare :data, at: "period / 4"
+  end
 
-  t.drive_wave <span style="color:#A60">:tck</span> <span style="color:#080;font-weight:bold">do</span> |w|
-     w.drive <span style="color:#A60">:data</span>, <span style="color:#606">at</span>: <span style="color:#00D">0</span>
-     w.drive <span style="color:#00D">0</span>, <span style="color:#606">at</span>: <span style="color:#00D">25</span>
-     w.dont_care <span style="color:#606">at</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">period - 10</span><span style="color:#710">"</span></span>  <span style="color:#777"># Just to show that dont_care can be used</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  t.drive_wave :tck do |w|
+     w.drive :data, at: 0
+     w.drive 0, at: 25
+     w.dont_care at: "period - 10"  # Just to show that dont_care can be used
+  end
+end
+</code></pre>
 
       <p>Pin groups can also be referenced in the timeset definition, here to add common drive timing
 to all pins in :gpio, and with a special compare waveform for :gpio5 only:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Another timeset to show the wave assignment to pin groups</span>
-timeset <span style="color:#A60">:t2</span> <span style="color:#080;font-weight:bold">do</span> |t|
-  t.compare_wave <span style="color:#A60">:gpio5</span> <span style="color:#080;font-weight:bold">do</span> |w|
-    w.compare <span style="color:#A60">:data</span>, <span style="color:#606">at</span>: <span style="color:#00D">100</span>
-  <span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby"># Another timeset to show the wave assignment to pin groups
+timeset :t2 do |t|
+  t.compare_wave :gpio5 do |w|
+    w.compare :data, at: 100
+  end
 
-  t.drive_wave <span style="color:#A60">:gpio</span> <span style="color:#080;font-weight:bold">do</span> |w|
-    w.drive <span style="color:#A60">:data</span>, <span style="color:#606">at</span>: <span style="color:#00D">200</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  t.drive_wave :gpio do |w|
+    w.drive :data, at: 200
+  end
+end
+</code></pre>
 
       <p>Note that the API currently only supports edge compares, i.e. window compares cannot be defined.</p>
 
@@ -706,44 +658,36 @@ V93K tester to select from multiple available waveforms.</a></p>
 when the pin is driven to <code>1</code>, and a double pulse waveform that will be applied when the pin
 is drive to <code>T</code>:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>timeset <span style="color:#A60">:func</span> <span style="color:#080;font-weight:bold">do</span> |t|
-  t.drive_wave <span style="color:#A60">:tck</span> <span style="color:#080;font-weight:bold">do</span> |w|
-    w.drive <span style="color:#00D">1</span>, <span style="color:#606">at</span>: <span style="color:#00D">0</span>
-    w.drive <span style="color:#00D">0</span>, <span style="color:#606">at</span>: <span style="color:#00D">20</span>
-  <span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby">timeset :func do |t|
+  t.drive_wave :tck do |w|
+    w.drive 1, at: 0
+    w.drive 0, at: 20
+  end
 
-  t.drive_wave <span style="color:#A60">:tck</span>, <span style="color:#606">code</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">T</span><span style="color:#710">'</span></span> <span style="color:#080;font-weight:bold">do</span> |w|
-    w.drive <span style="color:#00D">1</span>, <span style="color:#606">at</span>: <span style="color:#00D">0</span>
-    w.drive <span style="color:#00D">0</span>, <span style="color:#606">at</span>: <span style="color:#00D">10</span>
-    w.drive <span style="color:#00D">1</span>, <span style="color:#606">at</span>: <span style="color:#00D">20</span>
-    w.drive <span style="color:#00D">0</span>, <span style="color:#606">at</span>: <span style="color:#00D">30</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  t.drive_wave :tck, code: 'T' do |w|
+    w.drive 1, at: 0
+    w.drive 0, at: 10
+    w.drive 1, at: 20
+    w.drive 0, at: 30
+  end
+end
+</code></pre>
 
       <p>Complex waveforms also support an initial, or default, <code>period_in_ns</code>, allowing
 <code>set_timeset</code> to be used without providing a <code>period_in_ns</code>:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>dut.timeset <span style="color:#A60">:func</span> <span style="color:#080;font-weight:bold">do</span> |t|
-  t.period_in_ns = <span style="color:#00D">10</span>
-<span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby">dut.timeset :func do |t|
+  t.period_in_ns = 10
+end
   
-tester.set_timeset(<span style="color:#A60">:func</span>)
+tester.set_timeset(:func)
 tester.timeset.period_in_ns
-  <span style="color:#777">#=&gt; 10</span>
+  #=&gt; 10
 
-dut.timesets[<span style="color:#A60">:func</span>].period_in_ns = <span style="color:#00D">11</span>
+dut.timesets[:func].period_in_ns = 11
 tester.timeset.period_in_ns
-  <span style="color:#777">#=&gt; 11</span>
-</pre></div>
-</div>
-      </div>
+  #=&gt; 11
+</code></pre>
 
       <!-- This was originally planned, but causes some examples in Origen to fail.
 This `period_in_ns` can still changed prior to pattern execution, but the defining
@@ -774,26 +718,18 @@ timesets[:func].period_in_ns = 11
 
       <p>The currently selected timeset can be retrieved via the following methods which are aliases:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>dut.timeset               <span style="color:#777"># =&gt; instance of OrigenTesters::Timing::Timeset</span>
+      <pre><code class="language-ruby">dut.timeset               # =&gt; instance of OrigenTesters::Timing::Timeset
 dut.current_timeset
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>Even though this returns a <code>OrigenTesters::Timing::Timeset</code> object, its linked
 back to the corresponding <code>Origen::Pins::Timing::Timeset</code> object underneath. To
 access it directly:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>dut.timeset.dut_timeset    <span style="color:#777">#=&gt; instance of Origen::Pins::Timing::Timeset</span>
+      <pre><code class="language-ruby">dut.timeset.dut_timeset    #=&gt; instance of Origen::Pins::Timing::Timeset
 
-tester.timeset.dut_timeset <span style="color:#777">#=&gt; instance of Origen::Pins::Timing::Timeset</span>
-</pre></div>
-</div>
-      </div>
+tester.timeset.dut_timeset #=&gt; instance of Origen::Pins::Timing::Timeset
+</code></pre>
 
       <p>However, this is generally not needed, as anything that the <code>OrigenTesters::Timing::Timeset</code>
 cannot do is given to the corresponding <code>Origen::Pins::Timing::Timeset</code> instance.</p>
@@ -801,98 +737,70 @@ cannot do is given to the corresponding <code>Origen::Pins::Timing::Timeset</cod
       <p>Using the plural returns a hash containing all timesets, thereby allowing access to specific timesets
 regardless of the current selection:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>dut.timesets          <span style="color:#777"># =&gt; Hash</span>
-dut.timesets[<span style="color:#A60">:func</span>]   <span style="color:#777"># =&gt; instance of Origen::Pins::Timing::Timeset</span>
-<span style="color:#777"># This will also work:</span>
-dut.timeset(<span style="color:#A60">:func</span>)   
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">dut.timesets          # =&gt; Hash
+dut.timesets[:func]   # =&gt; instance of Origen::Pins::Timing::Timeset
+# This will also work:
+dut.timeset(:func)   
+</code></pre>
 
       <p>Each timeset stores the waves in two arrays, one for drive waves and another for the compare waves:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>dut.timeset(<span style="color:#A60">:func</span>).drive_waves    <span style="color:#777"># =&gt; Array containing instances of Origen::Pins::Timing::Wave</span>
-dut.timeset(<span style="color:#A60">:func</span>).compare_waves
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">dut.timeset(:func).drive_waves    # =&gt; Array containing instances of Origen::Pins::Timing::Wave
+dut.timeset(:func).compare_waves
+</code></pre>
 
       <p>Each wave object has an events array, and the pins assigned to it can also be retrieved:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>drive_wave = dut.timeset(<span style="color:#A60">:func</span>).drive_waves.first
-compare_wave = dut.timeset(<span style="color:#A60">:func</span>).compare_waves.first
+      <pre><code class="language-ruby">drive_wave = dut.timeset(:func).drive_waves.first
+compare_wave = dut.timeset(:func).compare_waves.first
 
-drive_wave.events    <span style="color:#777"># =&gt; [[0, :data], [50, 0], [75, :x]]</span>
-drive_wave.pins      <span style="color:#777"># =&gt; Array of Origen::Pins::Pin instances</span>
+drive_wave.events    # =&gt; [[0, :data], [50, 0], [75, :x]]
+drive_wave.pins      # =&gt; Array of Origen::Pins::Pin instances
 
-compare_wave.events  <span style="color:#777"># =&gt; [["period / 2", :data]]</span>
-</pre></div>
-</div>
-      </div>
+compare_wave.events  # =&gt; [["period / 2", :data]]
+</code></pre>
 
       <p>The method evaluated_events can be used to get the events with the formulas evaluated based on the
 current period:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>compare_wave.events            <span style="color:#777"># =&gt; [["period / 2", :data]]</span>
-compare_wave.evaluated_events  <span style="color:#777"># =&gt; [[50, :data]]</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">compare_wave.events            # =&gt; [["period / 2", :data]]
+compare_wave.evaluated_events  # =&gt; [[50, :data]]
+</code></pre>
 
       <p>The waves assigned to a given pin by the current timeset can also be accessed via the pin API:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>dut.pin(<span style="color:#A60">:tms</span>).compare_wave.events[<span style="color:#00D">0</span>]   <span style="color:#777"># =&gt; ["period / 2", :data]</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">dut.pin(:tms).compare_wave.events[0]   # =&gt; ["period / 2", :data]
+</code></pre>
 
       <p>The waveform associated with a particular code can be accessed as follows:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># The wave for driving 0 and 1 is returned by default, these are all aliases:</span>
-dut.pin(<span style="color:#A60">:clk</span>).drive_wave.events       <span style="color:#777"># =&gt; [[0, 1], [20, 0]]</span>
-dut.pin(<span style="color:#A60">:clk</span>).drive_wave(<span style="color:#00D">0</span>).events    <span style="color:#777"># =&gt; [[0, 1], [20, 0]]</span>
-dut.pin(<span style="color:#A60">:clk</span>).drive_wave(<span style="color:#00D">1</span>).events    <span style="color:#777"># =&gt; [[0, 1], [20, 0]]</span>
+      <pre><code class="language-ruby"># The wave for driving 0 and 1 is returned by default, these are all aliases:
+dut.pin(:clk).drive_wave.events       # =&gt; [[0, 1], [20, 0]]
+dut.pin(:clk).drive_wave(0).events    # =&gt; [[0, 1], [20, 0]]
+dut.pin(:clk).drive_wave(1).events    # =&gt; [[0, 1], [20, 0]]
 
-dut.pin(<span style="color:#A60">:clk</span>).drive_wave(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">T</span><span style="color:#710">'</span></span>).events  <span style="color:#777"># =&gt; [[0, 1], [10, 0], [20, 1], [30, 0]]</span>
-</pre></div>
-</div>
-      </div>
+dut.pin(:clk).drive_wave('T').events  # =&gt; [[0, 1], [10, 0], [20, 1], [30, 0]]
+</code></pre>
 
       <h5 id="timeset-details">Timeset Details</h5>
 
       <p>You can retrieve the same <code>current period</code> information from this scope as from
 the <code>tester.timeset</code> scope:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>tester.set_timeset(<span style="color:#A60">:test</span>, <span style="color:#00D">10</span>)
+      <pre><code class="language-ruby">tester.set_timeset(:test, 10)
 
 tester.current_period
-  <span style="color:#777">#=&gt; 10</span>
+  #=&gt; 10
 
 dut.current_timeset_period
-  <span style="color:#777">#=&gt; 10</span>
+  #=&gt; 10
   
 dut.current_period_in_ns
-  <span style="color:#777">#=&gt; 10</span>
+  #=&gt; 10
 
 dut.current_period_in_seconds
-  <span style="color:#777">#=&gt; 1/100000000</span>
-</pre></div>
-</div>
-      </div>
+  #=&gt; 1/100000000
+</code></pre>
 
       <div>    
   <a class="anchor" name="Timing_During_Execution"></a>          
@@ -902,63 +810,55 @@ dut.current_period_in_seconds
       <p>You can freely swap between timesets during pattern execution. For example,
 a sequence resembling below is perfectly valid:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Start with an initial timeset for pattern startup</span>
-tester.set_timeset(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">timing_for_startup</span><span style="color:#710">"</span></span>, <span style="color:#00D">100</span>)
+      <pre><code class="language-ruby"># Start with an initial timeset for pattern startup
+tester.set_timeset("timing_for_startup", 100)
 tester.cycle
-<span style="color:#777"># ...</span>
+# ...
 
-<span style="color:#777"># Switch to a timeset for ramloading</span>
-tester.set_timeset(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">timing_for_ramload</span><span style="color:#710">"</span></span>, <span style="color:#00D">200</span>)
+# Switch to a timeset for ramloading
+tester.set_timeset("timing_for_ramload", 200)
 tester.cycle
-<span style="color:#777"># ...</span>
+# ...
 
-<span style="color:#777"># Switch to a timeset for actual execution</span>
-tester.set_timeset(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">timing_for_execution</span><span style="color:#710">"</span></span>, <span style="color:#00D">100</span>)
+# Switch to a timeset for actual execution
+tester.set_timeset("timing_for_execution", 100)
 tester.cycle
-<span style="color:#777"># ...</span>
-</pre></div>
-</div>
-      </div>
+# ...
+</code></pre>
 
       <p>The period for that timeset will be remembered, allowing simpler timeset switches
 back to existing ones:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Execute using timing for SWD</span>
-tester.set_timeset(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">timing_for_swd</span><span style="color:#710">"</span></span>, <span style="color:#00D">40</span>)
+      <pre><code class="language-ruby"># Execute using timing for SWD
+tester.set_timeset("timing_for_swd", 40)
 tester.timeset.period_in_ns
-  <span style="color:#777">#=&gt; 40</span>
-<span style="color:#777"># ...</span>
+  #=&gt; 40
+# ...
 
-<span style="color:#777"># Execute using timing for an APB protocol</span>
-tester.set_timeset(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">timing_for_apb</span><span style="color:#710">"</span></span>, <span style="color:#00D">80</span>)
+# Execute using timing for an APB protocol
+tester.set_timeset("timing_for_apb", 80)
 tester.timeset.period_in_ns
-  <span style="color:#777">#=&gt; 80</span>
-<span style="color:#777"># ...</span>
+  #=&gt; 80
+# ...
 
-<span style="color:#777"># Switch back to using SWD</span>
-tester.set_timeset(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">timing_for_swd</span><span style="color:#710">"</span></span>)
+# Switch back to using SWD
+tester.set_timeset("timing_for_swd")
 tester.timeset.period_in_ns
-  <span style="color:#777">#=&gt; 40</span>
-<span style="color:#777"># ...</span>
+  #=&gt; 40
+# ...
 
-<span style="color:#777"># Switch back to using APB</span>
-tester.set_timeset(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">timing_for_apb</span><span style="color:#710">"</span></span>)
+# Switch back to using APB
+tester.set_timeset("timing_for_apb")
 tester.timeset.period_in_ns
-  <span style="color:#777">#=&gt; 80</span>
-<span style="color:#777"># ...</span>
+  #=&gt; 80
+# ...
 
-<span style="color:#777"># End the pattern using SWD</span>
-tester.set_timeset(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">timing_for_swd</span><span style="color:#710">"</span></span>)
+# End the pattern using SWD
+tester.set_timeset("timing_for_swd")
 tester.timeset.period_in_ns
-  <span style="color:#777">#=&gt; 40</span>
-<span style="color:#777"># ...</span>
-</pre></div>
-</div>
-      </div>
+  #=&gt; 40
+# ...
+</code></pre>
 
       <!--
 Notice that the `period_in_ns` is only defined once per timeset. Swiching
@@ -998,29 +898,25 @@ tester.timeset.period_in_ns = 13
 -->
       <p>The <code>#cycled?</code> method to denotes if the timeset has been cycled or not:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>tester.set_timeset(<span style="color:#A60">:cycle_test</span>, <span style="color:#00D">10</span>)
+      <pre><code class="language-ruby">tester.set_timeset(:cycle_test, 10)
 tester.timeset.name
-  <span style="color:#777">#=&gt; "cycle_test"</span>
+  #=&gt; "cycle_test"
 tester.timeset.cycled?
-  <span style="color:#777">#=&gt; false</span>
+  #=&gt; false
 
 tester.cycle
 tester.timeset.cycled?
-  <span style="color:#777">#=&gt; true</span>
+  #=&gt; true
 
-tester.set_timeset(<span style="color:#A60">:cycle_test_2</span>, <span style="color:#00D">11</span>)
+tester.set_timeset(:cycle_test_2, 11)
 tester.timeset.cycled?
-  <span style="color:#777">#=&gt; false</span>
+  #=&gt; false
 
-tester.timesets[<span style="color:#A60">:cycle_test</span>].cycled?
-  <span style="color:#777">#=&gt; true</span>
-tester.timesets[<span style="color:#A60">:cycle_test_2</span>].cycled?
-  <span style="color:#777">#=&gt; false</span>
-</pre></div>
-</div>
-      </div>
+tester.timesets[:cycle_test].cycled?
+  #=&gt; true
+tester.timesets[:cycle_test_2].cycled?
+  #=&gt; false
+</code></pre>
 
       <div style="position: relative">
   <hr>

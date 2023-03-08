@@ -475,62 +475,50 @@ that include the <code>Origen::TopLevel</code> module.</p>
 some examples but the names are completely arbitrary and you can use whatever you
 like:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MyDut</span>
-  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">TopLevel</span>
+      <pre><code class="language-ruby">class MyDut
+  include Origen::TopLevel
 
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>
-    add_package <span style="color:#A60">:probe</span>
-    add_package <span style="color:#A60">:mapbga</span>
-    add_package <span style="color:#A60">:qfp</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  def initialize
+    add_package :probe
+    add_package :mapbga
+    add_package :qfp
+  end
+end
+</code></pre>
 
       <p>By default the model will boot with no package set, this state would be used
 to represent the die with all pins exposed.</p>
 
       <p>The package state can then be changed as shown:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$dut</span>.package                  <span style="color:#777"># =&gt; nil</span>
-<span style="color:#d70">$dut</span>.package = <span style="color:#A60">:mapbga</span>       
-<span style="color:#d70">$dut</span>.package                  <span style="color:#777"># =&gt; &lt;mapbga package object&gt;</span>
-<span style="color:#d70">$dut</span>.with_package <span style="color:#A60">:qfp</span> <span style="color:#080;font-weight:bold">do</span>
-  <span style="color:#d70">$dut</span>.package                <span style="color:#777"># =&gt; &lt;qfp package object&gt;</span>
-<span style="color:#080;font-weight:bold">end</span>
-<span style="color:#d70">$dut</span>.package                  <span style="color:#777"># =&gt; &lt;mapbga package object&gt;</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">$dut.package                  # =&gt; nil
+$dut.package = :mapbga       
+$dut.package                  # =&gt; &lt;mapbga package object&gt;
+$dut.with_package :qfp do
+  $dut.package                # =&gt; &lt;qfp package object&gt;
+end
+$dut.package                  # =&gt; &lt;mapbga package object&gt;
+</code></pre>
 
       <p>Packages are objects (an instance of the <a href="/origen/api/Origen/ChipPackage.html"><code>Origen::ChipPackage</code></a> class)
 and additional attributes can be set at definition time like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>
-  add_package <span style="color:#A60">:t2080</span> <span style="color:#080;font-weight:bold">do</span> |package|
-    package.number_of_rows = <span style="color:#00D">16</span>
-    package.number_of_columns = <span style="color:#00D">16</span>
-  <span style="color:#080;font-weight:bold">end</span>
-  add_package <span style="color:#A60">:t4080</span> <span style="color:#080;font-weight:bold">do</span> |package|
-    package.number_of_rows = <span style="color:#00D">32</span>
-    package.number_of_columns = <span style="color:#00D">32</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby">def initialize
+  add_package :t2080 do |package|
+    package.number_of_rows = 16
+    package.number_of_columns = 16
+  end
+  add_package :t4080 do |package|
+    package.number_of_rows = 32
+    package.number_of_columns = 32
+  end
+end
 
-<span style="color:#d70">$dut</span>.package = <span style="color:#A60">:t2080</span>
-<span style="color:#d70">$dut</span>.package.number_of_columns     <span style="color:#777"># =&gt; 16</span>
-<span style="color:#d70">$dut</span>.package = <span style="color:#A60">:t4080</span>
-<span style="color:#d70">$dut</span>.package.number_of_columns     <span style="color:#777"># =&gt; 32</span>
-</pre></div>
-</div>
-      </div>
+$dut.package = :t2080
+$dut.package.number_of_columns     # =&gt; 16
+$dut.package = :t4080
+$dut.package.number_of_columns     # =&gt; 32
+</code></pre>
 
       <p>See the <a href="/origen/api/Origen/ChipPackage.html">ChipPackage API</a> for the up to
 date list of available attributes.</p>
@@ -550,27 +538,23 @@ object.</p>
 
       <p>Modes are defined and set in the same way as packages, here are some examples:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MyDut</span>
-  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">TopLevel</span>
+      <pre><code class="language-ruby">class MyDut
+  include Origen::TopLevel
 
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>
-    add_mode <span style="color:#A60">:user</span>
-    add_mode <span style="color:#A60">:rambist</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
+  def initialize
+    add_mode :user
+    add_mode :rambist
+  end
+end
 
-<span style="color:#d70">$dut</span>.mode                     <span style="color:#777"># =&gt; nil</span>
-<span style="color:#d70">$dut</span>.mode = <span style="color:#A60">:user</span>          
-<span style="color:#d70">$dut</span>.mode                     <span style="color:#777"># =&gt; &lt;user mode object&gt;</span>
-<span style="color:#d70">$dut</span>.with_mode <span style="color:#A60">:rambist</span> <span style="color:#080;font-weight:bold">do</span>
-  <span style="color:#d70">$dut</span>.mode                   <span style="color:#777"># =&gt; &lt;rambist mode object&gt;</span>
-<span style="color:#080;font-weight:bold">end</span>
-<span style="color:#d70">$dut</span>.mode                     <span style="color:#777"># =&gt; &lt;user mode object&gt;</span>
-</pre></div>
-</div>
-      </div>
+$dut.mode                     # =&gt; nil
+$dut.mode = :user          
+$dut.mode                     # =&gt; &lt;user mode object&gt;
+$dut.with_mode :rambist do
+  $dut.mode                   # =&gt; &lt;rambist mode object&gt;
+end
+$dut.mode                     # =&gt; &lt;user mode object&gt;
+</code></pre>
 
       <p>Note that like packages the modes are represented by objects which can be assigned attributes,
 see the <a href="/origen/api/Origen/ChipMode.html">ChipMode API</a> for the up to
@@ -578,13 +562,9 @@ date list of available attributes.</p>
 
       <p>Mode objects do support a convenience API for checking the current mode:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$dut</span>.mode.user?      <span style="color:#777"># =&gt; false</span>
-<span style="color:#d70">$dut</span>.mode.rambist?   <span style="color:#777"># =&gt; true</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">$dut.mode.user?      # =&gt; false
+$dut.mode.rambist?   # =&gt; true
+</code></pre>
 
       <div>    
   <a class="anchor" name="Configuration"></a>          
@@ -601,32 +581,28 @@ object.</p>
 
       <p>Here are some examples:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MyDut</span>
-  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">TopLevel</span>
+      <pre><code class="language-ruby">class MyDut
+  include Origen::TopLevel
 
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>
-    add_mode <span style="color:#A60">:user</span>
-    add_mode <span style="color:#A60">:bist</span>
-    add_configuration <span style="color:#A60">:nvm</span>
-    add_configuration <span style="color:#A60">:ram</span>
-  <span style="color:#080;font-weight:bold">end</span>
+  def initialize
+    add_mode :user
+    add_mode :bist
+    add_configuration :nvm
+    add_configuration :ram
+  end
 
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">enter_rambist_mode</span>
-    <span style="color:#069">self</span>.mode = <span style="color:#A60">:bist</span>
-    <span style="color:#069">self</span>.configuration = <span style="color:#A60">:ram</span>
-    <span style="color:#777"># In a test application you would generate the necessary vectors to actually do this here</span>
-    <span style="color:#777"># Upon exit from this method 3rd parties will now be able to tell that the DUT is in RAMBIST mode/configuration</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
+  def enter_rambist_mode
+    self.mode = :bist
+    self.configuration = :ram
+    # In a test application you would generate the necessary vectors to actually do this here
+    # Upon exit from this method 3rd parties will now be able to tell that the DUT is in RAMBIST mode/configuration
+  end
+end
 
-<span style="color:#d70">$dut</span>.enter_rambist_mode       <span style="color:#777"># =&gt; nil</span>
-<span style="color:#d70">$dut</span>.mode.bist?               <span style="color:#777"># =&gt; true</span>
-<span style="color:#d70">$dut</span>.configuration            <span style="color:#777"># =&gt; :ram</span>
-</pre></div>
-</div>
-      </div>
+$dut.enter_rambist_mode       # =&gt; nil
+$dut.mode.bist?               # =&gt; true
+$dut.configuration            # =&gt; :ram
+</code></pre>
 
       <p>Note that currently the configuration is not represented as an object and therefore cannot
 store additional attributes associated with the given configuration.</p>

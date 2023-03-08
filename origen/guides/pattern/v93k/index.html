@@ -476,28 +476,20 @@ per cycle.</p>
 
       <p>The ‘P’ code (or any other letter) can be driven very easily as shown below:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>                        <span style="color:#777">#      Example vectors</span>
-pin(<span style="color:#A60">:clk</span>).drive!(<span style="color:#00D">1</span>)     <span style="color:#777">#     1 X XXXX 10100001</span>
-<span style="color:#00D">1</span>.cycle                 <span style="color:#777">#     1 X XXXX 10100001</span>
-pin(<span style="color:#A60">:clk</span>).drive!(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">P</span><span style="color:#710">'</span></span>)   <span style="color:#777">#     P X XXXX 10100001</span>
-<span style="color:#00D">1</span>.cycle                 <span style="color:#777">#     P X XXXX 10100001</span>
-pin(<span style="color:#A60">:clk</span>).drive!(<span style="color:#00D">1</span>)     <span style="color:#777">#     1 X XXXX 10100001</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">                        #      Example vectors
+pin(:clk).drive!(1)     #     1 X XXXX 10100001
+1.cycle                 #     1 X XXXX 10100001
+pin(:clk).drive!('P')   #     P X XXXX 10100001
+1.cycle                 #     P X XXXX 10100001
+pin(:clk).drive!(1)     #     1 X XXXX 10100001
+</code></pre>
 
       <p>The above vectors would produce the following waveform per the earlier description of ‘P’:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>            _______         _______   _   _   _   _   _   _   _   _         _______
+      <pre><code class="language-text">            _______         _______   _   _   _   _   _   _   _   _         _______
 clk _______|       |_______|       |_| |_| |_| |_| |_| |_| |_| |_| |_______|       |
 
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <div>    
   <a class="anchor" name="SmarTest_8"></a>          
@@ -509,30 +501,22 @@ clk _______|       |_______|       |_| |_| |_| |_| |_| |_| |_| |_| |_______|    
       <p>To enable SMT8 format, set the <code>smt_version:</code> attribute to 8 when instantiating the tester in your
 <a href="/origen/guides/runtime/environment">application environment</a> as shown here:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># environment/v93k_smt7.rb</span>
-<span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">V93K</span>.new
+      <pre><code class="language-ruby"># environment/v93k_smt7.rb
+OrigenTesters::V93K.new
 
-<span style="color:#777"># environment/v93k_smt8.rb</span>
-<span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">V93K</span>.new <span style="color:#606">smt_version</span>: <span style="color:#00D">8</span>
-</pre></div>
-</div>
-      </div>
+# environment/v93k_smt8.rb
+OrigenTesters::V93K.new smt_version: 8
+</code></pre>
 
       <p>SMT8 patterns can either be in a zipped/binary format, or an ASCII file format.
 Zipped is the default, but the ASCII format can sometimes be useful when visually inspecting patterns or
 when comparing them via a difftool.
 To enable ASCII format patterns, configure your environment like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># environment/v93k_smt8.rb</span>
-<span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">V93K</span>.new <span style="color:#606">smt_version</span>: <span style="color:#00D">8</span>,
-                        <span style="color:#606">zip_patterns</span>: <span style="color:#069">false</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># environment/v93k_smt8.rb
+OrigenTesters::V93K.new smt_version: 8,
+                        zip_patterns: false
+</code></pre>
 
       <div style="position: relative">
   <hr>

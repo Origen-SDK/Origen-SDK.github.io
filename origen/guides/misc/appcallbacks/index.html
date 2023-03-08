@@ -461,14 +461,10 @@ other’s processes/flows.</p>
 
       <p>A call to all listeners for a specific callback method is made like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.listeners_for(<span style="color:#A60">:my_specific_callback_method</span>).each <span style="color:#080;font-weight:bold">do</span> |listener|
-  listener.my_specific_callback_method(<span style="color:#606">any</span>: <span style="color:#A60">:options</span>, <span style="color:#606">you</span>: <span style="color:#A60">:want</span>, <span style="color:#606">to</span>: <span style="color:#A60">:pass</span>)
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">Origen.listeners_for(:my_specific_callback_method).each do |listener|
+  listener.my_specific_callback_method(any: :options, you: :want, to: :pass)
+end
+</code></pre>
 
       <p>Callback handlers (the <code>my_specific_callback_method</code> in the example above) can be
 implemented in the application’s (or plugin’s) application.rb or any instantiated
@@ -501,40 +497,32 @@ and anyone who doesn’t care need take no action.</p>
 
       <p>To implement such a system the top-level object can do this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MySoC</span>
-  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">TopLevel</span>
+      <pre><code class="language-ruby">class MySoC
+  include Origen::TopLevel
 
-  <span style="color:#777"># Sync the DUT to the tester</span>
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">sync_up</span>
-    <span style="color:#777"># Logic to sync up the DUT goes here</span>
+  # Sync the DUT to the tester
+  def sync_up
+    # Logic to sync up the DUT goes here
 
-    <span style="color:#777"># Now let everyone know that the DUT is now sync'd</span>
-    <span style="color:#036;font-weight:bold">Origen</span>.listeners_for(<span style="color:#A60">:on_sync_up</span>).each <span style="color:#080;font-weight:bold">do</span> |listener|
+    # Now let everyone know that the DUT is now sync'd
+    Origen.listeners_for(:on_sync_up).each do |listener|
       listener.on_sync_up
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+    end
+  end
+end
+</code></pre>
 
       <p>Then in the test block code the test engineer who wants to do something on sync up
 can simply implement the necessary callback handler:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MyTestBlockModel</span>
-  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
+      <pre><code class="language-ruby">class MyTestBlockModel
+  include Origen::Model
 
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">on_sync_up</span>
-    <span style="color:#777"># Action to take when the DUT has been sync'd</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  def on_sync_up
+    # Action to take when the DUT has been sync'd
+  end
+end
+</code></pre>
 
       <div style="position: relative">
   <hr>

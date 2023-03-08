@@ -461,17 +461,13 @@ methods, such as the options hash, and the usual global scope.</p>
       <p>This means that your device attributes are normally accessed via
 the global top-level objects that were instantiated in the target like this:</p>
 
-      <div class="language-eruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>% if $dut.analog.atd
+      <pre><code class="language-eruby">% if $dut.analog.atd
 
-The <span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> <span style="color:#d70">$dut</span>.part_number <span style="font-weight:bold;color:#666">%&gt;</span></span> device has a <span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> <span style="color:#d70">$dut</span>.analog.atd.bits <span style="font-weight:bold;color:#666">%&gt;</span></span> bit analog to
+The &lt;%= $dut.part_number %&gt; device has a &lt;%= $dut.analog.atd.bits %&gt; bit analog to
 digital converter block which provides superior conversion accuracy... 
 
 % end
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>However you can easily create additional helper methods by opening the Origen::Generator::Compiler class
 and defining methods which can then be called directly from any template.</p>
@@ -483,40 +479,32 @@ become tedious having to keep writing
       <p>In that case the following helper method could be created to give me a shorthand access to the ATD
 model:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># config/boot.rb</span>
-require <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.root<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">/app/templates/helpers</span><span style="color:#710">"</span></span>
+      <pre><code class="language-ruby"># config/boot.rb
+require "#{Origen.root}/app/templates/helpers"
 
-<span style="color:#777"># app/templates/helpers.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">Origen</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">Generator</span>
-    <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">Compiler</span>
+# app/templates/helpers.rb
+module Origen
+  class Generator
+    class Compiler
 
-      <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">atd</span>
-        <span style="color:#d70">$dut</span>.analog.atd
-      <span style="color:#080;font-weight:bold">end</span>
+      def atd
+        $dut.analog.atd
+      end
 
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+    end
+  end
+end
+</code></pre>
 
       <p>The above template could now be re-written as:</p>
 
-      <div class="language-eruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>% if atd
+      <pre><code class="language-eruby">% if atd
 
-The <span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> <span style="color:#d70">$dut</span>.part_number <span style="font-weight:bold;color:#666">%&gt;</span></span> device has a <span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> atd.bits <span style="font-weight:bold;color:#666">%&gt;</span></span> bit analog to
+The &lt;%= $dut.part_number %&gt; device has a &lt;%= atd.bits %&gt; bit analog to
 digital converter block which provides superior conversion accuracy... 
 
 % end
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>These helper methods can become very powerful depending on what you are trying to generate
 with your template.

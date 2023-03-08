@@ -495,47 +495,39 @@ that all runtime objects already exist by the time it is called.</p>
       <p>Here are some examples of cases where <code>on_create</code> should be used in
 preference to <code>initialize</code>:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># In the $dut model</span>
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>
-  <span style="color:#777"># This would be creating an instantiation order dependency by doing this here,</span>
-  <span style="color:#777"># i.e. $tester must exist before the $dut</span>
-  <span style="color:#777"># $tester.do_something</span>
-<span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby"># In the $dut model
+def initialize
+  # This would be creating an instantiation order dependency by doing this here,
+  # i.e. $tester must exist before the $dut
+  # $tester.do_something
+end
 
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">on_create</span>
-  <span style="color:#777"># But not here</span>
-  <span style="color:#d70">$tester</span>.do_something
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+def on_create
+  # But not here
+  $tester.do_something
+end
+</code></pre>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># In a model that is not $dut</span>
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>
-  <span style="color:#777"># This would be creating an instantiation order dependency by doing this here,</span>
-  <span style="color:#777"># i.e. $dut must exist before this model</span>
-  <span style="color:#777"># if $dut.test_pin_muxed_with_reset?</span>
-  <span style="color:#777">#   add_pin_alias :test, :reset</span>
-  <span style="color:#777"># else</span>
-  <span style="color:#777">#   add_pin :test</span>
-  <span style="color:#777"># end</span>
-<span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby"># In a model that is not $dut
+def initialize
+  # This would be creating an instantiation order dependency by doing this here,
+  # i.e. $dut must exist before this model
+  # if $dut.test_pin_muxed_with_reset?
+  #   add_pin_alias :test, :reset
+  # else
+  #   add_pin :test
+  # end
+end
 
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">on_create</span>
-  <span style="color:#777"># But not here</span>
-  <span style="color:#080;font-weight:bold">if</span> <span style="color:#d70">$dut</span>.test_pin_muxed_with_reset?
-    add_pin_alias <span style="color:#A60">:test</span>, <span style="color:#A60">:reset</span>
-  <span style="color:#080;font-weight:bold">else</span>
-    add_pin <span style="color:#A60">:test</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+def on_create
+  # But not here
+  if $dut.test_pin_muxed_with_reset?
+    add_pin_alias :test, :reset
+  else
+    add_pin :test
+  end
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Any_Downside_to_Using_on_create_Instead_of_initialize?"></a>          
@@ -557,20 +549,16 @@ from the target, whereas options can be passed into the <code>initialize</code> 
 Such parameter dependent cases can still be moved to <code>on_create</code> but the
 options will need to be saved by the <code>initialize</code> method.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options={})
-  <span style="color:#33B">@intial_options</span> = options
-<span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby">def initialize(options={})
+  @intial_options = options
+end
 
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">on_create</span>
-  <span style="color:#080;font-weight:bold">if</span> <span style="color:#33B">@intial_options</span>[<span style="color:#A60">:uti</span>]
-    <span style="color:#d70">$tester</span>.do_something
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+def on_create
+  if @intial_options[:uti]
+    $tester.do_something
+  end
+end
+</code></pre>
 
       <div style="position: relative">
   <hr>

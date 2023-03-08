@@ -463,14 +463,10 @@ of your test patterns for free.</p>
 
       <p>The pattern generation command has the following switches:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>origen g bistcom           # Generate a regular pattern
+      <pre><code class="language-text">origen g bistcom           # Generate a regular pattern
 origen g bistcom --doc     # Output documentation of that pattern to the terminal
 origen g bistcom --html    # Generate pre-formatted HTML documentation for inclusion in a web page
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>The following methods are available to control the documentation output from the pattern
 generator…</p>
@@ -484,38 +480,26 @@ generator…</p>
 the pattern via the <code>cc</code> method, as with all methods related to
 pattern documentation this is globally available.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>cc <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Entering test mode now</span><span style="color:#710">"</span></span>
-test.mode.write!(<span style="color:#036;font-weight:bold">RAMBIST_MODE</span>)
+      <pre><code class="language-ruby">cc "Entering test mode now"
+test.mode.write!(RAMBIST_MODE)
 reset!
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>The method argument is a regular string and dynamic segments can be embedded and
 formatted using any regular Ruby.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>delay_cycles = <span style="color:#00D">100</span>
-cc <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Wait for </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>delay_cycles<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20"> cycles for the mode to latch</span><span style="color:#710">"</span></span>
+      <pre><code class="language-ruby">delay_cycles = 100
+cc "Wait for #{delay_cycles} cycles for the mode to latch"
 
-address = <span style="color:#00D">0x12</span>
-cc <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Set the target address to: 0x%04X</span><span style="color:#710">"</span></span> % address
-</pre></div>
-</div>
-      </div>
+address = 0x12
+cc "Set the target address to: 0x%04X" % address
+</code></pre>
 
       <p>This will produce pattern output that looks like this:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>// Wait for 100 cycles for the mode to latch
+      <pre><code class="language-text">// Wait for 100 cycles for the mode to latch
 // Set the target address to 0x0012
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p><code>c1</code> is an alias for <code>cc</code>.</p>
 
@@ -526,14 +510,10 @@ when a document of the pattern is generated.</p>
 these low level comments
 such that they will be included in generated documentation.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>cc <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">You won't see me in the docs</span><span style="color:#710">"</span></span>
-c1 <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Or me</span><span style="color:#710">"</span></span>
-c2 <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">But you will see me!</span><span style="color:#710">"</span></span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">cc "You won't see me in the docs"
+c1 "Or me"
+c2 "But you will see me!"
+</code></pre>
 
       <div>    
   <a class="anchor" name="Documenting_Major_Steps"></a>          
@@ -542,25 +522,19 @@ c2 <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710"
 
       <p>Major steps in the pattern can be highlighted using the <code>ss</code> method.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>ss <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Enter RAM BIST mode</span><span style="color:#710">"</span></span>
+      <pre><code class="language-ruby">ss "Enter RAM BIST mode"
 
-<span style="color:#777"># A block form is also available</span>
-ss <span style="color:#080;font-weight:bold">do</span>
-  vdd_core = <span style="color:#60E">1.7</span>
-  cc <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Enter RAM BIST mode with the following options:</span><span style="color:#710">"</span></span>
-  cc <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">  Vdd core - </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>vdd_core<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">v</span><span style="color:#710">"</span></span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+# A block form is also available
+ss do
+  vdd_core = 1.7
+  cc "Enter RAM BIST mode with the following options:"
+  cc "  Vdd core - #{vdd_core}v"
+end
+</code></pre>
 
       <p>This will produce the following output in the pattern:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>// #######################################################################
+      <pre><code class="language-text">// #######################################################################
 // # Enter RAM BIST mode
 // #######################################################################
 
@@ -568,9 +542,7 @@ ss <span style="color:#080;font-weight:bold">do</span>
 // # Enter RAM BIST mode with the following options:
 // #   Vdd core - 1.7v
 // #######################################################################
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>Any comments defined in this way are considered more important than the regular
 <code>cc</code> comments and they will be automatically included in the
@@ -587,36 +559,28 @@ of the pattern, this allows vectors to be grouped into sections like ‘startup�
 
       <p>Such structure can be described using the <code>pp</code> method:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>pp <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Startup</span><span style="color:#710">"</span></span> <span style="color:#080;font-weight:bold">do</span>
-  <span style="color:#d70">$dut</span>.enter_ram_bist_mode
-  <span style="color:#d70">$dut</span>.ram.configure_for_test
-<span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby">pp "Startup" do
+  $dut.enter_ram_bist_mode
+  $dut.ram.configure_for_test
+end
 
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">enter_ram_bist_mode</span>
-  pp <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Enter RAM BIST mode</span><span style="color:#710">"</span></span> <span style="color:#080;font-weight:bold">do</span>
-    <span style="color:#777"># Mode entry code here...</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>  
-</pre></div>
-</div>
-      </div>
+def enter_ram_bist_mode
+  pp "Enter RAM BIST mode" do
+    # Mode entry code here...
+  end
+end  
+</code></pre>
 
       <p>This would produce comments in the pattern that look like this:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>// #######################################################################
+      <pre><code class="language-text">// #######################################################################
 // # Startup
 // #######################################################################
 
 // #######################################################################
 // # Enter RAM BIST mode
 // #######################################################################
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>However this difference vs. the <code>ss</code> method is that information about
 the structure has been provided - it can be determined that the enter RAM bist
@@ -644,12 +608,8 @@ Startup
 <div id="collapseComment2" class="panel-collapse collapse">
 <div class="panel-body">
 
-                    <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre># Some comments generated by the RAM BIST entry sequence
-</pre></div>
-</div>
-                    </div>
+                    <pre><code class="language-text"># Some comments generated by the RAM BIST entry sequence
+</code></pre>
 
                   </div>
 </div>
@@ -673,18 +633,16 @@ in generated documentation.</p>
 
       <p>Here is the above example with some annotations added:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>pp <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Startup</span><span style="color:#710">"</span></span> <span style="color:#080;font-weight:bold">do</span>
-  annotate <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Perform startup operations that are common to all patterns.</span><span style="color:#710">"</span></span>
-  <span style="color:#d70">$dut</span>.enter_ram_bist_mode
-  <span style="color:#d70">$dut</span>.ram.configure_for_test
-<span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby">pp "Startup" do
+  annotate "Perform startup operations that are common to all patterns."
+  $dut.enter_ram_bist_mode
+  $dut.ram.configure_for_test
+end
 
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">enter_ram_bist_mode</span>
-  pp <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Enter RAM BIST mode</span><span style="color:#710">"</span></span> <span style="color:#080;font-weight:bold">do</span>
+def enter_ram_bist_mode
+  pp "Enter RAM BIST mode" do
 
-    annotate <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&lt;&lt;-END</span></span><span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">
+    annotate &lt;&lt;-END
       This is an example of a multi-line annotation. Anything you write here
       will be parsed as markdown, so you can do things like:
 
@@ -696,15 +654,13 @@ in generated documentation.</p>
       $dut.enter_ram_bist_mode
       ~~~
 
-      Or create [links](http://origen.freescale.net)</span><span style="color:#710">
-    END</span></span>
+      Or create [links](http://origen.freescale.net)
+    END
 
-    <span style="color:#777"># Mode entry code here...</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>  
-</pre></div>
-</div>
-      </div>
+    # Mode entry code here...
+  end
+end  
+</code></pre>
 
       <p>This would produce the following snippet of documentation:</p>
 
@@ -737,22 +693,14 @@ will be parsed as markdown, so you can do things like:</p>
                       <li>Lists</li>
                     </ul>
 
-                    <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Embed some code examples</span>
-<span style="color:#d70">$dut</span>.enter_ram_bist_mode
-</pre></div>
-</div>
-                    </div>
+                    <pre><code class="language-ruby"># Embed some code examples
+$dut.enter_ram_bist_mode
+</code></pre>
 
                     <p>Or create <a href="http://origen.freescale.net">links</a></p>
 
-                    <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre># Some comments generated by the RAM BIST entry sequence
-</pre></div>
-</div>
-                    </div>
+                    <pre><code class="language-text"># Some comments generated by the RAM BIST entry sequence
+</code></pre>
 
                   </div>
 </div>
@@ -779,14 +727,10 @@ the remainder of the output has been snipped for efficiency.</p>
       <p>Here is an example of how to use it, here the comments generated by the contained
 section will be limited to 10 lines:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>  snip <span style="color:#00D">10</span> <span style="color:#080;font-weight:bold">do</span>
-    <span style="color:#777"># Download some verbose LRE code here</span>
-  <span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">  snip 10 do
+    # Download some verbose LRE code here
+  end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Pattern_Headers"></a>          
@@ -836,36 +780,32 @@ for you, but <code>blocks</code> can handle the formatting themselves and can pr
       <p>Assume we have two plugins, <code>plugin1</code> and <code>plugin2</code> that are each needed to generate a pattern located in the
 application <code>my_app</code>. With <u>no plugin set</u> and with the configuration attributes set as follows:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># plugin1/config/application.rb</span>
+      <pre><code class="language-ruby"># plugin1/config/application.rb
 
-config.shared_pattern_header <span style="color:#080;font-weight:bold">do</span>
-  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Hi from shared </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.app!.name<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">!</span><span style="color:#710">"</span></span>
-<span style="color:#080;font-weight:bold">end</span>
+config.shared_pattern_header do
+  "Hi from shared #{Origen.app!.name}!"
+end
 
-config.current_plugin_pattern_header <span style="color:#080;font-weight:bold">do</span>
-  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Hi from current plugin: </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.app!.name<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">!</span><span style="color:#710">"</span></span>
-<span style="color:#080;font-weight:bold">end</span>
+config.current_plugin_pattern_header do
+  "Hi from current plugin: #{Origen.app!.name}!"
+end
 
-<span style="color:#777"># plugin2/config/application.rb</span>
+# plugin2/config/application.rb
 
-config.shared_pattern_header <span style="color:#080;font-weight:bold">do</span>
-  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Hi from shared </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.app!.name<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">!</span><span style="color:#710">"</span></span>
-<span style="color:#080;font-weight:bold">end</span>
+config.shared_pattern_header do
+  "Hi from shared #{Origen.app!.name}!"
+end
 
-config.current_plugin_pattern_header <span style="color:#080;font-weight:bold">do</span>
-  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Hi from current plugin: </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.app!.name<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">!</span><span style="color:#710">"</span></span>
-<span style="color:#080;font-weight:bold">end</span>
+config.current_plugin_pattern_header do
+  "Hi from current plugin: #{Origen.app!.name}!"
+end
 
-<span style="color:#777"># my_app/config/application.rb</span>
+# my_app/config/application.rb
 
-config.shared_pattern_header <span style="color:#080;font-weight:bold">do</span>
-  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Hi from application </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.app!.name<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">!</span><span style="color:#710">"</span></span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+config.shared_pattern_header do
+  "Hi from application #{Origen.app!.name}!"
+end
+</code></pre>
 
       <p>generating a pattern, will yield the following appended to the pattern header:</p>
 
@@ -903,18 +843,14 @@ the current plugin is set to a plugin that has this configuration attribute. Set
       <p>As previously said, you can provide either a <code>block, proc, or lambda</code> (anything that responds to <code>call</code> will work) and use 
 <code>cc, ss, c2</code>, etc. to handle arbitrary headers or formatting. For example, changing <code>shared_pattern_header</code> in <code>plugin2</code>:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># plugin2/config/application.rb</span>
+      <pre><code class="language-ruby"># plugin2/config/application.rb
 
-config.shared_pattern_header <span style="color:#080;font-weight:bold">do</span>
-  proc <span style="color:#080;font-weight:bold">do</span> 
-    c2 <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Hi from block in </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.app!.name<span style="font-weight:bold;color:#666">}</span></span><span style="color:#710">"</span></span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+config.shared_pattern_header do
+  proc do 
+    c2 "Hi from block in #{Origen.app!.name}"
+  end
+end
+</code></pre>
 
       <p>Will show the following in the pattern header:</p>
 

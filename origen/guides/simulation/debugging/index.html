@@ -467,61 +467,41 @@ or when running
       <p>All <a href="/origen/guides/pattern/documenting/#Documenting_Major_Steps">major step comments</a> in pattern
 source code will be simulation time-stamped and output to the console as shown below:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>ss <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Test basic 2-pin match loop</span><span style="color:#710">"</span></span>
+      <pre><code class="language-ruby">ss "Test basic 2-pin match loop"
 
-<span style="color:#777"># ...</span>
+# ...
 
-ss <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Test a block match loop</span><span style="color:#710">"</span></span>
+ss "Test a block match loop"
 
-<span style="color:#777"># ...</span>
-</pre></div>
-</div>
-      </div>
+# ...
+</code></pre>
 
       <p>The above will produce this output where the simulation time when each operation occurs is given in ns:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>[INFO]       6.710[0.000]    ||      991700 ns: ===========================================================
+      <pre><code class="language-text">[INFO]       6.710[0.000]    ||      991700 ns: ===========================================================
 [INFO]       6.710[0.001]    ||      991700 ns: Test basic 2-pin match loop
 [INFO]       6.711[0.001]    ||      991700 ns: ===========================================================
 [INFO]       6.711[0.001]    ||     1207500 ns: ===========================================================
 [INFO]       6.712[0.000]    ||     1207500 ns: Test a block match loop
 [INFO]       6.712[0.000]    ||     1207500 ns: ===========================================================
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>All <a href="/origen/guides/misc/logger">log output</a> created by application code will also be simulation
 time-stamped and synchronized to simulator progress:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.log.info <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Something important is happening!</span><span style="color:#710">"</span></span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">Origen.log.info "Something important is happening!"
+</code></pre>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>[INFO]       6.712[0.000]    ||    24210200 ns: Something important is happening!
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">[INFO]       6.712[0.000]    ||    24210200 ns: Something important is happening!
+</code></pre>
 
       <p><strong>Note that applications should avoid the use of <code>puts</code> to output debug or status information to the console
 because that will occur immediately and will not be time-stamped or synchronized with the simulator.</strong></p>
 
       <p>Additionally, the Origen testbench contains a register that can be used to mark events like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>tester.marker = <span style="color:#00D">0x1234</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">tester.marker = 0x1234
+</code></pre>
 
       <p>You can then view signal <code>origen.debug.marker</code> in a wave viewer and search for the appropriate value to
 locate the specific point in time when the mark was applied.</p>
@@ -545,18 +525,12 @@ safely left in production code.</p>
 
       <p>Here is an example:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>ss <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Now try and read and write a register</span><span style="color:#710">"</span></span>
-dut.cmd.write!(<span style="color:#00D">0x1234_5678</span>)
-dut.cmd.read!(<span style="color:#00D">0x1234_5078</span>)  <span style="color:#777"># Note that we just wrote ..567.. but are now expecting ..507..</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">ss "Now try and read and write a register"
+dut.cmd.write!(0x1234_5678)
+dut.cmd.read!(0x1234_5078)  # Note that we just wrote ..567.. but are now expecting ..507..
+</code></pre>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>[INFO]       4.098[0.000]    ||       86500 ns: ======================================================================
+      <pre><code class="language-text">[INFO]       4.098[0.000]    ||       86500 ns: ======================================================================
 [INFO]       4.098[0.001]    ||       86500 ns: Now try and read and write a register
 [INFO]       4.099[0.001]    ||       86500 ns: ======================================================================
 [ERROR]      4.100[0.001]    ||      117400 ns: Miscompare on pin tdo, expected 0 received 1
@@ -566,19 +540,13 @@ dut.cmd.read!(<span style="color:#00D">0x1234_5078</span>)  <span style="color:#
 [ERROR]      4.103[0.001]    ||      129100 ns:
 [ERROR]      4.104[0.001]    ||      129100 ns: /home/stephen/Code/github/origen_sim/pattern/test.rb:39:in `block in &lt;top (required)&gt;'
 [ERROR]      4.110[0.006]    ||      129100 ns: /home/stephen/Code/github/origen_sim/pattern/test.rb:1:in `&lt;top (required)&gt;'
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>The received data resolution does depend on the physical protocol driver supplying meta-data when
 creating pin assertions (reads) that correspond to register bits, like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>pin(<span style="color:#A60">:tdo</span>).assert(bit.data, <span style="color:#606">meta</span>: { <span style="color:#606">position</span>: bit.position })
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">pin(:tdo).assert(bit.data, meta: { position: bit.position })
+</code></pre>
 
       <p>For reference, here is the update that was made to the JTAG driver to support this feature -
 <a href="https://github.com/Origen-SDK/origen_jtag/pull/10/files">OrigenJTAG - Add meta data for OrigenSim</a></p>
@@ -591,17 +559,13 @@ bit position that failed along with the register that was being read. It may be 
 specific code interpret these bits (for example if it is a status bit). Origen provides a hook for this. Below 
 is an example of how to implement a custom interpreter.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">if</span> tester.sim?
-  tester.out_of_bounds_handler = proc <span style="color:#080;font-weight:bold">do</span> |position, received, expected, reg|
-    <span style="color:#036;font-weight:bold">Origen</span>.log.error <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Got data ouside of </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>reg.name<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20"> during the transaction, bit[</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>position<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">]: expected </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>expected<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">, received </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>received<span style="font-weight:bold;color:#666">}</span></span><span style="color:#710">"</span></span>
-    <span style="color:#036;font-weight:bold">Origen</span>.log.error <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">ECC error during read of </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>reg.path<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">.</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>reg.name<span style="font-weight:bold;color:#666">}</span></span><span style="color:#710">"</span></span> <span style="color:#080;font-weight:bold">if</span> position == <span style="color:#00D">39</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">if tester.sim?
+  tester.out_of_bounds_handler = proc do |position, received, expected, reg|
+    Origen.log.error "Got data ouside of #{reg.name} during the transaction, bit[#{position}]: expected #{expected}, received #{received}"
+    Origen.log.error "ECC error during read of #{reg.path}.#{reg.name}" if position == 39
+  end
+end
+</code></pre>
 
       <p>This feature will automatically be enabled for any reads launched via the register object itself, e.g.
 <code>my_reg.read!</code>, but not for reads launched by calling the <code>read_register</code> method manually,
@@ -610,19 +574,15 @@ e.g. <code>dut.read_register(my_reg)</code>.</p>
       <p>If your application has a tendency to do the latter, then the following modification can be made to your
 <code>read_register</code> method to make OrigenSim aware of such transactions:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">read_register</span>(reg_or_value, options = {})
-  <span style="color:#777"># Make OrigenSim aware of all transactions to enable failed transaction reporting</span>
-  tester.read_register(reg_or_value, options) <span style="color:#080;font-weight:bold">do</span>
+      <pre><code class="language-ruby">def read_register(reg_or_value, options = {})
+  # Make OrigenSim aware of all transactions to enable failed transaction reporting
+  tester.read_register(reg_or_value, options) do
 
-    <span style="color:#777"># Existing implementation here</span>
+    # Existing implementation here
 
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  end
+end
+</code></pre>
 
       <p>This feature will also work in the case of the read object being a value rather than a register object.</p>
 
@@ -642,12 +602,8 @@ periodically waits for the simulator to catch up if it is running too far ahead.
 
       <p>If you have entered a breakpoint and you suspect that the simulator may be still catching up, you can run:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>tester.sync_up
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">tester.sync_up
+</code></pre>
 
       <p>When that method returns you are guaranteed that the simulator is at the same point.</p>
 
@@ -660,12 +616,8 @@ This is because the simulator is buffering output that has yet to be written to 
 
       <p>You can force it to flush the buffer and update the wave viewer by running:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>tester.flush
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">tester.flush
+</code></pre>
 
       <p>Note that flushing will internally call a <code>sync_up</code> so you don’t have to do both of these manually.</p>
 
@@ -687,9 +639,7 @@ for more details on these.</p>
 
       <p>Referencing a register from the console will show you what Origen thinks the register currently contains:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>dut.my_block.my_reg
+      <pre><code class="language-text">dut.my_block.my_reg
 
 =&gt;
 0x10008000 - :my_reg
@@ -703,16 +653,12 @@ for more details on these.</p>
   │                                                      0x0                                                      │
   └─────────────┴─────────────┴─────────────┴─────────────┴─────────────┴─────────────┴─────────────┴─────────────┘
 
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>However, this may not be what the simulation currently reflects. To see what the simulation holds, call <code>sync</code>
 on the register:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>dut.my_block.my_reg.sync
+      <pre><code class="language-text">dut.my_block.my_reg.sync
 
 =&gt;
 0x10008000 - :my_reg
@@ -726,18 +672,12 @@ on the register:</p>
   │                                                     0xFF                                                      │
   └─────────────┴─────────────┴─────────────┴─────────────┴─────────────┴─────────────┴─────────────┴─────────────┘
 
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>A convenience API exists for this by appending <code>!</code> to the register name:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>dut.my_block.my_reg!
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">dut.my_block.my_reg!
+</code></pre>
 
       <p>Note that this works by firing off a conventional <code>read_register</code> request to your DUT model/controller.</p>
 
@@ -758,20 +698,16 @@ is not continuing to run while you are at the console.</p>
       <p>Simulation time can be advanced by calling the usual <code>tester.wait</code> API, however these convenience APIs exist for advancing
 time during a debugger breakpoint (and they can also be used in source code if you wish):</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#00D">10</span>.cycles
+      <pre><code class="language-ruby">10.cycles
 
-<span style="color:#00D">10</span>.ns!
+10.ns!
 
-<span style="color:#00D">10</span>.us!
+10.us!
 
-<span style="color:#00D">10</span>.ms!
+10.ms!
 
-<span style="color:#00D">10</span>.s!
-</pre></div>
-</div>
-      </div>
+10.s!
+</code></pre>
 
       <p>Note that 10 is just used as an example here, you can apply any number that you want.</p>
 
@@ -782,12 +718,8 @@ time during a debugger breakpoint (and they can also be used in source code if y
 
       <p>You can query the current error count by running:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>tester.simulator.error_count   <span style="color:#777"># =&gt; 0</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">tester.simulator.error_count   # =&gt; 0
+</code></pre>
 
       <div style="position: relative">
   <hr>

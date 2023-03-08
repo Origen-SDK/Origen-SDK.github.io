@@ -477,20 +477,16 @@ the extensions added to the <a href="/origen/api/String.html">String</a> class.<
 numeric classes have been extended to support most common units and to make writing spec
 limits more descriptive, here are some examples:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#00D">50</span>        <span style="color:#777"># =&gt; 50</span>
-<span style="color:#00D">50</span>.V      <span style="color:#777"># =&gt; 50</span>
-<span style="color:#00D">50</span>.mV     <span style="color:#777"># =&gt; 50E-03</span>
-<span style="color:#00D">50</span>.uA     <span style="color:#777"># =&gt; 50E-06</span>
-<span style="color:#00D">50</span>.nS     <span style="color:#777"># =&gt; 50E-09</span>
-<span style="color:#00D">50</span>.pA     <span style="color:#777"># =&gt; 50E-12</span>
-<span style="color:#00D">50</span>.kHz    <span style="color:#777"># =&gt; 50,000</span>
-<span style="color:#00D">50</span>.MHz    <span style="color:#777"># =&gt; 50,000,000</span>
-<span style="color:#00D">50</span>.GHz    <span style="color:#777"># =&gt; 50,000,000,000</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">50        # =&gt; 50
+50.V      # =&gt; 50
+50.mV     # =&gt; 50E-03
+50.uA     # =&gt; 50E-06
+50.nS     # =&gt; 50E-09
+50.pA     # =&gt; 50E-12
+50.kHz    # =&gt; 50,000
+50.MHz    # =&gt; 50,000,000
+50.GHz    # =&gt; 50,000,000,000
+</code></pre>
 
       <div>    
   <a class="anchor" name="Metric_Unit_Conversion_Helpers"></a>          
@@ -501,15 +497,11 @@ limits more descriptive, here are some examples:</p>
 display purposes.  All base units supported by the unit helpers are available as native functions.  For
 any other arbitrary units, the as_units(<str>) function is available.</str></p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#00D">50</span>.as_V             <span style="color:#777"># =&gt; '50.0V'</span>
-<span style="color:#00D">50000</span>.as_Hz         <span style="color:#777"># =&gt; '50.0kHz'</span>
-<span style="color:#60E">5e-5</span>.as_A           <span style="color:#777"># =&gt; '50.0uA'</span>
-<span style="color:#60E">5e-7</span>.as_units(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">F</span><span style="color:#710">'</span></span>)  <span style="color:#777"># =&gt; '500.0nF'</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">50.as_V             # =&gt; '50.0V'
+50000.as_Hz         # =&gt; '50.0kHz'
+5e-5.as_A           # =&gt; '50.0uA'
+5e-7.as_units('F')  # =&gt; '500.0nF'
+</code></pre>
 
       <div>    
   <a class="anchor" name="Number_Formatting_Helpers"></a>          
@@ -518,35 +510,27 @@ any other arbitrary units, the as_units(<str>) function is available.</str></p>
 
       <p>Displaying numbers in hex or binary format is very common, some helpers exist for that:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#00D">100</span>.to_hex          <span style="color:#777"># =&gt; "0x64"</span>
-<span style="color:#00D">100</span>.to_bin          <span style="color:#777"># =&gt; "0b1100100"</span>
-<span style="color:#00D">100</span>.to_hex.to_dec   <span style="color:#777"># =&gt; 100</span>
-<span style="color:#00D">100</span>.to_bin.to_dec   <span style="color:#777"># =&gt; 100</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">100.to_hex          # =&gt; "0x64"
+100.to_bin          # =&gt; "0b1100100"
+100.to_hex.to_dec   # =&gt; 100
+100.to_bin.to_dec   # =&gt; 100
+</code></pre>
 
       <p>Many data sources imported by Origen use Verilog numbers represented as Strings, to represent
 things such as memory addresses, bit size, etc. that need to be modeled as numbers.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">b10100110</span><span style="color:#710">"</span></span>.to_dec          <span style="color:#777"># =&gt; 166</span>
-<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">o246</span><span style="color:#710">"</span></span>.to_dec               <span style="color:#777"># =&gt; 166</span>
-<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">d166</span><span style="color:#710">"</span></span>.to_dec               <span style="color:#777"># =&gt; 166</span>
-<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">hA6</span><span style="color:#710">"</span></span>.to_dec                <span style="color:#777"># =&gt; 166</span>
-<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">8'b10100110</span><span style="color:#710">"</span></span>.to_dec        <span style="color:#777"># =&gt; 166</span>
-<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">8'o246</span><span style="color:#710">"</span></span>.to_dec             <span style="color:#777"># =&gt; 166</span>
-<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">8'd166</span><span style="color:#710">"</span></span>.to_dec             <span style="color:#777"># =&gt; 166</span>
-<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">8'hA6</span><span style="color:#710">"</span></span>.to_dec              <span style="color:#777"># =&gt; 166</span>
-<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">8'o246</span><span style="color:#710">"</span></span>.is_verilog_number? <span style="color:#777"># =&gt; true</span>
-<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">8'd166</span><span style="color:#710">"</span></span>.is_verilog_number? <span style="color:#777"># =&gt; true</span>
-<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">8'hA6</span><span style="color:#710">"</span></span>.is_verilog_number?  <span style="color:#777"># =&gt; true</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">"b10100110".to_dec          # =&gt; 166
+"o246".to_dec               # =&gt; 166
+"d166".to_dec               # =&gt; 166
+"hA6".to_dec                # =&gt; 166
+"8'b10100110".to_dec        # =&gt; 166
+"8'o246".to_dec             # =&gt; 166
+"8'd166".to_dec             # =&gt; 166
+"8'hA6".to_dec              # =&gt; 166
+"8'o246".is_verilog_number? # =&gt; true
+"8'd166".is_verilog_number? # =&gt; true
+"8'hA6".is_verilog_number?  # =&gt; true
+</code></pre>
 
       <h5 id="integer-width">Integer Width</h5>
 
@@ -559,30 +543,22 @@ per Origen thread using <code>Integer.width=</code> and can always be retrieved 
 
       <p><code>Integer</code> instances can be converted to their twos-complement representations:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#00D">-1</span>.twos_complement
-  <span style="color:#777">#=&gt; 11111111111111111111111111111111</span>
+      <pre><code class="language-ruby">-1.twos_complement
+  #=&gt; 11111111111111111111111111111111
 
-<span style="color:#00D">-2</span>.twos_complement
-  <span style="color:#777">#=&gt; 11111111111111111111111111111110</span>
-</pre></div>
-</div>
-      </div>
+-2.twos_complement
+  #=&gt; 11111111111111111111111111111110
+</code></pre>
 
       <p>The default width is the value of <code>Integer.width</code>. Changes there will be reflected
 here as well. Alternatively, the width parameter can be provided directly:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#00D">-1</span>.twos_complement(<span style="color:#00D">8</span>)
-  <span style="color:#777">#=&gt; 11111111</span>
+      <pre><code class="language-ruby">-1.twos_complement(8)
+  #=&gt; 11111111
 
-<span style="color:#00D">-2</span>.twos_complement(<span style="color:#00D">16</span>)
-  <span style="color:#777">#=&gt; 1111111111111110</span>
-</pre></div>
-</div>
-      </div>
+-2.twos_complement(16)
+  #=&gt; 1111111111111110
+</code></pre>
 
       <div>    
   <a class="anchor" name="Part_Select"></a>          
@@ -596,15 +572,11 @@ never consider <code>0x1234[7:0]</code> to be valid due to Ruby’s use of a col
 symbol names.
 However with a little compromise we can get very close:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>number = <span style="color:#00D">0x1234</span>
-number[<span style="color:#00D">3</span>..<span style="color:#00D">0</span>]           <span style="color:#777"># =&gt; 0x4</span>
-number[<span style="color:#00D">7</span>..<span style="color:#00D">0</span>]           <span style="color:#777"># =&gt; 0x34</span>
-number[<span style="color:#00D">15</span>..<span style="color:#00D">8</span>]          <span style="color:#777"># =&gt; 0x12</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">number = 0x1234
+number[3..0]           # =&gt; 0x4
+number[7..0]           # =&gt; 0x34
+number[15..8]          # =&gt; 0x12
+</code></pre>
 
       <div>    
   <a class="anchor" name="Try_Method"></a>          
@@ -615,14 +587,10 @@ number[<span style="color:#00D">15</span>..<span style="color:#00D">8</span>]   
 select the source of a given attribute. The first value provided by the first option to return a value
 will be returned, if none return a value then nil will be returned:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Take the value assigned to db_version if present, if not fall back to version</span>
-<span style="color:#d70">$dut</span>.try(<span style="color:#A60">:db_version</span>, <span style="color:#A60">:version</span>)                  <span style="color:#777"># =&gt; 5</span>
-<span style="color:#d70">$dut</span>.try(<span style="color:#A60">:missing_method_x</span>, <span style="color:#A60">:missing_method_y</span>)   <span style="color:#777"># =&gt; nil</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># Take the value assigned to db_version if present, if not fall back to version
+$dut.try(:db_version, :version)                  # =&gt; 5
+$dut.try(:missing_method_x, :missing_method_y)   # =&gt; nil
+</code></pre>
 
       <div>    
   <a class="anchor" name="Hash"></a>          
@@ -631,24 +599,20 @@ will be returned, if none return a value then nil will be returned:</p>
 
       <p>Hashes can be transformed to a version which will accept either string or symbol key references:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># A standard hash</span>
-my_hash = {<span style="color:#A60">:one</span> =&gt; <span style="color:#00D">1</span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">two</span><span style="color:#710">"</span></span> =&gt; <span style="color:#00D">2</span>}
-my_hash[<span style="color:#A60">:one</span>]   <span style="color:#777"># =&gt; 1</span>
-my_hash[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">one</span><span style="color:#710">"</span></span>]  <span style="color:#777"># =&gt; nil</span>
-my_hash[<span style="color:#A60">:two</span>]   <span style="color:#777"># =&gt; nil</span>
-my_hash[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">two</span><span style="color:#710">"</span></span>]  <span style="color:#777"># =&gt; 2</span>
+      <pre><code class="language-ruby"># A standard hash
+my_hash = {:one =&gt; 1, "two" =&gt; 2}
+my_hash[:one]   # =&gt; 1
+my_hash["one"]  # =&gt; nil
+my_hash[:two]   # =&gt; nil
+my_hash["two"]  # =&gt; 2
 
-<span style="color:#777"># A hash with indifferent access</span>
+# A hash with indifferent access
 my_hash = my_hash.with_indifferent_access
-my_hash[<span style="color:#A60">:one</span>]   <span style="color:#777"># =&gt; 1</span>
-my_hash[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">one</span><span style="color:#710">"</span></span>]  <span style="color:#777"># =&gt; 1</span>
-my_hash[<span style="color:#A60">:two</span>]   <span style="color:#777"># =&gt; 2</span>
-my_hash[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">two</span><span style="color:#710">"</span></span>]  <span style="color:#777"># =&gt; 2</span>
-</pre></div>
-</div>
-      </div>
+my_hash[:one]   # =&gt; 1
+my_hash["one"]  # =&gt; 1
+my_hash[:two]   # =&gt; 2
+my_hash["two"]  # =&gt; 2
+</code></pre>
 
       <p>Over time Origen will transition to returning this kind of hash to application-facing methods by
 default, but for now you can easily apply the transform on the application side if you want to use

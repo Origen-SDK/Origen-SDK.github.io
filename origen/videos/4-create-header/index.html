@@ -190,50 +190,46 @@
 
             <h5 id="templates">Templates</h5>
 
-            <div class="language-eruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre># templates/demo/atd.h.erb
+            <pre><code class="language-eruby"># templates/demo/atd.h.erb
 
 /* ============================================================================
    =============================== Module: ATD ================================
    ============================================================================ */
 
 % dut.atd0.regs.each do |name, reg|   
-typedef union ATD_<span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> name.to_s.upcase <span style="font-weight:bold;color:#666">%&gt;</span></span>_union_tag {      /* <span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> reg.description.first <span style="font-weight:bold;color:#666">%&gt;</span></span> */
+typedef union ATD_&lt;%= name.to_s.upcase %&gt;_union_tag {      /* &lt;%= reg.description.first %&gt; */
   vuint32_t R;
   struct {
 %   reg.named_bits(include_spacers: true).each do |bit_name, bits|
 %     if bit_name
-    vuint32_t <span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>bit_name.to_s.upcase<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">:</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>bits.size<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">;</span><span style="color:#710">"</span></span>.ljust(<span style="color:#00D">30</span>) <span style="font-weight:bold;color:#666">%&gt;</span></span>  /* <span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> bits.description.first <span style="font-weight:bold;color:#666">%&gt;</span></span> */
+    vuint32_t &lt;%= "#{bit_name.to_s.upcase}:#{bits.size};".ljust(30) %&gt;  /* &lt;%= bits.description.first %&gt; */
 %     else    
-    vuint32_t <span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>bit_name.to_s.upcase<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">:</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>bits.size<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">;</span><span style="color:#710">"</span></span>.ljust(<span style="color:#00D">30</span>) <span style="font-weight:bold;color:#666">%&gt;</span></span>
+    vuint32_t &lt;%= "#{bit_name.to_s.upcase}:#{bits.size};".ljust(30) %&gt;
 %     end    
 %   end    
   } B;
-} ATD_<span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> name.to_s.upcase <span style="font-weight:bold;color:#666">%&gt;</span></span>_tag;
+} ATD_&lt;%= name.to_s.upcase %&gt;_tag;
 
 % end
 
 struct ATD_tag {
 % dut.atd0.regs.each do |name, reg|   
-  <span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">ATD_</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>name.to_s.upcase<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">_tag </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>name.to_s.upcase<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">;</span><span style="color:#710">"</span></span>.ljust(<span style="color:#00D">30</span>) <span style="font-weight:bold;color:#666">%&gt;</span></span>  /* <span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> reg.description.first <span style="font-weight:bold;color:#666">%&gt;</span></span> */
+  &lt;%= "ATD_#{name.to_s.upcase}_tag #{name.to_s.upcase};".ljust(30) %&gt;  /* &lt;%= reg.description.first %&gt; */
 % end  
 };
 
 % dut.atds.each_with_index do |atd, i|
-#define ATD_<span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> i <span style="font-weight:bold;color:#666">%&gt;</span></span> (*(volatile struct ATD_tag *) <span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> atd.base_address.to_hex <span style="font-weight:bold;color:#666">%&gt;</span></span>UL)
+#define ATD_&lt;%= i %&gt; (*(volatile struct ATD_tag *) &lt;%= atd.base_address.to_hex %&gt;UL)
 % end
 
 /* ATD */
 % dut.atds.each_with_index do |atd, i|
 %   dut.atd0.regs.each do |name, reg|   
-#define <span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">ATD_</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>i<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">_</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>name.to_s.upcase<span style="font-weight:bold;color:#666">}</span></span><span style="color:#710">"</span></span>.ljust(<span style="color:#00D">20</span>) + <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">ATD_</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>i<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">.</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>name.to_s.upcase<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">.R</span><span style="color:#710">"</span></span>.ljust(<span style="color:#00D">20</span>) <span style="font-weight:bold;color:#666">%&gt;</span></span>  /* <span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> reg.description.first <span style="font-weight:bold;color:#666">%&gt;</span></span> */
+#define &lt;%= "ATD_#{i}_#{name.to_s.upcase}".ljust(20) + "ATD_#{i}.#{name.to_s.upcase}.R".ljust(20) %&gt;  /* &lt;%= reg.description.first %&gt; */
 %   end
 
 % end
-</pre></div>
-</div>
-            </div>
+</code></pre>
 
           </div>
 <div role="tabpanel" class="tab-pane" id="comments">

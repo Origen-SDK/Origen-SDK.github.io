@@ -463,19 +463,15 @@ for <a href="#Adding_Pins">adding pins</a> and <a href="#Executing">executing</a
 
       <p>A quick summary:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Decompile a pattern source from a file</span>
-<span style="color:#036;font-weight:bold">OrigenTesters</span>.decompile(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">path/to/src</span><span style="color:#710">'</span></span>)
+      <pre><code class="language-ruby"># Decompile a pattern source from a file
+OrigenTesters.decompile('path/to/src')
 
-<span style="color:#036;font-weight:bold">OrigenTesters</span>.add_pins(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">path/to_src</span><span style="color:#710">'</span></span>)
-  <span style="color:#777">#=&gt; Queries the pattern's pins and adds any missing pins to the DUT</span>
+OrigenTesters.add_pins('path/to_src')
+  #=&gt; Queries the pattern's pins and adds any missing pins to the DUT
 
-<span style="color:#036;font-weight:bold">OrigenTesters</span>.execute(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">path/to/src</span><span style="color:#710">'</span></span>)
-  <span style="color:#777">#=&gt; Executes the pattern source in its entirety.</span>
-</pre></div>
-</div>
-      </div>
+OrigenTesters.execute('path/to/src')
+  #=&gt; Executes the pattern source in its entirety.
+</code></pre>
 
       <div class="alert alert-warning" role="alert">
 Neither <code>#add_pins</code> nor <code>#execute</code> support input as
@@ -501,63 +497,47 @@ then call <code>#add_pins</code> or <code>#execute</code> on that,
 decompiler and input ending with <code>.avc</code> routes to the <code>SmartestBasedTester</code>
 decompiler.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>pat = <span style="color:#036;font-weight:bold">OrigenTesters</span>.decompile(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">path/to/src.atp</span><span style="color:#710">'</span></span>)
-  <span style="color:#777">#=&gt; OrigenTesters::IGXLBasedTester::Pattern</span>
+      <pre><code class="language-ruby">pat = OrigenTesters.decompile('path/to/src.atp')
+  #=&gt; OrigenTesters::IGXLBasedTester::Pattern
 pat.decompiled?
-  <span style="color:#777">#=&gt; true</span>
+  #=&gt; true
 
-pat = <span style="color:#036;font-weight:bold">OrigenTesters</span>.decompile(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">path/to/src.avc</span><span style="color:#710">'</span></span>)
-  <span style="color:#777">#=&gt; OrigenTesters::SmartestBasedTester::Pattern</span>
+pat = OrigenTesters.decompile('path/to/src.avc')
+  #=&gt; OrigenTesters::SmartestBasedTester::Pattern
 pat.decompiled?
-  <span style="color:#777">#=&gt; true</span>
-</pre></div>
-</div>
-      </div>
+  #=&gt; true
+</code></pre>
 
       <p>You can also a get a pre-decompiled pattern object using <code>#decompiled_pattern</code>:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>pat = <span style="color:#036;font-weight:bold">OrigenTesters</span>.decompiled_pattern(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">path/to/src.atp</span><span style="color:#710">'</span></span>)
-  <span style="color:#777">#=&gt; OrigenTesters::IGXLBasedTester::Pattern</span>
+      <pre><code class="language-ruby">pat = OrigenTesters.decompiled_pattern('path/to/src.atp')
+  #=&gt; OrigenTesters::IGXLBasedTester::Pattern
 pat.decompiled?
-  <span style="color:#777">#=&gt; false</span>
+  #=&gt; false
 
-pat = <span style="color:#036;font-weight:bold">OrigenTesters</span>.decompiled_pattern(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">path/to/src.avc</span><span style="color:#710">'</span></span>)
-  <span style="color:#777">#=&gt; OrigenTesters::SmartestBasedTester::Pattern</span>
+pat = OrigenTesters.decompiled_pattern('path/to/src.avc')
+  #=&gt; OrigenTesters::SmartestBasedTester::Pattern
 pat.decompiled?
-  <span style="color:#777">#=&gt; false</span>
-</pre></div>
-</div>
-      </div>
+  #=&gt; false
+</code></pre>
 
       <p>If either method cannot find an applicable decompiler given the extension,
 an exception is raised:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>pat = <span style="color:#036;font-weight:bold">OrigenTesters</span>.decompiled_pattern(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">path/to/src.blah</span><span style="color:#710">'</span></span>)
-  <span style="color:#777">#=&gt; OrigenTesters::Decompiler::NoSuitableDecompiler</span>
-  <span style="color:#777">#=&gt; Fail in origen_testers: Cannot find a suitable decompiler for pattern source 'pat.blah' ('.blah')</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">pat = OrigenTesters.decompiled_pattern('path/to/src.blah')
+  #=&gt; OrigenTesters::Decompiler::NoSuitableDecompiler
+  #=&gt; Fail in origen_testers: Cannot find a suitable decompiler for pattern source 'pat.blah' ('.blah')
+</code></pre>
 
       <p>If you want to decompile a source from a <code>String</code> object directly, use <code>#decompile_text</code>.
 You’ll need to provide the applicable decompiler, as the <code>Decompiler API</code> is
 not able to map a text source to the appropriate decompiler:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>pat = <span style="color:#036;font-weight:bold">OrigenTesters</span>.decompile_text(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">src as string</span><span style="color:#710">"</span></span>, <span style="color:#606">decompiler</span>: <span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">IGXLBasedTester</span>::<span style="color:#036;font-weight:bold">Pattern</span>)
-  <span style="color:#777">#=&gt; OrigenTesters::SmartestBasedTester::Pattern</span>
+      <pre><code class="language-ruby">pat = OrigenTesters.decompile_text("src as string", decompiler: OrigenTesters::IGXLBasedTester::Pattern)
+  #=&gt; OrigenTesters::SmartestBasedTester::Pattern
 pat.decompiled?
-  <span style="color:#777">#=&gt; true</span>
-</pre></div>
-</div>
-      </div>
+  #=&gt; true
+</code></pre>
 
       <div>    
   <a class="anchor" name="Discerning_Platform_Decompilers"></a>          
@@ -575,49 +555,45 @@ a <code>OrigenTesters::Decompiler::NoSuitableDecompiler</code> exception is rais
 trigger the correct decompiler, but the methods used underneath are available
 as well:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777">### See the registered decompilers</span>
+      <pre><code class="language-ruby">### See the registered decompilers
 
-<span style="color:#036;font-weight:bold">OrigenTesters</span>.registered_decompilers
-  <span style="color:#777">#=&gt; [OrigenTesters::IGXLBasedTester, OrigenTesters::SmartestBasedTester]</span>
+OrigenTesters.registered_decompilers
+  #=&gt; [OrigenTesters::IGXLBasedTester, OrigenTesters::SmartestBasedTester]
 
-<span style="color:#777">### See if an applicable decompiler exists for the pattern source</span>
+### See if an applicable decompiler exists for the pattern source
 
-<span style="color:#036;font-weight:bold">OrigenTesters</span>.decompiler_for?(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">pat.atp</span><span style="color:#710">"</span></span>)
-  <span style="color:#777">#=&gt; true</span>
+OrigenTesters.decompiler_for?("pat.atp")
+  #=&gt; true
 
-<span style="color:#036;font-weight:bold">OrigenTesters</span>.decompiler_for?(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">pat.blah</span><span style="color:#710">"</span></span>)
-  <span style="color:#777">#=&gt; false</span>
+OrigenTesters.decompiler_for?("pat.blah")
+  #=&gt; false
 
-<span style="color:#777">### Given the pattern source, select the appropriate decompiler, or return nil</span>
+### Given the pattern source, select the appropriate decompiler, or return nil
 
-<span style="color:#036;font-weight:bold">OrigenTesters</span>.select_decompiler(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">pat.atp</span><span style="color:#710">"</span></span>)
-  <span style="color:#777">#=&gt; OrigenTesters::IGXLBasedTester::Pattern</span>
+OrigenTesters.select_decompiler("pat.atp")
+  #=&gt; OrigenTesters::IGXLBasedTester::Pattern
 
-<span style="color:#036;font-weight:bold">OrigenTesters</span>.select_decompiler(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">pat.blah</span><span style="color:#710">"</span></span>)
-  <span style="color:#777">#=&gt; nil</span>
+OrigenTesters.select_decompiler("pat.blah")
+  #=&gt; nil
 
-<span style="color:#777">### Given the pattern source, select the appropriate decompiler or raise and exception</span>
-<span style="color:#777">### (Notice the '!')</span>
+### Given the pattern source, select the appropriate decompiler or raise and exception
+### (Notice the '!')
 
-<span style="color:#036;font-weight:bold">OrigenTesters</span>.select_decompiler!(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">pat.atp</span><span style="color:#710">"</span></span>)
-  <span style="color:#777">#=&gt; OrigenTesters::IGXLBasedTester::Pattern</span>
+OrigenTesters.select_decompiler!("pat.atp")
+  #=&gt; OrigenTesters::IGXLBasedTester::Pattern
 
-<span style="color:#036;font-weight:bold">OrigenTesters</span>.select_decompiler!(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">pat.blah</span><span style="color:#710">"</span></span>)
-  <span style="color:#777">#=&gt; OrigenTesters::Decompiler::NoSuitableDecompiler</span>
-  <span style="color:#777">#=&gt; Fail in origen_testers: Cannot find a suitable decompiler for pattern source 'pat.blah' ('.blah')</span>
+OrigenTesters.select_decompiler!("pat.blah")
+  #=&gt; OrigenTesters::Decompiler::NoSuitableDecompiler
+  #=&gt; Fail in origen_testers: Cannot find a suitable decompiler for pattern source 'pat.blah' ('.blah')
 
-<span style="color:#777">### See if the given module provides a decompiler</span>
+### See if the given module provides a decompiler
 
-<span style="color:#036;font-weight:bold">OrigenTesters</span>.registered_decompiler?(<span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">IGXLBasedTester</span>)
-  <span style="color:#777">#=&gt; true</span>
+OrigenTesters.registered_decompiler?(OrigenTesters::IGXLBasedTester)
+  #=&gt; true
 
-<span style="color:#036;font-weight:bold">OrigenTesters</span>.registered_decompiler?(<span style="color:#036;font-weight:bold">Origen</span>)
-  <span style="color:#777">#=&gt; false</span>
-</pre></div>
-</div>
-      </div>
+OrigenTesters.registered_decompiler?(Origen)
+  #=&gt; false
+</code></pre>
 
       <div>    
   <a class="anchor" name="Shorthand_Methods"></a>          
@@ -643,16 +619,12 @@ this operation: <code>OrigenTesters.add_pins('path/to/src')</code>. This will:</
         <li>Add any missing pins to the <code>DUT</code>.</li>
       </ol>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">OrigenTesters</span>.add_pins(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">pat.atp</span><span style="color:#710">'</span></span>)
-  <span style="color:#777"># Decompiles the pattern using the .atp decompiler</span>
-  <span style="color:#777"># Adds the pins to the DUT</span>
-  <span style="color:#777"># Returns any pins added to the DUT</span>
-  <span style="color:#777">#=&gt; Array</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">OrigenTesters.add_pins('pat.atp')
+  # Decompiles the pattern using the .atp decompiler
+  # Adds the pins to the DUT
+  # Returns any pins added to the DUT
+  #=&gt; Array
+</code></pre>
 
       <div>    
   <a class="anchor" name="Executing"></a>          
@@ -671,17 +643,13 @@ calling <code>OrigenTesters.execeute('path/to/src')</code> will:</p>
         <li>Execute the pattern.</li>
       </ol>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">OrigenTesters</span>.execute(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">pattern.atp</span><span style="color:#710">'</span></span>)
-  <span style="color:#777"># Decompiles the pattern using the .atp decompiler</span>
-  <span style="color:#777"># Adds the pins to the DUT</span>
-  <span style="color:#777"># Execute the pattern source</span>
-  <span style="color:#777"># Returns the decompiled pattern object</span>
-  <span style="color:#777">#=&gt; OrigenTesters::IGXLBasedTesters::Pattern</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">OrigenTesters.execute('pattern.atp')
+  # Decompiles the pattern using the .atp decompiler
+  # Adds the pins to the DUT
+  # Execute the pattern source
+  # Returns the decompiled pattern object
+  #=&gt; OrigenTesters::IGXLBasedTesters::Pattern
+</code></pre>
 
       <div style="position: relative">
   <hr>

@@ -482,12 +482,8 @@ the revision).</p>
       <p>So for example someone using an application to generate production IP for a device
 with maskset 1M79X should select the target like this:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>origen t 1m79x
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">origen t 1m79x
+</code></pre>
 
       <p>This keeps things simple for the end user and removes the need for them to
 choose a target.</p>
@@ -500,17 +496,13 @@ choose a target.</p>
       <p>To enable the above feature a map must be added to your <code>config/application.rb</code>
 file like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># config/application.rb</span>
+      <pre><code class="language-ruby"># config/application.rb
 config.production_targets = {
-  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">0m79x</span><span style="color:#710">"</span></span> =&gt; <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">eagle_0</span><span style="color:#710">"</span></span>,
-  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">0n30d</span><span style="color:#710">"</span></span> =&gt; <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">falcon_0</span><span style="color:#710">"</span></span>,
-  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">1n92a</span><span style="color:#710">"</span></span> =&gt; <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">osprey_1</span><span style="color:#710">"</span></span>,
+  "0m79x" =&gt; "eagle_0",
+  "0n30d" =&gt; "falcon_0",
+  "1n92a" =&gt; "osprey_1",
 }
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>Now whenever a maskset number is entered as a target the above table will be referred
 to automatically to select the actual target file.</p>
@@ -518,17 +510,13 @@ to automatically to select the actual target file.</p>
       <p>If giving the user a choice over the actual target to use is unavoidable, the number
 of options can be reduced by mapping a given maskset to multiple targets:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># config/application.rb</span>
+      <pre><code class="language-ruby"># config/application.rb
 config.production_targets = {
-  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">0m79x</span><span style="color:#710">"</span></span> =&gt; [<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">eagle_0_func</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">eagle_0_bist</span><span style="color:#710">"</span></span>],
-  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">0n30d</span><span style="color:#710">"</span></span> =&gt; <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">falcon_0</span><span style="color:#710">"</span></span>,
-  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">1n92a</span><span style="color:#710">"</span></span> =&gt; <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">osprey_1</span><span style="color:#710">"</span></span>,
+  "0m79x" =&gt; ["eagle_0_func", "eagle_0_bist"],
+  "0n30d" =&gt; "falcon_0",
+  "1n92a" =&gt; "osprey_1",
 }
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>Now a user selecting 0M79X will be presented with a message showing the two options
 and will be asked to choose one of them.</p>
@@ -536,34 +524,26 @@ and will be asked to choose one of them.</p>
       <p>Although not generally recommended, it is also possible to map multiple maskset numbers
 to the same target:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># config/application.rb</span>
+      <pre><code class="language-ruby"># config/application.rb
 config.production_targets = {
-  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">0m79x</span><span style="color:#710">"</span></span> =&gt; [<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">eagle_0_func</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">eagle_0_bist</span><span style="color:#710">"</span></span>],
-  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">0n30d</span><span style="color:#710">"</span></span> =&gt; <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">falcon_0</span><span style="color:#710">"</span></span>,
-  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">1n30d</span><span style="color:#710">"</span></span> =&gt; <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">falcon_0</span><span style="color:#710">"</span></span>,
-  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">1n92a</span><span style="color:#710">"</span></span> =&gt; <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">osprey_1</span><span style="color:#710">"</span></span>,
+  "0m79x" =&gt; ["eagle_0_func", "eagle_0_bist"],
+  "0n30d" =&gt; "falcon_0",
+  "1n30d" =&gt; "falcon_0",
+  "1n92a" =&gt; "osprey_1",
 }
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>Finally if a specific target(s) is not supported for a given release it can be easily disabled
 by commenting out the relevant line(s):</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># config/application.rb</span>
+      <pre><code class="language-ruby"># config/application.rb
 config.production_targets = {
-  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">0m79x</span><span style="color:#710">"</span></span> =&gt; [<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">eagle_0_func</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">eagle_0_bist</span><span style="color:#710">"</span></span>],
-<span style="color:#777">#  "0n30d" =&gt; "falcon_0",</span>
-<span style="color:#777">#  "1n30d" =&gt; "falcon_0",</span>
-  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">1n92a</span><span style="color:#710">"</span></span> =&gt; <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">osprey_1</span><span style="color:#710">"</span></span>,
+  "0m79x" =&gt; ["eagle_0_func", "eagle_0_bist"],
+#  "0n30d" =&gt; "falcon_0",
+#  "1n30d" =&gt; "falcon_0",
+  "1n92a" =&gt; "osprey_1",
 }
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>Now any requests to select target 0N30D or 1N30D will give a not found error.</p>
 

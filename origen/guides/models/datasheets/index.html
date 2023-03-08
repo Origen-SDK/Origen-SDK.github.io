@@ -460,37 +460,29 @@ directly to your console.</p>
 
       <p>The API is made available by including the Origen::Datasheet module.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">MyApplication</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">TopLevel</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Datasheet</span> <span style="color:#777"># =&gt; makes the Datasheet available to application</span>
-    attr_accessor <span style="color:#A60">:datasheet</span>
+      <pre><code class="language-ruby">module MyApplication
+  class TopLevel
+    include Origen::Datasheet # =&gt; makes the Datasheet available to application
+    attr_accessor :datasheet
     
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  end
+end
+</code></pre>
 
       <h3 id="creating-datasheets">Creating Datasheets</h3>
 
       <p>Creating a datasheet is very simple and is demonstrated in the following code sample:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">MyApplication</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">TopLevel</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Datasheet</span> <span style="color:#777"># =&gt; makes the Datasheet available to application</span>
-    attr_accessor <span style="color:#A60">:datasheet</span>
+      <pre><code class="language-ruby">module MyApplication
+  class TopLevel
+    include Origen::Datasheet # =&gt; makes the Datasheet available to application
+    attr_accessor :datasheet
     
-    <span style="color:#33B">@datasheet</span> = <span style="color:#036;font-weight:bold">TopLevel</span>.new.ds <span style="color:#777">#=&gt; Creates instance of a Datasheet in your application.</span>
+    @datasheet = TopLevel.new.ds #=&gt; Creates instance of a Datasheet in your application.
     
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  end
+end
+</code></pre>
 
       <p>Note: Creating a Datasheet in your Origen application does not physically instantiate an 
 XML Datasheet, but rather an Origen model of one that is visible to your application.</p>
@@ -507,21 +499,17 @@ the rs_import method like in the code sample below.</p>
       <p>The importation process is very fast in will complete in just a few seconds, even for very large XML
 files.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">MyApplication</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">TopLevel</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Datasheet</span> <span style="color:#777"># =&gt; makes the Datasheet available to application</span>
-    attr_accessor <span style="color:#A60">:datasheet</span>
+      <pre><code class="language-ruby">module MyApplication
+  class TopLevel
+    include Origen::Datasheet # =&gt; makes the Datasheet available to application
+    attr_accessor :datasheet
     
-    <span style="color:#33B">@datasheet</span> = <span style="color:#036;font-weight:bold">TopLevel</span>.new.ds <span style="color:#777">#=&gt; Creates instance of a Datasheet in your application.</span>
-    <span style="color:#33B">@datasheet</span> = rs_import(<span style="color:#A60">:path</span> =&gt; <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">path_to_your_datasheet.xml</span><span style="color:#710">"</span></span>)
+    @datasheet = TopLevel.new.ds #=&gt; Creates instance of a Datasheet in your application.
+    @datasheet = rs_import(:path =&gt; "path_to_your_datasheet.xml")
     
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  end
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Spec_Tables"></a>          
@@ -536,34 +524,22 @@ Spec API.</p>
 the unique Spec Table ID. In the case that the specific Spec Table ID is not known, you will 
 need to follow the command examples below.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$dut</span>.ds.spec_tables <span style="color:#777"># =&gt; This command lists every Spec Table in a datasheet, along with information including the ID.</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">$dut.ds.spec_tables # =&gt; This command lists every Spec Table in a datasheet, along with information including the ID.
+</code></pre>
 
       <p>Once the correct ID is provided the Spec Table will be displayed on the console in a very friendly
 table-view format.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$dut</span>.ds.spec_tables[<span style="color:#A60">:unique_id</span>] <span style="color:#777"># =&gt; Displays the Spec Table to the console</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">$dut.ds.spec_tables[:unique_id] # =&gt; Displays the Spec Table to the console
+</code></pre>
 
       <p>You can also add a Spec Table to your datasheet and provide your own values if necessary. This
 is shown below.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#33B">@datasheet</span>.spec_table <span style="color:#A60">:unique_id</span> <span style="color:#080;font-weight:bold">do</span> |t|
-  t.full_name = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Information you want to specify is done like this!</span><span style="color:#710">"</span></span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">@datasheet.spec_table :unique_id do |t|
+  t.full_name = "Information you want to specify is done like this!"
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Revision_History"></a>          
@@ -579,21 +555,13 @@ which version you will need to look at, the below command will display a list of
 for a datasheet’s Revision History, along with some information about each Version including the 
 access-key for each one.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$dut</span>.ds.revision_history <span style="color:#777"># =&gt; diplays a list of each Version in a Revision History</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">$dut.ds.revision_history # =&gt; diplays a list of each Version in a Revision History
+</code></pre>
 
       <p>To view a specific Version use the following command</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$dut</span>.ds.revision_history.versions[<span style="color:#A60">:access_key</span>] <span style="color:#777"># =&gt; displays the version to the console!</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">$dut.ds.revision_history.versions[:access_key] # =&gt; displays the version to the console!
+</code></pre>
 
       <p>Each Version will display a small table with the specific information concerning that version, 
 as well as the list of changes displayed as text.</p>
@@ -610,21 +578,13 @@ and a unique ID for easy referencing and retrieval.</p>
       <p>Typing the following command into the Origen console will display a list of all notes and their IDs 
 associated with the datasheet.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$dut</span>.ds.notes
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">$dut.ds.notes
+</code></pre>
 
       <p>If you would like to get a specific note use the following command</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$dut</span>.ds.notes[<span style="color:#A60">:note_id</span>]
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">$dut.ds.notes[:note_id]
+</code></pre>
 
       <div>    
   <a class="anchor" name="Searching"></a>          
@@ -635,14 +595,10 @@ associated with the datasheet.</p>
 different IDs to get the information you want. Currently, searching can be performed on Spec Tables
 and Notes. The way to perform a search is outlined in the following command examples.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$dut</span>.ds.spec_tables.search(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">search_string</span><span style="color:#710">"</span></span>) =&gt; this will display every <span style="color:#036;font-weight:bold">Spec</span> <span style="color:#036;font-weight:bold">Table</span> that matches <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">search_string.</span><span style="color:#710">"</span></span>
+      <pre><code class="language-ruby">$dut.ds.spec_tables.search("search_string") =&gt; this will display every Spec Table that matches "search_string."
 
-<span style="color:#d70">$dut</span>.ds.notes.search(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">search_string</span><span style="color:#710">"</span></span>) =&gt; displays every note corresponding to <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">search_string.</span><span style="color:#710">"</span></span>
-</pre></div>
-</div>
-      </div>
+$dut.ds.notes.search("search_string") =&gt; displays every note corresponding to "search_string."
+</code></pre>
 
       <div style="position: relative">
   <hr>

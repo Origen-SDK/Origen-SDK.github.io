@@ -487,15 +487,11 @@ the application top-level directory.</p>
 
       <p>Create the file “program/probe.rb” as shown below:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># program/probe.rb</span>
-<span style="color:#036;font-weight:bold">Flow</span>.create <span style="color:#080;font-weight:bold">do</span>
+      <pre><code class="language-ruby"># program/probe.rb
+Flow.create do
 
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+end
+</code></pre>
 
       <p>The above represents all of the officially required syntax to define a flow, what
 goes inside is now completely down to the needs of the application.</p>
@@ -504,15 +500,11 @@ goes inside is now completely down to the needs of the application.</p>
 the environment in which it will run. For example we have indicated via the name that this
 is a flow intended to run at probe, we can also note this in the code:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># program/probe.rb</span>
-<span style="color:#036;font-weight:bold">Flow</span>.create(<span style="color:#606">environment</span>: <span style="color:#A60">:probe</span>) <span style="color:#080;font-weight:bold">do</span>
+      <pre><code class="language-ruby"># program/probe.rb
+Flow.create(environment: :probe) do
 
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+end
+</code></pre>
 
       <p>Again the naming of the terms <code>:environment</code> and <code>:probe</code> are
 completely arbitrary, you may want to note some details about the temperature, parallelism
@@ -531,24 +523,20 @@ flow to the interface via this mechanism.</p>
       <p>Origen extends Ruby to add the following methods which are very helpful
 when specifying test conditions:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#00D">3</span>.A     <span style="color:#777"># =&gt; 3 </span>
-<span style="color:#00D">3</span>.mA    <span style="color:#777"># =&gt; 0.003 </span>
-<span style="color:#00D">3</span>.uA    <span style="color:#777"># =&gt; 0.000003 </span>
-<span style="color:#00D">3</span>.nA    <span style="color:#777"># =&gt; 0.000000003 </span>
-<span style="color:#00D">3</span>.pA    <span style="color:#777"># =&gt; 0.000000000003 </span>
+      <pre><code class="language-ruby">3.A     # =&gt; 3 
+3.mA    # =&gt; 0.003 
+3.uA    # =&gt; 0.000003 
+3.nA    # =&gt; 0.000000003 
+3.pA    # =&gt; 0.000000000003 
 
-<span style="color:#00D">3</span>.V     <span style="color:#777"># =&gt; 3</span>
-<span style="color:#00D">3</span>.mV    <span style="color:#777"># =&gt; 0.003</span>
-        <span style="color:#777"># =&gt; etc</span>
+3.V     # =&gt; 3
+3.mV    # =&gt; 0.003
+        # =&gt; etc
 
-<span style="color:#00D">3</span>.Hz    <span style="color:#777"># =&gt; 3        </span>
-<span style="color:#00D">3</span>.kHz   <span style="color:#777"># =&gt; 3000        </span>
-<span style="color:#00D">3</span>.MHz   <span style="color:#777"># =&gt; 3000000</span>
-</pre></div>
-</div>
-      </div>
+3.Hz    # =&gt; 3        
+3.kHz   # =&gt; 3000        
+3.MHz   # =&gt; 3000000
+</code></pre>
 
       <div>    
   <a class="anchor" name="Adding_Some_Tests"></a>          
@@ -560,39 +548,31 @@ test and then two parametric tests that we wish to run - one that simply tests t
 output and one that tests the output under load.
 Let’s start with this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># program/probe.rb</span>
-<span style="color:#036;font-weight:bold">Flow</span>.create(<span style="color:#606">environment</span>: <span style="color:#A60">:probe</span>) <span style="color:#080;font-weight:bold">do</span>
+      <pre><code class="language-ruby"># program/probe.rb
+Flow.create(environment: :probe) do
 
-  log <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Vreg test module</span><span style="color:#710">"</span></span>
+  log "Vreg test module"
 
-  func <span style="color:#A60">:vreg_functional</span>, <span style="color:#606">pattern</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">vreg/functional</span><span style="color:#710">"</span></span>, <span style="color:#606">vdd</span>: <span style="color:#A60">:min</span>, <span style="color:#606">bin</span>: <span style="color:#00D">5</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">101</span>, <span style="color:#606">tnum</span>: <span style="color:#00D">101000</span>
+  func :vreg_functional, pattern: "vreg/functional", vdd: :min, bin: 5, softbin: 101, tnum: 101000
 
-  func <span style="color:#A60">:vreg_functional</span>, <span style="color:#606">pattern</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">vreg/functional</span><span style="color:#710">"</span></span>, <span style="color:#606">vdd</span>: <span style="color:#A60">:max</span>, <span style="color:#606">bin</span>: <span style="color:#00D">5</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">101</span>, <span style="color:#606">tnum</span>: <span style="color:#00D">101001</span>
+  func :vreg_functional, pattern: "vreg/functional", vdd: :max, bin: 5, softbin: 101, tnum: 101001
 
-  para <span style="color:#A60">:vreg_meas</span>, <span style="color:#606">pattern</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">vreg/meas</span><span style="color:#710">"</span></span>, <span style="color:#606">vdd</span>: <span style="color:#A60">:min</span>, <span style="color:#606">bin</span>: <span style="color:#00D">5</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">105</span>, <span style="color:#606">tnum</span>: <span style="color:#00D">105000</span>, <span style="color:#606">lo</span>: <span style="color:#60E">1.12</span>, <span style="color:#606">hi</span>: <span style="color:#60E">1.34</span>
+  para :vreg_meas, pattern: "vreg/meas", vdd: :min, bin: 5, softbin: 105, tnum: 105000, lo: 1.12, hi: 1.34
 
-  para <span style="color:#A60">:vreg_meas</span>, <span style="color:#606">pattern</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">vreg/meas</span><span style="color:#710">"</span></span>, <span style="color:#606">vdd</span>: <span style="color:#A60">:max</span>, <span style="color:#606">bin</span>: <span style="color:#00D">5</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">105</span>, <span style="color:#606">tnum</span>: <span style="color:#00D">105001</span>, <span style="color:#606">lo</span>: <span style="color:#60E">1.12</span>, <span style="color:#606">hi</span>: <span style="color:#60E">1.34</span>
+  para :vreg_meas, pattern: "vreg/meas", vdd: :max, bin: 5, softbin: 105, tnum: 105001, lo: 1.12, hi: 1.34
 
-  para <span style="color:#A60">:vreg_meas</span>, <span style="color:#606">pattern</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">vreg/meas</span><span style="color:#710">"</span></span>, <span style="color:#606">vdd</span>: <span style="color:#A60">:min</span>, <span style="color:#606">bin</span>: <span style="color:#00D">5</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">105</span>, <span style="color:#606">tnum</span>: <span style="color:#00D">105002</span>, <span style="color:#606">load</span>: <span style="color:#00D">5</span>.mA, <span style="color:#606">lo</span>: <span style="color:#60E">1.10</span>, <span style="color:#606">hi</span>: <span style="color:#60E">1.34</span>
+  para :vreg_meas, pattern: "vreg/meas", vdd: :min, bin: 5, softbin: 105, tnum: 105002, load: 5.mA, lo: 1.10, hi: 1.34
 
-  para <span style="color:#A60">:vreg_meas</span>, <span style="color:#606">pattern</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">vreg/meas</span><span style="color:#710">"</span></span>, <span style="color:#606">vdd</span>: <span style="color:#A60">:max</span>, <span style="color:#606">bin</span>: <span style="color:#00D">5</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">105</span>, <span style="color:#606">tnum</span>: <span style="color:#00D">105003</span>, <span style="color:#606">load</span>: <span style="color:#00D">5</span>.mA, <span style="color:#606">lo</span>: <span style="color:#60E">1.12</span>, <span style="color:#606">hi</span>: <span style="color:#60E">1.34</span>
+  para :vreg_meas, pattern: "vreg/meas", vdd: :max, bin: 5, softbin: 105, tnum: 105003, load: 5.mA, lo: 1.12, hi: 1.34
 
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+end
+</code></pre>
 
       <p>This is a good start, we have something that resembles a test flow and we have gone with the
 general convention that a flow line is structured like this:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>&lt;function&gt; &lt;name&gt;, &lt;attributes&gt;
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">&lt;function&gt; &lt;name&gt;, &lt;attributes&gt;
+</code></pre>
 
       <ul>
         <li>
@@ -644,29 +624,25 @@ attributes is ripe for elimination.</li>
 
       <p>With those optimizations applied we end up with:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># program/probe.rb</span>
-<span style="color:#036;font-weight:bold">Flow</span>.create(<span style="color:#606">environment</span>: <span style="color:#A60">:probe</span>) <span style="color:#080;font-weight:bold">do</span>
+      <pre><code class="language-ruby"># program/probe.rb
+Flow.create(environment: :probe) do
 
-  log <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Vreg test module</span><span style="color:#710">"</span></span>
+  log "Vreg test module"
 
-  func <span style="color:#A60">:vreg_functional</span>, <span style="color:#606">vdd</span>: <span style="color:#A60">:min</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">101</span>
+  func :vreg_functional, vdd: :min, softbin: 101
 
-  func <span style="color:#A60">:vreg_functional</span>, <span style="color:#606">vdd</span>: <span style="color:#A60">:max</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">101</span>
+  func :vreg_functional, vdd: :max, softbin: 101
 
-  para <span style="color:#A60">:vreg_meas</span>, <span style="color:#606">vdd</span>: <span style="color:#A60">:min</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">105</span>, <span style="color:#606">lo</span>: <span style="color:#60E">1.12</span>, <span style="color:#606">hi</span>: <span style="color:#60E">1.34</span>
+  para :vreg_meas, vdd: :min, softbin: 105, lo: 1.12, hi: 1.34
 
-  para <span style="color:#A60">:vreg_meas</span>, <span style="color:#606">vdd</span>: <span style="color:#A60">:max</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">105</span>, <span style="color:#606">lo</span>: <span style="color:#60E">1.12</span>, <span style="color:#606">hi</span>: <span style="color:#60E">1.34</span>
+  para :vreg_meas, vdd: :max, softbin: 105, lo: 1.12, hi: 1.34
 
-  para <span style="color:#A60">:vreg_meas</span>, <span style="color:#606">vdd</span>: <span style="color:#A60">:min</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">105</span>, <span style="color:#606">load</span>: <span style="color:#00D">5</span>.mA, <span style="color:#606">lo</span>: <span style="color:#60E">1.10</span>, <span style="color:#606">hi</span>: <span style="color:#60E">1.34</span>
+  para :vreg_meas, vdd: :min, softbin: 105, load: 5.mA, lo: 1.10, hi: 1.34
 
-  para <span style="color:#A60">:vreg_meas</span>, <span style="color:#606">vdd</span>: <span style="color:#A60">:max</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">105</span>, <span style="color:#606">load</span>: <span style="color:#00D">5</span>.mA, <span style="color:#606">lo</span>: <span style="color:#60E">1.12</span>, <span style="color:#606">hi</span>: <span style="color:#60E">1.34</span>
+  para :vreg_meas, vdd: :max, softbin: 105, load: 5.mA, lo: 1.12, hi: 1.34
 
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+end
+</code></pre>
 
       <p>Finally we seem to always be running our tests at min vdd and then max vdd, so again
 there seems to be a convention that we could choose to implement by default. One issue we
@@ -676,25 +652,21 @@ good example of one case where we would override the default.</p>
       <p>So switching to the convention that each test will execute at min and max vdd unless otherwise
 specified, our final flow is:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># program/probe.rb</span>
-<span style="color:#036;font-weight:bold">Flow</span>.create(<span style="color:#606">environment</span>: <span style="color:#A60">:probe</span>) <span style="color:#080;font-weight:bold">do</span>
+      <pre><code class="language-ruby"># program/probe.rb
+Flow.create(environment: :probe) do
 
-  log <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Vreg test module</span><span style="color:#710">"</span></span>
+  log "Vreg test module"
 
-  func <span style="color:#A60">:vreg_functional</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">101</span>
+  func :vreg_functional, softbin: 101
 
-  para <span style="color:#A60">:vreg_meas</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">105</span>, <span style="color:#606">lo</span>: <span style="color:#60E">1.12</span>, <span style="color:#606">hi</span>: <span style="color:#60E">1.34</span><span style="color:#036;font-weight:bold">V</span>
+  para :vreg_meas, softbin: 105, lo: 1.12, hi: 1.34V
 
-  para <span style="color:#A60">:vreg_meas</span>, <span style="color:#606">vdd</span>: <span style="color:#A60">:min</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">105</span>, <span style="color:#606">load</span>: <span style="color:#00D">5</span>.mA, <span style="color:#606">lo</span>: <span style="color:#60E">1.10</span>, <span style="color:#606">hi</span>: <span style="color:#60E">1.34</span>
+  para :vreg_meas, vdd: :min, softbin: 105, load: 5.mA, lo: 1.10, hi: 1.34
 
-  para <span style="color:#A60">:vreg_meas</span>, <span style="color:#606">vdd</span>: <span style="color:#A60">:max</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">105</span>, <span style="color:#606">load</span>: <span style="color:#00D">5</span>.mA, <span style="color:#606">lo</span>: <span style="color:#60E">1.12</span>, <span style="color:#606">hi</span>: <span style="color:#60E">1.34</span>
+  para :vreg_meas, vdd: :max, softbin: 105, load: 5.mA, lo: 1.12, hi: 1.34
 
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+end
+</code></pre>
 
       <p>That very clearly and concisely describes what the flow must do. Also by establishing
 conventions and eliminating redundancy we have made it really easy for us to add
@@ -715,53 +687,45 @@ vreg load test will not work properly. Let’s say its a problem with the pad co
 such that the vreg works ok but it just can’t be tested via an external load.
 Our models to represent this situation would look something like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/dut_1.rb</span>
-<span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">DUT1</span>
-  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
-<span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby"># lib/dut_1.rb
+class DUT1
+  include Origen::Model
+end
 
-<span style="color:#777"># lib/dut_2.rb</span>
-<span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">DUT2</span> &lt; <span style="color:#036;font-weight:bold">DUT</span>
-  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
+# lib/dut_2.rb
+class DUT2 &lt; DUT
+  include Origen::Model
 
-  bug <span style="color:#A60">:vreg_pad</span>
-<span style="color:#080;font-weight:bold">end</span>
+  bug :vreg_pad
+end
 
-<span style="color:#036;font-weight:bold">DUT1</span>.new.has_bug?(<span style="color:#A60">:vreg_pad</span>)  <span style="color:#777"># =&gt; false</span>
-<span style="color:#036;font-weight:bold">DUT2</span>.new.has_bug?(<span style="color:#A60">:vreg_pad</span>)  <span style="color:#777"># =&gt; true</span>
-</pre></div>
-</div>
-      </div>
+DUT1.new.has_bug?(:vreg_pad)  # =&gt; false
+DUT2.new.has_bug?(:vreg_pad)  # =&gt; true
+</code></pre>
 
       <p>There are two ways that we could build the flow to ensure that DUT2 can still give a bin 1 - either
 skip the loaded test completely, or else don’t care its result.
 Here is an example of both:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># program/probe.rb</span>
-<span style="color:#036;font-weight:bold">Flow</span>.create(<span style="color:#606">environment</span>: <span style="color:#A60">:probe</span>) <span style="color:#080;font-weight:bold">do</span>
+      <pre><code class="language-ruby"># program/probe.rb
+Flow.create(environment: :probe) do
 
-  log <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Vreg test module</span><span style="color:#710">"</span></span>
+  log "Vreg test module"
 
-  func <span style="color:#A60">:vreg_functional</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">101</span>
+  func :vreg_functional, softbin: 101
 
-  para <span style="color:#A60">:vreg_meas</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">105</span>, <span style="color:#606">lo</span>: <span style="color:#60E">1.12</span>, <span style="color:#606">hi</span>: <span style="color:#60E">1.34</span>
+  para :vreg_meas, softbin: 105, lo: 1.12, hi: 1.34
 
-  <span style="color:#777"># Don't build this test if the target DUT has the bug</span>
-  <span style="color:#080;font-weight:bold">unless</span> <span style="color:#d70">$dut</span>.has_bug?(<span style="color:#A60">:vreg_pad</span>)
-    para <span style="color:#A60">:vreg_meas</span>, <span style="color:#606">vdd</span>: <span style="color:#A60">:min</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">105</span>, <span style="color:#606">load</span>: <span style="color:#00D">5</span>.mA, <span style="color:#606">lo</span>: <span style="color:#60E">1.10</span>, <span style="color:#606">hi</span>: <span style="color:#60E">1.34</span>
-  <span style="color:#080;font-weight:bold">end</span>
+  # Don't build this test if the target DUT has the bug
+  unless $dut.has_bug?(:vreg_pad)
+    para :vreg_meas, vdd: :min, softbin: 105, load: 5.mA, lo: 1.10, hi: 1.34
+  end
 
-  <span style="color:#777"># Continue on fail if the target DUT has the bug</span>
-  para <span style="color:#A60">:vreg_meas</span>, <span style="color:#606">vdd</span>: <span style="color:#A60">:max</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">105</span>, <span style="color:#606">load</span>: <span style="color:#00D">5</span>.mA, <span style="color:#606">lo</span>: <span style="color:#60E">1.12</span>, <span style="color:#606">hi</span>: <span style="color:#60E">1.34</span>, <span style="color:#606">continue</span>: <span style="color:#d70">$dut</span>.has_bug?(<span style="color:#A60">:vreg_pad</span>)
+  # Continue on fail if the target DUT has the bug
+  para :vreg_meas, vdd: :max, softbin: 105, load: 5.mA, lo: 1.12, hi: 1.34, continue: $dut.has_bug?(:vreg_pad)
 
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Re-usable_Flow_Snippets"></a>          
@@ -782,29 +746,25 @@ instantiate the sub-flow.</p>
 
       <p>Let’s convert our flow to a sub-flow in file “_vreg.rb”:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># program/_vreg.rb</span>
-<span style="color:#036;font-weight:bold">Flow</span>.create <span style="color:#080;font-weight:bold">do</span> |options|
+      <pre><code class="language-ruby"># program/_vreg.rb
+Flow.create do |options|
 
-  log <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Vreg test module</span><span style="color:#710">"</span></span>
+  log "Vreg test module"
 
-  func <span style="color:#A60">:vreg_functional</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">101</span>
+  func :vreg_functional, softbin: 101
 
-  para <span style="color:#A60">:vreg_meas</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">105</span>, <span style="color:#606">lo</span>: <span style="color:#60E">1.12</span>, <span style="color:#606">hi</span>: <span style="color:#60E">1.34</span>
+  para :vreg_meas, softbin: 105, lo: 1.12, hi: 1.34
 
-  <span style="color:#777"># Don't build this test if the target DUT has the bug</span>
-  <span style="color:#080;font-weight:bold">unless</span> <span style="color:#d70">$dut</span>.has_bug?(<span style="color:#A60">:vreg_pad</span>)
-    para <span style="color:#A60">:vreg_meas</span>, <span style="color:#606">vdd</span>: <span style="color:#A60">:min</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">105</span>, <span style="color:#606">load</span>: <span style="color:#00D">5</span>.mA, <span style="color:#606">lo</span>: <span style="color:#60E">1.10</span>, <span style="color:#606">hi</span>: <span style="color:#60E">1.34</span>
-  <span style="color:#080;font-weight:bold">end</span>
+  # Don't build this test if the target DUT has the bug
+  unless $dut.has_bug?(:vreg_pad)
+    para :vreg_meas, vdd: :min, softbin: 105, load: 5.mA, lo: 1.10, hi: 1.34
+  end
 
-  <span style="color:#777"># Continue on fail if the target DUT has the bug</span>
-  para <span style="color:#A60">:vreg_meas</span>, <span style="color:#606">vdd</span>: <span style="color:#A60">:max</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">105</span>, <span style="color:#606">load</span>: <span style="color:#00D">5</span>.mA, <span style="color:#606">lo</span>: <span style="color:#60E">1.12</span>, <span style="color:#606">hi</span>: <span style="color:#60E">1.34</span>, <span style="color:#606">continue</span>: <span style="color:#d70">$dut</span>.has_bug?(<span style="color:#A60">:vreg_pad</span>)
+  # Continue on fail if the target DUT has the bug
+  para :vreg_meas, vdd: :max, softbin: 105, load: 5.mA, lo: 1.12, hi: 1.34, continue: $dut.has_bug?(:vreg_pad)
 
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+end
+</code></pre>
 
       <p>Not much has changed so far - the environment option has been removed from the <code>Flow.create</code>
 definition since that is more of a top-level concern, and the options have been added.</p>
@@ -821,35 +781,31 @@ to target the test at vreg 0 or vreg 1.</li>
 
       <p>Here is the flow with these modifications:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># program/_vreg.rb</span>
-<span style="color:#036;font-weight:bold">Flow</span>.create <span style="color:#080;font-weight:bold">do</span> |options|
+      <pre><code class="language-ruby"># program/_vreg.rb
+Flow.create do |options|
 
-  <span style="color:#777"># These are the option defaults that will be used unless specified by the caller</span>
+  # These are the option defaults that will be used unless specified by the caller
   options = {
-    <span style="color:#606">include_loaded_output_tests</span>: <span style="color:#069">true</span>,
-    <span style="color:#606">index</span>: <span style="color:#00D">0</span>,
+    include_loaded_output_tests: true,
+    index: 0,
   }.merge(options)
 
-  log <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Vreg test module</span><span style="color:#710">"</span></span>
+  log "Vreg test module"
 
-  func <span style="color:#A60">:vreg_functional</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">101</span>, <span style="color:#606">index</span>: options[<span style="color:#A60">:index</span>]
+  func :vreg_functional, softbin: 101, index: options[:index]
 
-  para <span style="color:#A60">:vreg_meas</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">105</span>, <span style="color:#606">lo</span>: <span style="color:#60E">1.12</span>, <span style="color:#606">hi</span>: <span style="color:#60E">1.34</span>, <span style="color:#606">index</span>: options[<span style="color:#A60">:index</span>]
+  para :vreg_meas, softbin: 105, lo: 1.12, hi: 1.34, index: options[:index]
 
-  <span style="color:#080;font-weight:bold">if</span> options[<span style="color:#A60">:include_loaded_output_tests</span>]
+  if options[:include_loaded_output_tests]
 
-    para <span style="color:#A60">:vreg_meas</span>, <span style="color:#606">vdd</span>: <span style="color:#A60">:min</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">105</span>, <span style="color:#606">load</span>: <span style="color:#00D">5</span>.mA, <span style="color:#606">lo</span>: <span style="color:#60E">1.10</span>, <span style="color:#606">hi</span>: <span style="color:#60E">1.34</span>, <span style="color:#606">index</span>: options[<span style="color:#A60">:index</span>]
+    para :vreg_meas, vdd: :min, softbin: 105, load: 5.mA, lo: 1.10, hi: 1.34, index: options[:index]
 
-    para <span style="color:#A60">:vreg_meas</span>, <span style="color:#606">vdd</span>: <span style="color:#A60">:max</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">105</span>, <span style="color:#606">load</span>: <span style="color:#00D">5</span>.mA, <span style="color:#606">lo</span>: <span style="color:#60E">1.12</span>, <span style="color:#606">hi</span>: <span style="color:#60E">1.34</span>, <span style="color:#606">index</span>: options[<span style="color:#A60">:index</span>]
+    para :vreg_meas, vdd: :max, softbin: 105, load: 5.mA, lo: 1.12, hi: 1.34, index: options[:index]
 
-  <span style="color:#080;font-weight:bold">end</span>
+  end
 
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+end
+</code></pre>
 
       <p>For now we have not really committed to how the indexed tests will be generated, but we have
 passed the information along to the interface. Most likely when it comes to generating the
@@ -857,17 +813,13 @@ pattern name within the interface we will just append the index to the name.</p>
 
       <p>So the original top-level flow is now really simple:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># program/probe.rb</span>
-<span style="color:#036;font-weight:bold">Flow</span>.create(<span style="color:#606">environment</span>: <span style="color:#A60">:probe</span>) <span style="color:#080;font-weight:bold">do</span>
+      <pre><code class="language-ruby"># program/probe.rb
+Flow.create(environment: :probe) do
 
-  import <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">vreg</span><span style="color:#710">"</span></span>, <span style="color:#606">include_loaded_output_tests</span>: !<span style="color:#d70">$dut</span>.has_bug?(<span style="color:#A60">:vreg_pad</span>)
+  import "vreg", include_loaded_output_tests: !$dut.has_bug?(:vreg_pad)
 
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+end
+</code></pre>
 
       <p>The path argument supplied to the import method can be either a relative path from the
 current file (as it is above), for example <code>"../components/vreg"</code>, or an
@@ -881,21 +833,17 @@ in an array.</p>
 
       <p>Our final flow is:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># program/probe.rb</span>
-<span style="color:#036;font-weight:bold">Flow</span>.create(<span style="color:#606">environment</span>: <span style="color:#A60">:probe</span>) <span style="color:#080;font-weight:bold">do</span>
+      <pre><code class="language-ruby"># program/probe.rb
+Flow.create(environment: :probe) do
 
-  <span style="color:#d70">$dut</span>.vregs.each_with_index <span style="color:#080;font-weight:bold">do</span> |vreg, i|
+  $dut.vregs.each_with_index do |vreg, i|
 
-    import <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">vreg</span><span style="color:#710">"</span></span>, <span style="color:#606">include_loaded_output_tests</span>: !<span style="color:#d70">$dut</span>.has_bug?(<span style="color:#A60">:vreg_pad</span>), <span style="color:#606">index</span>: i
+    import "vreg", include_loaded_output_tests: !$dut.has_bug?(:vreg_pad), index: i
 
-  <span style="color:#080;font-weight:bold">end</span>
+  end
 
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Importing_Top-Level_Flows"></a>          
@@ -913,21 +861,17 @@ if one with "_" is not found.</p>
       <p>So for example we have 3 top-level flows that we know work ok stand-alone, but we want to check that they work ok when 
 running back to back:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># program/probe.rb</span>
-<span style="color:#036;font-weight:bold">Flow</span>.create(<span style="color:#606">environment</span>: <span style="color:#A60">:probe</span>) <span style="color:#080;font-weight:bold">do</span>  <span style="color:#777"># options here match those in the probe_* flows imported below</span>
+      <pre><code class="language-ruby"># program/probe.rb
+Flow.create(environment: :probe) do  # options here match those in the probe_* flows imported below
 
-  import <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">probe_start</span><span style="color:#710">"</span></span>   <span style="color:#777"># will import file called 'probe_start.rb'</span>
+  import "probe_start"   # will import file called 'probe_start.rb'
 
-  import <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">probe_middle</span><span style="color:#710">"</span></span>  <span style="color:#777"># will import file called 'probe_middle.rb'</span>
+  import "probe_middle"  # will import file called 'probe_middle.rb'
 
-  import <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">probe_end</span><span style="color:#710">"</span></span>     <span style="color:#777"># will import file called 'probe_end.rb'</span>
+  import "probe_end"     # will import file called 'probe_end.rb'
 
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Documenting_Tests"></a>          
@@ -948,44 +892,40 @@ so this can be used to make things like bulleted lists or tables.</p>
 
       <p>Here is our vreg test suite with some example documentation added:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># program/_vreg.rb</span>
-<span style="color:#036;font-weight:bold">Flow</span>.create <span style="color:#080;font-weight:bold">do</span> |options|
+      <pre><code class="language-ruby"># program/_vreg.rb
+Flow.create do |options|
 
-  <span style="color:#777"># These are the option defaults that will be used unless specified by the caller</span>
+  # These are the option defaults that will be used unless specified by the caller
   options = {
-    <span style="color:#606">include_loaded_output_tests</span>: <span style="color:#069">true</span>,
-    <span style="color:#606">index</span>: <span style="color:#00D">0</span>,
+    include_loaded_output_tests: true,
+    index: 0,
   }.merge(options)
 
-  log <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Vreg test module</span><span style="color:#710">"</span></span>
+  log "Vreg test module"
 
-  <span style="color:#777"># This test verifies that the following things work:</span>
-  <span style="color:#777">#</span>
-  <span style="color:#777"># * The vreg can be disabled</span>
-  <span style="color:#777"># * The trim register can be written to and read from</span>
-  func <span style="color:#A60">:vreg_functional</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">101</span>, <span style="color:#606">index</span>: options[<span style="color:#A60">:index</span>]
+  # This test verifies that the following things work:
+  #
+  # * The vreg can be disabled
+  # * The trim register can be written to and read from
+  func :vreg_functional, softbin: 101, index: options[:index]
 
-  <span style="color:#777"># Measure the output of the vreg under no load, this is a simple</span>
-  <span style="color:#777"># test to catch any gross defects that prevent the vreg from working</span>
-  para <span style="color:#A60">:vreg_meas</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">105</span>, <span style="color:#606">lo</span>: <span style="color:#60E">1.12</span>, <span style="color:#606">hi</span>: <span style="color:#60E">1.34</span>, <span style="color:#606">index</span>: options[<span style="color:#A60">:index</span>]
+  # Measure the output of the vreg under no load, this is a simple
+  # test to catch any gross defects that prevent the vreg from working
+  para :vreg_meas, softbin: 105, lo: 1.12, hi: 1.34, index: options[:index]
 
-  <span style="color:#080;font-weight:bold">if</span> options[<span style="color:#A60">:include_loaded_output_tests</span>]
+  if options[:include_loaded_output_tests]
 
-    <span style="color:#777"># Measure the output of the vreg under the given load, this is approximately</span>
-    <span style="color:#777"># equivalent to 1.5x the maximum load anticipated in a customer application.</span>
-    para <span style="color:#A60">:vreg_meas</span>, <span style="color:#606">vdd</span>: <span style="color:#A60">:min</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">105</span>, <span style="color:#606">load</span>: <span style="color:#00D">5</span>.mA, <span style="color:#606">lo</span>: <span style="color:#60E">1.10</span>, <span style="color:#606">hi</span>: <span style="color:#60E">1.34</span>, <span style="color:#606">index</span>: options[<span style="color:#A60">:index</span>]
+    # Measure the output of the vreg under the given load, this is approximately
+    # equivalent to 1.5x the maximum load anticipated in a customer application.
+    para :vreg_meas, vdd: :min, softbin: 105, load: 5.mA, lo: 1.10, hi: 1.34, index: options[:index]
 
-    <span style="color:#777"># As above</span>
-    para <span style="color:#A60">:vreg_meas</span>, <span style="color:#606">vdd</span>: <span style="color:#A60">:max</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">105</span>, <span style="color:#606">load</span>: <span style="color:#00D">5</span>.mA, <span style="color:#606">lo</span>: <span style="color:#60E">1.12</span>, <span style="color:#606">hi</span>: <span style="color:#60E">1.34</span>, <span style="color:#606">index</span>: options[<span style="color:#A60">:index</span>]
+    # As above
+    para :vreg_meas, vdd: :max, softbin: 105, load: 5.mA, lo: 1.12, hi: 1.34, index: options[:index]
 
-  <span style="color:#080;font-weight:bold">end</span>
+  end
 
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+end
+</code></pre>
 
       <div style="position: relative">
   <hr>

@@ -461,21 +461,13 @@ and test program sources to a parent application.</p>
       <p>The current plugin is selected in a similar way to the current target, either at 
 runtime to set the current plugin for a given job only:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>origen g atd_ramp --plugin atd_test
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">origen g atd_ramp --plugin atd_test
+</code></pre>
 
       <p>or the workspace default can be set via the <code>origen pl</code> command:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>origen pl atd_test
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">origen pl atd_test
+</code></pre>
 
       <p>Identifying a current plugin performs two main functions:</p>
 
@@ -516,15 +508,11 @@ for some more discussion on this.</p>
 
       <p>The current plugin can be set in Ruby code using the below API.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.app.plugins.current   = <span style="color:#A60">:atd_test</span>    <span style="color:#777"># Sets the default plugin</span>
-<span style="color:#036;font-weight:bold">Origen</span>.app.plugins.temporary = <span style="color:#A60">:atd_test</span>    <span style="color:#777"># Temporarily sets the current plugin (for this thread only)</span>
-<span style="color:#036;font-weight:bold">Origen</span>.app.plugins.temporary = <span style="color:#069">nil</span>          <span style="color:#777"># Discard the temp plugin and set it back to the default</span>
-<span style="color:#036;font-weight:bold">Origen</span>.app.plugins.current.name             <span style="color:#777"># Returns current plugin name</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">Origen.app.plugins.current   = :atd_test    # Sets the default plugin
+Origen.app.plugins.temporary = :atd_test    # Temporarily sets the current plugin (for this thread only)
+Origen.app.plugins.temporary = nil          # Discard the temp plugin and set it back to the default
+Origen.app.plugins.current.name             # Returns current plugin name
+</code></pre>
 
       <p>A common usage pattern for modern ‘BOM’ style applications is to have a target corresponding to each
 main pattern type, which typically will correspond to the main plugins that are providing pattern
@@ -533,18 +521,14 @@ sources to the application.</p>
       <p>The current plugin can therefore be set in the target and then forgotten about, such that it
 will automatically be set to the correct thing based on the current target:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># target/atd.rb</span>
-load <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.root<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">/target/dut.rb</span><span style="color:#710">"</span></span>  <span style="color:#777"># Load and instantiate the DUT</span>
-<span style="color:#036;font-weight:bold">Origen</span>.app.plugins.temporary = <span style="color:#A60">:atd_test</span>
+      <pre><code class="language-ruby"># target/atd.rb
+load "#{Origen.root}/target/dut.rb"  # Load and instantiate the DUT
+Origen.app.plugins.temporary = :atd_test
 
-<span style="color:#777"># target/nvm.rb</span>
-load <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.root<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">/target/dut.rb</span><span style="color:#710">"</span></span>  <span style="color:#777"># Load and instantiate the DUT</span>
-<span style="color:#036;font-weight:bold">Origen</span>.app.plugins.temporary = <span style="color:#A60">:nvm_test</span>
-</pre></div>
-</div>
-      </div>
+# target/nvm.rb
+load "#{Origen.root}/target/dut.rb"  # Load and instantiate the DUT
+Origen.app.plugins.temporary = :nvm_test
+</code></pre>
 
       <div>    
   <a class="anchor" name="Providing_A_Default_Plugin"></a>          
@@ -556,13 +540,9 @@ workspace, by setting the configuration attribute <code>default_plugin</code>. T
 points to the name of the plugin which should be loaded in the absence of any
 user intervention:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Set the default plugin to OrigenTesters</span>
-config.default_plugin = <span style="color:#A60">:origen_testers</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># Set the default plugin to OrigenTesters
+config.default_plugin = :origen_testers
+</code></pre>
 
       <p>Plugins can be set and reset as normal. Once the current plugin is reset, the
 default plugin will not be assessed again.</p>

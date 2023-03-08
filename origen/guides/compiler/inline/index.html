@@ -466,28 +466,20 @@ otherwise work with it in some way.</p>
 to invoke the compiler in an in-line manner such that it will return a string
 rather than generate a file:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.compile(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.root<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">/app/templates/my_template.txt.erb</span><span style="color:#710">"</span></span>, <span style="color:#606">some_option</span>: <span style="color:#00D">10</span>)
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">Origen.compile("#{Origen.root}/app/templates/my_template.txt.erb", some_option: 10)
+</code></pre>
 
       <p>Any options given as shown above will be available in the <code>options</code>
 hash within the template in the usual way.</p>
 
       <p>The inline compiler will also accept the template in the form of a string:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>template =<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&lt;&lt;-END</span></span><span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">
-X is: </span><span style="color:#710">
-END</span></span>
+      <pre><code class="language-ruby">template =&lt;&lt;-END
+X is: 
+END
 
-<span style="color:#036;font-weight:bold">Origen</span>.compile(template, <span style="color:#606">string</span>: <span style="color:#069">true</span>, <span style="color:#606">x</span>: <span style="color:#00D">10</span>)
-</pre></div>
-</div>
-      </div>
+Origen.compile(template, string: true, x: 10)
+</code></pre>
 
       <div>    
   <a class="anchor" name="Changing_Scope"></a>          
@@ -498,50 +490,34 @@ END</span></span>
 have the template compile such that ‘self’ inside the template will refer to an
 existing object. i.e. to give the template direct access to all of that objects methods and attributes:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.compile(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.root<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">/app/templates/my_template.txt.erb</span><span style="color:#710">"</span></span>, <span style="color:#606">scope</span>: <span style="color:#d70">$dut</span>)
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">Origen.compile("#{Origen.root}/app/templates/my_template.txt.erb", scope: $dut)
+</code></pre>
 
       <p>For example let’s say we had a simple template like this to display some information
 about an ATD block:</p>
 
-      <div class="language-eruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre># app/templates/atd.txt.erb
+      <pre><code class="language-eruby"># app/templates/atd.txt.erb
 
-Type: <span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> type <span style="font-weight:bold;color:#666">%&gt;</span></span>
-Bits: <span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">&lt;%=</span> bits <span style="font-weight:bold;color:#666">%&gt;</span></span>
-</pre></div>
-</div>
-      </div>
+Type: &lt;%= type %&gt;
+Bits: &lt;%= bits %&gt;
+</code></pre>
 
       <p>Then in our model let’s say we have two ATD instances:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$dut</span>.atd[<span style="color:#00D">0</span>].type    <span style="color:#777"># =&gt; :sar</span>
-<span style="color:#d70">$dut</span>.atd[<span style="color:#00D">0</span>].bits    <span style="color:#777"># =&gt; 16</span>
+      <pre><code class="language-ruby">$dut.atd[0].type    # =&gt; :sar
+$dut.atd[0].bits    # =&gt; 16
 
-<span style="color:#d70">$dut</span>.atd[<span style="color:#00D">1</span>].type    <span style="color:#777"># =&gt; :sigma_delta</span>
-<span style="color:#d70">$dut</span>.atd[<span style="color:#00D">1</span>].bits    <span style="color:#777"># =&gt; 8</span>
-</pre></div>
-</div>
-      </div>
+$dut.atd[1].type    # =&gt; :sigma_delta
+$dut.atd[1].bits    # =&gt; 8
+</code></pre>
 
       <p>We can compile our template for each ATD as follows:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>template = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.root<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">/app/templates/atd.txt.erb</span><span style="color:#710">"</span></span>
+      <pre><code class="language-ruby">template = "#{Origen.root}/app/templates/atd.txt.erb"
 
-<span style="color:#036;font-weight:bold">Origen</span>.compile(template, <span style="color:#606">scope</span>: <span style="color:#d70">$dut</span>.atd[<span style="color:#00D">0</span>])  <span style="color:#777"># =&gt; "Type: sar\nBits: 16\n"</span>
-<span style="color:#036;font-weight:bold">Origen</span>.compile(template, <span style="color:#606">scope</span>: <span style="color:#d70">$dut</span>.atd[<span style="color:#00D">1</span>])  <span style="color:#777"># =&gt; "Type: sigma_delta\nBits: 8\n"</span>
-</pre></div>
-</div>
-      </div>
+Origen.compile(template, scope: $dut.atd[0])  # =&gt; "Type: sar\nBits: 16\n"
+Origen.compile(template, scope: $dut.atd[1])  # =&gt; "Type: sigma_delta\nBits: 8\n"
+</code></pre>
 
       <div style="position: relative">
   <hr>

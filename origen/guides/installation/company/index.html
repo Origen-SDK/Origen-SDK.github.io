@@ -566,23 +566,15 @@ allowing you to see what the variable was at each config index.</li>
       <p>To test if your configuration values are being applied, open a console within an
 Origen application:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>origen i
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">origen i
+</code></pre>
 
       <p>You can then query the current live values via the following API, where the method names
 correspond directly to the attribute names in the config file:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.site_config.gem_server          <span style="color:#777"># =&gt; nil</span>
-<span style="color:#036;font-weight:bold">Origen</span>.site_config.gem_manage_bundler  <span style="color:#777"># =&gt; true</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">Origen.site_config.gem_server          # =&gt; nil
+Origen.site_config.gem_manage_bundler  # =&gt; true
+</code></pre>
 
       <div>    
   <a class="anchor" name="Centralizing_The_Site_Config"></a>          
@@ -703,24 +695,20 @@ cerification failure and to disable it accordingly.</p>
 
       <h5 id="getting-values">Getting Values</h5>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.site_config.get(var) 
-  <span style="color:#777">#=&gt; gets the current value of a site config variable 'name'</span>
-  <span style="color:#777">#=&gt; if var doesn't exist, nil is returned</span>
+      <pre><code class="language-ruby">Origen.site_config.get(var) 
+  #=&gt; gets the current value of a site config variable 'name'
+  #=&gt; if var doesn't exist, nil is returned
 
-<span style="color:#036;font-weight:bold">Origen</span>.site_config.get_all(var) 
-  <span style="color:#777">#=&gt; gets all values of a site config variable 'name'</span>
-  <span style="color:#777">#=&gt; returns an array of values, where the higher priority values are earlier in the array</span>
-  <span style="color:#777">#=&gt; i.e., get_all(var).first is the current value and highest priority</span>
-  <span style="color:#777">#=&gt; get_all(var).last is the lowest priority value</span>
-  <span style="color:#777">#=&gt; same as Origen.site_config.add_as_highest(var, value)</span>
+Origen.site_config.get_all(var) 
+  #=&gt; gets all values of a site config variable 'name'
+  #=&gt; returns an array of values, where the higher priority values are earlier in the array
+  #=&gt; i.e., get_all(var).first is the current value and highest priority
+  #=&gt; get_all(var).last is the lowest priority value
+  #=&gt; same as Origen.site_config.add_as_highest(var, value)
   
-<span style="color:#036;font-weight:bold">Origen</span>.site_config[var]
-  <span style="color:#777">#=&gt; same as Origen.site_config.get(var)</span>
-</pre></div>
-</div>
-      </div>
+Origen.site_config[var]
+  #=&gt; same as Origen.site_config.get(var)
+</code></pre>
 
       <div class="alert alert-info">
   <strong>Info!</strong> You can also get a value using the method name corresponding to the site config variable, 
@@ -729,58 +717,46 @@ cerification failure and to disable it accordingly.</p>
 
       <h5 id="setting-values">Setting Values</h5>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.site_config.add_as_highest(var, value)
-  <span style="color:#777">#=&gt; add a new site variable at the highest priority</span>
+      <pre><code class="language-ruby">Origen.site_config.add_as_highest(var, value)
+  #=&gt; add a new site variable at the highest priority
 
-<span style="color:#036;font-weight:bold">Origen</span>.site_config.add_as_lowest(var, value)
-  <span style="color:#777">#=&gt; add a new site variable at the lowest priority</span>
-  <span style="color:#777">#=&gt; essentially, this sets a new default value</span>
+Origen.site_config.add_as_lowest(var, value)
+  #=&gt; add a new site variable at the lowest priority
+  #=&gt; essentially, this sets a new default value
 
-<span style="color:#036;font-weight:bold">Origen</span>.site_config[var] = value
-  <span style="color:#777">#=&gt; same as Origen.site_config.add_as_highest(var, value)</span>
-</pre></div>
-</div>
-      </div>
+Origen.site_config[var] = value
+  #=&gt; same as Origen.site_config.add_as_highest(var, value)
+</code></pre>
 
       <h5 id="removing-values">Removing Values</h5>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>remove_highest(var)
-  <span style="color:#777">#=&gt; remove the highest instance of var</span>
-  <span style="color:#777">#=&gt; returns the value of the variable removed</span>
-  <span style="color:#777">#=&gt; if var doesn't exist, nil is returned</span>
+      <pre><code class="language-ruby">remove_highest(var)
+  #=&gt; remove the highest instance of var
+  #=&gt; returns the value of the variable removed
+  #=&gt; if var doesn't exist, nil is returned
 
 remove_all_instances(var)
-  <span style="color:#777">#=&gt; remove all the instances of var</span>
-  <span style="color:#777">#=&gt; returns an array of the values, from highest priority to lowest</span>
-  <span style="color:#777">#=&gt; if var doesn't exist, the an empty array is returned</span>
+  #=&gt; remove all the instances of var
+  #=&gt; returns an array of the values, from highest priority to lowest
+  #=&gt; if var doesn't exist, the an empty array is returned
 
 purge(var)
-  <span style="color:#777">#=&gt; aliase to remove_all_instances</span>
+  #=&gt; aliase to remove_all_instances
 
 clear
-  <span style="color:#777">#=&gt; clears the site config completely</span>
-</pre></div>
-</div>
-      </div>
+  #=&gt; clears the site config completely
+</code></pre>
 
       <h5 id="adding-new-configuration-files">Adding New Configuration Files</h5>
 
       <p>You can also add a new configuration file that is not in the default paths using the methods below:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Adds a new site config file as the highest priority</span>
+      <pre><code class="language-ruby"># Adds a new site config file as the highest priority
 add_site_config_as_highest(site_config_file)
 
-<span style="color:#777"># Adds a new site config file as the lowest priority</span>
+# Adds a new site config file as the lowest priority
 add_site_config_as_lowest(site_config_file)
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <div class="alert alert-warning">
   <strong>Warning</strong> Using the site config is this way requires that Origen has already booted. So, using these

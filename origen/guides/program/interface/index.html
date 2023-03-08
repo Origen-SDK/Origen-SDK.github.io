@@ -467,19 +467,15 @@ Continuing with the vreg example and assuming that all of our code was
 <a href="/origen/guides/models/naming">namespaced</a> in the Vreg module,
 we could create an initial interface like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/vreg/interface.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">Vreg</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">Interface</span>
-    include <span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">ProgramGenerators</span>
+      <pre><code class="language-ruby"># lib/vreg/interface.rb
+module Vreg
+  class Interface
+    include OrigenTesters::ProgramGenerators
 
-    <span style="color:#777"># The methods called by the flow files will be implemented here</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+    # The methods called by the flow files will be implemented here
+  end
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Required_Methods"></a>          
@@ -495,44 +491,40 @@ as probe in our flow example).</p>
       <p>Here is an interface shell to handle the test flow that we created in the previous
 section:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/vreg/interface.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">Vreg</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">Interface</span>
-    include <span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">ProgramGenerators</span>
+      <pre><code class="language-ruby"># lib/vreg/interface.rb
+module Vreg
+  class Interface
+    include OrigenTesters::ProgramGenerators
 
-    <span style="color:#777"># Add a regular attribute to our interface to allow us to query the</span>
-    <span style="color:#777"># execution environment</span>
-    attr_reader <span style="color:#A60">:environment</span>
+    # Add a regular attribute to our interface to allow us to query the
+    # execution environment
+    attr_reader :environment
 
-    <span style="color:#777"># Any options passed to Flow.create can be captured here and assigned</span>
-    <span style="color:#777"># to instance variables which can be used later to modify the output from</span>
-    <span style="color:#777"># your other interface methods.</span>
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options={})
+    # Any options passed to Flow.create can be captured here and assigned
+    # to instance variables which can be used later to modify the output from
+    # your other interface methods.
+    def initialize(options={})
       options = {
-        <span style="color:#606">environment</span>: <span style="color:#A60">:ft</span>,  <span style="color:#777"># Set the environment to FT unless otherwise specified</span>
+        environment: :ft,  # Set the environment to FT unless otherwise specified
       }.merge(options)
-      <span style="color:#33B">@environment</span> = options[<span style="color:#A60">:environment</span>]
-    <span style="color:#080;font-weight:bold">end</span>
+      @environment = options[:environment]
+    end
 
-    <span style="color:#777"># Record the given message to the datalog</span>
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">log</span>(msg, options={})
-    <span style="color:#080;font-weight:bold">end</span>
+    # Record the given message to the datalog
+    def log(msg, options={})
+    end
 
-    <span style="color:#777"># Create a functional test and call it from the flow</span>
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">func</span>(name, options={})
-    <span style="color:#080;font-weight:bold">end</span>
+    # Create a functional test and call it from the flow
+    def func(name, options={})
+    end
 
-    <span style="color:#777"># Create a parametric test and call it from the flow</span>
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">para</span>(name, options={})
-    <span style="color:#080;font-weight:bold">end</span>
+    # Create a parametric test and call it from the flow
+    def para(name, options={})
+    end
 
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  end
+end
+</code></pre>
 
       <p>Note that you do not need to define methods to handle the
 <a href="/origen/guides/program/flowapi">Flow Control API</a>, the included generator
@@ -541,12 +533,8 @@ module will already take care of those.</p>
       <p>At this point you can now generate your flow for the first time to make sure
 that there are no methods missing:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>origen p path/to/your/flow.rb
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">origen p path/to/your/flow.rb
+</code></pre>
 
       <p>All being well this should run cleanly without actually generating any of your tests,
 if you get some errors your should be able to work out what methods need to be added to
@@ -609,24 +597,20 @@ the main flow API.
 In this example, let’s just add the following method to help us generate the full
 test names:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/vreg/interface.rb</span>
+      <pre><code class="language-ruby"># lib/vreg/interface.rb
 
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">namer</span>(basename, options={})
+def namer(basename, options={})
   name = basename
-  <span style="color:#080;font-weight:bold">if</span> options[<span style="color:#A60">:vdd</span>]
-    <span style="color:#777"># In our world let's have the convention that if the vdd is not included in</span>
-    <span style="color:#777"># the name then it is nominal, otherwise it will be in the name</span>
-    <span style="color:#080;font-weight:bold">unless</span> options[<span style="color:#A60">:vdd</span>] == <span style="color:#A60">:nom</span> 
-      name = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>name<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">_</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>options[<span style="color:#A60">:vdd</span>]<span style="font-weight:bold;color:#666">}</span></span><span style="color:#710">"</span></span>
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
+  if options[:vdd]
+    # In our world let's have the convention that if the vdd is not included in
+    # the name then it is nominal, otherwise it will be in the name
+    unless options[:vdd] == :nom 
+      name = "#{name}_#{options[:vdd]}"
+    end
+  end
   name
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+end
+</code></pre>
 
       <p>In reality some interfaces can get quite complex, and breaking the code down to additional
 Ruby class or modules is common.</p>
@@ -663,83 +647,63 @@ selection for example.</p>
 recommended to have a single method responsible for actually adding the generated tests into
 the flow, like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># my_interface.rb</span>
+      <pre><code class="language-ruby"># my_interface.rb
 
-<span style="color:#777"># Add the given test into the flow</span>
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">add_to_flow</span>(test_object, options = {})
+# Add the given test into the flow
+def add_to_flow(test_object, options = {})
   flow.test test_object, options
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+end
+</code></pre>
 
       <p>By funneling all tests through a single point like this, it naturally gives you a place to look
 for context changes and take corrective action.
 Use the <code>context_changed?</code> helper as shown in this example:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">add_to_flow</span>(test_object, options = {})
-  <span style="color:#777"># Give this all options that you are about to send to the flow.test method</span>
-  <span style="color:#080;font-weight:bold">if</span> context_changed?(options)
-    <span style="color:#777"># Can't rely on inheriting from the previous test, configure this test to re-apply the levels</span>
-    <span style="color:#777"># (where add_levels_configuration is a fictional method within your interface)</span>
+      <pre><code class="language-ruby">def add_to_flow(test_object, options = {})
+  # Give this all options that you are about to send to the flow.test method
+  if context_changed?(options)
+    # Can't rely on inheriting from the previous test, configure this test to re-apply the levels
+    # (where add_levels_configuration is a fictional method within your interface)
     add_levels_configuration(test_object)  
-  <span style="color:#080;font-weight:bold">end</span>
+  end
   flow.test test_object, options
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+end
+</code></pre>
 
       <p>A similar helper method called <code>parameter_changed?</code> exists to detect changes in your application-specific test attributes. For
 example, let’s say that your test flow always defines the vdd settings via two parameters called
 <code>:vdde</code> and <code>:vddc</code>:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># my_flow.rb</span>
+      <pre><code class="language-ruby"># my_flow.rb
 
-func <span style="color:#A60">:march_a</span>, <span style="color:#606">vdde</span>: <span style="color:#A60">:nom</span>, <span style="color:#A60">:vddc</span>: <span style="color:#A60">:nom</span>
+func :march_a, vdde: :nom, :vddc: :nom
 
-func <span style="color:#A60">:march_b</span>, <span style="color:#606">vdde</span>: <span style="color:#A60">:nom</span>, <span style="color:#A60">:vddc</span>: <span style="color:#A60">:nom</span>
+func :march_b, vdde: :nom, :vddc: :nom
 
-func <span style="color:#A60">:march_b</span>, <span style="color:#606">vdde</span>: <span style="color:#A60">:nom</span>, <span style="color:#A60">:vddc</span>: <span style="color:#A60">:max</span>
-</pre></div>
-</div>
-      </div>
+func :march_b, vdde: :nom, :vddc: :max
+</code></pre>
 
       <p>Then if your level switching had to be implemented by the injection of a dedicated test instance,
 it could be easily handled like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">add_to_flow</span>(test_object, options = {})
-  <span style="color:#777"># Give this all options that you are about to send to the flow.test method, supply as many parameter</span>
-  <span style="color:#777"># names as you want up front</span>
-  <span style="color:#080;font-weight:bold">if</span> parameter_changed?(<span style="color:#A60">:vdde</span>, <span style="color:#A60">:vddc</span>, options)
-    <span style="color:#777"># The upcoming test requires a vdd change, inject this into the flow before inserting it, again</span>
-    <span style="color:#777"># using a fictional switch_levels method</span>
+      <pre><code class="language-ruby">def add_to_flow(test_object, options = {})
+  # Give this all options that you are about to send to the flow.test method, supply as many parameter
+  # names as you want up front
+  if parameter_changed?(:vdde, :vddc, options)
+    # The upcoming test requires a vdd change, inject this into the flow before inserting it, again
+    # using a fictional switch_levels method
     switch_levels(options)
-  <span style="color:#080;font-weight:bold">end</span>
+  end
   flow.test test_object, options
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+end
+</code></pre>
 
       <p>Also, a convenience method exists that will trigger if either the context or one of your
 specified parameters changes:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">if</span> context_or_parameter_changed?(<span style="color:#A60">:vdde</span>, <span style="color:#A60">:vddc</span>, options)
-  <span style="color:#777"># ...</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">if context_or_parameter_changed?(:vdde, :vddc, options)
+  # ...
+</code></pre>
 
       <div>    
   <a class="anchor" name="Reloading_of_the_Target"></a>          
@@ -750,39 +714,31 @@ specified parameters changes:</p>
 increased flow generation time if the flow is large and calls many sub-flows.  To turn off reloading of the target, configure
 the test interface to set the attribute <code>reload_target</code> to <code>false</code>.  Here is an example from the origen_testers spec tests:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MyInterface</span>
-  include <span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">ProgramGenerators</span>
+      <pre><code class="language-ruby">class MyInterface
+  include OrigenTesters::ProgramGenerators
 
-  attr_accessor <span style="color:#A60">:reload_target</span>
+  attr_accessor :reload_target
 
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options = {})
-    <span style="color:#33B">@reload_target</span> = <span style="color:#069">false</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
+  def initialize(options = {})
+    @reload_target = false
+  end
+end
 
-<span style="color:#036;font-weight:bold">This</span> feature also exists at the flow file level, however the test interface will take precendence.  For example, the following flow file option
-will <span style="color:#080;font-weight:bold">not</span> have any effect <span style="color:#080;font-weight:bold">if</span> the test interface has the <span style="background-color:hsla(120,100%,50%,0.06)"><span style="color:#161">`</span><span style="color:#2B2">reload_target</span><span style="color:#161">`</span></span> attribute set to <span style="background-color:hsla(120,100%,50%,0.06)"><span style="color:#161">`</span><span style="color:#2B2">false</span><span style="color:#161">`</span></span>.
+This feature also exists at the flow file level, however the test interface will take precendence.  For example, the following flow file option
+will not have any effect if the test interface has the `reload_target` attribute set to `false`.
 
 ~~~ruby
-<span style="color:#036;font-weight:bold">Flow</span>.create <span style="color:#606">interface</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">MyInterface</span><span style="color:#710">'</span></span>, <span style="color:#606">reload_target</span>: <span style="color:#069">true</span> <span style="color:#080;font-weight:bold">do</span>
-  <span style="color:#777"># Tests inserted here</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+Flow.create interface: 'MyInterface', reload_target: true do
+  # Tests inserted here
+end
+</code></pre>
 
       <p>If the test interface does not set the <code>reload_target</code> attribute to <code>false</code>, then a flow file may do so to prevent reloading of the target.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Flow</span>.create <span style="color:#606">interface</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">MyInterface</span><span style="color:#710">'</span></span>, <span style="color:#606">reload_target</span>: <span style="color:#069">false</span> <span style="color:#080;font-weight:bold">do</span>
-  <span style="color:#777"># Tests inserted here</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">Flow.create interface: 'MyInterface', reload_target: false do
+  # Tests inserted here
+end
+</code></pre>
 
       <div style="position: relative">
   <hr>

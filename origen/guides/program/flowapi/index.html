@@ -502,17 +502,13 @@ test based on whether a previous test passed, failed or ran at all.</li>
 
       <p>Here are some examples of how to apply these methods to single tests:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Run this test to characterize the vreg, only if the 'vreg_cz' flag has been enabled</span>
-para <span style="color:#A60">:vreg_meas</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">107</span>, <span style="color:#606">cz</span>: <span style="color:#069">true</span>, <span style="color:#606">if_enable</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">vreg_cz</span><span style="color:#710">"</span></span>
-<span style="color:#777"># Apply HVST to the vreg module, unless the 'skip_hvst' flag has been enabled</span>
-func <span style="color:#A60">:vreg_hvst</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">101</span>, <span style="color:#606">hv</span>: <span style="color:#00D">10</span>.V, <span style="color:#606">vdd</span>: <span style="color:#A60">:max</span>, <span style="color:#606">unless_enable</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">skip_hvst</span><span style="color:#710">"</span></span>
-<span style="color:#777"># Run this test only at cold</span>
-para <span style="color:#A60">:vreg_meas</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">105</span>, <span style="color:#606">lo</span>: <span style="color:#60E">1.12</span>, <span style="color:#606">hi</span>: <span style="color:#60E">1.34</span><span style="color:#036;font-weight:bold">V</span>, <span style="color:#606">if_job</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">FC</span><span style="color:#710">"</span></span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># Run this test to characterize the vreg, only if the 'vreg_cz' flag has been enabled
+para :vreg_meas, softbin: 107, cz: true, if_enable: "vreg_cz"
+# Apply HVST to the vreg module, unless the 'skip_hvst' flag has been enabled
+func :vreg_hvst, softbin: 101, hv: 10.V, vdd: :max, unless_enable: "skip_hvst"
+# Run this test only at cold
+para :vreg_meas, softbin: 105, lo: 1.12, hi: 1.34V, if_job: "FC"
+</code></pre>
 
       <p>The use of <code>if/unless_enable</code> will make use of flow enable words on Teradyne platforms and user
 flow variables on Advantest.
@@ -522,24 +518,20 @@ flow variable named <code>@JOB</code> on Advantest.</p>
       <p>Both of these controls support a block form, which allows it to be applied to a group of test
 and, in the case of enable words, it also provides a way to implement AND and OR logic:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># OR - Run these tests if either word is set</span>
-if_enable [<span style="color:#A60">:word1</span>, <span style="color:#A60">:word2</span>] <span style="color:#080;font-weight:bold">do</span>
-  <span style="color:#606">func</span>: <span style="color:#A60">:test1</span>
-  <span style="color:#606">func</span>: <span style="color:#A60">:test2</span>
-<span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby"># OR - Run these tests if either word is set
+if_enable [:word1, :word2] do
+  func: :test1
+  func: :test2
+end
 
-<span style="color:#777"># AND - Run these tests if both words are set</span>
-if_enable <span style="color:#A60">:word1</span> <span style="color:#080;font-weight:bold">do</span>
-  if_enable <span style="color:#A60">:word2</span> <span style="color:#080;font-weight:bold">do</span>
-    <span style="color:#606">func</span>: <span style="color:#A60">:test1</span>
-    <span style="color:#606">func</span>: <span style="color:#A60">:test2</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+# AND - Run these tests if both words are set
+if_enable :word1 do
+  if_enable :word2 do
+    func: :test1
+    func: :test2
+  end
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Execution_Based_on_Relational_Expressions"></a>          
@@ -576,51 +568,43 @@ if_enable <span style="color:#A60">:word1</span> <span style="color:#080;font-we
 
       <p>Here are some examples of how to apply these methods:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Run these tests if VAR1 is greater than 2</span>
-whenever gt(<span style="color:#A60">:var1</span>, <span style="color:#00D">2</span>) <span style="color:#080;font-weight:bold">do</span>
-  <span style="color:#606">func</span>: <span style="color:#A60">:test1</span>
-  <span style="color:#606">func</span>: <span style="color:#A60">:test2</span>
-<span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby"># Run these tests if VAR1 is greater than 2
+whenever gt(:var1, 2) do
+  func: :test1
+  func: :test2
+end
 
-<span style="color:#777"># Run these tests if VAR1 is greater than 2 AND VAR2 is less than VAR3</span>
-whenever_all gt(<span style="color:#A60">:var1</span>, <span style="color:#00D">2</span>), lt(<span style="color:#A60">:var2</span>, <span style="color:#A60">:var3</span>) <span style="color:#080;font-weight:bold">do</span>
-  <span style="color:#606">func</span>: <span style="color:#A60">:test1</span>
-  <span style="color:#606">func</span>: <span style="color:#A60">:test2</span>
-<span style="color:#080;font-weight:bold">end</span>
+# Run these tests if VAR1 is greater than 2 AND VAR2 is less than VAR3
+whenever_all gt(:var1, 2), lt(:var2, :var3) do
+  func: :test1
+  func: :test2
+end
 
-<span style="color:#777"># Run these tests if VAR1 is greater than 2 OR VAR2 is less than VAR3</span>
-whenever_any gt(<span style="color:#A60">:var1</span>, <span style="color:#00D">2</span>), lt(<span style="color:#A60">:var2</span>, <span style="color:#A60">:var3</span>) <span style="color:#080;font-weight:bold">do</span>
-  <span style="color:#606">func</span>: <span style="color:#A60">:test1</span>
-  <span style="color:#606">func</span>: <span style="color:#A60">:test2</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+# Run these tests if VAR1 is greater than 2 OR VAR2 is less than VAR3
+whenever_any gt(:var1, 2), lt(:var2, :var3) do
+  func: :test1
+  func: :test2
+end
+</code></pre>
 
       <p>Additionally, these variables can be set in the flow using the <strong>set</strong> method as shown in here:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Set the VAR1 = 1</span>
-set <span style="color:#A60">:var1</span>, <span style="color:#00D">1</span>
-set <span style="color:#A60">:var2</span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">OFF</span><span style="color:#710">'</span></span>
-set <span style="color:#A60">:var3</span>, <span style="color:#60E">3.14</span>
+      <pre><code class="language-ruby"># Set the VAR1 = 1
+set :var1, 1
+set :var2, 'OFF'
+set :var3, 3.14
 
-<span style="color:#777"># Update VAR1 value based on some runtime condition</span>
-if_enable <span style="color:#A60">:some_other_variable</span> <span style="color:#080;font-weight:bold">do</span>
-  set <span style="color:#A60">:var1</span>, <span style="color:#00D">3</span>
-<span style="color:#080;font-weight:bold">end</span>
+# Update VAR1 value based on some runtime condition
+if_enable :some_other_variable do
+  set :var1, 3
+end
 
-<span style="color:#777"># Run these tests if VAR1 is greater than 2</span>
-whenever gt(<span style="color:#A60">:var1</span>, <span style="color:#00D">2</span>) <span style="color:#080;font-weight:bold">do</span>
-  <span style="color:#606">func</span>: <span style="color:#A60">:test1</span>
-  <span style="color:#606">func</span>: <span style="color:#A60">:test2</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+# Run these tests if VAR1 is greater than 2
+whenever gt(:var1, 2) do
+  func: :test1
+  func: :test2
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Execution_Based_on_a_Previous_Test"></a>          
@@ -643,12 +627,8 @@ the conditional execution will depend.
 This ID must be assigned by you in the flow line of the previous test by adding
 an <code>:id</code> key, like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>para <span style="color:#A60">:vreg_meas</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">105</span>, <span style="color:#606">lo</span>: <span style="color:#60E">1.12</span>, <span style="color:#606">hi</span>: <span style="color:#60E">1.34</span>, <span style="color:#606">id</span>: <span style="color:#A60">:vreg_meas_1</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">para :vreg_meas, softbin: 105, lo: 1.12, hi: 1.34, id: :vreg_meas_1
+</code></pre>
 
       <p>The ID can be any value you like as long as it is unique, Origen will raise an error
 if any duplicate IDs are encountered.</p>
@@ -657,22 +637,18 @@ if any duplicate IDs are encountered.</p>
 of the previous test is given in place of the enable flag or job name.
 Here are some examples:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>para <span style="color:#A60">:vreg_meas</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">105</span>, <span style="color:#606">lo</span>: <span style="color:#60E">1.12</span>, <span style="color:#606">hi</span>: <span style="color:#60E">1.34</span>, <span style="color:#606">id</span>: <span style="color:#A60">:vreg_meas_1</span>
-<span style="color:#777"># Automatically characterize the vreg if the measurement fails</span>
-para <span style="color:#A60">:vreg_meas</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">107</span>, <span style="color:#606">cz</span>: <span style="color:#069">true</span>, <span style="color:#606">if_failed</span>: <span style="color:#A60">:vreg_meas_1</span>
-<span style="color:#777"># Then bin out</span>
-bin <span style="color:#00D">3</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">105</span>, <span style="color:#606">if_failed</span>: <span style="color:#A60">:vreg_meas_1</span>
-<span style="color:#777"># Check if the HVST has already been run on this device</span>
-func <span style="color:#A60">:rd_vreg_hvst_passcode</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">50</span>, <span style="color:#606">vdd</span>: <span style="color:#A60">:nom</span>, <span style="color:#606">id</span>: <span style="color:#A60">:vreg_hvst_done</span>
-<span style="color:#777"># If not run it</span>
-func <span style="color:#A60">:vreg_hvst</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">101</span>, <span style="color:#606">hv</span>: <span style="color:#00D">10</span>.V, <span style="color:#606">vdd</span>: <span style="color:#A60">:max</span>, <span style="color:#606">unless_passed</span>: <span style="color:#A60">:vreg_hvst_done</span>
-<span style="color:#777"># And program the flag for next time</span>
-func <span style="color:#A60">:pgm_vreg_hvst_passcode</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">51</span>, <span style="color:#606">vdd</span>: <span style="color:#A60">:nom</span>, <span style="color:#606">unless_passed</span>: <span style="color:#A60">:vreg_hvst_done</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">para :vreg_meas, softbin: 105, lo: 1.12, hi: 1.34, id: :vreg_meas_1
+# Automatically characterize the vreg if the measurement fails
+para :vreg_meas, softbin: 107, cz: true, if_failed: :vreg_meas_1
+# Then bin out
+bin 3, softbin: 105, if_failed: :vreg_meas_1
+# Check if the HVST has already been run on this device
+func :rd_vreg_hvst_passcode, softbin: 50, vdd: :nom, id: :vreg_hvst_done
+# If not run it
+func :vreg_hvst, softbin: 101, hv: 10.V, vdd: :max, unless_passed: :vreg_hvst_done
+# And program the flag for next time
+func :pgm_vreg_hvst_passcode, softbin: 51, vdd: :nom, unless_passed: :vreg_hvst_done
+</code></pre>
 
       <p>Origen automatically takes care of setting up all of the tests in the relationship:</p>
 
@@ -685,24 +661,20 @@ func <span style="color:#A60">:pgm_vreg_hvst_passcode</span>, <span style="color
       <p>AND and OR conditions can be created by using <code>if_any/all_failed/passed</code>
 variations as follows:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>func <span style="color:#A60">:test1</span>, <span style="color:#606">id</span>: <span style="color:#A60">:t1</span>
-func <span style="color:#A60">:test2</span>, <span style="color:#606">id</span>: <span style="color:#A60">:t2</span>
+      <pre><code class="language-ruby">func :test1, id: :t1
+func :test2, id: :t2
 
-<span style="color:#777"># OR logic - This test will run if either of the referenced tests fail</span>
-func <span style="color:#A60">:test3</span>, <span style="color:#606">if_any_failed</span>: [<span style="color:#A60">:t1</span>, <span style="color:#A60">:t2</span>]
+# OR logic - This test will run if either of the referenced tests fail
+func :test3, if_any_failed: [:t1, :t2]
 
-<span style="color:#777"># AND logic - This test will only run if both of the referenced tests fail</span>
-func <span style="color:#A60">:test4</span>, <span style="color:#606">if_all_passed</span>: [<span style="color:#A60">:t1</span>, <span style="color:#A60">:t2</span>]
+# AND logic - This test will only run if both of the referenced tests fail
+func :test4, if_all_passed: [:t1, :t2]
 
-<span style="color:#777"># Block forms are available as with all condition APIs</span>
-if_any_passed [<span style="color:#A60">:t1</span>, <span style="color:#A60">:t2</span>] <span style="color:#080;font-weight:bold">do</span>
-  <span style="color:#777">#...</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+# Block forms are available as with all condition APIs
+if_any_passed [:t1, :t2] do
+  #...
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="References_to_External_Tests"></a>          
@@ -716,26 +688,22 @@ will prevent an error being raised for the ID not being found within the current
 
       <p>Here is an example:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># program/flow_1.rb</span>
-<span style="color:#036;font-weight:bold">Flow</span>.create <span style="color:#080;font-weight:bold">do</span>
-  <span style="color:#777"># This ID can only be referenced within this flow</span>
-  func <span style="color:#A60">:test1</span>, <span style="color:#606">id</span>: <span style="color:#A60">:t1</span>
-  <span style="color:#777"># This ID can be referenced outside of this flow</span>
-  func <span style="color:#A60">:test2</span> <span style="color:#606">id</span>: <span style="color:#A60">:extern_t2</span>
-<span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby"># program/flow_1.rb
+Flow.create do
+  # This ID can only be referenced within this flow
+  func :test1, id: :t1
+  # This ID can be referenced outside of this flow
+  func :test2 id: :extern_t2
+end
 
-<span style="color:#777"># program/flow_2.rb</span>
-<span style="color:#036;font-weight:bold">Flow</span>.create <span style="color:#080;font-weight:bold">do</span>
-  <span style="color:#777"># This will generate an undefined ID error</span>
-  func <span style="color:#A60">:test3</span>, <span style="color:#606">if_failed</span>: <span style="color:#A60">:t1</span>
-  <span style="color:#777"># But this will work, since the ID's name indicates that it is an intentional external reference</span>
-  func <span style="color:#A60">:test4</span>, <span style="color:#606">if_failed</span>: <span style="color:#A60">:extern_t2</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+# program/flow_2.rb
+Flow.create do
+  # This will generate an undefined ID error
+  func :test3, if_failed: :t1
+  # But this will work, since the ID's name indicates that it is an intentional external reference
+  func :test4, if_failed: :extern_t2
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Applying_Conditions_to_Sub-Flows"></a>          
@@ -751,15 +719,11 @@ execution.
 For example, here the ‘FH’ job requirement will be applied to all tests
 imported from the vreg component:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Only run the vreg tests at hot</span>
-if_job <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">FH</span><span style="color:#710">"</span></span> <span style="color:#080;font-weight:bold">do</span>
-  import <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">components/vreg</span><span style="color:#710">"</span></span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># Only run the vreg tests at hot
+if_job "FH" do
+  import "components/vreg"
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Conditions_Applied_to_Groups"></a>          
@@ -769,29 +733,25 @@ if_job <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#
       <p>Groups can also be used to implement AND/OR logic, here is an example of how you
 might implement a speed binning flow:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>group <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">200Mhz</span><span style="color:#710">"</span></span>, <span style="color:#606">id</span>: <span style="color:#A60">:spec200</span> <span style="color:#080;font-weight:bold">do</span>
-  func <span style="color:#A60">:test1_200</span>
-  func <span style="color:#A60">:test2_200</span>
-<span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby">group "200Mhz", id: :spec200 do
+  func :test1_200
+  func :test2_200
+end
 
-<span style="color:#777"># Bin out to bin 1 if passed at 200 Mhz, here if_passed will apply to all tests in the group</span>
-pass <span style="color:#00D">1</span>, <span style="color:#606">if_passed</span>: <span style="color:#A60">:spec200</span>
+# Bin out to bin 1 if passed at 200 Mhz, here if_passed will apply to all tests in the group
+pass 1, if_passed: :spec200
 
-group <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">100Mhz</span><span style="color:#710">"</span></span>, <span style="color:#606">id</span>: <span style="color:#A60">:spec100</span> <span style="color:#080;font-weight:bold">do</span>
-  func <span style="color:#A60">:test1_100</span>
-  func <span style="color:#A60">:test2_100</span>
-<span style="color:#080;font-weight:bold">end</span>
+group "100Mhz", id: :spec100 do
+  func :test1_100
+  func :test2_100
+end
 
-<span style="color:#777"># Bin out to bin 2 if passed at 100 Mhz, here if_passed will apply to all tests in the group</span>
-pass <span style="color:#00D">2</span>, <span style="color:#606">if_passed</span>: <span style="color:#A60">:spec100</span>
+# Bin out to bin 2 if passed at 100 Mhz, here if_passed will apply to all tests in the group
+pass 2, if_passed: :spec100
 
-<span style="color:#777"># Otherwise we have failed</span>
-bin <span style="color:#00D">3</span>
-</pre></div>
-</div>
-      </div>
+# Otherwise we have failed
+bin 3
+</code></pre>
 
       <div>    
   <a class="anchor" name="Manually_Setting_and_Referencing_Flags"></a>          
@@ -804,21 +764,17 @@ party test block will later reference.</p>
 
       <p>An API exists to manually set and react to flags in these situations:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>log <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Example of manual flag setting upon pass or fail</span><span style="color:#710">"</span></span>
-test <span style="color:#A60">:test1</span>, <span style="color:#606">on_pass</span>: { <span style="color:#606">set_flag</span>: <span style="color:#A60">:my_pass_flag</span> }, <span style="color:#606">on_fail</span>: { <span style="color:#606">set_flag</span>: <span style="color:#A60">:my_fail_flag</span> }, <span style="color:#606">continue</span>: <span style="color:#069">true</span>
+      <pre><code class="language-ruby">log "Example of manual flag setting upon pass or fail"
+test :test1, on_pass: { set_flag: :my_pass_flag }, on_fail: { set_flag: :my_fail_flag }, continue: true
 
-<span style="color:#777"># Execute only if the above pass flag was set</span>
-test <span style="color:#A60">:test2</span>, <span style="color:#606">if_flag</span>: <span style="color:#A60">:my_pass_flag</span>
+# Execute only if the above pass flag was set
+test :test2, if_flag: :my_pass_flag
 
-<span style="color:#777"># Execute only if the above pass flag was not set</span>
-unless_flag <span style="color:#A60">:my_pass_flag</span> <span style="color:#080;font-weight:bold">do</span>
-  test <span style="color:#A60">:test3</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+# Execute only if the above pass flag was not set
+unless_flag :my_pass_flag do
+  test :test3
+end
+</code></pre>
 
       <p>Note that flag names will usually be forced to uppercase, this is to institute a convention that
 flags/flow variables are always uppercased in order to avoid any test program bugs from
@@ -827,22 +783,18 @@ incorrectly referencing a given flag due to case sensitivity.</p>
       <p>However, if you need to reference a flag from a 3rd party test module that does not follow this
 convention, then a literal flag can be supplied by prefixing it with <code>$</code> as shown below:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>test <span style="color:#A60">:test1</span>, <span style="color:#606">on_fail</span>: { <span style="color:#606">set_flag</span>: <span style="color:#A60">:$My_Mixed_Flag</span> }, <span style="color:#606">continue</span>: <span style="color:#069">true</span>
-test <span style="color:#A60">:test2</span>, <span style="color:#606">if_flag</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">$My_Mixed_Flag</span><span style="color:#710">"</span></span>
-unless_flag <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">$My_Mixed_Flag</span><span style="color:#710">"</span></span> <span style="color:#080;font-weight:bold">do</span>
-  test <span style="color:#A60">:test3</span>
-<span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby">test :test1, on_fail: { set_flag: :$My_Mixed_Flag }, continue: true
+test :test2, if_flag: "$My_Mixed_Flag"
+unless_flag "$My_Mixed_Flag" do
+  test :test3
+end
 
-test <span style="color:#A60">:extra_test</span>, <span style="color:#606">if_enable</span>: <span style="color:#A60">:$MCEn_extras</span>
-unless_enable <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">$MCEn_test</span><span style="color:#710">"</span></span> <span style="color:#080;font-weight:bold">do</span>
-  test <span style="color:#A60">:test1</span>
-  test <span style="color:#A60">:test2</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+test :extra_test, if_enable: :$MCEn_extras
+unless_enable "$MCEn_test" do
+  test :test1
+  test :test2
+end
+</code></pre>
 
       <p>In all cases the <code>$</code> will be removed from the final flag name that appears in the test program.</p>
 
@@ -853,41 +805,62 @@ unless_enable <span style="background-color:hsla(0,100%,50%,0.05)"><span style="
 
       <p>Add the flow bypass option:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Flow</span>.create <span style="color:#606">interface</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">My::Interface</span><span style="color:#710">'</span></span>, <span style="color:#606">flow_bypass</span>: <span style="color:#069">true</span> <span style="color:#080;font-weight:bold">do</span>
-  test <span style="color:#A60">:test1</span>
-<span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby">Flow.create interface: 'My::Interface', flow_bypass: true do
+  test :test1
+end
 
-<span style="color:#036;font-weight:bold">Flow</span>.create <span style="color:#606">interface</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">My::Interface</span><span style="color:#710">'</span></span> <span style="color:#080;font-weight:bold">do</span>
-  flow.flow_bypass = <span style="color:#069">true</span>
-  test <span style="color:#A60">:test1</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+Flow.create interface: 'My::Interface' do
+  flow.flow_bypass = true
+  test :test1
+end
+</code></pre>
 
       <p>Add group bypass option:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>group <span style="color:#A60">:my_group</span>, <span style="color:#606">bypass</span>: <span style="color:#069">true</span> <span style="color:#080;font-weight:bold">do</span>
-  test <span style="color:#A60">:test1</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">group :my_group, bypass: true do
+  test :test1
+end
+</code></pre>
 
       <p>Add group comment/description options;</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>group <span style="color:#A60">:my_other_group</span>, <span style="color:#606">comment</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">This is the other group</span><span style="color:#710">"</span></span> <span style="color:#080;font-weight:bold">do</span>
-  test <span style="color:#A60">:test1</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
+      <pre><code class="language-ruby">group :my_other_group, comment: "This is the other group" do
+  test :test1
+end
+</code></pre>
+
+      <div>    
+  <a class="anchor" name="Flow_Loops_for_V93k_(SMT7_only)"></a>          
+  <h4><a href="#Flow_Loops_for_V93k_(SMT7_only)">Flow Loops for V93k (SMT7 only)</a></h4>          
 </div>
-      </div>
+      <p>Use flow loop control to permit re-running tests without using additional sequence labels.</p>
+
+      <pre><code class="language-ruby">loop from: 0, to: 5, step: 1, var: '$LOOP_VARIABLE' do
+  func :test_myloop, number: 56000
+end
+</code></pre>
+
+      <p>Indicating step value is optional, default is 1.</p>
+
+      <p>These loops can also be nested:
+~~~ruby
+loop from: 0, to: 9, step: 2, var: ‘$LOOP_VARIABLE1’do
+  loop from: 1, to: 10, step: 1, var: ‘$LOOP_VARIABLE2’ do
+    loop from: 1, to: 5, step: 1, var: ‘$LOOP_VARIABLE3’ do
+      func :test_myloop5, number: 56400
+    end
+  end
+end
+~~~</p>
+
+      <p>You can also indicate a test number increment if desired (default is 1):
+~~~ruby
+loop from: 0, to: 5, var: ‘$LOOP_VARIABLE’, test_num_inc: 2 do
+    func :test_myloop3, number: 56200
+end
+~~~</p>
+
+      <p>Decrementing loops, having <code>from:</code> value &gt; <code>to:</code> value and using negative <code>step:</code>, is also supported.</p>
 
       <div style="position: relative">
   <hr>

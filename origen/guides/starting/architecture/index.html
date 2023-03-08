@@ -478,9 +478,7 @@ you need within a single application, a so-called monolithic application.</p>
 
       <p>You would typically have a single target, and a single file for your code within <code>lib</code>:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>App Root (Origen.root)
+      <pre><code class="language-text">App Root (Origen.root)
 |
 +---target
 |       device1.rb
@@ -490,15 +488,11 @@ you need within a single application, a so-called monolithic application.</p>
     |   
     \---device1
             top_level.rb   # The application code lives in here
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>As your device code grows, you might start to split it out in separate modules:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>App Root (Origen.root)
+      <pre><code class="language-text">App Root (Origen.root)
 |
 +---target
 |       device1.rb
@@ -511,15 +505,11 @@ you need within a single application, a so-called monolithic application.</p>
             adc.rb         # Everything related to ADC
             ram.rb         # Everything related to RAM, etc.
             flash.rb       
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>For complex modules, you might develop another layer of hierarchy:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>App Root (Origen.root)
+      <pre><code class="language-text">App Root (Origen.root)
 |
 +---target
 |       device1.rb
@@ -536,26 +526,20 @@ you need within a single application, a so-called monolithic application.</p>
                 model.rb
                 controller.rb
                 bist.rb
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>At this point you should be trying to keep your code namespaced based on where it lives,
 so for example, the <code>lib/device1/flash/bist.rb</code> file would contain this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">Device1</span>
-  <span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">Flash</span>
-    <span style="color:#777"># Model for the flash BIST</span>
-    <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">BIST</span>
+      <pre><code class="language-ruby">module Device1
+  module Flash
+    # Model for the flash BIST
+    class BIST
       
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+    end
+  end
+end
+</code></pre>
 
       <p>Now let’s say that the need to support a 2nd device comes along, we could start that process
 by just copying everything from <code>lib/device1</code> to <code>lib/device2</code>.</p>
@@ -563,9 +547,7 @@ by just copying everything from <code>lib/device1</code> to <code>lib/device2</c
       <p>We may also realize that we made a mistake initially by calling our app <code>device1</code>, so we’ll
 take the opportunity to rename it after the name given to the product family, let’s say <code>family</code>:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>App Root (Origen.root)
+      <pre><code class="language-text">App Root (Origen.root)
 |
 +---target
 |       device1.rb
@@ -594,17 +576,13 @@ take the opportunity to rename it after the name given to the product family, le
                     model.rb
                     controller.rb
                     bist.rb
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>There is a high chance of duplication here, especially if the devices both instantiate some of the
 same physical IP blocks. Let’s say they both use the same flash IP, in that case we can remove some
 of the duplication by popping the flash code up a level:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>App Root (Origen.root)
+      <pre><code class="language-text">App Root (Origen.root)
 |
 +---target
 |       device1.rb
@@ -628,33 +606,25 @@ of the duplication by popping the flash code up a level:</p>
                 model.rb
                 controller.rb
                 bist.rb
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>For comparison, our flash bist module now looks like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">Family</span>
-  <span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">Flash</span>
-    <span style="color:#777"># Model for the flash BIST</span>
-    <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">BIST</span>
+      <pre><code class="language-ruby">module Family
+  module Flash
+    # Model for the flash BIST
+    class BIST
       
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+    end
+  end
+end
+</code></pre>
 
       <p>Finally, we might find that since these devices come from the same family, much of the top-level code
 might be the same. For example, if we are creating patterns, perhaps they both use the same code to
 create a mode entry sequence, so we can make that common:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>App Root (Origen.root)
+      <pre><code class="language-text">App Root (Origen.root)
 |
 +---target
 |       device1.rb
@@ -680,9 +650,7 @@ create a mode entry sequence, so we can make that common:</p>
                 model.rb
                 controller.rb
                 bist.rb
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>By continuing to follow these same principles, this application can be further expanded to support many
 additional devices features, while still being maintainable by minimizing duplication and by keeping
@@ -729,9 +697,7 @@ and to maintain which versions of the plugins to use. i.e. it is a bill of mater
 eco-system (meaning both internal and external to a given company) are required for the given product.
 For that reason, these are commonly referred to as “BOM apps”:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>App Root (Origen.root)
+      <pre><code class="language-text">App Root (Origen.root)
 |
 +---target
 |       device1.rb
@@ -742,13 +708,9 @@ For that reason, these are commonly referred to as “BOM apps”:</p>
     \---device1
             top_level.rb   # Deals with top-level concerns
             adc.rb         # Everything related to ADC, seems to be product specific for now
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>App Root (Origen.root)
+      <pre><code class="language-text">App Root (Origen.root)
 |
 +---target
 |       device2.rb
@@ -759,15 +721,11 @@ For that reason, these are commonly referred to as “BOM apps”:</p>
     \---device2
             top_level.rb   # Deals with top-level concerns
             adc.rb         # Everything related to ADC, seems to be product specific for now
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>Our flash IP is managed by a dedicated team, so becomes its own <a href="/origen/guides/plugins/introduction/">Origen plugin</a>:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>App Root (Origen.root)
+      <pre><code class="language-text">App Root (Origen.root)
 |
 \---lib
     |   flash.rb         # This file is used to load everything
@@ -776,16 +734,12 @@ For that reason, these are commonly referred to as “BOM apps”:</p>
             model.rb
             controller.rb
             bist.rb
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>The product team/community maintains another plugin that provides everything that is common amongst the
 device family, including the RAM module for now:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>App Root (Origen.root)
+      <pre><code class="language-text">App Root (Origen.root)
 |
 \---lib
     |   family.rb         # This file is used to load everything
@@ -793,9 +747,7 @@ device family, including the RAM module for now:</p>
     \---family
             mode_entry.rb    # Common mode entry logic, shared by all devices in this family
             ram.rb           # RAM code shared by all devices in this family, but nowhere else for now
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>With this distributed architecture, all duplication has been aggressively eliminated, making it very easy
 for a central group or person, like the flash team in this example, to roll out an improved module to the

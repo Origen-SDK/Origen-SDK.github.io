@@ -463,29 +463,25 @@ components from within an interface file.</p>
 
       <p>To re-cap this is the shell required to implement an interface:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/vreg/interface.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">Vreg</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">Interface</span>
-    include <span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">ProgramGenerators</span>
+      <pre><code class="language-ruby"># lib/vreg/interface.rb
+module Vreg
+  class Interface
+    include OrigenTesters::ProgramGenerators
 
-    <span style="color:#777"># An example method that can be called from your test flow to generate a functional test</span>
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">func</span>(name, options={})
-      <span style="color:#777"># If your interface supports multiple platforms, add conditional logic like this, if you</span>
-      <span style="color:#777"># only ever want to support one platform then you don't need this</span>
-      <span style="color:#080;font-weight:bold">if</span> tester.j750?
-        <span style="color:#777"># Functional test implementation for J750</span>
-      <span style="color:#080;font-weight:bold">elsif</span> tester.v93k?
-        <span style="color:#777"># Functional test implementation for V93K</span>
-      <span style="color:#080;font-weight:bold">end</span>
-    <span style="color:#080;font-weight:bold">end</span>
+    # An example method that can be called from your test flow to generate a functional test
+    def func(name, options={})
+      # If your interface supports multiple platforms, add conditional logic like this, if you
+      # only ever want to support one platform then you don't need this
+      if tester.j750?
+        # Functional test implementation for J750
+      elsif tester.v93k?
+        # Functional test implementation for V93K
+      end
+    end
 
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  end
+end
+</code></pre>
 
       <p>The <code>OrigenTesters::ProgramGenerators</code> will provide the interface
 with access to all of the platform generator APIs for the platforms that it supports.</p>
@@ -511,12 +507,8 @@ should be consulted for the most up to date information on the methods available
 
       <p>A new test instance can be instantiated like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>test_instances.add(<span style="color:#A60">:vreg_func</span>, <span style="color:#A60">:functional</span>)
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">test_instances.add(:vreg_func, :functional)
+</code></pre>
 
       <p>This one line of code does a lot of things:</p>
 
@@ -537,28 +529,20 @@ called ‘vreg_func’. Not bad.</p>
       <p>Convenience methods exist where you can call a method named after the type of the test instance,
 this is equivalent:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>test_instances.functional(<span style="color:#A60">:vreg_func</span>)
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">test_instances.functional(:vreg_func)
+</code></pre>
 
       <p>You will of course want to decorate your new test instance with attributes that are specific
 to your application, to do that you simply assign the returned instance to a variable and
 then you can programmatically set the attributes that you want.
 For example:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>ins = test_instances.functional(<span style="color:#A60">:vreg_func</span>)
-ins.ac_category = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Spec</span><span style="color:#710">"</span></span>
-ins.ac_selector = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Default</span><span style="color:#710">"</span></span>
-ins.time_sets = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Tim</span><span style="color:#710">"</span></span>
-ins.pin_levels = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Lvl</span><span style="color:#710">"</span></span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">ins = test_instances.functional(:vreg_func)
+ins.ac_category = "Spec"
+ins.ac_selector = "Default"
+ins.time_sets = "Tim"
+ins.pin_levels = "Lvl"
+</code></pre>
 
       <p>The name of these methods is the underscored (to align with general Ruby conventions)
 version of the name in the IG-XL columns headers and they should hopefully be very
@@ -570,15 +554,11 @@ this will all be done automatically.</p>
       <p>Attributes can also be passed in when instantiating the new instance, this is equivalent
 if you prefer:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>ins = test_instances.functional <span style="color:#A60">:vreg_func</span>, <span style="color:#606">ac_category</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Spec</span><span style="color:#710">"</span></span>,
-                                            <span style="color:#606">ac_selector</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Default</span><span style="color:#710">"</span></span>,
-                                            <span style="color:#606">time_sets</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Tim</span><span style="color:#710">"</span></span>,
-                                            <span style="color:#606">pin_levels</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Lvl</span><span style="color:#710">"</span></span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">ins = test_instances.functional :vreg_func, ac_category: "Spec",
+                                            ac_selector: "Default",
+                                            time_sets: "Tim",
+                                            pin_levels: "Lvl"
+</code></pre>
 
       <div>    
   <a class="anchor" name="Instance_Type_Specific_Attributes"></a>          
@@ -590,13 +570,9 @@ specified.
 For example in our functional instance we can set the pattern and call a pre-test
 interpose function like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>ins.pattern = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">vreg_functional</span><span style="color:#710">"</span></span>
-ins.pre_test_func = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">someInterposeFunc</span><span style="color:#710">"</span></span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">ins.pattern = "vreg_functional"
+ins.pre_test_func = "someInterposeFunc"
+</code></pre>
 
       <p>Again the method names should hopefully be intuitive and should correspond to
 the IG-XL names.</p>
@@ -629,55 +605,51 @@ information):</p>
 
       <p>The <code>add_til</code> method is available to describe a custom instance. An example is below.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># app_interface</span>
+      <pre><code class="language-ruby"># app_interface
 
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options = {})
-  add_til <span style="color:#A60">:my_lib</span>,
-    <span style="color:#606">test_a</span>: {
-      <span style="color:#777"># Basic arg</span>
-      <span style="color:#606">input1</span>: <span style="color:#A60">:arg0</span>,
-      <span style="color:#777"># Arg with default value</span>
-      <span style="color:#606">input2</span>: [<span style="color:#A60">:arg1</span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">default</span><span style="color:#710">'</span></span>],
-      <span style="color:#777"># Arg with default and list of predefined allowed values</span>
-      <span style="color:#606">input3</span>: [<span style="color:#A60">:arg2</span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">volt</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">%w(</span><span style="color:#D20">volt curr</span><span style="color:#710">)</span></span>],
-      <span style="color:#777"># Attribute aliases can be defined like this:</span>
-      <span style="color:#606">aliases</span>: {
-        <span style="color:#606">some_alias_name</span>: <span style="color:#A60">:input1</span>,
-        <span style="color:#606">another_alias</span>:   <span style="color:#A60">:input2</span>
+def initialize(options = {})
+  add_til :my_lib,
+    test_a: {
+      # Basic arg
+      input1: :arg0,
+      # Arg with default value
+      input2: [:arg1, 'default'],
+      # Arg with default and list of predefined allowed values
+      input3: [:arg2, 'volt', %w(volt curr)],
+      # Attribute aliases can be defined like this:
+      aliases: {
+        some_alias_name: :input1,
+	another_alias:   :input2
       },
-      <span style="color:#777"># Define any methods you want for the instance like this</span>
-      <span style="color:#606">methods</span>: {
-        <span style="color:#777"># An optional finalize method can be supplied, this method will be called</span>
-        <span style="color:#777"># immediately before the test instance is rendered. The test object itself</span>
-        <span style="color:#777"># will be passed as an argument.</span>
-        <span style="color:#606">finalize</span>: lambda <span style="color:#080;font-weight:bold">do</span> |ti|
-          ti.proc_name = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">blah_blah</span><span style="color:#710">'</span></span>
-          ti.proc_called_as = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#710">'</span></span>
-        <span style="color:#080;font-weight:bold">end</span>,
-        <span style="color:#606">set_some_arg</span>: lambda <span style="color:#080;font-weight:bold">do</span> |ti, val|
-          ti.input1 = val
-        <span style="color:#080;font-weight:bold">end</span>
+      # Define any methods you want for the instance like this
+      methods: {
+        # An optional finalize method can be supplied, this method will be called
+	# immediately before the test instance is rendered. The test object itself
+	# will be passed as an argument.
+	finalize: lambda do |ti|
+	  ti.proc_name = 'blah_blah'
+	  ti.proc_called_as = ''
+	end,
+	set_some_arg: lambda do |ti, val|
+	  ti.input1 = val
+	end
       }
     },
     
-    <span style="color:#606">test_b</span>: {
-      <span style="color:#777"># ...</span>
+    test_b: {
+      # ...
     }
-<span style="color:#080;font-weight:bold">end</span>
+end
 
-<span style="color:#777"># Here's how to use the custom library</span>
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">do_test_a</span>(name, options = {})
+# Here's how to use the custom library
+def do_test_a(name, options = {})
   ti = test_instances.my_lib.test_a name
-  ti.input1 = <span style="color:#60E">50.0</span>
-  ti.input3 = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">curr</span><span style="color:#710">'</span></span>
+  ti.input1 = 50.0
+  ti.input3 = 'curr'
   
-  <span style="color:#777"># ...</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  # ...
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Legacy_Custom_Test_Instance_Types_(prefered_method_is_above)"></a>          
@@ -700,13 +672,9 @@ in IG-XL.</p>
       <p>So the previous example of adding a pattern and interpose function call to our functional
 instance could be re-written as shown below:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>ins.arg0 = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">vreg_functional</span><span style="color:#710">"</span></span>
-ins.arg3 = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">someInterposeFunc</span><span style="color:#710">"</span></span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">ins.arg0 = "vreg_functional"
+ins.arg3 = "someInterposeFunc"
+</code></pre>
 
       <p>You would also need to configure the basic attributes such as the template type and name.
 To get an idea of what is required refer to the <code>TEST_INSTANCE_DEFAULTS</code> constant
@@ -743,17 +711,13 @@ range value that it represents.
 A <a href="http://origen-sdk.org/testers/api/OrigenTesters/IGXLBasedTester/Base/TestInstance.html#set_irange-instance_method">set_irange</a>
 method is available to help, here are some examples:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>ins.set_irange(<span style="color:#A60">:smart</span>)
-ins.set_irange(<span style="color:#606">ua</span>: <span style="color:#00D">2</span>)
-ins.set_irange(<span style="color:#00D">2</span>.uA) <span style="color:#777"># Same as above</span>
-ins.set_irange(<span style="color:#606">ma</span>: <span style="color:#00D">200</span>)
-ins.set_irange(<span style="color:#60E">0.2</span>) <span style="color:#777"># Same as above</span>
-ins.set_irange(<span style="color:#606">a</span>: <span style="color:#60E">0.2</span>) <span style="color:#777"># Same as above</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">ins.set_irange(:smart)
+ins.set_irange(ua: 2)
+ins.set_irange(2.uA) # Same as above
+ins.set_irange(ma: 200)
+ins.set_irange(0.2) # Same as above
+ins.set_irange(a: 0.2) # Same as above
+</code></pre>
 
       <p>A useful pattern when using this method is just to set the range to the test upper
 spec limit, Origen will then take care of rounding this to the correct range.</p>
@@ -794,16 +758,12 @@ vs. an intentional generation of a group?</p>
 method for generating groups. Any instances generated within the given block of code will
 be treated as a group:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>test_instances.group(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">vreg_func_all</span><span style="color:#710">"</span></span>) <span style="color:#080;font-weight:bold">do</span> |group|
-  <span style="color:#d70">$dut</span>.vregs.each_with_index <span style="color:#080;font-weight:bold">do</span> |vreg, i|
-    test_instances.functional(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">vreg_func</span><span style="color:#710">"</span></span>)
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">test_instances.group("vreg_func_all") do |group|
+  $dut.vregs.each_with_index do |vreg, i|
+    test_instances.functional("vreg_func")
+  end
+end
+</code></pre>
 
       <p>See the <a href="http://origen-sdk.org/testers/api/OrigenTesters/IGXLBasedTester/Base/TestInstances.html#group-instance_method">group method API</a>
 for more details and examples.</p>
@@ -826,30 +786,26 @@ for some very large and complex test flows.</p>
 test instances which contains all of the attributes that every instance in your
 application will have.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">base_instance</span>(name, type, options={})
+      <pre><code class="language-ruby">def base_instance(name, type, options={})
   ins = test_instances.add(name, type)
-  ins.dc_category = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">VREG</span><span style="color:#710">"</span></span>
-  <span style="color:#080;font-weight:bold">if</span> options[<span style="color:#A60">:vdd</span>]
-    ins.dc_selector = options[<span style="color:#A60">:vdd</span>].to_s.capitalize  <span style="color:#777"># If :min, :max for example</span>
-  <span style="color:#080;font-weight:bold">else</span>
-    ins.dc_selector = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Typ</span><span style="color:#710">"</span></span>
-  <span style="color:#080;font-weight:bold">end</span>
-  ins.ac_category = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Spec</span><span style="color:#710">"</span></span>
-  ins.ac_selector = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Default</span><span style="color:#710">"</span></span>
-  ins.time_sets = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Tim</span><span style="color:#710">"</span></span>
-  ins.pin_levels = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Lvl</span><span style="color:#710">"</span></span>
-  ins    <span style="color:#777"># Remember to return the newly created instance object to the caller</span>
-<span style="color:#080;font-weight:bold">end</span>
+  ins.dc_category = "VREG"
+  if options[:vdd]
+    ins.dc_selector = options[:vdd].to_s.capitalize  # If :min, :max for example
+  else
+    ins.dc_selector = "Typ"
+  end
+  ins.ac_category = "Spec"
+  ins.ac_selector = "Default"
+  ins.time_sets = "Tim"
+  ins.pin_levels = "Lvl"
+  ins    # Remember to return the newly created instance object to the caller
+end
 
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">func</span>(name, options={})
-  ins = base_instance(name, <span style="color:#A60">:functional</span>, options)
-  <span style="color:#777"># Additional functional specific configuration here</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+def func(name, options={})
+  ins = base_instance(name, :functional, options)
+  # Additional functional specific configuration here
+end
+</code></pre>
 
       <p>This pattern can be extended to provide additional methods like “base_functional_instance”, 
 “base_bpmu_instance” and so on.</p>
@@ -862,21 +818,17 @@ For example in the flagship Origen application, some of our functional test inst
 loop support while others did not, so we created a decorator that we could call to add
 this feature:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">add_match</span>(ins)
-  ins.post_test_f = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">MatchBinFails</span><span style="color:#710">"</span></span>
-  ins.pat_flag_f = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">MatchLoopPatFlagFunc</span><span style="color:#710">"</span></span>
-  ins.set_wait_flags <span style="color:#A60">:a</span>
-<span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby">def add_match(ins)
+  ins.post_test_f = "MatchBinFails"
+  ins.pat_flag_f = "MatchLoopPatFlagFunc"
+  ins.set_wait_flags :a
+end
 
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">func</span>(name, options={})
-  ins = base_instance(name, <span style="color:#A60">:functional</span>, options)
-  ins.add_match(ins) <span style="color:#080;font-weight:bold">if</span> some_logic_to_gate_this
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+def func(name, options={})
+  ins = base_instance(name, :functional, options)
+  ins.add_match(ins) if some_logic_to_gate_this
+end
+</code></pre>
 
       <h5 id="split-your-application-instances-into-logical-groups">Split Your Application Instances into Logical Groups</h5>
 
@@ -919,23 +871,15 @@ cases.</p>
 
       <p>To add a pattern set call as follows:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>patsets.add(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">vreg_func_pset</span><span style="color:#710">"</span></span>, <span style="color:#606">pattern</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">patterns/VREG/vreg_func.PAT</span><span style="color:#710">"</span></span>)
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">patsets.add("vreg_func_pset", pattern: "patterns/VREG/vreg_func.PAT")
+</code></pre>
 
       <p>Multiple patterns can be specified by passing an array as the 2nd argument:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>patsets.add(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">vreg_func_pset</span><span style="color:#710">"</span></span>, [{<span style="color:#606">pattern</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">patterns/VREG/vreg_func.PAT</span><span style="color:#710">"</span></span>},
-                               {<span style="color:#606">pattern</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">patterns/VREG/vreg_global_subs.PAT</span><span style="color:#710">"</span></span>, <span style="color:#606">start_label</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">subr</span><span style="color:#710">"</span></span>}
+      <pre><code class="language-ruby">patsets.add("vreg_func_pset", [{pattern: "patterns/VREG/vreg_func.PAT"},
+                               {pattern: "patterns/VREG/vreg_global_subs.PAT", start_label: "subr"}
                               ])
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>Creating pattern groups is identical, just substitute <code>patsets</code> with
 <code>patgroups</code>.</p>
@@ -943,38 +887,26 @@ cases.</p>
       <p>Normally you would create a dedicated method for creating pattern sets to avoid
 duplication, something like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">add_patset</span>(name)
-  patsets.add(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>name<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">_pset</span><span style="color:#710">"</span></span>, <span style="color:#606">pattern</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">patterns/VREG/</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>name<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">.PAT</span><span style="color:#710">"</span></span>)
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">def add_patset(name)
+  patsets.add("#{name}_pset", pattern: "patterns/VREG/#{name}.PAT")
+end
+</code></pre>
 
       <p>The pattern set or group object can be assigned to the pattern attribute of a test
 instance directly:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">func</span>(name, options={})
+      <pre><code class="language-ruby">def func(name, options={})
   ins = test_instances.functional(name)
   ins.pattern = add_patset(name)
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+end
+</code></pre>
 
       <p>If you just want to add a pattern reference outside of a pattern set or group then
 add it to the <code>referenced_patterns</code> array to ensure that it gets added
 to the list of required patterns that is output from the program generation process:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>referenced_patterns &lt;&lt; <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">some_vreg_pattern</span><span style="color:#710">"</span></span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">referenced_patterns &lt;&lt; "some_vreg_pattern"
+</code></pre>
 
       <div>    
   <a class="anchor" name="Creating_a_Flow_Entry"></a>          
@@ -988,33 +920,21 @@ for full details.</p>
 
       <p>So for example to enter a log print statement in the flow you can call:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>flow.logprint <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Start of the vreg test section</span><span style="color:#710">"</span></span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">flow.logprint "Start of the vreg test section"
+</code></pre>
 
       <p>Going back to the earlier example from the <a href="/origen/guides/program/flows">Creating Flows</a>
 guide we had this in our flow:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>log <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Vreg test module</span><span style="color:#710">"</span></span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">log "Vreg test module"
+</code></pre>
 
       <p>This is probably the simplest method to implement in our interface:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">log</span>(msg)
+      <pre><code class="language-ruby">def log(msg)
   flow.logprint(msg)
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+end
+</code></pre>
 
       <p>The most common call will be to the <code>test</code> method which will insert a call
 to a test instance in the flow.
@@ -1026,16 +946,12 @@ logic will get implemented</strong>.</p>
 add a pattern set reference to it, and now finally call the instance from the
 test flow:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">func</span>(name, options={})
+      <pre><code class="language-ruby">def func(name, options={})
   ins = test_instances.functional(name)
   ins.pattern = add_patset(name)
   flow.test(ins, options)
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+end
+</code></pre>
 
       <p>The object returned from <code>flow.test</code> is an instance of
 <a href="http://origen-sdk.org/testers/api/OrigenTesters/IGXLBasedTester/J750/FlowLine.html">OrigenTesters::IGXLBasedTester::J750::FlowLine</a>
@@ -1055,75 +971,55 @@ to <code>'number'</code>.</p>
       <p>This means that you can set this attribute via this style (which is most useful
 for passing attributes through directly from the flow file):</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>flow.test(ins, <span style="color:#606">tnum</span>: <span style="color:#00D">10000</span>)
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">flow.test(ins, tnum: 10000)
+</code></pre>
 
       <p>Or it can also be set via a method call:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>flow_line = flow.test(ins)
-flow_line.tnum = <span style="color:#00D">10000</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">flow_line = flow.test(ins)
+flow_line.tnum = 10000
+</code></pre>
 
       <p>It is recommended that you create a dedicated method for flow insertion as this gives you
 a single place to implement defaults and to perform any translation between what the flow has
 called an attribute and what the J750 generator would call it:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">add_flow_entry</span>(ins, options)
-  <span style="color:#777"># Defaults</span>
+      <pre><code class="language-ruby">def add_flow_entry(ins, options)
+  # Defaults
   options = {
-    <span style="color:#606">bin</span>: <span style="color:#00D">5</span>,
-    <span style="color:#606">tname</span>: options[<span style="color:#A60">:tname</span>] || options[<span style="color:#A60">:name</span>] || ins.name,
+    bin: 5,
+    tname: options[:tname] || options[:name] || ins.name,
   }.merge(options)
 
-  <span style="color:#777"># Some translations</span>
-  options[<span style="color:#A60">:softbin</span>] = options[<span style="color:#A60">:sbin</span>] <span style="color:#080;font-weight:bold">if</span> options[<span style="color:#A60">:sbin</span>]
+  # Some translations
+  options[:softbin] = options[:sbin] if options[:sbin]
 
-  <span style="color:#777"># Add the flow entry</span>
+  # Add the flow entry
   flow_line = flow.test(ins, options)
 
-  <span style="color:#777"># Some final decoration</span>
-  flow_line.continue_on_fail <span style="color:#080;font-weight:bold">if</span> options[<span style="color:#A60">:continue</span>]
+  # Some final decoration
+  flow_line.continue_on_fail if options[:continue]
 
   flow_line
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+end
+</code></pre>
 
       <p>Here is an example interface method using this add to flow method:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">func</span>(name, options={})
+      <pre><code class="language-ruby">def func(name, options={})
   ins = test_instances.functional(name, options)
   ins.pattern = add_patset(name)
   add_flow_entry(ins, options)
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+end
+</code></pre>
 
       <p>Finally you may on occasion wish to call a test from your flow where the instance
 is not available - maybe the instance is generated by another test module for example.
 In this case the <code>:instance_not_available</code> option can be set to <code>true</code>
 to prevent Origen from trying to match up the flow with an instance object.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>flow.test(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">POR_INSTANCE</span><span style="color:#710">"</span></span>, <span style="color:#606">instance_not_available</span>: <span style="color:#069">true</span>)
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">flow.test("POR_INSTANCE", instance_not_available: true)
+</code></pre>
 
       <div>    
   <a class="anchor" name="Multi-site_Flow_Control"></a>          
@@ -1161,19 +1057,15 @@ options such as <code>if_failed</code>, <code>if_passed</code>, etc:</p>
 
       <p>Here is an example of how to use in both block and in-line forms:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>func <span style="color:#A60">:read1</span>, <span style="color:#606">id</span>: <span style="color:#A60">:ta1</span>, <span style="color:#606">bin</span>: <span style="color:#00D">10</span>, <span style="color:#606">number</span>: <span style="color:#00D">60000</span>
-func <span style="color:#A60">:erase1</span>, <span style="color:#606">if_any_site_failed</span>: <span style="color:#A60">:ta1</span>, <span style="color:#606">bin</span>: <span style="color:#00D">12</span>, <span style="color:#606">number</span>: <span style="color:#00D">60010</span>
+      <pre><code class="language-ruby">func :read1, id: :ta1, bin: 10, number: 60000
+func :erase1, if_any_site_failed: :ta1, bin: 12, number: 60010
 
-func <span style="color:#A60">:read2</span>, <span style="color:#606">id</span>: <span style="color:#A60">:ta2</span>, <span style="color:#606">bin</span>: <span style="color:#00D">10</span>, <span style="color:#606">number</span>: <span style="color:#00D">60020</span>
-if_any_site_failed <span style="color:#A60">:ta2</span> <span style="color:#080;font-weight:bold">do</span>
-  func <span style="color:#A60">:erase2</span>, <span style="color:#606">number</span>: <span style="color:#00D">60030</span>
-  func <span style="color:#A60">:erase2</span>, <span style="color:#606">number</span>: <span style="color:#00D">60040</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+func :read2, id: :ta2, bin: 10, number: 60020
+if_any_site_failed :ta2 do
+  func :erase2, number: 60030
+  func :erase2, number: 60040
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="What_About_My_DC_Specs?"></a>          

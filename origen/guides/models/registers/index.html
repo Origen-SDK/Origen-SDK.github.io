@@ -481,30 +481,26 @@ efficient in terms of effort.</p>
 
       <p><img src="/origen/img/reg1.png" style="margin-left: 70px; width: 700px; height: 255px;"></p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># file: lib/nvm/analog_t921.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">NVM</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">ANALOG_T921</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
+      <pre><code class="language-ruby"># file: lib/nvm/analog_t921.rb
+module NVM
+  class ANALOG_T921
+    include Origen::Model
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options={})
+    def initialize(options={})
       instantiate_registers(options)
-    <span style="color:#080;font-weight:bold">end</span>
+    end
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">instantiate_registers</span>(options={})
-      reg <span style="color:#A60">:ctrl</span>, <span style="color:#00D">0x0024</span>, <span style="color:#606">size</span>: <span style="color:#00D">16</span> <span style="color:#080;font-weight:bold">do</span> |reg|
-        reg.bit <span style="color:#00D">7</span>, <span style="color:#A60">:coco</span>, <span style="color:#606">access</span>: <span style="color:#A60">:ro</span>
-        reg.bit <span style="color:#00D">6</span>, <span style="color:#A60">:aien</span>
-        reg.bit <span style="color:#00D">5</span>, <span style="color:#A60">:diff</span>
-        reg.bit <span style="color:#00D">4</span>..<span style="color:#00D">0</span>, <span style="color:#A60">:adch</span>, <span style="color:#606">reset</span>: <span style="color:#00D">0x1F</span>
-      <span style="color:#080;font-weight:bold">end</span>
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+    def instantiate_registers(options={})
+      reg :ctrl, 0x0024, size: 16 do |reg|
+        reg.bit 7, :coco, access: :ro
+        reg.bit 6, :aien
+        reg.bit 5, :diff
+        reg.bit 4..0, :adch, reset: 0x1F
+      end
+    end
+  end
+end
+</code></pre>
 
       <p>Some points to note in the above code:</p>
 
@@ -532,21 +528,15 @@ overridden on an as needed basis as shown above.</li>
       <p>Origen will automatically create accessor methods for the register and its bits, the above register
 would be accessed like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$dut</span>.nvm.analog.ctrl         <span style="color:#777"># =&gt; &lt;register object&gt;</span>
-<span style="color:#d70">$dut</span>.nvm.analog.ctrl.adch    <span style="color:#777"># =&gt; &lt;subset of bits&gt;</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">$dut.nvm.analog.ctrl         # =&gt; &lt;register object&gt;
+$dut.nvm.analog.ctrl.adch    # =&gt; &lt;subset of bits&gt;
+</code></pre>
 
       <p>The Origen console will show a nice graphical representation of the register which reflects its
 current state, this can be very useful when debugging or more generally as an interactive
 version of the block guide:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>&gt; origen i
+      <pre><code class="language-text">&gt; origen i
 
 &gt;&gt; $dut.nvm.analog.ctrl
 =&gt;
@@ -560,34 +550,24 @@ version of the block guide:</p>
   |    :coco    |    :aien    |    :diff    |                             :adch[4:0]                              |
   |    0(RO)    |      0      |      0      |                                0x1F                                 |
   ----------------------------------------------------------------------------------------------------------------
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>Origen supports some more verbose APIs that you may see used in some codebases or documentation,
 these are now considered legacy APIs but are equivalent to the above:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$dut</span>.nvm.analog.reg(<span style="color:#A60">:ctrl</span>)
-<span style="color:#d70">$dut</span>.nvm.analog.reg(<span style="color:#A60">:ctrl</span>).bits(<span style="color:#A60">:adch</span>)
-<span style="color:#d70">$dut</span>.nvm.analog.reg(<span style="color:#A60">:ctrl</span>)[<span style="color:#A60">:adch</span>]
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">$dut.nvm.analog.reg(:ctrl)
+$dut.nvm.analog.reg(:ctrl).bits(:adch)
+$dut.nvm.analog.reg(:ctrl)[:adch]
+</code></pre>
 
       <p>Origen supports Verilog style part selects to access an ad-hoc subset of bits, although unfortunately
 <code>[3:0]</code> is not valid Ruby and <code>[3..0]</code> is used instead.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$dut</span>.nvm.analog.ctrl[<span style="color:#00D">1</span>]           <span style="color:#777"># =&gt; bit 1 of the register</span>
-<span style="color:#d70">$dut</span>.nvm.analog.ctrl.adch[<span style="color:#00D">1</span>]      <span style="color:#777"># =&gt; bit 1 of the adch bits</span>
-<span style="color:#d70">$dut</span>.nvm.analog.ctrl[<span style="color:#00D">3</span>..<span style="color:#00D">0</span>]
-<span style="color:#d70">$dut</span>.nvm.analog.ctrl.adch[<span style="color:#00D">1</span>..<span style="color:#00D">0</span>]
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">$dut.nvm.analog.ctrl[1]           # =&gt; bit 1 of the register
+$dut.nvm.analog.ctrl.adch[1]      # =&gt; bit 1 of the adch bits
+$dut.nvm.analog.ctrl[3..0]
+$dut.nvm.analog.ctrl.adch[1..0]
+</code></pre>
 
       <div>    
   <a class="anchor" name="Bit_Order_and_Serial_Processing"></a>          
@@ -597,18 +577,14 @@ these are now considered legacy APIs but are equivalent to the above:</p>
       <p>By default, a register is defined with LSB0 bit numbering, this can be changed to the MSB0 numbering by setting the
 <code>bit_order</code> attribute as shown below:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># identical register description as above, except described with MSB0 numbering</span>
-reg <span style="color:#A60">:ctrl</span>, <span style="color:#00D">0x0024</span>, <span style="color:#606">size</span>: <span style="color:#00D">16</span>, <span style="color:#606">bit_order</span>: <span style="color:#A60">:msb0</span> <span style="color:#080;font-weight:bold">do</span> |reg|
-  reg.bit <span style="color:#00D">8</span>,      <span style="color:#A60">:coco</span>, <span style="color:#606">access</span>: <span style="color:#A60">:ro</span>
-  reg.bit <span style="color:#00D">9</span>,      <span style="color:#A60">:aien</span>
-  reg.bit <span style="color:#00D">10</span>,     <span style="color:#A60">:diff</span>
-  reg.bit <span style="color:#00D">11</span>..<span style="color:#00D">15</span>, <span style="color:#A60">:adch</span>, <span style="color:#606">reset</span>: <span style="color:#00D">0x1F</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># identical register description as above, except described with MSB0 numbering
+reg :ctrl, 0x0024, size: 16, bit_order: :msb0 do |reg|
+  reg.bit 8,      :coco, access: :ro
+  reg.bit 9,      :aien
+  reg.bit 10,     :diff
+  reg.bit 11..15, :adch, reset: 0x1F
+end
+</code></pre>
 
       <p>Origen, however will store and access the register with LSB0 bit numbering. This allows the ecosystem of plugins to behave
 consistently regardless of how the register was described without needing to constantly check and recalculate indexes.</p>
@@ -617,25 +593,19 @@ consistently regardless of how the register was described without needing to con
 be used to access bits by number. If you have worked with MSB0 numbering before you can appreciate how confusing it can
 be, especially when switching back and forth. So, Origen provides an API to “say what you mean” and handles the converting.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>  <span style="color:#777"># use .with_lsb0 to explicitly refer to bits using LSB0 numbering</span>
-  <span style="color:#d70">$dut</span>.nvm.analog.ctrl.with_lsb0[<span style="color:#00D">7</span>].write <span style="color:#00D">1</span>       <span style="color:#777"># set :coco by referring to the bit number</span>
+      <pre><code class="language-ruby">  # use .with_lsb0 to explicitly refer to bits using LSB0 numbering
+  $dut.nvm.analog.ctrl.with_lsb0[7].write 1       # set :coco by referring to the bit number
   
-  <span style="color:#777"># the equivalent code without explicitly using .with_lsb0</span>
-  <span style="color:#d70">$dut</span>.nvm.analog.ctrl[<span style="color:#00D">7</span>].write <span style="color:#00D">1</span>       <span style="color:#777"># set :coco by referring to the bit number</span>
+  # the equivalent code without explicitly using .with_lsb0
+  $dut.nvm.analog.ctrl[7].write 1       # set :coco by referring to the bit number
 
-  <span style="color:#777"># use .with_msb0 to explicitly refer to bits using MSB0 numbering</span>
-  <span style="color:#d70">$dut</span>.nvm.analog.ctrl.with_msb0[<span style="color:#00D">8</span>].write <span style="color:#00D">1</span>       <span style="color:#777"># set :coco by referring to the bit number</span>
-</pre></div>
-</div>
-      </div>
+  # use .with_msb0 to explicitly refer to bits using MSB0 numbering
+  $dut.nvm.analog.ctrl.with_msb0[8].write 1       # set :coco by referring to the bit number
+</code></pre>
 
       <p>Below is the console output when displaying the register (first with LSB0 numbering (default) then MSB0):</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>&gt; origen i
+      <pre><code class="language-text">&gt; origen i
 
 &gt;&gt; $dut.nvm.analog.ctrl
 
@@ -671,9 +641,7 @@ be, especially when switching back and forth. So, Origen provides an API to “s
   |    :coco    |    :aien    |    :diff    |                             :adch[0:4]                              |
   |    0(RO)    |      0      |      0      |                                0x1F                                 |
   ----------------------------------------------------------------------------------------------------------------
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>When serially processing a register (in a pattern driver for example), there are APIs that will always return bits in the desired order regardless of the
 <code>.with_lsb0</code> or <code>.with_msb0</code> setting.
@@ -691,17 +659,13 @@ register (as displayed in the console) first.</li>
 
       <p>All of these APIs behave like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>myreg.shift_out_left_with_index <span style="color:#080;font-weight:bold">do</span> |bit, i|
-  <span style="color:#777"># This block will execute for each bit in the register</span>
-  <span style="color:#777"># *bit* is a bit object (instance of Origen::Reg::Bit)</span>
-  <span style="color:#777"># *i* is the iteration index, 0, 1, 2, etc. Note that this is only available for the _with_index versions.</span>
+      <pre><code class="language-ruby">myreg.shift_out_left_with_index do |bit, i|
+  # This block will execute for each bit in the register
+  # *bit* is a bit object (instance of Origen::Reg::Bit)
+  # *i* is the iteration index, 0, 1, 2, etc. Note that this is only available for the _with_index versions.
   bit_shift(bit)
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Base_Addresses"></a>          
@@ -714,24 +678,16 @@ IP block.</p>
       <p>Base addresses can be passed in within the sub block definition, <code>base_address</code> is an official
 option that Origen will recognize and automatically deal with.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/nvm/nvm_m682.rb</span>
-sub_block <span style="color:#A60">:analog</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">ANALOG_T921</span><span style="color:#710">"</span></span>, <span style="color:#606">base_address</span>: <span style="color:#00D">0x4000_0000</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># lib/nvm/nvm_m682.rb
+sub_block :analog, class_name: "ANALOG_T921", base_address: 0x4000_0000
+</code></pre>
 
       <p>Registers will automatically pick up the base address of their parent, the local address can
 be accessed via the <code>offset</code> method:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$dut</span>.nvm.analog.ctrl.address   <span style="color:#777"># =&gt; 0x4000_0024</span>
-<span style="color:#d70">$dut</span>.nvm.analog.ctrl.offset    <span style="color:#777"># =&gt; 0x24</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">$dut.nvm.analog.ctrl.address   # =&gt; 0x4000_0024
+$dut.nvm.analog.ctrl.offset    # =&gt; 0x24
+</code></pre>
 
       <p>Note that when resolving a base address Origen will look right up the hierarchy until it reaches the top
 level object and all base addresses in that branch of the tree will be added together.</p>
@@ -747,27 +703,19 @@ register is on, or any similar concept.</p>
       <p>Domains must first be declared in the object that owns them and then they can be passed to sub block
 definitions:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#606">domain</span>: <span style="color:#A60">:ips</span>
-<span style="color:#606">domain</span>: <span style="color:#A60">:ahb</span>, <span style="color:#606">endian</span>: <span style="color:#A60">:little</span>
+      <pre><code class="language-ruby">domain: :ips
+domain: :ahb, endian: :little
 
-sub_block <span style="color:#A60">:analog</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">ANALOG_T921</span><span style="color:#710">"</span></span>, <span style="color:#606">base_address</span>: <span style="color:#00D">0x4000_0000</span>, <span style="color:#606">domain</span>: <span style="color:#A60">:ips</span>
-</pre></div>
-</div>
-      </div>
+sub_block :analog, class_name: "ANALOG_T921", base_address: 0x4000_0000, domain: :ips
+</code></pre>
 
       <p>The domain attribute will also accept an array of multiple domain names as required.</p>
 
       <p>The child block and any of its registers will then be associated with the given domains:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$dut</span>.nvm.analog.domains            <span style="color:#777"># =&gt; {ips: &lt;object&gt;}</span>
-<span style="color:#d70">$dut</span>.nvm.analog.ctrl.domains       <span style="color:#777"># =&gt; {ips: &lt;object&gt;}</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">$dut.nvm.analog.domains            # =&gt; {ips: &lt;object&gt;}
+$dut.nvm.analog.ctrl.domains       # =&gt; {ips: &lt;object&gt;}
+</code></pre>
 
       <p>Note that the <code>domains</code> method returns a hash pointing to objects that represent the domains,
 this can therefore be associated with attributes such as the <code>:endian</code> attribute in the
@@ -784,67 +732,59 @@ supported attributes.</p>
       <p>Domain specific base addresses can be assigned to a sub-block by passing a hash to the <code>:base_address</code>
 option as shown in the example below:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">Top</span>
-  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">TopLevel</span>
+      <pre><code class="language-ruby">class Top
+  include Origen::TopLevel
 
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>
-    domain <span style="color:#A60">:ips</span>
-    domain <span style="color:#A60">:ahb</span>
+  def initialize
+    domain :ips
+    domain :ahb
 
-    sub_block <span style="color:#A60">:subx1</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">SubX</span><span style="color:#710">"</span></span>, <span style="color:#606">base_address</span>: <span style="color:#00D">0x1000_0000</span>
-    sub_block <span style="color:#A60">:subx2</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">SubX</span><span style="color:#710">"</span></span>, <span style="color:#606">base_address</span>: { <span style="color:#606">ips</span>: <span style="color:#00D">0x2000_0000</span>, <span style="color:#606">ahb</span>: <span style="color:#00D">0x3000_0000</span> }
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
+    sub_block :subx1, class_name: "SubX", base_address: 0x1000_0000
+    sub_block :subx2, class_name: "SubX", base_address: { ips: 0x2000_0000, ahb: 0x3000_0000 }
+  end
+end
 
-<span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">SubX</span>
-  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
+class SubX
+  include Origen::Model
 
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>
-    reg <span style="color:#A60">:reg1</span>, <span style="color:#00D">0x200</span> <span style="color:#080;font-weight:bold">do</span>
-      bits <span style="color:#00D">31</span>..<span style="color:#00D">0</span>, <span style="color:#A60">:data</span>
-    <span style="color:#080;font-weight:bold">end</span>
-    sub_block <span style="color:#A60">:suby1</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">SubY</span><span style="color:#710">"</span></span>, <span style="color:#606">domain</span>: <span style="color:#A60">:ips</span>
-    sub_block <span style="color:#A60">:suby2</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">SubY</span><span style="color:#710">"</span></span>, <span style="color:#606">domain</span>: <span style="color:#A60">:ahb</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
+  def initialize
+    reg :reg1, 0x200 do
+      bits 31..0, :data
+    end
+    sub_block :suby1, class_name: "SubY", domain: :ips
+    sub_block :suby2, class_name: "SubY", domain: :ahb
+  end
+end
 
-<span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">SubY</span>
-  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
+class SubY
+  include Origen::Model
 
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>
-    reg <span style="color:#A60">:reg1</span>, <span style="color:#00D">0x300</span> <span style="color:#080;font-weight:bold">do</span>
-      bits <span style="color:#00D">31</span>..<span style="color:#00D">0</span>, <span style="color:#A60">:data</span>
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
+  def initialize
+    reg :reg1, 0x300 do
+      bits 31..0, :data
+    end
+  end
+end
 
-<span style="color:#d70">$dut</span> = <span style="color:#036;font-weight:bold">Top</span>.new
-<span style="color:#d70">$dut</span>.subx1.reg1.address                <span style="color:#777"># =&gt; 0x1000_0200</span>
-<span style="color:#d70">$dut</span>.subx1.suby1.reg1.address          <span style="color:#777"># =&gt; 0x1000_0300</span>
-<span style="color:#d70">$dut</span>.subx1.suby2.reg1.address          <span style="color:#777"># =&gt; 0x1000_0300</span>
-<span style="color:#777"># Where a register falls into the case where multiple domains are specified for it, you must</span>
-<span style="color:#777"># indicate the one you want</span>
-<span style="color:#d70">$dut</span>.subx1.reg1.address(<span style="color:#606">domain</span>: <span style="color:#A60">:ips</span>)  <span style="color:#777"># =&gt; 0x2000_0200</span>
-<span style="color:#d70">$dut</span>.subx1.reg1.address(<span style="color:#606">domain</span>: <span style="color:#A60">:ahb</span>)  <span style="color:#777"># =&gt; 0x3000_0200</span>
-<span style="color:#d70">$dut</span>.subx2.suby1.reg1.address          <span style="color:#777"># =&gt; 0x2000_0300</span>
-<span style="color:#d70">$dut</span>.subx2.suby2.reg1.address          <span style="color:#777"># =&gt; 0x3000_0300</span>
-</pre></div>
-</div>
-      </div>
+$dut = Top.new
+$dut.subx1.reg1.address                # =&gt; 0x1000_0200
+$dut.subx1.suby1.reg1.address          # =&gt; 0x1000_0300
+$dut.subx1.suby2.reg1.address          # =&gt; 0x1000_0300
+# Where a register falls into the case where multiple domains are specified for it, you must
+# indicate the one you want
+$dut.subx1.reg1.address(domain: :ips)  # =&gt; 0x2000_0200
+$dut.subx1.reg1.address(domain: :ahb)  # =&gt; 0x3000_0200
+$dut.subx2.suby1.reg1.address          # =&gt; 0x2000_0300
+$dut.subx2.suby2.reg1.address          # =&gt; 0x3000_0300
+</code></pre>
 
       <p>In the case where a register owned by a child sub-block is not in any of the domains listed in the base address
 hash then it will pick up a base address of 0.</p>
 
       <p>An alternative default can be set by adding a <code>:default</code> key to the hash:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>sub_block <span style="color:#A60">:subx2</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">SubX</span><span style="color:#710">"</span></span>, <span style="color:#606">base_address</span>: { <span style="color:#606">default</span>: <span style="color:#00D">0x1000_0000</span>, <span style="color:#606">ips</span>: <span style="color:#00D">0x2000_0000</span>, <span style="color:#606">ahb</span>: <span style="color:#00D">0x3000_0000</span> }
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">sub_block :subx2, class_name: "SubX", base_address: { default: 0x1000_0000, ips: 0x2000_0000, ahb: 0x3000_0000 }
+</code></pre>
 
       <div>    
   <a class="anchor" name="Documenting_Registers"></a>          
@@ -853,40 +793,32 @@ hash then it will pick up a base address of 0.</p>
 
       <p>Registers can be documented by Ruby comments like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># ** MGATE Clock Divider Register **</span>
-<span style="color:#777"># The MCLKDIV register is used to divide down the frequency of the HBOSCCLK input. If the MCLKDIV</span>
-<span style="color:#777"># register is set to value "N", then the output (beat) frequency of the clock divider is OSCCLK / (N+1). The</span>
-<span style="color:#777"># resulting beats are, in turn, counted by the PTIMER module to control the duration of Flash high-voltage</span>
-<span style="color:#777"># operations.</span>
-reg <span style="color:#A60">:mclkdiv</span>, <span style="color:#00D">0x0003</span>, <span style="color:#606">size</span>: <span style="color:#00D">16</span> <span style="color:#080;font-weight:bold">do</span> |reg|
-  <span style="color:#777"># **Oscillator (Hi)** - Firmware FMU clk source selection. (Note that in addition to this firmware-controlled bit, the</span>
-  <span style="color:#777"># FMU clock source is also dependent on test and power control discretes).</span>
-  <span style="color:#777">#</span>
-  <span style="color:#777"># 0 | FMU clock is the externally supplied bus clock ipg_clk</span>
-  <span style="color:#777"># 1 | FMU clock is the internal oscillator from the TFS hardblock</span>
-  reg.bit <span style="color:#00D">15</span>, <span style="color:#A60">:osch</span>, <span style="color:#606">reset</span>: <span style="color:#00D">1</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># ** MGATE Clock Divider Register **
+# The MCLKDIV register is used to divide down the frequency of the HBOSCCLK input. If the MCLKDIV
+# register is set to value "N", then the output (beat) frequency of the clock divider is OSCCLK / (N+1). The
+# resulting beats are, in turn, counted by the PTIMER module to control the duration of Flash high-voltage
+# operations.
+reg :mclkdiv, 0x0003, size: 16 do |reg|
+  # **Oscillator (Hi)** - Firmware FMU clk source selection. (Note that in addition to this firmware-controlled bit, the
+  # FMU clock source is also dependent on test and power control discretes).
+  #
+  # 0 | FMU clock is the externally supplied bus clock ipg_clk
+  # 1 | FMU clock is the internal oscillator from the TFS hardblock
+  reg.bit 15, :osch, reset: 1
+end
+</code></pre>
 
       <p>The descriptions are then programmatically accessible via the following methods:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>mclkdiv.full_name                          <span style="color:#777"># =&gt; "MGATE Clock Divider Register"</span>
-mclkdiv.description(<span style="color:#606">include_name</span>: <span style="color:#069">false</span>)   <span style="color:#777"># =&gt; ["The MCLKDIV register is...", "register is set...", ...] </span>
+      <pre><code class="language-ruby">mclkdiv.full_name                          # =&gt; "MGATE Clock Divider Register"
+mclkdiv.description(include_name: false)   # =&gt; ["The MCLKDIV register is...", "register is set...", ...] 
 
 bit = mclkdiv.osch
-bit.full_name  <span style="color:#777"># =&gt; "Oscillator (Hi)"</span>
-bit.description(<span style="color:#606">include_name</span>: <span style="color:#069">false</span>, <span style="color:#606">include_bit_values</span>: <span style="color:#069">false</span>)  <span style="color:#777"># =&gt; ["Firmware FMU clk...", "FMU clock...", ...] </span>
-bit.bit_value_descriptions[<span style="color:#00D">0</span>]   <span style="color:#777"># =&gt; "FMU clock is the externally supplied bus block ipg_clk"</span>
-bit.bit_value_descriptions[<span style="color:#00D">1</span>]   <span style="color:#777"># =&gt; "FMU clock is the internal oscillator from the TFS hardblock"</span>
-</pre></div>
-</div>
-      </div>
+bit.full_name  # =&gt; "Oscillator (Hi)"
+bit.description(include_name: false, include_bit_values: false)  # =&gt; ["Firmware FMU clk...", "FMU clock...", ...] 
+bit.bit_value_descriptions[0]   # =&gt; "FMU clock is the externally supplied bus block ipg_clk"
+bit.bit_value_descriptions[1]   # =&gt; "FMU clock is the internal oscillator from the TFS hardblock"
+</code></pre>
 
       <p>Most commonly these descriptions will be used for documentation, for example the 
 <a href="https://origen-sdk.org/doc_helpers/">Documentation Helpers</a> plugin provides
@@ -898,14 +830,10 @@ documentation.</strong>  Thus, it is intended to be used
 only when the register is being declared programmatically by an importer and humans
 should stick to the above API for clarity:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>reg <span style="color:#A60">:mclkdiv</span>, <span style="color:#00D">0x0003</span>, <span style="color:#606">size</span>: <span style="color:#00D">16</span>, <span style="color:#606">description</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">** MGATE Clock Divider Register **</span><span style="color:#b0b">\n</span><span style="color:#D20">The MCLKDIV reg...</span><span style="color:#710">"</span></span> <span style="color:#080;font-weight:bold">do</span> |reg|
-  reg.bit <span style="color:#00D">15</span>, <span style="color:#A60">:osch</span>, <span style="color:#606">reset</span>: <span style="color:#00D">1</span>, <span style="color:#606">description</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">** Oscillator (Hi) ** - Firmware FMU clk source selection...</span><span style="color:#710">"</span></span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">reg :mclkdiv, 0x0003, size: 16, description: "** MGATE Clock Divider Register **\nThe MCLKDIV reg..." do |reg|
+  reg.bit 15, :osch, reset: 1, description: "** Oscillator (Hi) ** - Firmware FMU clk source selection..."
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Defining_Application-Specific_Metadata"></a>          
@@ -920,44 +848,40 @@ mode or not.</p>
 these for specific registers and bits.
 Here is an example:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">instantiate_registers</span>(options={})
+      <pre><code class="language-ruby">def instantiate_registers(options={})
 
-  default_reg_metadata <span style="color:#080;font-weight:bold">do</span> |reg|
-    reg.user_reg = <span style="color:#069">false</span>
-  <span style="color:#080;font-weight:bold">end</span>
+  default_reg_metadata do |reg|
+    reg.user_reg = false
+  end
 
-  default_bit_metadata <span style="color:#080;font-weight:bold">do</span> |bit|
-    bit.time_to_respond = <span style="color:#00D">0</span>
-  <span style="color:#080;font-weight:bold">end</span>
+  default_bit_metadata do |bit|
+    bit.time_to_respond = 0
+  end
 
-  reg <span style="color:#A60">:fstat</span>, <span style="color:#00D">0x0001</span>, <span style="color:#606">size</span>: <span style="color:#00D">8</span>, <span style="color:#606">user_reg</span>: <span style="color:#069">true</span> <span style="color:#080;font-weight:bold">do</span> |reg|
-    reg.bit <span style="color:#00D">8</span>, <span style="color:#A60">:ccif</span>, <span style="color:#606">time_to_respond</span>: <span style="color:#00D">10</span>.us
-    reg.bit <span style="color:#00D">7</span>, <span style="color:#A60">:rdcolerr</span>
-    reg.bit <span style="color:#00D">6</span>, <span style="color:#A60">:accerr</span>, <span style="color:#606">access</span>: <span style="color:#A60">:w1c</span>
-    reg.bit <span style="color:#00D">5</span>, <span style="color:#A60">:fpviol</span>, <span style="color:#606">access</span>: <span style="color:#A60">:w1c</span>
-    reg.bit <span style="color:#00D">0</span>, <span style="color:#A60">:mgstat</span>, <span style="color:#606">access</span>: <span style="color:#A60">:ro</span>
-  <span style="color:#080;font-weight:bold">end</span>
+  reg :fstat, 0x0001, size: 8, user_reg: true do |reg|
+    reg.bit 8, :ccif, time_to_respond: 10.us
+    reg.bit 7, :rdcolerr
+    reg.bit 6, :accerr, access: :w1c
+    reg.bit 5, :fpviol, access: :w1c
+    reg.bit 0, :mgstat, access: :ro
+  end
 
-  reg <span style="color:#A60">:mclkdiv</span>, <span style="color:#00D">0x0002</span>, <span style="color:#606">size</span>: <span style="color:#00D">16</span> <span style="color:#080;font-weight:bold">do</span> |reg|
-    reg.bit <span style="color:#00D">15</span>, <span style="color:#A60">:osch</span>, <span style="color:#606">reset</span>: <span style="color:#00D">1</span>
-    reg.bit <span style="color:#00D">13</span>..<span style="color:#00D">12</span>, <span style="color:#A60">:mode_rdy</span>, <span style="color:#606">writable</span>: <span style="color:#069">false</span>
-    reg.bit <span style="color:#00D">10</span>, <span style="color:#A60">:eccen</span>, <span style="color:#606">reset</span>: <span style="color:#00D">1</span>
-    reg.bit <span style="color:#00D">9</span>..<span style="color:#00D">8</span>, <span style="color:#A60">:cmdloc</span>
-    reg.bit <span style="color:#00D">7</span>..<span style="color:#00D">0</span>, <span style="color:#A60">:div</span>
-  <span style="color:#080;font-weight:bold">end</span>
+  reg :mclkdiv, 0x0002, size: 16 do |reg|
+    reg.bit 15, :osch, reset: 1
+    reg.bit 13..12, :mode_rdy, writable: false
+    reg.bit 10, :eccen, reset: 1
+    reg.bit 9..8, :cmdloc
+    reg.bit 7..0, :div
+  end
 
-<span style="color:#080;font-weight:bold">end</span>
+end
 
-fstat.user_reg?     <span style="color:#777"># =&gt; true</span>
-mclkdiv.user_reg?   <span style="color:#777"># =&gt; false</span>
+fstat.user_reg?     # =&gt; true
+mclkdiv.user_reg?   # =&gt; false
 
-fstat.ccif.time_to_respond     <span style="color:#777"># =&gt; 10us</span>
-fstat.accerr.time_to_respond   <span style="color:#777"># =&gt; 0</span>
-</pre></div>
-</div>
-      </div>
+fstat.ccif.time_to_respond     # =&gt; 10us
+fstat.accerr.time_to_respond   # =&gt; 0
+</code></pre>
 
       <p>Global attributes can also be added, when done in this way the meta data
 will be applied to all registers within the scope of an application.</p>
@@ -968,19 +892,15 @@ from the class will take precedence.</p>
       <p>As with the above example the attribute values can be overridden when
 defining registers and bits.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Registers</span>.default_reg_metadata <span style="color:#080;font-weight:bold">do</span> |reg|
-  reg.attr_x        <span style="color:#777"># Adds the attribute with a default value of nil</span>
-  reg.attr_y = <span style="color:#00D">10</span>   <span style="color:#777"># Adds the attribute with a default value of 10</span>
-<span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby">Origen::Registers.default_reg_metadata do |reg|
+  reg.attr_x        # Adds the attribute with a default value of nil
+  reg.attr_y = 10   # Adds the attribute with a default value of 10
+end
 
-<span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Registers</span>.default_bit_metadata <span style="color:#080;font-weight:bold">do</span> |reg|
-  reg.attr_z = <span style="color:#00D">15</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+Origen::Registers.default_bit_metadata do |reg|
+  reg.attr_z = 15
+end
+</code></pre>
 
       <p>Plugins may also use this approach to globally extend the attributes of
 registers and bits.</p>
@@ -1001,22 +921,18 @@ plugin and this should be consulted directly for the latest information on the A
 
       <p>However here is a brief example of how it can be used to import from a local XML file:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/nvm/nvm_m682.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">NVM</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">NVM_M682</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
-    include <span style="color:#036;font-weight:bold">CrossOrigen</span>
+      <pre><code class="language-ruby"># lib/nvm/nvm_m682.rb
+module NVM
+  class NVM_M682
+    include Origen::Model
+    include CrossOrigen
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options={})
-      cr_import(<span style="color:#606">path</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.root<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">/ipxact_files/nvm_m682.xml</span><span style="color:#710">"</span></span>)
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+    def initialize(options={})
+      cr_import(path: "#{Origen.root}/ipxact_files/nvm_m682.xml")
+    end
+  end
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Understanding_the_Origen_Register_Model"></a>          
@@ -1058,40 +974,36 @@ returned that contains only the subset of requested bits.</p>
 
       <p>Here are a few examples of working with the register that we recently added:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$dut</span> = <span style="color:#036;font-weight:bold">SOC</span>::<span style="color:#036;font-weight:bold">EAGLE_M352</span>.new(<span style="color:#606">version</span>: <span style="color:#00D">1</span>)
+      <pre><code class="language-ruby">$dut = SOC::EAGLE_M352.new(version: 1)
 
-reg = <span style="color:#d70">$dut</span>.nvm.analog.ctrl
+reg = $dut.nvm.analog.ctrl
 
-reg.data                  <span style="color:#777"># =&gt; 31</span>
-reg.data.to_hex           <span style="color:#777"># =&gt; "0x1F"</span>
+reg.data                  # =&gt; 31
+reg.data.to_hex           # =&gt; "0x1F"
 
-<span style="color:#777"># Only bits that are writable can hold data, the same as real silicon</span>
-reg.write(<span style="color:#00D">0xFFFF</span>)
-reg.data.to_hex           <span style="color:#777"># =&gt; "0x7F"</span>
+# Only bits that are writable can hold data, the same as real silicon
+reg.write(0xFFFF)
+reg.data.to_hex           # =&gt; "0x7F"
   
-<span style="color:#777"># Individual bits can be manipulated</span>
-reg.adch.data             <span style="color:#777"># =&gt; 31</span>
-reg.adch.write(<span style="color:#00D">0</span>)       
-reg.adch.data             <span style="color:#777"># =&gt; 0</span>
+# Individual bits can be manipulated
+reg.adch.data             # =&gt; 31
+reg.adch.write(0)       
+reg.adch.data             # =&gt; 0
                           
-reg.data.to_hex           <span style="color:#777"># =&gt; "0x60"</span>
+reg.data.to_hex           # =&gt; "0x60"
 
-<span style="color:#777"># Bits can be marked for read</span>
-reg.is_to_be_read?        <span style="color:#777"># =&gt; false</span>
+# Bits can be marked for read
+reg.is_to_be_read?        # =&gt; false
 reg.coco.read
-reg.coco.is_to_be_read?   <span style="color:#777"># =&gt; true</span>
-reg.aien.is_to_be_read?   <span style="color:#777"># =&gt; false</span>
-reg.is_to_be_read?        <span style="color:#777"># =&gt; true</span>
+reg.coco.is_to_be_read?   # =&gt; true
+reg.aien.is_to_be_read?   # =&gt; false
+reg.is_to_be_read?        # =&gt; true
 
-<span style="color:#777"># The register can be reset</span>
+# The register can be reset
 reg.reset
-reg.is_to_be_read?        <span style="color:#777"># =&gt; false</span>
-reg.data.to_hex           <span style="color:#777"># =&gt; "0x1F"</span>
-</pre></div>
-</div>
-      </div>
+reg.is_to_be_read?        # =&gt; false
+reg.data.to_hex           # =&gt; "0x1F"
+</code></pre>
 
       <div>    
   <a class="anchor" name="More_Examples"></a>          
@@ -1100,47 +1012,43 @@ reg.data.to_hex           <span style="color:#777"># =&gt; "0x1F"</span>
 
       <p>Here are some addtional examples showing how to iterate through a model’s registers</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">Top</span>
-  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">TopLevel</span>
+      <pre><code class="language-ruby">class Top
+  include Origen::TopLevel
 
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>
-    reg <span style="color:#A60">:adc0_cfg</span>, <span style="color:#00D">0x200</span> <span style="color:#080;font-weight:bold">do</span>
-      bits <span style="color:#00D">31</span>..<span style="color:#00D">0</span>, <span style="color:#A60">:data</span>
-    <span style="color:#080;font-weight:bold">end</span>
-    reg <span style="color:#A60">:adc1_cfg</span>, <span style="color:#00D">0x300</span> <span style="color:#080;font-weight:bold">do</span>
-      bits <span style="color:#00D">31</span>..<span style="color:#00D">0</span>, <span style="color:#A60">:data</span>
-    <span style="color:#080;font-weight:bold">end</span>
-    reg <span style="color:#A60">:dac_cfg</span>, <span style="color:#00D">0x400</span> <span style="color:#080;font-weight:bold">do</span>
-      bits <span style="color:#00D">31</span>..<span style="color:#00D">0</span>, <span style="color:#A60">:data</span>
-    <span style="color:#080;font-weight:bold">end</span>
-    reg <span style="color:#A60">:status</span>, <span style="color:#00D">0x100</span> <span style="color:#080;font-weight:bold">do</span>
-      bits <span style="color:#00D">31</span>..<span style="color:#00D">0</span>, <span style="color:#A60">:data</span>
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
+  def initialize
+    reg :adc0_cfg, 0x200 do
+      bits 31..0, :data
+    end
+    reg :adc1_cfg, 0x300 do
+      bits 31..0, :data
+    end
+    reg :dac_cfg, 0x400 do
+      bits 31..0, :data
+    end
+    reg :status, 0x100 do
+      bits 31..0, :data
+    end
+  end
+end
 
-<span style="color:#d70">$dut</span> = <span style="color:#036;font-weight:bold">Top</span>.new
+$dut = Top.new
 
-<span style="color:#777"># Iterate over ALL registers (:adc0_cfg, :adc1_cfg, :dac_cfg, :status)</span>
-<span style="color:#d70">$dut</span>.regs.each <span style="color:#080;font-weight:bold">do</span> |r|
-  <span style="color:#777"># do something with register r</span>
-<span style="color:#080;font-weight:bold">end</span>
+# Iterate over ALL registers (:adc0_cfg, :adc1_cfg, :dac_cfg, :status)
+$dut.regs.each do |r|
+  # do something with register r
+end
 
-<span style="color:#777"># Iterate over all registers matching a regular expression</span>
-<span style="color:#777"># Ex 1: Only ADC cfg registers (:adc0_cfg, :adc1_cfg)</span>
-<span style="color:#d70">$dut</span>.regs(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/acd</span><span style="color:#D20">\d</span><span style="color:#D20">_cfg/</span><span style="color:#710">'</span></span>).each <span style="color:#080;font-weight:bold">do</span> |r|
-  <span style="color:#777"># do something with register r</span>
-<span style="color:#080;font-weight:bold">end</span>
+# Iterate over all registers matching a regular expression
+# Ex 1: Only ADC cfg registers (:adc0_cfg, :adc1_cfg)
+$dut.regs('/acd\d_cfg/').each do |r|
+  # do something with register r
+end
 
-<span style="color:#777"># Ex 2: Any cfg registers (:adc0_cfg, :adc1_cfg, :dac_cfg)</span>
-<span style="color:#d70">$dut</span>.regs(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/cfg/</span><span style="color:#710">'</span></span>).each <span style="color:#080;font-weight:bold">do</span> |r|
-  <span style="color:#777"># do something with register r</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+# Ex 2: Any cfg registers (:adc0_cfg, :adc1_cfg, :dac_cfg)
+$dut.regs('/cfg/').each do |r|
+  # do something with register r
+end
+</code></pre>
 
       <div style="position: relative">
   <hr>

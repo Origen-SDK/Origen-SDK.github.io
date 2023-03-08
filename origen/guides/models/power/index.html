@@ -472,38 +472,30 @@ The advantage of using PowerDomains is that all pins get a single source of trut
 
       <p>Here is an example of the PowerDomain API:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>add_power_domain <span style="color:#A60">:vdd</span> <span style="color:#080;font-weight:bold">do</span> |domain|
-  domain.description = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">CPU Core Complex</span><span style="color:#710">'</span></span>
-  domain.nominal_voltage = <span style="color:#60E">0.9</span>.V
-  domain.unit_voltage_range = <span style="color:#60E">0.7</span>.V..<span style="color:#60E">1.1</span>.V
-<span style="color:#080;font-weight:bold">end</span>
-add_power_domain <span style="color:#A60">:vdda</span> <span style="color:#080;font-weight:bold">do</span> |domain|
-  domain.description = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">PLL</span><span style="color:#710">'</span></span>
-  domain.nominal_voltage = <span style="color:#60E">1.2</span>.V
-  domain.unit_voltage_range = <span style="color:#60E">1.08</span>.V..<span style="color:#60E">1.32</span>.V
-<span style="color:#080;font-weight:bold">end</span>
-add_power_domain <span style="color:#A60">:vccsoc</span> <span style="color:#080;font-weight:bold">do</span> |domain|
-  domain.description = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">SoC</span><span style="color:#710">'</span></span>
-  domain.nominal_voltage = <span style="color:#60E">1.5</span>.V
-  domain.unit_voltage_range = <span style="color:#60E">1.35</span>.V..<span style="color:#60E">1.65</span>.V
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">add_power_domain :vdd do |domain|
+  domain.description = 'CPU Core Complex'
+  domain.nominal_voltage = 0.9.V
+  domain.unit_voltage_range = 0.7.V..1.1.V
+end
+add_power_domain :vdda do |domain|
+  domain.description = 'PLL'
+  domain.nominal_voltage = 1.2.V
+  domain.unit_voltage_range = 1.08.V..1.32.V
+end
+add_power_domain :vccsoc do |domain|
+  domain.description = 'SoC'
+  domain.nominal_voltage = 1.5.V
+  domain.unit_voltage_range = 1.35.V..1.65.V
+end
+</code></pre>
 
       <p>Now we can interact with the power domains using the top level DUT.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>    <span style="color:#d70">$dut</span>.power_domains <span style="color:#777"># =&gt; [:vdd, :vdda, :vccsoc]</span>
-    <span style="color:#d70">$dut</span>.power_domains(<span style="color:#A60">:vdd</span>).description <span style="color:#777"># =&gt; "CPU Core Complex"</span>
-    <span style="color:#d70">$dut</span>.power_domains(<span style="color:#A60">:vdd</span>).nominal_voltage <span style="color:#777"># =&gt; 1.0.V</span>
-    <span style="color:#d70">$dut</span>.power_domains(<span style="color:#A60">:vdd</span>).range <span style="color:#777"># =&gt; (0.7.V..1.1.V)</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">    $dut.power_domains # =&gt; [:vdd, :vdda, :vccsoc]
+    $dut.power_domains(:vdd).description # =&gt; "CPU Core Complex"
+    $dut.power_domains(:vdd).nominal_voltage # =&gt; 1.0.V
+    $dut.power_domains(:vdd).range # =&gt; (0.7.V..1.1.V)
+</code></pre>
 
       <p>Typically in Origen, models own things directly, but in the case of power domains, they ‘own’ pins indirectly.  Most apps
 instantiate pins to the top level DUT so the PowerDomains module was written to deal with that reality, versus asking apps
@@ -512,70 +504,58 @@ the <a href="https://origen-sdk.org/origen/api/Origen/Pins/Pin.html#supply-insta
 
       <p>Let’s define some pins, for the :vdd power domain, that have the supply attribute defined.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>  <span style="color:#036;font-weight:bold">VDD_SIGNAL_PINS</span> = [<span style="color:#A60">:pin1</span>, <span style="color:#A60">:pin2</span>, <span style="color:#A60">:pin3</span>]
-  <span style="color:#036;font-weight:bold">VDD_POWER_PINS</span> = [<span style="color:#A60">:vdd1</span>, <span style="color:#A60">:vdd2</span>, <span style="color:#A60">:vdd3</span>]
-  <span style="color:#036;font-weight:bold">VDD_GND_PINS</span> = [<span style="color:#A60">:vss1</span>, <span style="color:#A60">:vss2</span>, <span style="color:#A60">:vss3</span>]
+      <pre><code class="language-ruby">  VDD_SIGNAL_PINS = [:pin1, :pin2, :pin3]
+  VDD_POWER_PINS = [:vdd1, :vdd2, :vdd3]
+  VDD_GND_PINS = [:vss1, :vss2, :vss3]
 
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>
-    <span style="color:#036;font-weight:bold">VDD_SIGNAL_PINS</span>.each <span style="color:#080;font-weight:bold">do</span> |p|
-      <span style="color:#d70">$dut</span>.add_pin p <span style="color:#080;font-weight:bold">do</span> |pin|
-        pin.supply = <span style="color:#A60">:vdd</span>
-      <span style="color:#080;font-weight:bold">end</span>
-    <span style="color:#080;font-weight:bold">end</span>
-    <span style="color:#036;font-weight:bold">VDD_POWER_PINS</span>.each <span style="color:#080;font-weight:bold">do</span> |p|
-      <span style="color:#d70">$dut</span>.add_power_pin p <span style="color:#080;font-weight:bold">do</span> |pin|
-        pin.supply = <span style="color:#A60">:vdd</span>
-      <span style="color:#080;font-weight:bold">end</span>
-    <span style="color:#080;font-weight:bold">end</span>
-    <span style="color:#036;font-weight:bold">VDD_GND_PINS</span>.each <span style="color:#080;font-weight:bold">do</span> |p|
-      <span style="color:#d70">$dut</span>.add_ground_pin p <span style="color:#080;font-weight:bold">do</span> |pin|
-        pin.supply = <span style="color:#A60">:vdd</span>
-      <span style="color:#080;font-weight:bold">end</span>
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  def initialize
+    VDD_SIGNAL_PINS.each do |p|
+      $dut.add_pin p do |pin|
+        pin.supply = :vdd
+      end
+    end
+    VDD_POWER_PINS.each do |p|
+      $dut.add_power_pin p do |pin|
+        pin.supply = :vdd
+      end
+    end
+    VDD_GND_PINS.each do |p|
+      $dut.add_ground_pin p do |pin|
+        pin.supply = :vdd
+      end
+    end
+  end
+</code></pre>
 
       <p>Here are some methods available to interact with the pins associated with a power domain.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>    <span style="color:#d70">$dut</span>.power_domains(<span style="color:#A60">:vdd</span>).signal_pins <span style="color:#777"># =&gt; [:pin1, :pin2, :pin3]</span>
-    <span style="color:#d70">$dut</span>.power_domains(<span style="color:#A60">:vdd</span>).power_pins <span style="color:#777"># =&gt; [:vdd1, :vdd2, :vdd3]</span>
-    <span style="color:#d70">$dut</span>.power_domains(<span style="color:#A60">:vdd</span>).ground_pins <span style="color:#777"># =&gt; [:vss1, :vss2, :vss3]</span>
-    <span style="color:#d70">$dut</span>.power_domains(<span style="color:#A60">:vdd</span>).has_pin?(<span style="color:#A60">:vdd1</span>) <span style="color:#777"># =&gt; true</span>
-    <span style="color:#d70">$dut</span>.power_domains(<span style="color:#A60">:vdd</span>).pin_type(<span style="color:#A60">:vdd1</span>) <span style="color:#777"># =&gt; :power</span>
-    <span style="color:#d70">$dut</span>.power_domains(<span style="color:#A60">:vdd</span>).has_power_pin?(<span style="color:#A60">:vdd1</span>) <span style="color:#777"># =&gt; true</span>
-    <span style="color:#d70">$dut</span>.power_domains(<span style="color:#A60">:vdd</span>).has_pin?(<span style="color:#A60">:pin1</span>) <span style="color:#777"># =&gt; true</span>
-    <span style="color:#d70">$dut</span>.power_domains(<span style="color:#A60">:vdd</span>).pin_type(<span style="color:#A60">:pin1</span>) <span style="color:#777"># =&gt; :signal</span>
-    <span style="color:#d70">$dut</span>.power_domains(<span style="color:#A60">:vdd</span>).has_signal_pin?(<span style="color:#A60">:pin1</span>) <span style="color:#777"># =&gt; true</span>
-    <span style="color:#d70">$dut</span>.power_domains(<span style="color:#A60">:vdd</span>).has_pin?(<span style="color:#A60">:vss1</span>) <span style="color:#777"># =&gt; true</span>
-    <span style="color:#d70">$dut</span>.power_domains(<span style="color:#A60">:vdd</span>).pin_type(<span style="color:#A60">:vss1</span>) <span style="color:#777"># =&gt; :ground</span>
-    <span style="color:#d70">$dut</span>.power_domains(<span style="color:#A60">:vdd</span>).has_ground_pin?(<span style="color:#A60">:vss1</span>) <span style="color:#777"># =&gt; true</span>
-    <span style="color:#d70">$dut</span>.power_domains(<span style="color:#A60">:vdda</span>).signal_pins <span style="color:#777"># =&gt; []</span>
-    <span style="color:#d70">$dut</span>.power_domains(<span style="color:#A60">:vdda</span>).power_pins <span style="color:#777"># =&gt; []</span>
-    <span style="color:#d70">$dut</span>.power_domains(<span style="color:#A60">:vdda</span>).ground_pins <span style="color:#777"># =&gt; []</span>
-    <span style="color:#d70">$dut</span>.power_domains(<span style="color:#A60">:vdda</span>).has_pin?(<span style="color:#A60">:vdd1</span>) <span style="color:#777"># =&gt; false</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">    $dut.power_domains(:vdd).signal_pins # =&gt; [:pin1, :pin2, :pin3]
+    $dut.power_domains(:vdd).power_pins # =&gt; [:vdd1, :vdd2, :vdd3]
+    $dut.power_domains(:vdd).ground_pins # =&gt; [:vss1, :vss2, :vss3]
+    $dut.power_domains(:vdd).has_pin?(:vdd1) # =&gt; true
+    $dut.power_domains(:vdd).pin_type(:vdd1) # =&gt; :power
+    $dut.power_domains(:vdd).has_power_pin?(:vdd1) # =&gt; true
+    $dut.power_domains(:vdd).has_pin?(:pin1) # =&gt; true
+    $dut.power_domains(:vdd).pin_type(:pin1) # =&gt; :signal
+    $dut.power_domains(:vdd).has_signal_pin?(:pin1) # =&gt; true
+    $dut.power_domains(:vdd).has_pin?(:vss1) # =&gt; true
+    $dut.power_domains(:vdd).pin_type(:vss1) # =&gt; :ground
+    $dut.power_domains(:vdd).has_ground_pin?(:vss1) # =&gt; true
+    $dut.power_domains(:vdda).signal_pins # =&gt; []
+    $dut.power_domains(:vdda).power_pins # =&gt; []
+    $dut.power_domains(:vdda).ground_pins # =&gt; []
+    $dut.power_domains(:vdda).has_pin?(:vdd1) # =&gt; false
+</code></pre>
 
       <p>After a power domain is instantiated, its setpoint or value is nil by default.  This behavior is by design, such that the
 user could define <a href="https://origen-sdk.org/origen/guides/models/modes/#Mode">chip modes</a> or
 <a href="https://origen-sdk.org/origen/guides/models/parameters/#Defining_a_Set_of_Parameters">parameter contexts</a> that provide scope
 for a group of power domain values.  Here are some examples of setting power domain setpoints/values.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>  <span style="color:#d70">$dut</span>.power_domains(<span style="color:#A60">:vdd</span>).setpoint = <span style="color:#60E">0.72</span>.V
-  <span style="color:#d70">$dut</span>.power_domains(<span style="color:#A60">:vdda</span>).setpoint = <span style="color:#60E">1.10</span>.V
-  <span style="color:#d70">$dut</span>.power_domains(<span style="color:#A60">:vccsoc</span>).setpoint = <span style="color:#60E">1.37</span>.V
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">  $dut.power_domains(:vdd).setpoint = 0.72.V
+  $dut.power_domains(:vdda).setpoint = 1.10.V
+  $dut.power_domains(:vccsoc).setpoint = 1.37.V
+</code></pre>
 
       <p>A little about the attribute ‘unit_voltage_range’.  If a power domain has this attribute set to :fixed, then it means all units
 will see the eact same voltage when the device is powered up.  If this attribute is set to a Range, then it means each device can 

@@ -467,22 +467,14 @@ you may want to programmatically define or manipulate the target.</p>
       <p>A single target should always be loaded by using the following method, it
 can be called again to later switch to a different target:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.load_target(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">falcon_1</span><span style="color:#710">"</span></span>)
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">Origen.load_target("falcon_1")
+</code></pre>
 
       <p>To load the default target, or to reload the current target, call the same method
 with no argument:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.load_target
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">Origen.load_target
+</code></pre>
 
       <div class="alert alert-danger">
   <strong>Warning</strong> - 
@@ -498,12 +490,8 @@ an instance of that class is available via <code>Origen.target</code>.</p>
 
       <p>For example to get the name of the current target:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.target.name   <span style="color:#777"># =&gt; "falcon_1"</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">Origen.target.name   # =&gt; "falcon_1"
+</code></pre>
 
       <div>    
   <a class="anchor" name="Configurable_Targets"></a>          
@@ -516,25 +504,17 @@ from within the target and used to customize it by the caller.</p>
       <p>For example here is a target where the device version is left for the caller
 to specify:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># target/falcon.rb</span>
-<span style="color:#036;font-weight:bold">MyApp</span>::<span style="color:#036;font-weight:bold">Falcon</span>.new(<span style="color:#606">version</span>: options[<span style="color:#A60">:version</span>])
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># target/falcon.rb
+MyApp::Falcon.new(version: options[:version])
+</code></pre>
 
       <p>This would be used like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.load_target(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">falcon</span><span style="color:#710">"</span></span>, <span style="color:#606">version</span>: <span style="color:#00D">1</span>)
-<span style="color:#d70">$dut</span>.version   <span style="color:#777"># =&gt; 1</span>
-<span style="color:#036;font-weight:bold">Origen</span>.load_target(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">falcon</span><span style="color:#710">"</span></span>, <span style="color:#606">version</span>: <span style="color:#00D">2</span>)
-<span style="color:#d70">$dut</span>.version   <span style="color:#777"># =&gt; 2</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">Origen.load_target("falcon", version: 1)
+$dut.version   # =&gt; 1
+Origen.load_target("falcon", version: 2)
+$dut.version   # =&gt; 2
+</code></pre>
 
       <div>    
   <a class="anchor" name="Target_Loops"></a>          
@@ -554,28 +534,22 @@ default target following the normal conventions.</p>
       <p>It is therefore ideally suited to creating a command where the user can
 supply one or more targets and could be used like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>opt_parser = <span style="color:#036;font-weight:bold">OptionParser</span>.new <span style="color:#080;font-weight:bold">do</span> |opts|
-  opts.on(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">-t</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">--target NAME1,NAME2,NAME3</span><span style="color:#710">"</span></span>, <span style="color:#036;font-weight:bold">Array</span>,
-    <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Override the default target, NAME can be a full path or a fragment of a target name</span><span style="color:#710">"</span></span>) { |t| options[<span style="color:#A60">:target</span>] = t }
-<span style="color:#080;font-weight:bold">end</span>
-opt_parser.parse! <span style="color:#069">ARGV</span>
+      <pre><code class="language-ruby">opt_parser = OptionParser.new do |opts|
+  opts.on("-t", "--target NAME1,NAME2,NAME3", Array,
+    "Override the default target, NAME can be a full path or a fragment of a target name") { |t| options[:target] = t }
+end
+opt_parser.parse! ARGV
 
-<span style="color:#036;font-weight:bold">Origen</span>.target.loop(options) <span style="color:#080;font-weight:bold">do</span> |options|
-  <span style="color:#777"># The current target is already loaded, the name of the current target has been substituted into options[:target]</span>
-  puts <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">The name of the current target is: </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>options[<span style="color:#A60">:target</span>]<span style="font-weight:bold;color:#666">}</span></span><span style="color:#710">"</span></span>
-  <span style="color:#777"># Implement your command logic here...</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+Origen.target.loop(options) do |options|
+  # The current target is already loaded, the name of the current target has been substituted into options[:target]
+  puts "The name of the current target is: #{options[:target]}"
+  # Implement your command logic here...
+end
+</code></pre>
 
       <p>The above would work with any of the following inputs:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre># Execute for the current default target
+      <pre><code class="language-text"># Execute for the current default target
 origen my_command      
 
 # Execute for a single specific target
@@ -583,9 +557,7 @@ origen my_command -t falcon
 
 # Execute for multiple specific targets
 origen my_command -t falcon,eagle    
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <div>    
   <a class="anchor" name="Production_Target_Loops"></a>          
@@ -595,18 +567,14 @@ origen my_command -t falcon,eagle
       <p>If your application has defined a <a href="/origen/guides/targets/production">production target map</a>
 then some additional methods are available to loop on that:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.target.each_production <span style="color:#080;font-weight:bold">do</span> |maskset|
-  <span style="color:#777"># Do something for each maskset line defined in the map</span>
-<span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby">Origen.target.each_production do |maskset|
+  # Do something for each maskset line defined in the map
+end
 
-<span style="color:#036;font-weight:bold">Origen</span>.target.each_unique_production <span style="color:#080;font-weight:bold">do</span> |masksets|
-  <span style="color:#777"># Do something for each unique target defined in the map</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+Origen.target.each_unique_production do |masksets|
+  # Do something for each unique target defined in the map
+end
+</code></pre>
 
       <p>The latter will only execute for unique target files, so if the same file is used
 by multiple maskset numbers it will only be looped once and the <code>masksets</code> argument
@@ -621,14 +589,10 @@ will be an array containing all maskset numbers that use that target.</p>
 this can be useful depending on the purpose of your command, but should obviously
 be avoided in cases where the command is concerned with generating production IP.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.target.each_production <span style="color:#606">force_debug</span>: <span style="color:#069">true</span> <span style="color:#080;font-weight:bold">do</span> |maskset|
-  <span style="color:#777"># As above except Origen is running in debug mode regardless of the mode defined by the environment</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">Origen.target.each_production force_debug: true do |maskset|
+  # As above except Origen is running in debug mode regardless of the mode defined by the environment
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Anonymous_Targets"></a>          
@@ -638,15 +602,11 @@ be avoided in cases where the command is concerned with generating production IP
       <p>Mostly intended for use in test cases, a temporary target can be declared on the fly with
 a block of code like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.target.temporary = -&gt; <span style="color:#080;font-weight:bold">do</span>
-  <span style="color:#036;font-weight:bold">MyDUT</span>.new
-  <span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">V93K</span>.new
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">Origen.target.temporary = -&gt; do
+  MyDUT.new
+  OrigenTesters::V93K.new
+end
+</code></pre>
 
       <p>Any calls to load or reload the target will now execute the above function.</p>
 

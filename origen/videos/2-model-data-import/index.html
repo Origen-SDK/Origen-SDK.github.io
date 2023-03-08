@@ -193,35 +193,27 @@
 
             <h5 id="application-integration">Application Integration</h5>
 
-            <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/atd_test/atd.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">ATDTest</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">ATD</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
-    include <span style="color:#036;font-weight:bold">CrossOrigen</span>
-                    
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options = {})
-      cr_import(<span style="color:#606">path</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.root<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">/ipxact/atd.xml</span><span style="color:#710">"</span></span>)
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-            </div>
+            <pre><code class="language-ruby"># lib/atd_test/atd.rb
+module ATDTest
+  class ATD
+    include Origen::Model
+    include CrossOrigen
+  		  
+    def initialize(options = {})
+      cr_import(path: "#{Origen.root}/ipxact/atd.xml")
+    end
+  end
+end
+</code></pre>
 
-            <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># config/application.rb</span>
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">after_web_site_compile</span>(options)
-  <span style="color:#777"># Build the model documentation</span>
-  <span style="color:#036;font-weight:bold">OrigenDocHelpers</span>.generate_model_docs <span style="color:#606">layout</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.root<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">/templates/web/layouts/_basic.html.erb</span><span style="color:#710">"</span></span>, <span style="color:#606">tab</span>: <span style="color:#A60">:model</span> <span style="color:#080;font-weight:bold">do</span> |d|
-    d.page <span style="color:#606">model</span>: <span style="color:#d70">$dut</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-            </div>
+            <pre><code class="language-ruby"># config/application.rb
+def after_web_site_compile(options)
+  # Build the model documentation
+  OrigenDocHelpers.generate_model_docs layout: "#{Origen.root}/templates/web/layouts/_basic.html.erb", tab: :model do |d|
+    d.page model: $dut
+  end
+end
+</code></pre>
 
           </div>
 <div role="tabpanel" class="tab-pane" id="comments">

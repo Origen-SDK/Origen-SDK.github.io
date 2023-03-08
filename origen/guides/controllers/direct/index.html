@@ -479,21 +479,17 @@ ATD model is <code>$model.atd</code>.</p>
       <p>The key difference is that instead of linking the controller to a model class who’s instances it should shadow,
 it is instead linked to a model instance:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/atd_test_block/atd_controller.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">ATDTestBlock</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">ATDController</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Controller</span>
+      <pre><code class="language-ruby"># lib/atd_test_block/atd_controller.rb
+module ATDTestBlock
+  class ATDController
+    include Origen::Controller
 
-    model <span style="color:#606">path</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">$model.atd</span><span style="color:#710">"</span></span>
+    model path: "$model.atd"
 
-    <span style="color:#777"># ATD pattern API implementation as before</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+    # ATD pattern API implementation as before
+  end
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Instantiating_the_Controller"></a>          
@@ -503,16 +499,12 @@ it is instead linked to a model instance:</p>
       <p>This is where the main difference between Shadow and Direct controllers exists, the direct controller
 needs to be instantiated directly:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$model</span> = <span style="color:#036;font-weight:bold">SoC</span>::<span style="color:#036;font-weight:bold">Eagle</span>.new    <span style="color:#777"># Instantiates a model of the target device</span>
+      <pre><code class="language-ruby">$model = SoC::Eagle.new    # Instantiates a model of the target device
 
-atd = <span style="color:#036;font-weight:bold">ATDTestBlock</span>::<span style="color:#036;font-weight:bold">ATDController</span>.new
+atd = ATDTestBlock::ATDController.new
 
-atd.convert(<span style="color:#00D">10</span>)  <span style="color:#777"># =&gt; &lt;BitCollection&gt;</span>
-</pre></div>
-</div>
-      </div>
+atd.convert(10)  # =&gt; &lt;BitCollection&gt;
+</code></pre>
 
       <p>Once instantiated the <code>atd</code> object above will otherwise behave identically to the
 <a href="/origen/guides/controller/shadow/#Instantiating_the_Controller">Shadow controller example</a>.</p>
@@ -528,44 +520,32 @@ practices for how to build them are probably still to emerge.</p>
       <p>However here is one approach that would work;
 first the top-level controller would be created and managed by the top-level test engineer:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">EagleController</span>
-  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Controller</span>
+      <pre><code class="language-ruby">class EagleController
+  include Origen::Controller
 
-  model <span style="color:#606">path</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">$model</span><span style="color:#710">"</span></span>
+  model path: "$model"
 
-  <span style="color:#777"># Instantiate a model whenever a new controller is instantiated</span>
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options = {})
-    <span style="color:#d70">$model</span> = <span style="color:#036;font-weight:bold">Eagle</span>.new(options)
-  <span style="color:#080;font-weight:bold">end</span>
+  # Instantiate a model whenever a new controller is instantiated
+  def initialize(options = {})
+    $model = Eagle.new(options)
+  end
 
-  <span style="color:#777"># Instantiate an ATD controller as required</span>
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">atd</span>
-    <span style="color:#33B">@atd</span> ||= <span style="color:#036;font-weight:bold">ATDTestBlock</span>::<span style="color:#036;font-weight:bold">ATDController</span>.new
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  # Instantiate an ATD controller as required
+  def atd
+    @atd ||= ATDTestBlock::ATDController.new
+  end
+end
+</code></pre>
 
       <p>The target would instantiate the top-level controller, not the model:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$dut</span> = <span style="color:#036;font-weight:bold">EagleController</span>.new
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">$dut = EagleController.new
+</code></pre>
 
       <p>The ATD API is now available within the ecosystem as per the <a href="/origen/guides/controller/shadow/#Typical_Integration">Shadow controller example</a>:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$dut</span>.atd.convert(<span style="color:#00D">10</span>)  <span style="color:#777"># =&gt; &lt;BitCollection&gt;</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">$dut.atd.convert(10)  # =&gt; &lt;BitCollection&gt;
+</code></pre>
 
       <div style="position: relative">
   <hr>

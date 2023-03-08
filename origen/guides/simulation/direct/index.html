@@ -462,22 +462,18 @@ and manipulate the DUT which is not possible in the physical world.</p>
       <p>The user is responsible for ensuring that the use of these APIs is safely handled when generating for
 an ATE or other non-simulation target, normally via one of these constructs:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Simply skip this unless simulating</span>
-<span style="color:#080;font-weight:bold">unless</span> tester.sim?
-  tester.peek <span style="color:#777"># ...</span>
-<span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby"># Simply skip this unless simulating
+unless tester.sim?
+  tester.peek # ...
+end
   
-<span style="color:#777"># Implement differently for ATE</span>
-<span style="color:#080;font-weight:bold">if</span> tester.sim?
-  tester.poke <span style="color:#777"># ...</span>
-<span style="color:#080;font-weight:bold">else</span>
+# Implement differently for ATE
+if tester.sim?
+  tester.poke # ...
+else
   dut.do_something
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Poke"></a>          
@@ -490,27 +486,19 @@ value into an existing storage element.</p>
       <p>To use the <code>poke</code> method, supply the net path of the storage element to be changed and the value you want to
 change it to:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Poking a register</span>
-tester.poke(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">dut.my_ip.user_regs.some_reg</span><span style="color:#710">"</span></span>, <span style="color:#00D">0x1111</span>)
+      <pre><code class="language-ruby"># Poking a register
+tester.poke("dut.my_ip.user_regs.some_reg", 0x1111)
 
-<span style="color:#777"># Poking a memory</span>
-tester.poke(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">dut.my_ip.mem[15]</span><span style="color:#710">"</span></span>, <span style="color:#00D">0x1111_2222</span>)
-</pre></div>
-</div>
-      </div>
+# Poking a memory
+tester.poke("dut.my_ip.mem[15]", 0x1111_2222)
+</code></pre>
 
       <p>The poke method can be used on real variables too, in that case a float should be given as the second
 argument instead of an integer to indicate to Origen that a real value net is being poked. e.g. to poke
 the value <code>1</code> to a real value net then supply <code>1.0</code> as the value argument instead of <code>1</code>.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>tester.poke(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">dut.my_ip.my_real_var</span><span style="color:#710">"</span></span>, <span style="color:#60E">1.25</span>)
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">tester.poke("dut.my_ip.my_real_var", 1.25)
+</code></pre>
 
       <div>    
   <a class="anchor" name="Peek"></a>          
@@ -526,30 +514,22 @@ an instance of <a href="/origen/api/Origen/Value.html">Origen::Value</a> which c
       <p>Normally, if you don’t care about catching <code>Z</code> or <code>X</code> cases you can simply call <code>to_i</code> on the value
 returned from <code>peek</code>, here are some examples:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Peeking a register</span>
-tester.peek(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">dut.my_ip.user_regs.some_reg</span><span style="color:#710">"</span></span>).to_i   <span style="color:#777"># =&gt; 0x1111</span>
+      <pre><code class="language-ruby"># Peeking a register
+tester.peek("dut.my_ip.user_regs.some_reg").to_i   # =&gt; 0x1111
 
-<span style="color:#777"># Peeking a memory</span>
-tester.peek(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">dut.my_ip.mem[15]</span><span style="color:#710">"</span></span>).to_i   <span style="color:#777"># =&gt; 0x1111_2222</span>
-</pre></div>
-</div>
-      </div>
+# Peeking a memory
+tester.peek("dut.my_ip.mem[15]").to_i   # =&gt; 0x1111_2222
+</code></pre>
 
       <p>When peeking a real number, <code>X</code> or <code>Z</code> states are not supported and a float will be returned.</p>
 
       <p>You must indicate to Origen that you are peeking a real value by supplying a second argument of <code>true</code>,
 or for convenience calling <code>peek_real</code> instead:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>tester.peek(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">dut.my_ip.my_real_var</span><span style="color:#710">"</span></span>, <span style="color:#069">true</span>)   <span style="color:#777"># =&gt; 1.25</span>
+      <pre><code class="language-ruby">tester.peek("dut.my_ip.my_real_var", true)   # =&gt; 1.25
 
-tester.peek_real(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">dut.my_ip.my_real_var</span><span style="color:#710">"</span></span>)    <span style="color:#777"># =&gt; 1.25</span>
-</pre></div>
-</div>
-      </div>
+tester.peek_real("dut.my_ip.my_real_var")    # =&gt; 1.25
+</code></pre>
 
       <div>    
   <a class="anchor" name="Force"></a>          
@@ -569,29 +549,21 @@ in the DUT until the force is released.</p>
 
       <p>The <code>force</code> method has the same arguments as the <code>peek</code> method:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Forcing a register</span>
-tester.force(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">dut.my_ip.user_regs.some_reg</span><span style="color:#710">"</span></span>, <span style="color:#00D">0x1111</span>)
+      <pre><code class="language-ruby"># Forcing a register
+tester.force("dut.my_ip.user_regs.some_reg", 0x1111)
 
-<span style="color:#777"># Forcing a memory</span>
-tester.force(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">dut.my_ip.mem[15]</span><span style="color:#710">"</span></span>, <span style="color:#00D">0x1111_2222</span>)
+# Forcing a memory
+tester.force("dut.my_ip.mem[15]", 0x1111_2222)
 
-<span style="color:#777"># Forcing a real value</span>
-tester.force(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">dut.my_ip.my_real_var</span><span style="color:#710">"</span></span>, <span style="color:#60E">1.25</span>)
-</pre></div>
-</div>
-      </div>
+# Forcing a real value
+tester.force("dut.my_ip.my_real_var", 1.25)
+</code></pre>
 
       <p>A force can be released by calling the <code>release</code> method and supplying the net reference:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Releasing an existing force</span>
-tester.release(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">dut.my_ip.user_regs.some_reg</span><span style="color:#710">"</span></span>)
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># Releasing an existing force
+tester.release("dut.my_ip.user_regs.some_reg")
+</code></pre>
 
       <div style="position: relative">
   <hr>

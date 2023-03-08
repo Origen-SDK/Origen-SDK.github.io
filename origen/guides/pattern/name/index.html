@@ -505,33 +505,25 @@ generation.</p>
       <p>Add these lines to your <code>application.rb</code> file to engage a pattern dispatcher
 (where MyApp is your application’s namespace):</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># config/application.rb</span>
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">before_pattern_lookup</span>(requested_pattern)
-  <span style="color:#036;font-weight:bold">MyApp</span>::<span style="color:#036;font-weight:bold">PatternDispatcher</span>.new.dispatch_or_return(requested_pattern)
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># config/application.rb
+def before_pattern_lookup(requested_pattern)
+  MyApp::PatternDispatcher.new.dispatch_or_return(requested_pattern)
+end
+</code></pre>
 
       <p>Then create an initial pattern dispatcher shell like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/my_app/pattern_dispatcher.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">MyApp</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">PatternDispatcher</span>
+      <pre><code class="language-ruby"># lib/my_app/pattern_dispatcher.rb
+module MyApp
+  class PatternDispatcher
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">dispatch_or_return</span>(requested_pattern)
+    def dispatch_or_return(requested_pattern)
       requested_pattern
-    <span style="color:#080;font-weight:bold">end</span>
+    end
 
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  end
+end
+</code></pre>
 
       <p>This initial dispatcher simply returns the requested pattern name, therefore Origen will
 behave as normal and look for a source file for every pattern request.</p>
@@ -551,24 +543,20 @@ that it should be generated without a source.</p>
       <p>Let’s go with sourceless being the default, here is how to modify the <code>dispatch_or_return</code>
 method to do that:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">dispatch_or_return</span>(requested_pattern)
-  <span style="color:#777"># If the pattern name contains 'custom' just return the name to have Origen lookup a source file for it</span>
-  <span style="color:#080;font-weight:bold">if</span> requested_pattern =~ <span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#808">custom</span><span style="color:#404">/</span></span>
+      <pre><code class="language-ruby">def dispatch_or_return(requested_pattern)
+  # If the pattern name contains 'custom' just return the name to have Origen lookup a source file for it
+  if requested_pattern =~ /custom/
     requested_pattern
-  <span style="color:#080;font-weight:bold">else</span>
+  else
     generate(requested_pattern)
-    <span style="color:#069">false</span>   <span style="color:#777"># Return false to Origen to prevent std pattern dispatch</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
+    false   # Return false to Origen to prevent std pattern dispatch
+  end
+end
 
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">generate</span>(requested_pattern)
-  <span style="color:#777"># Logic to generate the pattern to be added here</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+def generate(requested_pattern)
+  # Logic to generate the pattern to be added here
+end
+</code></pre>
 
       <p>Now you can see the influence of the pattern dispatcher for the first time, any requests
 containing ‘custom’ will be processed as normal and any requests without this will
@@ -584,16 +572,12 @@ generated within a regular pattern source file.</p>
 
       <p>Here our <code>generate</code> method will now produce an empty pattern:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">generate</span>(requested_pattern)
-  <span style="color:#036;font-weight:bold">Pattern</span>.create(<span style="color:#606">name</span>: requested_pattern) <span style="color:#080;font-weight:bold">do</span>
-    <span style="color:#777"># Logic to generate the pattern to be added here</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">def generate(requested_pattern)
+  Pattern.create(name: requested_pattern) do
+    # Logic to generate the pattern to be added here
+  end
+end
+</code></pre>
 
       <p>Within the <code>Pattern.create</code> block you can call the exact same methods
 that you would use in a regular pattern source, the difference of course is that
@@ -607,13 +591,9 @@ file extension, and pre and post-fixes that may or may not be present. In other
 words Origen allows you to very flexible over what name you request, for example
 these are equivalent:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>origen g bistcom
+      <pre><code class="language-text">origen g bistcom
 origen g output/p2/nvm_bistcom_debug.atp
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>In due course the internal Origen methods may be exposed via an API, but for now
 your pattern dispatcher will have to deal with it (if you want to continue to
@@ -621,25 +601,21 @@ have this flexibility).</p>
 
       <p>Here is an example method that you can use for this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">generate</span>(requested_pattern)
+      <pre><code class="language-ruby">def generate(requested_pattern)
   requested_pattern = clean_pattern_name(requested_pattern)
-  <span style="color:#036;font-weight:bold">Pattern</span>.create(<span style="color:#606">name</span>: requested_pattern) <span style="color:#080;font-weight:bold">do</span>
-    <span style="color:#777"># Logic to generate the pattern to be added here</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
+  Pattern.create(name: requested_pattern) do
+    # Logic to generate the pattern to be added here
+  end
+end
 
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">clean_pattern_name</span>(name)
-  name = <span style="color:#036;font-weight:bold">Pathname</span>.new(name).basename.to_s  <span style="color:#777"># Strip path</span>
-  name.sub!(<span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#D20">\.</span><span style="color:#808">.*</span><span style="color:#404">/</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#710">"</span></span>)    <span style="color:#777"># Strip any and all extensions</span>
-  name.sub!(<span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#808">^nvm_</span><span style="color:#404">/</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#710">"</span></span>)   <span style="color:#777"># Strip prefix, this will unique to your app, here 'nvm_' is removed</span>
-  name.sub!(<span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#808">_debug$</span><span style="color:#404">/</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#710">"</span></span>) <span style="color:#777"># Strip postfix, again unique to your app, here '_debug' occurring at the end is removed</span>
+def clean_pattern_name(name)
+  name = Pathname.new(name).basename.to_s  # Strip path
+  name.sub!(/\..*/, "")    # Strip any and all extensions
+  name.sub!(/^nvm_/, "")   # Strip prefix, this will unique to your app, here 'nvm_' is removed
+  name.sub!(/_debug$/, "") # Strip postfix, again unique to your app, here '_debug' occurring at the end is removed
   name
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+end
+</code></pre>
 
       <p>Now you should be able to create (albeit empty) patterns via your dispatcher in the
 same way as via the regular generator.</p>
@@ -657,32 +633,20 @@ this already in place.</p>
 easy for a computer.
 For example your patterns may have the general format:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>&lt;parameter set&gt;_&lt;operation&gt;_&lt;identifier&gt;_&lt;block&gt;
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">&lt;parameter set&gt;_&lt;operation&gt;_&lt;identifier&gt;_&lt;block&gt;
+</code></pre>
 
       <p>Here are a couple of examples:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>prb_pgm_ckbd_b0   # Program a checkerboard to block 0, using probe parameters
+      <pre><code class="language-text">prb_pgm_ckbd_b0   # Program a checkerboard to block 0, using probe parameters
 ft_pgm_ckbd_b0    # Program a checkerboard to block 0, using FT parameters
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>That’s fine, but what if these are allowed:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>pgm_ckbd_b0       # Program a checkerboard to block 0, using default parameters
+      <pre><code class="language-text">pgm_ckbd_b0       # Program a checkerboard to block 0, using default parameters
 pgm_ckbd_20us_b0  # Program a checkerboard to block 0, using default parameters + 20us programming time
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>Again easy enough to understand, but we have just introduced somethings that will be
 difficult to interpret by our pattern dispatcher. Firstly how do we know if ‘pgm’
@@ -707,15 +671,11 @@ of ‘b’ followed by a number. This is exactly the kind of thing that we can d
       <p>So extending that convention to prefix each field with a short mnemonic describing what it
 refers to we end up with:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>paraprb_oppgm_patckbd_b0 # Program a checkerboard to block 0, using probe parameters
+      <pre><code class="language-text">paraprb_oppgm_patckbd_b0 # Program a checkerboard to block 0, using probe parameters
 paraft_oppgm_patckbd_b0  # Program a checkerboard to block 0, using FT parameters
 oppgm_patckbd_b0         # Program a checkerboard to block 0, using default parameters
 oppgm_patckbd_tprog20_b0 # Program a checkerboard to block 0, using default parameters + 20us programming time
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>So we have paid a penalty here with a pattern name that is a bit more verbose than it really
 needs to be, but it is a small price to pay for being able to drop pattern sources
@@ -746,36 +706,32 @@ Here are some examples
 (here assuming that the requested pattern
 has been assigned to an instance variable by upstream code):</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># An example of a required field</span>
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">operation</span>
-  <span style="color:#080;font-weight:bold">if</span> <span style="color:#33B">@requested_pattern</span> =~ <span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#808">(^|_)op(</span><span style="color:#D20">\w</span><span style="color:#808">+?)(_|$)</span><span style="color:#404">/</span></span>
-    <span style="color:#d70">$2</span>
-  <span style="color:#080;font-weight:bold">else</span>
-    raise <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">No operation was contained in pattern: </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#33B">@requested_pattern</span><span style="font-weight:bold;color:#666">}</span></span><span style="color:#710">"</span></span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby"># An example of a required field
+def operation
+  if @requested_pattern =~ /(^|_)op(\w+?)(_|$)/
+    $2
+  else
+    raise "No operation was contained in pattern: #{@requested_pattern}"
+  end
+end
 
-<span style="color:#777"># An example of an optional field with a default</span>
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">parameter_set</span>
-  <span style="color:#080;font-weight:bold">if</span> <span style="color:#33B">@requested_pattern</span> =~ <span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#808">(^|_)para(</span><span style="color:#D20">\w</span><span style="color:#808">+?)(_|$)</span><span style="color:#404">/</span></span>
-    <span style="color:#d70">$2</span>
-  <span style="color:#080;font-weight:bold">else</span>
-    <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">default</span><span style="color:#710">"</span></span>   <span style="color:#777"># Use the 'default' parameter set if not specified</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
+# An example of an optional field with a default
+def parameter_set
+  if @requested_pattern =~ /(^|_)para(\w+?)(_|$)/
+    $2
+  else
+    "default"   # Use the 'default' parameter set if not specified
+  end
+end
 
-<span style="color:#777"># An example of an optional field that returns nil if not present, a default</span>
-<span style="color:#777"># may or may not be assigned later within the patgen logic</span>
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">block</span>
-  <span style="color:#080;font-weight:bold">if</span> <span style="color:#33B">@requested_pattern</span> =~ <span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#808">(^|_)b(</span><span style="color:#D20">\w</span><span style="color:#808">+?)(_|$)</span><span style="color:#404">/</span></span>
-    <span style="color:#d70">$2</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+# An example of an optional field that returns nil if not present, a default
+# may or may not be assigned later within the patgen logic
+def block
+  if @requested_pattern =~ /(^|_)b(\w+?)(_|$)/
+    $2
+  end
+end
+</code></pre>
 
       <p>No doubt the regex code may look a bit daunting at first and unfortunately regexs are
 unusual in that they tend to be easier to write than they are to read!
@@ -833,28 +789,24 @@ our parse methods return this.</p>
 way they can be used as strings, so actually we could abstract the regex portion of the
 code to a method like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">extract</span>(op_code)
-  <span style="color:#080;font-weight:bold">if</span> <span style="color:#33B">@requested_pattern</span> =~ <span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#808">(^|_)</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>op_code<span style="font-weight:bold;color:#666">}</span></span><span style="color:#808">(</span><span style="color:#D20">\w</span><span style="color:#808">+?)(_|$)</span><span style="color:#404">/</span></span>
-    <span style="color:#d70">$2</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby">def extract(op_code)
+  if @requested_pattern =~ /(^|_)#{op_code}(\w+?)(_|$)/
+    $2
+  end
+end
 
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">operation</span>
-  extract(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">op</span><span style="color:#710">"</span></span>) || raise(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">No operation was contained in pattern: </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#33B">@requested_pattern</span><span style="font-weight:bold;color:#666">}</span></span><span style="color:#710">"</span></span>)
-<span style="color:#080;font-weight:bold">end</span>
+def operation
+  extract("op") || raise("No operation was contained in pattern: #{@requested_pattern}")
+end
 
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">parameter_set</span>
-  extract(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">para</span><span style="color:#710">"</span></span>) || <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">default</span><span style="color:#710">"</span></span>
-<span style="color:#080;font-weight:bold">end</span>
+def parameter_set
+  extract("para") || "default"
+end
 
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">block</span>
-  extract(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">b</span><span style="color:#710">"</span></span>)
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+def block
+  extract("b")
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Putting_it_All_Together"></a>          
@@ -870,17 +822,13 @@ the parameter set option is passed into our startup method via <code>Pattern.cre
 
       <p>We can now do this by simply calling our <code>parameter_set</code> method:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">generate</span>(requested_pattern)
+      <pre><code class="language-ruby">def generate(requested_pattern)
   requested_pattern = clean_pattern_name(requested_pattern)
-  <span style="color:#036;font-weight:bold">Pattern</span>.create(<span style="color:#606">name</span>: requested_pattern, <span style="color:#606">parameter_set</span>: parameter_set) <span style="color:#080;font-weight:bold">do</span>
-    <span style="color:#777"># Logic to generate the pattern to be added here</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  Pattern.create(name: requested_pattern, parameter_set: parameter_set) do
+    # Logic to generate the pattern to be added here
+  end
+end
+</code></pre>
 
       <p>What happens inside the pattern block very much depends on your application patgen API
 and if you are creating this from scratch
@@ -895,79 +843,59 @@ done via an options hash.</p>
 
       <p>So for example a good API to handle our program checkerboard example might be:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Pattern</span>.create(<span style="color:#606">params</span>: <span style="color:#A60">:ft</span>) <span style="color:#080;font-weight:bold">do</span>
-  <span style="color:#d70">$dut</span>.nvm.pgm(<span style="color:#606">pattern</span>: <span style="color:#A60">:ckbd</span>, <span style="color:#606">tprog</span>: <span style="color:#00D">20</span>, <span style="color:#606">block</span>: <span style="color:#00D">0</span>)
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">Pattern.create(params: :ft) do
+  $dut.nvm.pgm(pattern: :ckbd, tprog: 20, block: 0)
+end
+</code></pre>
 
       <p>Which could then be synthesized via the following method:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">generate</span>(requested_pattern)
+      <pre><code class="language-ruby">def generate(requested_pattern)
   requested_pattern = clean_pattern_name(requested_pattern)
-  <span style="color:#036;font-weight:bold">Pattern</span>.create(<span style="color:#606">name</span>: requested_pattern, <span style="color:#606">parameter_set</span>: parameter_set) <span style="color:#080;font-weight:bold">do</span>
-    <span style="color:#d70">$dut</span>.nvm.send operation, <span style="color:#606">pattern</span>: pattern,
-                             <span style="color:#606">tprog</span>: tprog,
-                             <span style="color:#606">block</span>: block
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  Pattern.create(name: requested_pattern, parameter_set: parameter_set) do
+    $dut.nvm.send operation, pattern: pattern,
+                             tprog: tprog,
+                             block: block
+  end
+end
+</code></pre>
 
       <p>Even simpler would be:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Pattern</span>.create(<span style="color:#606">params</span>: <span style="color:#A60">:ft</span>) <span style="color:#080;font-weight:bold">do</span>
-  <span style="color:#d70">$dut</span>.nvm.execute(<span style="color:#606">operation</span>: <span style="color:#A60">:pgm</span>, <span style="color:#606">pattern</span>: <span style="color:#A60">:ckbd</span>, <span style="color:#606">tprog</span>: <span style="color:#00D">20</span>, <span style="color:#606">block</span>: block)
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">Pattern.create(params: :ft) do
+  $dut.nvm.execute(operation: :pgm, pattern: :ckbd, tprog: 20, block: block)
+end
+</code></pre>
 
       <p>And the equivalent synthesizer method:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">generate</span>(requested_pattern)
+      <pre><code class="language-ruby">def generate(requested_pattern)
   requested_pattern = clean_pattern_name(requested_pattern)
-  <span style="color:#036;font-weight:bold">Pattern</span>.create(<span style="color:#606">name</span>: requested_pattern, <span style="color:#606">parameter_set</span>: parameter_set) <span style="color:#080;font-weight:bold">do</span>
-    <span style="color:#d70">$dut</span>.nvm.execute <span style="color:#606">operation</span>: operation,
-                     <span style="color:#606">pattern</span>: pattern,
-                     <span style="color:#606">tprog</span>: tprog,
-                     <span style="color:#606">block</span>: block
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  Pattern.create(name: requested_pattern, parameter_set: parameter_set) do
+    $dut.nvm.execute operation: operation,
+                     pattern: pattern,
+                     tprog: tprog,
+                     block: block
+  end
+end
+</code></pre>
 
       <p>A clear pattern is starting to emerge now that for every supported option we have
 a matching method of the same name in our dispatcher, so we can optimize this a bit:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">OPTIONS</span> = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">%w(</span><span style="color:#D20">operation pattern tprog block</span><span style="color:#710">)</span></span>
+      <pre><code class="language-ruby">OPTIONS = %w(operation pattern tprog block)
 
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">generate</span>(requested_pattern)
+def generate(requested_pattern)
   requested_pattern = clean_pattern_name(requested_pattern)
   options = {}
-  <span style="color:#036;font-weight:bold">OPTIONS</span>.each <span style="color:#080;font-weight:bold">do</span> |option|
-    options[<span style="color:#A60">:option</span>] = <span style="color:#069">self</span>.send(option)
-  <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#036;font-weight:bold">Pattern</span>.create(<span style="color:#606">name</span>: requested_pattern, <span style="color:#606">parameter_set</span>: parameter_set) <span style="color:#080;font-weight:bold">do</span>
-    <span style="color:#d70">$dut</span>.nvm.execute(options) 
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  OPTIONS.each do |option|
+    options[:option] = self.send(option)
+  end
+  Pattern.create(name: requested_pattern, parameter_set: parameter_set) do
+    $dut.nvm.execute(options) 
+  end
+end
+</code></pre>
 
       <p>Now if we want to add support for a new option we just add it to the <code>OPTIONS</code>
 array and create the corresponding parse method.</p>
@@ -983,59 +911,55 @@ models (where it probably makes more sense anyway).</p>
 add support for another field in the future just add it to the <code>OPTIONS</code>
 definition that maps the option name to the pattern name op code:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/my_app/pattern_dispatcher.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">MyApp</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">PatternDispatcher</span>
+      <pre><code class="language-ruby"># lib/my_app/pattern_dispatcher.rb
+module MyApp
+  class PatternDispatcher
 
-    <span style="color:#036;font-weight:bold">OPTIONS</span> = {
-      <span style="color:#606">operation</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">op</span><span style="color:#710">"</span></span>,
-      <span style="color:#606">pattern</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">pat</span><span style="color:#710">"</span></span>,
-      <span style="color:#606">tprog</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">tprog</span><span style="color:#710">"</span></span>,
-      <span style="color:#606">block</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">b</span><span style="color:#710">"</span></span>,
+    OPTIONS = {
+      operation: "op",
+      pattern: "pat",
+      tprog: "tprog",
+      block: "b",
     }
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">generate</span>(requested_pattern)
-      <span style="color:#33B">@requested_pattern</span> = clean_pattern_name(requested_pattern)
+    def generate(requested_pattern)
+      @requested_pattern = clean_pattern_name(requested_pattern)
       options = {}
-      <span style="color:#036;font-weight:bold">OPTIONS</span>.each <span style="color:#080;font-weight:bold">do</span> |option, op_code|
-        options[<span style="color:#A60">:option</span>] = extract(op_code)
-      <span style="color:#080;font-weight:bold">end</span>
-      <span style="color:#036;font-weight:bold">Pattern</span>.create(<span style="color:#606">name</span>: <span style="color:#33B">@requested_pattern</span>, <span style="color:#606">parameter_set</span>: extract(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">para</span><span style="color:#710">"</span></span>)) <span style="color:#080;font-weight:bold">do</span>
-        <span style="color:#d70">$dut</span>.nvm.execute(options) 
-      <span style="color:#080;font-weight:bold">end</span>
-    <span style="color:#080;font-weight:bold">end</span>
+      OPTIONS.each do |option, op_code|
+        options[:option] = extract(op_code)
+      end
+      Pattern.create(name: @requested_pattern, parameter_set: extract("para")) do
+        $dut.nvm.execute(options) 
+      end
+    end
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">extract</span>(op_code)
-      <span style="color:#080;font-weight:bold">if</span> <span style="color:#33B">@requested_pattern</span> =~ <span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#808">(^|_)</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>op_code<span style="font-weight:bold;color:#666">}</span></span><span style="color:#808">(</span><span style="color:#D20">\w</span><span style="color:#808">+?)(_|$)</span><span style="color:#404">/</span></span>
-        <span style="color:#d70">$2</span>
-      <span style="color:#080;font-weight:bold">end</span>
-    <span style="color:#080;font-weight:bold">end</span>
+    def extract(op_code)
+      if @requested_pattern =~ /(^|_)#{op_code}(\w+?)(_|$)/
+        $2
+      end
+    end
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">dispatch_or_return</span>(requested_pattern)
-      <span style="color:#777"># If the pattern name contains 'custom' just return the name to have Origen lookup a source file for it</span>
-      <span style="color:#080;font-weight:bold">if</span> requested_pattern =~ <span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#808">custom</span><span style="color:#404">/</span></span>
+    def dispatch_or_return(requested_pattern)
+      # If the pattern name contains 'custom' just return the name to have Origen lookup a source file for it
+      if requested_pattern =~ /custom/
         requested_pattern
-      <span style="color:#080;font-weight:bold">else</span>
+      else
         generate(requested_pattern)
-        <span style="color:#069">false</span>   <span style="color:#777"># Return false to Origen to prevent std pattern dispatch</span>
-      <span style="color:#080;font-weight:bold">end</span>
-    <span style="color:#080;font-weight:bold">end</span>
+        false   # Return false to Origen to prevent std pattern dispatch
+      end
+    end
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">clean_pattern_name</span>(name)
-      name = <span style="color:#036;font-weight:bold">Pathname</span>.new(name).basename.to_s  <span style="color:#777"># Strip path</span>
-      name.sub!(<span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#D20">\.</span><span style="color:#808">.*</span><span style="color:#404">/</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#710">"</span></span>)    <span style="color:#777"># Strip any and all extensions</span>
-      name.sub!(<span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#808">^nvm_</span><span style="color:#404">/</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#710">"</span></span>)   <span style="color:#777"># Strip prefix, this will unique to your app, here 'nvm_' is removed</span>
-      name.sub!(<span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#808">_debug$</span><span style="color:#404">/</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#710">"</span></span>) <span style="color:#777"># Strip postfix, again unique to your app, here '_debug' occurring at the end is removed</span>
+    def clean_pattern_name(name)
+      name = Pathname.new(name).basename.to_s  # Strip path
+      name.sub!(/\..*/, "")    # Strip any and all extensions
+      name.sub!(/^nvm_/, "")   # Strip prefix, this will unique to your app, here 'nvm_' is removed
+      name.sub!(/_debug$/, "") # Strip postfix, again unique to your app, here '_debug' occurring at the end is removed
       name
-    <span style="color:#080;font-weight:bold">end</span>
+    end
 
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  end
+end
+</code></pre>
 
       <div style="position: relative">
   <hr>

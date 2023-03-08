@@ -468,29 +468,25 @@ components from within an interface file.</p>
 
       <p>To re-cap this is the shell required to implement an interface:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/vreg/interface.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">Vreg</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">Interface</span>
-    include <span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">ProgramGenerators</span>
+      <pre><code class="language-ruby"># lib/vreg/interface.rb
+module Vreg
+  class Interface
+    include OrigenTesters::ProgramGenerators
 
-    <span style="color:#777"># An example method that can be called from your test flow to generate a functional test</span>
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">func</span>(name, options={})
-      <span style="color:#777"># If your interface supports multiple platforms, add conditional logic like this, if you</span>
-      <span style="color:#777"># only ever want to support one platform then you don't need this</span>
-      <span style="color:#080;font-weight:bold">if</span> tester.j750?
-        <span style="color:#777"># Functional test implementation for J750</span>
-      <span style="color:#080;font-weight:bold">elsif</span> tester.v93k?
-        <span style="color:#777"># Functional test implementation for V93K</span>
-      <span style="color:#080;font-weight:bold">end</span>
-    <span style="color:#080;font-weight:bold">end</span>
+    # An example method that can be called from your test flow to generate a functional test
+    def func(name, options={})
+      # If your interface supports multiple platforms, add conditional logic like this, if you
+      # only ever want to support one platform then you don't need this
+      if tester.j750?
+        # Functional test implementation for J750
+      elsif tester.v93k?
+        # Functional test implementation for V93K
+      end
+    end
 
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  end
+end
+</code></pre>
 
       <p>The <code>OrigenTesters::ProgramGenerators</code> will provide the interface
 with access to all of the platform generator APIs for the platforms that it supports.</p>
@@ -508,13 +504,9 @@ associated test methods.</p>
 
       <p>A new test suite and test method can be instantiated and linked together like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>t = test_suites.add(<span style="color:#A60">:vreg_func</span>)
+      <pre><code class="language-ruby">t = test_suites.add(:vreg_func)
 t.test_method = test_methods.origen.functional_test
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>These lines of code do the following things:</p>
 
@@ -529,26 +521,18 @@ t.test_method = test_methods.origen.functional_test
       <p>You will of course want to then decorate your new test with attributes that are specific
 to your application, here for example to set the levels and timing:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>t.tim_equ_set = <span style="color:#00D">15</span>
-t.tim_spec_set = <span style="color:#00D">1</span>
-t.timset = <span style="color:#00D">1</span>
-t.lev_equ_set = <span style="color:#00D">20</span>
-t.lev_spec_set = <span style="color:#00D">8</span>
-t.levset = <span style="color:#00D">1</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">t.tim_equ_set = 15
+t.tim_spec_set = 1
+t.timset = 1
+t.lev_equ_set = 20
+t.lev_spec_set = 8
+t.levset = 1
+</code></pre>
 
       <p>or to assign a spec in SMT8:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>t.spec = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">my_spec_min</span><span style="color:#710">'</span></span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">t.spec = 'my_spec_min'
+</code></pre>
 
       <p>If the test method provides parameters, you can set them in the same way. As a convenience,
 Origen will automatically work out whether the reference is to a parameter of the test suite
@@ -556,15 +540,11 @@ or of the test method, and will assign it accordingly.
 For example, let’s say this functional test method had a parameter named <code>checkShutdown</code>, you
 could set that like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>t.check_shutdown = <span style="color:#00D">1</span>   <span style="color:#777"># By Ruby convention, use the lower-cased underscored version of the C++ name</span>
+      <pre><code class="language-ruby">t.check_shutdown = 1   # By Ruby convention, use the lower-cased underscored version of the C++ name
 
-<span style="color:#777"># The above is a shorthand equivalent to:</span>
-t.test_method.check_shutdown = <span style="color:#00D">1</span>
-</pre></div>
-</div>
-      </div>
+# The above is a shorthand equivalent to:
+t.test_method.check_shutdown = 1
+</code></pre>
 
       <p>Attributes can also be passed in when instantiating the new test suite/method, this is equivalent
 if you prefer:</p>
@@ -581,13 +561,9 @@ t.test_method = test_methods.origen.functional_test(check_shutdown: 1)
       <p>The limits can be set for all test objects using the following API, see here for some examples
 <a href="/origen/guides/misc/coreext/#Unit_Helpers">of the available unit helpers</a>:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>t.lo_limit = <span style="color:#00D">100</span>.uA
-t.hi_limit = <span style="color:#00D">150</span>.uA
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">t.lo_limit = 100.uA
+t.hi_limit = 150.uA
+</code></pre>
 
       <div>    
   <a class="anchor" name="Custom_Test_Methods"></a>          
@@ -602,127 +578,119 @@ making them easier to use within an Origen test program interface.</p>
       <p>This is best shown by example, here is how to define a custom test method library and a custom
 test method within an Origen interface:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/vreg/interface.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">Vreg</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">Interface</span>
-    include <span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">ProgramGenerators</span>
+      <pre><code class="language-ruby"># lib/vreg/interface.rb
+module Vreg
+  class Interface
+    include OrigenTesters::ProgramGenerators
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options={})
-      add_my_tml <span style="color:#080;font-weight:bold">if</span> tester.v93k?
-    <span style="color:#080;font-weight:bold">end</span>
+    def initialize(options={})
+      add_my_tml if tester.v93k?
+    end
 
-    <span style="color:#777"># Define the test methods from a custom V93K library</span>
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">add_my_tml</span>
-      <span style="color:#777"># The identifier you give here is what you will use to access the test methods from your interface</span>
-      <span style="color:#777"># code, for example: test_methods.my_tml.my_test</span>
-      <span style="color:#777">#</span>
-      <span style="color:#777"># This will also be the C++ namespace that is used within SMT to access the test method classes</span>
-      <span style="color:#777"># defined in this library.</span>
-      add_tml <span style="color:#A60">:my_tml</span>,
-        <span style="color:#777"># [OPTIONAL] If you need the C++ namespace to be different to the above identifier then you can</span>
-        <span style="color:#777"># specify the C++ name like this:</span>
-        <span style="color:#606">class_name</span>:      <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">MyTmlNamespace</span><span style="color:#710">'</span></span>,
+    # Define the test methods from a custom V93K library
+    def add_my_tml
+      # The identifier you give here is what you will use to access the test methods from your interface
+      # code, for example: test_methods.my_tml.my_test
+      #
+      # This will also be the C++ namespace that is used within SMT to access the test method classes
+      # defined in this library.
+      add_tml :my_tml,
+        # [OPTIONAL] If you need the C++ namespace to be different to the above identifier then you can
+        # specify the C++ name like this:
+        class_name:      'MyTmlNamespace',
 
-        <span style="color:#777"># Here is a test definition.</span>
-        <span style="color:#777"># The identifier should be lower-cased and underscored, in-keeping with Ruby naming conventions.</span>
-        <span style="color:#777"># By default the class name will be the camel-cased version of this identifier, so 'myTest' in</span>
-        <span style="color:#777"># this case.</span>
-        <span style="color:#606">my_test</span>: {
-          <span style="color:#777"># [OPTIONAL] The C++ test method class name can be overridden from the default like this:</span>
-          <span style="color:#606">class_name</span>:   <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">MyTestClass</span><span style="color:#710">'</span></span>,
-          <span style="color:#777"># [OPTIONAL] If the test method does not require a definition in the testmethodlimits section</span>
-          <span style="color:#777">#    of the .tf file, you can suppress like this:</span>
-          <span style="color:#606">render_limits_in_file</span>: <span style="color:#069">false</span>,
-          <span style="color:#777"># Parameters can be defined with an underscored symbol as the name, this can be used</span>
-          <span style="color:#777"># if the C++ implementation follows the standard V93K convention of calling the attribute</span>
-          <span style="color:#777"># the camel cased version, starting with a lower-cased letter, i.e. 'testerState' in this</span>
-          <span style="color:#777"># first example.</span>
-          <span style="color:#777"># The attribute definition has two required parameters, the type and the default value.</span>
-          <span style="color:#777"># The type can be :string, :current, :voltage, :time, :frequency, integer, :double or :boolean</span>
-          <span style="color:#606">pin_list</span>: [<span style="color:#A60">:string</span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#710">'</span></span>],
-          <span style="color:#606">samples</span>: [<span style="color:#A60">:integer</span>, <span style="color:#00D">1</span>],
-          <span style="color:#606">precharge_voltage</span>: [<span style="color:#A60">:voltage</span>, <span style="color:#00D">0</span>],
-          <span style="color:#606">settling_time</span>: [<span style="color:#A60">:time</span>, <span style="color:#00D">0</span>],
-          <span style="color:#777"># An optional parameter that sets the limits name in the 'testmethodlimits' section</span>
-          <span style="color:#777"># of the generated .tf file.  Defaults to 'Functional' if not provided.</span>
-          <span style="color:#606">test_name</span>: [<span style="color:#A60">:string</span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">SpecSearch</span><span style="color:#710">'</span></span>]
-          <span style="color:#777"># An optional 3rd parameter can be supplied to provide an array of allowed values. If supplied,</span>
-          <span style="color:#777"># Origen will raise an error upon an attempt to set it to an unlisted value.</span>
-          <span style="color:#606">tester_state</span>: [<span style="color:#A60">:string</span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">CONNECTED</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">%w(</span><span style="color:#D20">CONNECTED UNCHANGED DISCONNECTED</span><span style="color:#710">)</span></span>],
-          <span style="color:#606">force_mode</span>: [<span style="color:#A60">:string</span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">VOLT</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">%w(</span><span style="color:#D20">VOLT CURR</span><span style="color:#710">)</span></span>],
-          <span style="color:#777"># The name of another parameter can be supplied as the type argument, meaning that the type</span>
-          <span style="color:#777"># here will be either :current or :voltage depending on the value of :force_mode</span>
-          <span style="color:#606">force_value</span>: [<span style="color:#A60">:force_mode</span>, <span style="color:#00D">3800</span>.mV],
-          <span style="color:#777"># In cases where the C++ library has deviated from standard attribute naming conventions</span>
-          <span style="color:#777"># (camel-cased with lower cased first character), the absolute attribute name can be given</span>
-          <span style="color:#777"># as a string.</span>
-          <span style="color:#777"># The Origen accessor for these will be the underscored version, with '.' characters</span>
-          <span style="color:#777"># converted to underscores e.g. tm.an_unusual_name</span>
-          <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">An.UnusualName</span><span style="color:#710">'</span></span> =&gt; [<span style="color:#A60">:string</span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">NO</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">%w(</span><span style="color:#D20">NO YES</span><span style="color:#710">)</span></span>],
-          <span style="color:#777"># Attribute aliases can be defined like this:</span>
-          <span style="color:#606">aliases</span>: {
-            <span style="color:#606">my_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">An.UnusualName</span><span style="color:#710">'</span></span>,
-            <span style="color:#606">precharge</span>: <span style="color:#A60">:precharge_voltage</span>,
+        # Here is a test definition.
+        # The identifier should be lower-cased and underscored, in-keeping with Ruby naming conventions.
+        # By default the class name will be the camel-cased version of this identifier, so 'myTest' in
+        # this case.
+        my_test: {
+          # [OPTIONAL] The C++ test method class name can be overridden from the default like this:
+          class_name:   'MyTestClass',
+          # [OPTIONAL] If the test method does not require a definition in the testmethodlimits section
+          #    of the .tf file, you can suppress like this:
+          render_limits_in_file: false,
+          # Parameters can be defined with an underscored symbol as the name, this can be used
+          # if the C++ implementation follows the standard V93K convention of calling the attribute
+          # the camel cased version, starting with a lower-cased letter, i.e. 'testerState' in this
+          # first example.
+          # The attribute definition has two required parameters, the type and the default value.
+          # The type can be :string, :current, :voltage, :time, :frequency, integer, :double or :boolean
+          pin_list: [:string, ''],
+          samples: [:integer, 1],
+          precharge_voltage: [:voltage, 0],
+          settling_time: [:time, 0],
+          # An optional parameter that sets the limits name in the 'testmethodlimits' section
+          # of the generated .tf file.  Defaults to 'Functional' if not provided.
+          test_name: [:string, 'SpecSearch']
+          # An optional 3rd parameter can be supplied to provide an array of allowed values. If supplied,
+          # Origen will raise an error upon an attempt to set it to an unlisted value.
+          tester_state: [:string, 'CONNECTED', %w(CONNECTED UNCHANGED DISCONNECTED)],
+          force_mode: [:string, 'VOLT', %w(VOLT CURR)],
+          # The name of another parameter can be supplied as the type argument, meaning that the type
+          # here will be either :current or :voltage depending on the value of :force_mode
+          force_value: [:force_mode, 3800.mV],
+          # In cases where the C++ library has deviated from standard attribute naming conventions
+          # (camel-cased with lower cased first character), the absolute attribute name can be given
+          # as a string.
+          # The Origen accessor for these will be the underscored version, with '.' characters
+          # converted to underscores e.g. tm.an_unusual_name
+          'An.UnusualName' =&gt; [:string, 'NO', %w(NO YES)],
+          # Attribute aliases can be defined like this:
+          aliases: {
+            my_name: 'An.UnusualName',
+            precharge: :precharge_voltage,
           },
-          <span style="color:#777"># Define any methods you want the test method to have</span>
-          <span style="color:#606">methods</span>: {
-            <span style="color:#777"># If you define a method called 'finalize', it will be called automatically before the test</span>
-            <span style="color:#777"># method is finally rendered, making it a good place to do any last minute attribute</span>
-            <span style="color:#777"># manipulation based on the final values that have been set by the user.</span>
-            <span style="color:#777"># The test method object itself will be passed in as an argument.</span>
-            <span style="color:#777">#</span>
-            <span style="color:#777"># In this example it will set the pre-charge if it has not already been set and a voltage is</span>
-            <span style="color:#777"># being forced above a given threshold.</span>
-            <span style="color:#606">finalize</span>: -&gt; (tm) {
-              <span style="color:#080;font-weight:bold">if</span> tm.force_mode == <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">VOLT</span><span style="color:#710">'</span></span> &amp;&amp; tm.precharge_voltage == <span style="color:#00D">0</span> &amp;&amp; tm.force_value &gt; <span style="color:#60E">3.5</span>.V
-                <span style="color:#777"># Set the pre-charge level to 1V below the force value</span>
-                tm.precharge_voltage = tm.force_value - <span style="color:#00D">1</span>.V
-              <span style="color:#080;font-weight:bold">end</span>
+          # Define any methods you want the test method to have
+          methods: {
+            # If you define a method called 'finalize', it will be called automatically before the test
+            # method is finally rendered, making it a good place to do any last minute attribute
+            # manipulation based on the final values that have been set by the user.
+            # The test method object itself will be passed in as an argument.
+            #
+            # In this example it will set the pre-charge if it has not already been set and a voltage is
+            # being forced above a given threshold.
+            finalize: -&gt; (tm) {
+              if tm.force_mode == 'VOLT' &amp;&amp; tm.precharge_voltage == 0 &amp;&amp; tm.force_value &gt; 3.5.V
+                # Set the pre-charge level to 1V below the force value
+                tm.precharge_voltage = tm.force_value - 1.V
+              end
             },
-            <span style="color:#777"># Example of a custom helper method, here to provide a single method to force a current and</span>
-            <span style="color:#777"># which will configure multiple test method attributes.</span>
-            <span style="color:#606">force_current</span>: -&gt; (tm, value) {
-              tm.force_mode = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">CURR</span><span style="color:#710">'</span></span>
+            # Example of a custom helper method, here to provide a single method to force a current and
+            # which will configure multiple test method attributes.
+            force_current: -&gt; (tm, value) {
+              tm.force_mode = 'CURR'
               tm.force_value = value
             },
           }
         },
         
-        <span style="color:#606">my_other_test</span>: {
-          <span style="color:#777"># Define another test in exactly the same way...</span>
+        my_other_test: {
+          # Define another test in exactly the same way...
         }
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+    end
+  end
+end
+</code></pre>
 
       <p>Here is an example of how the above definition might be used with test program interface logic:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># An example method that can be called from your test flow to generate a DC measurement test like this:</span>
-<span style="color:#777">#</span>
-<span style="color:#777">#   measure :vreg, force: 10.uA, lo_limit: 1.25, hi_limit: 1.75</span>
-<span style="color:#777">#</span>
-<span style="color:#777">#   measure :iref, force: 1.2.V, lo_limit: 20.uA, hi_limit: 30.uA, type: :current</span>
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">measure</span>(name, options={})
+      <pre><code class="language-ruby"># An example method that can be called from your test flow to generate a DC measurement test like this:
+#
+#   measure :vreg, force: 10.uA, lo_limit: 1.25, hi_limit: 1.75
+#
+#   measure :iref, force: 1.2.V, lo_limit: 20.uA, hi_limit: 30.uA, type: :current
+def measure(name, options={})
   t = test_suites.add(name, options)
-  t.test_method = test_methods.my_tml.my_test(<span style="color:#606">pin_list</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">@</span><span style="color:#710">'</span></span>)
-  <span style="color:#080;font-weight:bold">if</span> options[<span style="color:#A60">:type</span>] == <span style="color:#A60">:current</span>
-    <span style="color:#777"># Force mode is 'VOLT' by default per the above definition</span>
-    t.force_value = options[<span style="color:#A60">:force</span>]
-  <span style="color:#080;font-weight:bold">else</span>
-    <span style="color:#777"># Here calling the helper method to configure the method for force current mode</span>
-    t.force_current(options[<span style="color:#A60">:force</span>])
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  t.test_method = test_methods.my_tml.my_test(pin_list: '@')
+  if options[:type] == :current
+    # Force mode is 'VOLT' by default per the above definition
+    t.force_value = options[:force]
+  else
+    # Here calling the helper method to configure the method for force current mode
+    t.force_current(options[:force])
+  end
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Distribute_as_a_Plugin"></a>          
@@ -740,77 +708,69 @@ and then include it in all of the applications that wish to use the library.</p>
 
       <p>Here is an example of how to package a library definition for inclusion in a plugin:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/my_library.rb within the my_library plugin</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">MyLibrary</span>
-  <span style="color:#777"># Define the test methods from a custom V93K library</span>
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">add_my_library</span>
-    <span style="color:#777"># The definition here is identical to the original example above</span>
-    add_tml <span style="color:#A60">:my_tml</span>,
-      <span style="color:#777"># [OPTIONAL] If you need the C++ namespace to be different to the above identifier then you can</span>
-      <span style="color:#777"># specify the C++ name like this:</span>
-      <span style="color:#606">class_name</span>:      <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">MyTmlNamespace</span><span style="color:#710">'</span></span>,
+      <pre><code class="language-ruby"># lib/my_library.rb within the my_library plugin
+module MyLibrary
+  # Define the test methods from a custom V93K library
+  def add_my_library
+    # The definition here is identical to the original example above
+    add_tml :my_tml,
+      # [OPTIONAL] If you need the C++ namespace to be different to the above identifier then you can
+      # specify the C++ name like this:
+      class_name:      'MyTmlNamespace',
 
-      <span style="color:#777"># Here is a test definition.</span>
-      <span style="color:#777"># The identifier should be lower-cased and underscored, in-keeping with Ruby naming conventions.</span>
-      <span style="color:#777"># By default the class name will be the camel-cased version of this identifier, so 'myTest' in</span>
-      <span style="color:#777"># this case.</span>
-      <span style="color:#606">my_test</span>: {
+      # Here is a test definition.
+      # The identifier should be lower-cased and underscored, in-keeping with Ruby naming conventions.
+      # By default the class name will be the camel-cased version of this identifier, so 'myTest' in
+      # this case.
+      my_test: {
 
-      <span style="color:#777"># ...</span>
+      # ...
 
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
+    end
+  end
 
-  <span style="color:#777"># [OPTIONAL] You can also supply complete interface method definitions which use this library</span>
-  <span style="color:#777"># An example method that can be called from your test flow to generate a DC measurement test like this:</span>
-  <span style="color:#777">#</span>
-  <span style="color:#777">#   measure :vreg, force: 10.uA, lo_limit: 1.25, hi_limit: 1.75</span>
-  <span style="color:#777">#</span>
-  <span style="color:#777">#   measure :iref, force: 1.2.V, lo_limit: 20.uA, hi_limit: 30.uA, type: :current</span>
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">measure</span>(name, options={})
+  # [OPTIONAL] You can also supply complete interface method definitions which use this library
+  # An example method that can be called from your test flow to generate a DC measurement test like this:
+  #
+  #   measure :vreg, force: 10.uA, lo_limit: 1.25, hi_limit: 1.75
+  #
+  #   measure :iref, force: 1.2.V, lo_limit: 20.uA, hi_limit: 30.uA, type: :current
+  def measure(name, options={})
     t = test_suites.add(name, options)
-    t.test_method = test_methods.my_tml.my_test(<span style="color:#606">pin_list</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">@</span><span style="color:#710">'</span></span>)
-    <span style="color:#080;font-weight:bold">if</span> options[<span style="color:#A60">:type</span>] == <span style="color:#A60">:current</span>
-      <span style="color:#777"># Force mode is 'VOLT' by default per the above definition</span>
-      t.force_value = options[<span style="color:#A60">:force</span>]
-    <span style="color:#080;font-weight:bold">else</span>
-      <span style="color:#777"># Here calling the helper method to configure the method for force current mode</span>
-      t.force_current(options[<span style="color:#A60">:force</span>])
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+    t.test_method = test_methods.my_tml.my_test(pin_list: '@')
+    if options[:type] == :current
+      # Force mode is 'VOLT' by default per the above definition
+      t.force_value = options[:force]
+    else
+      # Here calling the helper method to configure the method for force current mode
+      t.force_current(options[:force])
+    end
+  end
+end
+</code></pre>
 
       <p>Then simply add the plugin to a given application, and it can be used within an interface like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">MyApp</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">Interface</span>
-    include <span style="color:#036;font-weight:bold">OrigenTesters</span>::<span style="color:#036;font-weight:bold">ProgramGenerators</span>
-    include <span style="color:#036;font-weight:bold">MyLibrary</span>
+      <pre><code class="language-ruby">module MyApp
+  class Interface
+    include OrigenTesters::ProgramGenerators
+    include MyLibrary
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options={})
+    def initialize(options={})
       add_my_library
-    <span style="color:#080;font-weight:bold">end</span>
+    end
 
-    <span style="color:#777"># You don't need to do anything here, and your flow will already support the measure method!</span>
+    # You don't need to do anything here, and your flow will already support the measure method!
     
-    <span style="color:#777"># Some application-specific flow method that uses the library:</span>
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">some_test</span>(name, options = {})
+    # Some application-specific flow method that uses the library:
+    def some_test(name, options = {})
       t = test_suites.add(name, options)
       t.test_method = test_methods.my_tml.my_other_test
-      t.some_parameter = <span style="color:#777">#...</span>
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      t.some_parameter = #...
+    end
+  end
+end
+</code></pre>
 
       <p>For a more advanced integration which gets rid of the need to even call <code>add_my_library</code>, you
 can refer to how the <code>origen_std_lib</code> interface integration works 

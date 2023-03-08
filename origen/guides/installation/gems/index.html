@@ -485,22 +485,18 @@ the gem dependencies for the given application will be specified.</p>
 
       <p>Here is an example Gemfile:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>source <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">https://rubygems.org</span><span style="color:#710">'</span></span>
+      <pre><code class="language-ruby">source 'https://rubygems.org'
 
-gem <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">origen</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">&gt;= 0.5</span><span style="color:#710">'</span></span>
+gem 'origen', '&gt;= 0.5'
 
-gem <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">origen_debuggers</span><span style="color:#710">'</span></span>
+gem 'origen_debuggers'
 
-gem <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">roo</span><span style="color:#710">'</span></span>
+gem 'roo'
 
-gem <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">origen_testers</span><span style="color:#710">'</span></span>, <span style="color:#606">path</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/path/to/local/origen_testers</span><span style="color:#710">'</span></span>
+gem 'origen_testers', path: '/path/to/local/origen_testers'
 
-gem <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">origen_jtag</span><span style="color:#710">'</span></span>, <span style="color:#606">git</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">https://github.com/Origen-SDK/origen_jtag.git</span><span style="color:#710">'</span></span>, <span style="color:#606">ref</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">ad323f</span><span style="color:#710">'</span></span>
-</pre></div>
-</div>
-      </div>
+gem 'origen_jtag', git: 'https://github.com/Origen-SDK/origen_jtag.git', ref: 'ad323f'
+</code></pre>
 
       <p>Points to note on the above:</p>
 
@@ -548,33 +544,21 @@ your Gemfile.</p>
 
       <p>Once you have changed the requirement you should run:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>bundle update &lt;gem_name&gt;
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">bundle update &lt;gem_name&gt;
+</code></pre>
 
       <p>This will tell Bundler to update the version of the given gem, but leave the versions of everything else
 as they are. Sometimes however the new version of the given gem will itself require a new version of
 some other dependent gem, in that case you will get an error and you can try running this command
 to resolve it:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>bundle
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">bundle
+</code></pre>
 
       <p>If you still have an error, then updating the complete bundle will resolve it:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>bundle update
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">bundle update
+</code></pre>
 
       <p>Note that this will fetch the latest version of every gem in your bundle that has an open-ended
 version dependency. This can result in more changes to your environment than you really want/need
@@ -599,19 +583,15 @@ You will likely need to work with your IT department to get this setup and maint
 
       <p>When it is available, simply update your Gemfiles with the additional server like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>source <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">https://rubygems.org</span><span style="color:#710">'</span></span>
-source <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">http://gems.mycompany.net:9292</span><span style="color:#710">'</span></span>
+      <pre><code class="language-ruby">source 'https://rubygems.org'
+source 'http://gems.mycompany.net:9292'
 
-gem <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">origen</span><span style="color:#710">'</span></span>
+gem 'origen'
 
-gem <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">private_test_block</span><span style="color:#710">'</span></span>
+gem 'private_test_block'
 
-<span style="color:#777">#...</span>
-</pre></div>
-</div>
-      </div>
+#...
+</code></pre>
 
       <p>At that point you should also update your <a href="/origen/guides/installation/company">company’s Origen configuration</a>
 with the details of the new server, in that way the <code>origen new</code> command will automatically
@@ -643,45 +623,29 @@ Bundler to make them run within the context of the application’s gem environme
 Say for example that a given gem provides an executable called <code>clean</code>, then to run this from your
 application’s command line you should do:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>bundle exec clean
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">bundle exec clean
+</code></pre>
 
       <p>This applies to the <code>origen</code> executable too, however as this is cumbersome to write and
 easy to forget, Origen employs some tricks that will enforce this wrapping automatically, so Origen
 can always be invoked with just:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>origen &lt;command&gt;
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">origen &lt;command&gt;
+</code></pre>
 
       <p>Bundler will build wrapped executables within an application’s <code>lbin</code> directory, these
 can be invoked directly without the need for the <code>bundle exec</code> prefix, so for example the
 <code>clean</code> executable could be correctly invoked by running:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>./lbin/clean
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">./lbin/clean
+</code></pre>
 
       <p>This is arguably easier to write than <code>bundle exec</code>, but it can still be easy to forget. Therefore
 if your application has a need to run 3rd party executables a lot, then it is recommend to add
 the application’s <code>lbin</code> directory to your path so that you can simply run:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>clean
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">clean
+</code></pre>
 
       <div>    
   <a class="anchor" name="System_Origen"></a>          

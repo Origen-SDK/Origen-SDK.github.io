@@ -475,40 +475,26 @@ will be required to define the run command to start the simulation.</p>
       <p>AMS support must be added in when building the testbench, this is done by adding the <code>--wreal</code> switch to the
 <code>sim:build</code> command:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>origen sim:build path/to/my_dut.v --wreal
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">origen sim:build path/to/my_dut.v --wreal
+</code></pre>
 
       <p>By adding this switch, any pins which are defined as <code>wreal</code> types within the given top level will be assigned
 an analog pin driver by the testbench rather than a digital driver which is the default.</p>
 
       <p>Pins can be defined as a <code>wreal</code> type either by adding the <code>real</code> type to their definition:</p>
 
-      <div class="language-verilog highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>input real vddc,
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-verilog">input real vddc,
+</code></pre>
 
       <p>or by adding a <code>wreal</code> wire within the module body:</p>
 
-      <div class="language-verilog highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>wreal vddc;
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-verilog">wreal vddc;
+</code></pre>
 
       <p>Here is an example which uses both approaches to declare the <code>vdd</code> and <code>ana</code> pins as analog pins whenever
 the <code>USE_WREAL</code> define is enabled:</p>
 
-      <div class="language-verilog highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>module my_dut(
+      <pre><code class="language-verilog">module my_dut(
   input tck, tdi, tms, trstn,
   input rstn,
   input [31:0] din,
@@ -531,27 +517,17 @@ the <code>USE_WREAL</code> define is enabled:</p>
   wreal ana;
 `endif
 endmodule
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>A digital testbench for this would be built via this command:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>origen sim:build path/to/my_dut.v
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">origen sim:build path/to/my_dut.v
+</code></pre>
 
       <p>while AMS support would be added by running:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>origen sim:build path/to/my_dut.v --wreal --define USE_WREAL
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">origen sim:build path/to/my_dut.v --wreal --define USE_WREAL
+</code></pre>
 
       <div>    
   <a class="anchor" name="Origen_Application_Configuration"></a>          
@@ -563,14 +539,10 @@ analog, power or ground pins.</p>
 
       <p>From the above example, the wreal pins could be modeled like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>add_power_pin <span style="color:#A60">:vdd</span>    <span style="color:#777"># Could also be a regular analog pin too, if you prefer</span>
+      <pre><code class="language-ruby">add_power_pin :vdd    # Could also be a regular analog pin too, if you prefer
 
-add_pin <span style="color:#A60">:ana</span>, <span style="color:#606">type</span>: <span style="color:#A60">:analog</span>
-</pre></div>
-</div>
-      </div>
+add_pin :ana, type: :analog
+</code></pre>
 
       <p>See the <a href="/origen/guides/models/pins">Pins Guide</a> for more information on modeling pins in Origen.</p>
 
@@ -582,17 +554,13 @@ add_pin <span style="color:#A60">:ana</span>, <span style="color:#606">type</spa
       <p>With all of the AMS configuration done, real values can now be driven and read from Origen application code
 during a simulation like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>dut.power_pin(<span style="color:#A60">:vdd</span>).drive(<span style="color:#60E">1.25</span>)
+      <pre><code class="language-ruby">dut.power_pin(:vdd).drive(1.25)
 
-dut.pin(<span style="color:#A60">:ana</span>).read     <span style="color:#777"># =&gt; 0.7</span>
+dut.pin(:ana).read     # =&gt; 0.7
 
-<span style="color:#777"># .measure is available as an alias of read for analog pins</span>
-dut.pin(<span style="color:#A60">:ana</span>).measure  <span style="color:#777"># =&gt; 0.7</span>
-</pre></div>
-</div>
-      </div>
+# .measure is available as an alias of read for analog pins
+dut.pin(:ana).measure  # =&gt; 0.7
+</code></pre>
 
       <p>The <code>peek</code>, <code>poke</code> and <code>force</code> methods from <a href="/origen/guides/simulation/direct">the Direct DUT Manipulation APIs</a> are
 also available to manipulate real valued nets during simulation.</p>
@@ -600,34 +568,26 @@ also available to manipulate real valued nets during simulation.</p>
       <p>The analog pin APIs will not work correctly when generating a pattern for an ATE and the application code is 
 responsible for handling them safely, typically like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Example of a simulation-only assertion</span>
-<span style="color:#080;font-weight:bold">if</span> tester.sim?
-  measured = dut.pin(<span style="color:#A60">:ana</span>).measure
-  <span style="color:#080;font-weight:bold">if</span> measured != <span style="color:#60E">0.3125</span>
-    <span style="color:#036;font-weight:bold">OrigenSim</span>.error <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Expected to measure 0.3125V from the ana pin, got </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>measured<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">V!</span><span style="color:#710">"</span></span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># Example of a simulation-only assertion
+if tester.sim?
+  measured = dut.pin(:ana).measure
+  if measured != 0.3125
+    OrigenSim.error "Expected to measure 0.3125V from the ana pin, got #{measured}V!"
+  end
+end
+</code></pre>
 
       <p>It is easy to build more complex functionality in your application code from these simple APIs, for example to
 ramp a vdd pin:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Ramp up the power on VDD</span>
-v = <span style="color:#00D">0</span>
-dut.power_pin(<span style="color:#A60">:vdd</span>).drive!(v)
-<span style="color:#080;font-weight:bold">until</span> v &gt;= <span style="color:#60E">1.25</span>
-  v += <span style="color:#60E">0.05</span>
-  dut.power_pin(<span style="color:#A60">:vdd</span>).drive!(v)   <span style="color:#777"># Note the use of drive! here which will generate a cycle</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># Ramp up the power on VDD
+v = 0
+dut.power_pin(:vdd).drive!(v)
+until v &gt;= 1.25
+  v += 0.05
+  dut.power_pin(:vdd).drive!(v)   # Note the use of drive! here which will generate a cycle
+end
+</code></pre>
 
       <p>It is hoped that the community will contribute plugins that contain higher-level functionality like this
 to make such functions available off-the-shelf in the future.</p>

@@ -465,12 +465,8 @@ in other workspaces.</p>
 
       <p>To access the session store:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.app.session
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">Origen.app.session
+</code></pre>
 
       <p>The session is split into named stores which will be automatically created as soon as data
 is added to them,
@@ -478,42 +474,26 @@ this gives application developers a namespace level to keep their data organized
 
       <p>The namespace returns a key-value store containing all of the values in that namespace:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.app.session.main      <span style="color:#777"># =&gt; A key-value store</span>
-<span style="color:#036;font-weight:bold">Origen</span>.app.session.blah      <span style="color:#777"># =&gt; A different key-value store</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">Origen.app.session.main      # =&gt; A key-value store
+Origen.app.session.blah      # =&gt; A different key-value store
+</code></pre>
 
       <p>Plugin developers should use a store named after their plugin, for example the <code>ATDTest</code>
 plugin would use:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.app.session.atd_test  <span style="color:#777"># =&gt; A key-value store for use by the ATDTest plugin</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">Origen.app.session.atd_test  # =&gt; A key-value store for use by the ATDTest plugin
+</code></pre>
 
       <p>To store values to the session simply set them like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.app.session.main[<span style="color:#A60">:exec_count</span>] = <span style="color:#00D">10</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">Origen.app.session.main[:exec_count] = 10
+</code></pre>
 
       <p>Unlike assigning values to a regular Hash variable, this value will survive between Origen
 threads - go on fire up an <code>origen i</code> session and try it out:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.app.session.main[<span style="color:#A60">:exec_count</span>]    <span style="color:#777"># =&gt; 10</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">Origen.app.session.main[:exec_count]    # =&gt; 10
+</code></pre>
 
       <p>Generally you can store hashes, arrays and even objects to the session although your
 mileage-may-vary with particularly rich objects. Note that in the case of storing objects the class
@@ -523,17 +503,13 @@ from the session later. Similarly binary data cannot be stored to the session.</
 
       <p>There are a few helper methods for managing the session store.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.app.session.main[<span style="color:#A60">:exec_count</span>] = <span style="color:#00D">10</span>       
-<span style="color:#036;font-weight:bold">Origen</span>.app.session.main[<span style="color:#A60">:owner</span>] = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Stephen</span><span style="color:#710">'</span></span>     
-<span style="color:#036;font-weight:bold">Origen</span>.app.session.main.has_key?(<span style="color:#A60">:exec_count</span>)   <span style="color:#777"># =&gt; true</span>
-<span style="color:#036;font-weight:bold">Origen</span>.app.session.main.keys.sort               <span style="color:#777"># =&gt; [:exec_count, :owner]</span>
-<span style="color:#036;font-weight:bold">Origen</span>.app.session.main.delete_key(<span style="color:#A60">:exec_count</span>) <span style="color:#777"># =&gt; 10</span>
-<span style="color:#036;font-weight:bold">Origen</span>.app.session.main.keys.sort               <span style="color:#777"># =&gt; [:owner]</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">Origen.app.session.main[:exec_count] = 10       
+Origen.app.session.main[:owner] = 'Stephen'     
+Origen.app.session.main.has_key?(:exec_count)   # =&gt; true
+Origen.app.session.main.keys.sort               # =&gt; [:exec_count, :owner]
+Origen.app.session.main.delete_key(:exec_count) # =&gt; 10
+Origen.app.session.main.keys.sort               # =&gt; [:owner]
+</code></pre>
 
       <div>    
   <a class="anchor" name="A_Practical_Example"></a>          
@@ -553,30 +529,26 @@ is the same as what is already there then the user is not made to wait for a red
       <p>In early Origen applications, significant logic had to be added to the application to implement
 such a system, but the availability of the session store now makes this trivial:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Return the associated firmware file, this will automatically fetch the new version</span>
-<span style="color:#777"># if the production firmware tag has changed since this was last called</span>
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">firmware_file</span>
-  path_to_local_file = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.app.imports_dir<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">/firmware/production.hex</span><span style="color:#710">"</span></span>
-  f = <span style="color:#036;font-weight:bold">Pathname</span>.new(path_to_local_file)
-  <span style="color:#080;font-weight:bold">if</span> !f.exist? || <span style="color:#036;font-weight:bold">Origen</span>.app.session.nvm[<span style="color:#A60">:local_firmware_version</span>] != production_tag
-    <span style="color:#777"># Clear this up front as we won't know what we will have if the checkout fails</span>
-    <span style="color:#036;font-weight:bold">Origen</span>.app.session.nvm[<span style="color:#A60">:local_firmware_version</span>] = <span style="color:#069">nil</span>
-    firmware_rc.checkout(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">production.hex</span><span style="color:#710">"</span></span>, <span style="color:#606">force</span>: <span style="color:#069">true</span>, <span style="color:#606">version</span>: production_tag)
-    <span style="color:#036;font-weight:bold">Origen</span>.app.session.nvm[<span style="color:#A60">:local_firmware_version</span>] = production_tag
-  <span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby"># Return the associated firmware file, this will automatically fetch the new version
+# if the production firmware tag has changed since this was last called
+def firmware_file
+  path_to_local_file = "#{Origen.app.imports_dir}/firmware/production.hex"
+  f = Pathname.new(path_to_local_file)
+  if !f.exist? || Origen.app.session.nvm[:local_firmware_version] != production_tag
+    # Clear this up front as we won't know what we will have if the checkout fails
+    Origen.app.session.nvm[:local_firmware_version] = nil
+    firmware_rc.checkout("production.hex", force: true, version: production_tag)
+    Origen.app.session.nvm[:local_firmware_version] = production_tag
+  end
   f
-<span style="color:#080;font-weight:bold">end</span>
+end
 
-<span style="color:#777"># Returns a revision controller to manage local import of firmware files</span>
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">firmware_rc</span>
-  <span style="color:#33B">@firmware_rc</span> ||= <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">RevisionControl</span>.new <span style="color:#606">remote</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">sync://sync-15000:15000/nvm/firmware</span><span style="color:#710">"</span></span>,
-                                                <span style="color:#606">local</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.app.imports_dir<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">/firmware</span><span style="color:#710">"</span></span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+# Returns a revision controller to manage local import of firmware files
+def firmware_rc
+  @firmware_rc ||= Origen::RevisionControl.new remote: "sync://sync-15000:15000/nvm/firmware",
+                                                local: "#{Origen.app.imports_dir}/firmware"
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Global_Sessions"></a>          
@@ -591,23 +563,19 @@ the entire Origen installation (in the case of site-wide Origen installions as r
       <p>Accessing Origen’s global session is similiar to that of the application specific sessions and works in much the same
 way:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.session <span style="color:#777">#=&gt; Origen's Global Session</span>
+      <pre><code class="language-ruby">Origen.session #=&gt; Origen's Global Session
 
-<span style="color:#036;font-weight:bold">Origen</span>.session.globals <span style="color:#777">#=&gt; Create a new database called 'globals' available across all of Origen.</span>
+Origen.session.globals #=&gt; Create a new database called 'globals' available across all of Origen.
 
-<span style="color:#777"># One use case encountered was to store another machine's IP that other applications would SSH into.</span>
-<span style="color:#777"># This IP is the same for all Origen applications for a given user (i.e., each user has their own </span>
-<span style="color:#777"># machine to log into).</span>
-<span style="color:#036;font-weight:bold">Origen</span>.session.ssh[<span style="color:#A60">:machine_ip</span>] = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">255.255.255.0</span><span style="color:#710">"</span></span>
-<span style="color:#036;font-weight:bold">Origen</span>.session.ssh[<span style="color:#A60">:machine_ip</span>] <span style="color:#777">#=&gt; "255.255.255.0"</span>
+# One use case encountered was to store another machine's IP that other applications would SSH into.
+# This IP is the same for all Origen applications for a given user (i.e., each user has their own 
+# machine to log into).
+Origen.session.ssh[:machine_ip] = "255.255.255.0"
+Origen.session.ssh[:machine_ip] #=&gt; "255.255.255.0"
 
-<span style="color:#777"># --Move to another Origen workspace--</span>
-<span style="color:#036;font-weight:bold">Origen</span>.session.ssh[<span style="color:#A60">:machine_ip</span>] <span style="color:#777">#=&gt; "255.255.255.0"</span>
-</pre></div>
-</div>
-      </div>
+# --Move to another Origen workspace--
+Origen.session.ssh[:machine_ip] #=&gt; "255.255.255.0"
+</code></pre>
 
       <p>The session itself is stored in the same fashion as the application sessions, just at a more accessible location. That
 location is at <code>Origen.home</code>, which equates to <code>~/.origen/</code>. There lives the global <code>.session</code>.</p>
@@ -623,45 +591,29 @@ This is accomplished by just setting the permissions to <code>0600</code>.</p>
 
       <p>To enable a private session, you can, at anytime, run:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.session.secret.private = <span style="color:#069">true</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">Origen.session.secret.private = true
+</code></pre>
 
       <p>The next time that a session is updated, the permissions will be modified accordingly. Likewise, you can disable the private
 database by running:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.session.secret.private = <span style="color:#069">false</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">Origen.session.secret.private = false
+</code></pre>
 
       <p>If you want to create a new session that is private from the beginning, just set the private variable prior to performing
 the first session write:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># This session doesn't exist yet:</span>
+      <pre><code class="language-ruby"># This session doesn't exist yet:
 
-<span style="color:#036;font-weight:bold">Origen</span>.session.always_secret.private = <span style="color:#069">true</span>
-<span style="color:#036;font-weight:bold">Origen</span>.session.always_secret[<span style="color:#A60">:my_key</span>] = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">my value</span><span style="color:#710">"</span></span>
-</pre></div>
-</div>
-      </div>
+Origen.session.always_secret.private = true
+Origen.session.always_secret[:my_key] = "my value"
+</code></pre>
 
       <p>You can check whether a session is private or not by querying one of the methods below:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.session.secret.private
-<span style="color:#036;font-weight:bold">Origen</span>.session.secret.private?
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">Origen.session.secret.private
+Origen.session.secret.private?
+</code></pre>
 
       <p>It is important to note that this is a <b>per individual session</b> parameter. That is, you must set this for all
 sessions that you want to make private.</p>

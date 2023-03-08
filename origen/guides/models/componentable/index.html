@@ -484,12 +484,8 @@ handle instantiating and initializing your classes, and what the API provides.</
       <p>Mixing in <code>Componentable</code> is easy and does not require that any particular methods be defined. You
 can mix it in by just putting the following into your class:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Componentable</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">include Origen::Componentable
+</code></pre>
 
       <p><code>Componentable</code> actually contains two APIs: The first is the API provided to the <code>includer class</code>,
 that is, the class that includes <code>Componentable</code>. This <code>includer class</code> is then added to a
@@ -581,13 +577,9 @@ an <code>origen_model_init</code> callback handler for you
 This callback will add and initialize this object during the <code>includer class's</code> initialization. 
 So, the following will take care of everything for you:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
-include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Componentable</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">include Origen::Model
+include Origen::Componentable
+</code></pre>
 
       <p>If you are not using <code>include Origen::Model</code>, you’ll need to take some action yourself. 
 <code>Componentable</code> comes with a method to assist with this:
@@ -595,32 +587,28 @@ include <span style="color:#036;font-weight:bold">Origen</span>::<span style="co
 Calling this method in your class’s <code>initialize</code> function will accomplish the same thing as including
 <code>Origen::Model</code>. The usage is:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Initialze the _componentable_container object</span>
-<span style="color:#777"># Note that this is in the Origen::Componentable module's class methods, not in the mixin.</span>
+      <pre><code class="language-ruby"># Initialze the _componentable_container object
+# Note that this is in the Origen::Componentable module's class methods, not in the mixin.
 
-<span style="color:#777"># Initialize internal to the class</span>
+# Initialize internal to the class
 
-<span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">Includer</span>
-  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Componentable</span>
+class Includer
+  include Origen::Componentable
 
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options={})
-    <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Componentable</span>.init_includer_class(<span style="color:#069">self</span>)
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
+  def initialize(options={})
+    Origen::Componentable.init_includer_class(self)
+  end
+end
 
 
-<span style="color:#777"># Initialize externally an already existing object</span>
-<span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">Includer</span>
-  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Componentable</span>
-<span style="color:#080;font-weight:bold">end</span>
+# Initialize externally an already existing object
+class Includer
+  include Origen::Componentable
+end
 
-i = <span style="color:#036;font-weight:bold">Includer</span>.new
-<span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Componentable</span>.init_includer_class(i)
-</pre></div>
-</div>
-      </div>
+i = Includer.new
+Origen::Componentable.init_includer_class(i)
+</code></pre>
 
       <p>After booting, the <code>includer class</code> is ready!</p>
 
@@ -638,89 +626,69 @@ can be overridden or extended to further customize the <code>Compentable</code> 
 
       <h5 id="adding-new-objects">Adding new objects</h5>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>add(name, options={}, &amp;block)
-<span style="color:#777">#=&gt; adds a new object, :name</span>
+      <pre><code class="language-ruby">add(name, options={}, &amp;block)
+#=&gt; adds a new object, :name
 
-add(name, <span style="color:#606">class_name</span>: <span style="color:#036;font-weight:bold">ClassToAdd</span>
-<span style="color:#777">#=&gt; adds a new object of class ClassToAdd</span>
+add(name, class_name: ClassToAdd
+#=&gt; adds a new object of class ClassToAdd
 
-add(name) <span style="color:#080;font-weight:bold">do</span> |n|
-  n.class_name <span style="color:#036;font-weight:bold">ClassToAdd</span>
-<span style="color:#080;font-weight:bold">end</span>
-<span style="color:#777">#=&gt; (also) adds a new object of class ClassToAdd using block syntax</span>
-</pre></div>
-</div>
-      </div>
+add(name) do |n|
+  n.class_name ClassToAdd
+end
+#=&gt; (also) adds a new object of class ClassToAdd using block syntax
+</code></pre>
 
       <p><a class="anchor" name="includer_api_query"></a></p>
 
       <h5 id="querying-objects">Querying objects</h5>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>list
-<span style="color:#777">#=&gt; list the available names in the componentable container</span>
+      <pre><code class="language-ruby">list
+#=&gt; list the available names in the componentable container
 
 has?(name)
-<span style="color:#777">#=&gt; returns true if and object with :name has been added</span>
+#=&gt; returns true if and object with :name has been added
 
 [](name)
-<span style="color:#777">#=&gt; returns the object at :name, or nil if :name has not been added</span>
-</pre></div>
-</div>
-      </div>
+#=&gt; returns the object at :name, or nil if :name has not been added
+</code></pre>
 
       <p><a class="anchor" name="includer_api_move_copy"></a></p>
 
       <h5 id="moving-and-copying-objects">Moving and copying objects</h5>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>copy(to_copy, to_location, options = {})
-<span style="color:#777">#=&gt; # copies an object from to_copy to to_location, cloning the object</span>
+      <pre><code class="language-ruby">copy(to_copy, to_location, options = {})
+#=&gt; # copies an object from to_copy to to_location, cloning the object
 
 move(to_move, new_name, option={})
-<span style="color:#777">#=&gt; Moves an object from to_move to new_name</span>
-</pre></div>
-</div>
-      </div>
+#=&gt; Moves an object from to_move to new_name
+</code></pre>
 
       <p><a class="anchor" name="includer_api_iterating"></a></p>
 
       <h5 id="iterating-through-objects">Iterating through objects</h5>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>each(&amp;block)
-<span style="color:#777">#=&gt; runs the generic :each method from enumerable across the underlying componentable container hash</span>
+      <pre><code class="language-ruby">each(&amp;block)
+#=&gt; runs the generic :each method from enumerable across the underlying componentable container hash
 
 select(&amp;block)
-<span style="color:#777">#=&gt; runs the generic :select method from enumerable across the underlying componentable container hash</span>
+#=&gt; runs the generic :select method from enumerable across the underlying componentable container hash
 
 instances_of(class_name)
-<span style="color:#777">#=&gt; returns an array of all the names of class :class_name</span>
-</pre></div>
-</div>
-      </div>
+#=&gt; returns an array of all the names of class :class_name
+</code></pre>
 
       <p><a class="anchor" name="includer_api_remove"></a></p>
 
       <h5 id="removing-objects">Removing objects</h5>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># aliased as :remove</span>
+      <pre><code class="language-ruby"># aliased as :remove
 delete(to_delete)
-<span style="color:#777">#=&gt; deletes the object at :to_delete, returning the object</span>
+#=&gt; deletes the object at :to_delete, returning the object
 
-<span style="color:#777"># aliased as :clear and :remove_all</span>
+# aliased as :clear and :remove_all
 delete_all
-<span style="color:#777">#=&gt; deletes everything in the componentable container</span>
-</pre></div>
-</div>
-      </div>
+#=&gt; deletes everything in the componentable container
+</code></pre>
 
       <!--
 I'll reinsert this link when I finish the yardoc - coreyeng
@@ -750,15 +718,11 @@ the goal is to bring in your <code>Componentable class</code> as a single line. 
 <code>Componentable class</code> <code>MyTest</code> for example, then what we’re looking for in the
 <code>parent class</code> is simply:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">Parent</span>
-  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
-  include <span style="color:#036;font-weight:bold">MyTest</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">class Parent
+  include Origen::Model
+  include MyTest
+end
+</code></pre>
 
       <p>Well, what’s the problem with this right now? <code>MyTest</code> isn’t a module. Its a class. We can’t
 <code>include</code> a class, Ruby won’t let us. But we can do is namespace our <code>MyTest</code> class in a module
@@ -766,45 +730,37 @@ also named <code>MyTest</code>, in this case. When this module is included, <cod
 to Origen that this module <code>MyTest</code> contains <code>Componentable classes</code> that must be booted. So,
 a simple implementation may look like:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">MyTest</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MyTest</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Componentable</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">module MyTest
+  class MyTest
+    include Origen::Model
+    include Origen::Componentable
+  end
+end
+</code></pre>
 
       <p>Note that the name of the module actually isn’t important. As long as the module contains some 
 <code>Componentable classes</code> everything will go as expected. You aren’t even limited to a single class per module.
 If you have a few <code>Componentable classes</code> in a module, they will each be booted.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">MyTests</span>
+      <pre><code class="language-ruby">module MyTests
 
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MyBasicTest</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Componentable</span>
-  <span style="color:#080;font-weight:bold">end</span>
+  class MyBasicTest
+    include Origen::Model
+    include Origen::Componentable
+  end
   
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MyIntermediateTest</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Componentable</span>
-  <span style="color:#080;font-weight:bold">end</span>
+  class MyIntermediateTest
+    include Origen::Model
+    include Origen::Componentable
+  end
   
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MyAdvancedTest</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Componentable</span>
-  <span style="color:#080;font-weight:bold">end</span>
+  class MyAdvancedTest
+    include Origen::Model
+    include Origen::Componentable
+  end
 
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+end
+</code></pre>
 
       <p>An in-depth explanation of <i>how</i> this occurs is out of scope right now, but you can see the
 <a href="#Advanced_Booting">section on advanced booting</a>
@@ -838,24 +794,20 @@ other cases, such as:</p>
       <p>You can run this method on your class yourself in interactive mode. This returns a <code>Hash</code> with keys
 <code>singleton_name</code> and <code>plural_name</code>. For example:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Componentable</span>.componentable_names(<span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Component</span>)
+      <pre><code class="language-ruby">Origen::Componentable.componentable_names(Origen::Component)
 
 {
-  <span style="color:#606">singleton_name</span>: <span style="color:#A60">:component</span>
-  <span style="color:#606">plural_name</span>: <span style="color:#A60">:components</span>
+  singleton_name: :component
+  plural_name: :components
 }
 
-<span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Componentable</span>.componentable_names(<span style="color:#036;font-weight:bold">MyTest</span>)
+Origen::Componentable.componentable_names(MyTest)
 
 {
-  <span style="color:#606">singleton_name</span>: <span style="color:#A60">:my_test</span>
-  <span style="color:#606">plural_name</span>: <span style="color:#A60">:my_tests</span>
+  singleton_name: :my_test
+  plural_name: :my_tests
 }
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>We here at Origen are engineers, not writers, and not interested in figuring out all rules of how to make
 everything plural (I can tell you, the author of this particular section is a native english speaker, and still got
@@ -863,51 +815,39 @@ half rules wrong before looking them up). So, if you don’t like the name <code
 You can define it yourself using two <code>class constants</code> (not <code>instance variables</code>). The following
 examples will show this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MyTest</span>
-  <span style="color:#036;font-weight:bold">COMPONENTABLE_SINGLETON_NAME</span> = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">just_test</span><span style="color:#710">'</span></span>
-<span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby">class MyTest
+  COMPONENTABLE_SINGLETON_NAME = 'just_test'
+end
 
-<span style="color:#777"># This will take the 'just_test' singleton_name, and pluralize it as using that name</span>
+# This will take the 'just_test' singleton_name, and pluralize it as using that name
 {
-  <span style="color:#606">singleton_name</span>: <span style="color:#A60">:just_test</span>
-  <span style="color:#606">plural_name</span>: <span style="color:#A60">:just_tests</span>
+  singleton_name: :just_test
+  plural_name: :just_tests
 }
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MyTest</span>
-  <span style="color:#036;font-weight:bold">COMPONENTABLE_PLURAL_NAME</span> = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">just_tests</span><span style="color:#710">'</span></span>
-<span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby">class MyTest
+  COMPONENTABLE_PLURAL_NAME = 'just_tests'
+end
 
-<span style="color:#777"># This will evaluate the singleton name as normal, but use the given plural name</span>
+# This will evaluate the singleton name as normal, but use the given plural name
 {
-  <span style="color:#606">singleton_name</span>: <span style="color:#A60">:my_test</span>
-  <span style="color:#606">plural_name</span>: <span style="color:#A60">:just_tests</span>
+  singleton_name: :my_test
+  plural_name: :just_tests
 }
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MyTest</span>
-  <span style="color:#036;font-weight:bold">COMPONENTABLE_SINGLETON_NAME</span> = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">test</span><span style="color:#710">'</span></span>
-  <span style="color:#036;font-weight:bold">COMPONENTABLE_PLURAL_NAME</span> = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">tests</span><span style="color:#710">'</span></span>
-<span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby">class MyTest
+  COMPONENTABLE_SINGLETON_NAME = 'test'
+  COMPONENTABLE_PLURAL_NAME = 'tests'
+end
 
-<span style="color:#777"># This will use both the provided singletoneand plural name.</span>
+# This will use both the provided singletoneand plural name.
 {
-  <span style="color:#606">singleton_name</span>: <span style="color:#A60">:test</span>
-  <span style="color:#606">plural_name</span>: <span style="color:#A60">:tests</span>
+  singleton_name: :test
+  plural_name: :tests
 }
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>Ruby itself has some requirements though. Due to how these names will be used, they can’t start with a capital letter.
 So, even if you define a <code>COMPONENTABLE_SINGLETON_NAME</code> and/or a <code>COMPONENTABLE_PLURAL_NAME</code> name,
@@ -976,54 +916,46 @@ including <code>Origen::Model</code> will let us hook into the intializer to tak
 <a href="#Includer_Class_Organization">includer organization section</a>,
 we can simply do this by include the module, including <code>Origen::Model</code> and going on our way.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>
-<span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">Parent</span>
-  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
-  include <span style="color:#036;font-weight:bold">MyTest</span>
-<span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby">
+class Parent
+  include Origen::Model
+  include MyTest
+end
 
-parent = <span style="color:#036;font-weight:bold">Parent</span>.new
-parent.my_test <span style="color:#777">#=&gt; Instance of MyTest Componentable class.</span>
-parent.list_my_tests <span style="color:#777">#=&gt; list the current added my_tests, in this case, []</span>
+parent = Parent.new
+parent.my_test #=&gt; Instance of MyTest Componentable class.
+parent.list_my_tests #=&gt; list the current added my_tests, in this case, []
 
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>But, say we want to boot it directly. That is, not rely on Origen. We can do that using the 
 method <code>Origen::Componentable.init_parent_class</code> (class method within the <code>Origen::Componentable</code>
 namespace). We can give this both the instance of the <code>parent class</code> and the <code>includer class</code>
 and it will handle booting for you. For example:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>
-<span style="color:#777"># Internal to the parent class</span>
-<span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">Parent</span>
-  <span style="color:#777">#include MyTest #=&gt; nevermind, don't need this right now.</span>
+      <pre><code class="language-ruby">
+# Internal to the parent class
+class Parent
+  #include MyTest #=&gt; nevermind, don't need this right now.
 
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">intiailize</span>
-    <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Componentable</span>.init_parent_class(<span style="color:#069">self</span>, <span style="color:#036;font-weight:bold">MyTest</span>)
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
+  def intiailize
+    Origen::Componentable.init_parent_class(self, MyTest)
+  end
+end
 
-<span style="color:#777"># External to the parent class</span>
-<span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">Parent</span>
-  <span style="color:#777">#include MyTest #=&gt; nevermind.</span>
+# External to the parent class
+class Parent
+  #include MyTest #=&gt; nevermind.
 
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">intiailize</span>
-    <span style="color:#777">#Origen::Componentable.init_parent_class(self, MyTest) #=&gt; Nevermind this too.</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
+  def intiailize
+    #Origen::Componentable.init_parent_class(self, MyTest) #=&gt; Nevermind this too.
+  end
+end
 
-p = <span style="color:#036;font-weight:bold">Parent</span>.new
-<span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Componentable</span>.init_parent_class(p, <span style="color:#036;font-weight:bold">MyTest</span>)
+p = Parent.new
+Origen::Componentable.init_parent_class(p, MyTest)
 
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>And… we’re done! Now we’ve got the parent booted up and we’re ready to start using it.</p>
 
@@ -1047,27 +979,23 @@ will be dependent on what you’ve named your class.</p>
 
       <p>After booting, we’ll be able to use our includer class on the parent:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>
-p.my_test   <span style="color:#777">#=&gt; MyTest object</span>
-p.my_tests  <span style="color:#777">#=&gt; {}</span>
+      <pre><code class="language-ruby">
+p.my_test   #=&gt; MyTest object
+p.my_tests  #=&gt; {}
 
-p.add_my_tests(<span style="color:#A60">:test1</span>)
-p.list_my_tests <span style="color:#777">#=&gt; ["test1"]</span>
+p.add_my_tests(:test1)
+p.list_my_tests #=&gt; ["test1"]
 
-p.add_my_tests(<span style="color:#A60">:test2</span>) <span style="color:#080;font-weight:bold">do</span> |t|
-  t.class_name <span style="color:#036;font-weight:bold">TestClass</span>
-<span style="color:#080;font-weight:bold">end</span>
+p.add_my_tests(:test2) do |t|
+  t.class_name TestClass
+end
 
-p.list_my_tests <span style="color:#777">#=&gt; ["test1", "test2"]</span>
+p.list_my_tests #=&gt; ["test1", "test2"]
 
-p.my_tests[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">test1].do_something
-#=&gt; run method :do_something with object at name </span><span style="color:#710">"</span></span>test1<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">
+p.my_tests["test1].do_something
+#=&gt; run method :do_something with object at name "test1"
 
-</span></span></pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>Since this API is not static, its more difficult to document. The generic API is actually just placeholders that can
 be found <a href="#Generic_Parent_API">here</a>.</p>
@@ -1084,13 +1012,9 @@ passed down to it. You can review the full <code>includer</code> API <a href="#I
       <p>As with <code>compoments</code>, we added <code>COMPONENTABLE_ADDS_ACCESSORS = true</code>
 constant in the <code>MyTest</code> class. So, we can expect:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>p.test1 <span style="color:#777">#=&gt; Object stored in MyTest at name :test1</span>
-p.test2 <span style="color:#777">#=&gt; Object stored in MyTest at name :test2</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">p.test1 #=&gt; Object stored in MyTest at name :test1
+p.test2 #=&gt; Object stored in MyTest at name :test2
+</code></pre>
 
       <p>But, say we already had method <code>:test1</code> on the parent? The result would be a 
 <code>Origen::Componentable::NameInUseError</code>. And if we had multiple <code>test</code> classes, and all
@@ -1116,18 +1040,14 @@ for <code>Compoonents</code>.</p>
 <code>Componentable</code> will give it the <code>includer class</code> requesting to add an accessor, as a class name.
 We can write a method like so to do this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">disable_componentable_accessors</span> includer_class
-  <span style="color:#080;font-weight:bold">if</span> includer_class == <span style="color:#036;font-weight:bold">MyClockingTest</span> || includer_class == <span style="color:#036;font-weight:bold">MyPowerTest</span>
-    <span style="color:#069">true</span>
-  <span style="color:#080;font-weight:bold">else</span>
-    <span style="color:#069">false</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">def disable_componentable_accessors includer_class
+  if includer_class == MyClockingTest || includer_class == MyPowerTest
+    true
+  else
+    false
+  end
+end
+</code></pre>
 
       <p>You can build this method however you see fit on the parent to only get the accessors you want from the various includers.</p>
 
@@ -1147,39 +1067,31 @@ to view the API in generic terms.</p>
 
       <h5 id="basics">Basics</h5>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Retrieving an instance of the MyTest object</span>
+      <pre><code class="language-ruby"># Retrieving an instance of the MyTest object
 parent.my_test 
-  <span style="color:#777">#=&gt; instance of MyTest </span>
+  #=&gt; instance of MyTest 
 
-<span style="color:#777"># Retrieving MyTest's componentable container</span>
+# Retrieving MyTest's componentable container
 parent.my_test._componentable_container
 parent.my_tests
-  <span style="color:#777">#=&gt; Hash with indifferent access</span>
+  #=&gt; Hash with indifferent access
 
-<span style="color:#777"># Retrieving MyTest instance variable directly on the parent</span>
-instance_variable_get(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">@_my_test</span><span style="color:#710">"</span></span>.to_sym) <span style="color:#777">#=&gt; instance variable on the parent class</span>
-</pre></div>
-</div>
-      </div>
+# Retrieving MyTest instance variable directly on the parent
+instance_variable_get("@_my_test".to_sym) #=&gt; instance variable on the parent class
+</code></pre>
 
       <p><a class="anchor" name="parent_example_api_adding"></a></p>
 
       <h5 id="adding">Adding</h5>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Adding Objects</span>
-<span style="color:#777"># These methods correspond to a my_test.add call.</span>
+      <pre><code class="language-ruby"># Adding Objects
+# These methods correspond to a my_test.add call.
 parent.my_test(name, options={}, &amp;block)
 parent.my_tests(name, options={}, &amp;block)
 parent.add_my_test(name, options={}, &amp;block)
-<span style="color:#777"># add_my_test is aliased to:</span>
-  <span style="color:#777">#=&gt; add_my_tests</span>
-</pre></div>
-</div>
-      </div>
+# add_my_test is aliased to:
+  #=&gt; add_my_tests
+</code></pre>
 
       <p><a class="anchor" name="parent_example_api_querying"></a></p>
 
@@ -1201,68 +1113,56 @@ parent.my_tests_of_class(class_name)
 
       <h5 id="iterating">Iterating</h5>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Emumerating</span>
-<span style="color:#777"># These methods correspond to a my_test.each call</span>
+      <pre><code class="language-ruby"># Emumerating
+# These methods correspond to a my_test.each call
 parent.my_tests(&amp;block)
 parent.each_my_test(&amp;block)
-<span style="color:#777"># each_my_test is aliased to:</span>
-  <span style="color:#777">#=&gt; all_my_tests</span>
+# each_my_test is aliased to:
+  #=&gt; all_my_tests
 
-<span style="color:#777"># Selecting</span>
-<span style="color:#777"># These methods correspond to a my_test.select call</span>
+# Selecting
+# These methods correspond to a my_test.select call
 parent.select_my_tests(&amp;block)
-<span style="color:#777"># select_my_tests is aliased to:</span>
-  <span style="color:#777">#=&gt; select_my_test</span>
-</pre></div>
-</div>
-      </div>
+# select_my_tests is aliased to:
+  #=&gt; select_my_test
+</code></pre>
 
       <p><a class="anchor" name="parent_example_api_copying_moving"></a></p>
 
       <h5 id="copying-and-moving">Copying and Moving</h5>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Copying</span>
-<span style="color:#777"># These methods correspond to a my_test.copy call</span>
+      <pre><code class="language-ruby"># Copying
+# These methods correspond to a my_test.copy call
 parent.copy_my_test(to_copy, to_location, options={})
-<span style="color:#777"># copy_my_test is aliased to:</span>
-  <span style="color:#777">#=&gt; copy_my_tests</span>
+# copy_my_test is aliased to:
+  #=&gt; copy_my_tests
 
-<span style="color:#777"># Moving</span>
-<span style="color:#777"># These methods correspond to a my_test.move call</span>
+# Moving
+# These methods correspond to a my_test.move call
 parent.move_my_test(to_move, to_location, options={})
-<span style="color:#777"># move_my_test is aliased to:</span>
-  <span style="color:#777">#=&gt; move_my_tests</span>
-</pre></div>
-</div>
-      </div>
+# move_my_test is aliased to:
+  #=&gt; move_my_tests
+</code></pre>
 
       <p><a class="anchor" name="parent_example_api_deleting"></a></p>
 
       <h5 id="deleting">Deleting</h5>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Deleting Single Objects</span>
-<span style="color:#777"># These methods correspond to a my_test.delete call</span>
+      <pre><code class="language-ruby"># Deleting Single Objects
+# These methods correspond to a my_test.delete call
 parent.delete_my_test(name)
-<span style="color:#777"># delete_my_test is aliased to:</span>
-  <span style="color:#777">#=&gt; delete_my_tests</span>
-  <span style="color:#777">#=&gt; remove_my_test</span>
-  <span style="color:#777">#=&gt; remove_my_tests</span>
+# delete_my_test is aliased to:
+  #=&gt; delete_my_tests
+  #=&gt; remove_my_test
+  #=&gt; remove_my_tests
 
-<span style="color:#777"># Deleting All Objects</span>
-<span style="color:#777"># These methods correspond to a my_test.delete_all call</span>
+# Deleting All Objects
+# These methods correspond to a my_test.delete_all call
 parent.delete_all_my_tests
-<span style="color:#777"># delete_all_my_tests is aliased to:</span>
-  <span style="color:#777">#=&gt; clear_my_tests</span>
-  <span style="color:#777">#=&gt; remove_all_my_tests</span>
-</pre></div>
-</div>
-      </div>
+# delete_all_my_tests is aliased to:
+  #=&gt; clear_my_tests
+  #=&gt; remove_all_my_tests
+</code></pre>
 
       <p>Also recall, that these methods link directly back to just calling the corresponding method on the <code>includer class</code>,
 so the full method documentation (parameters, options, return values, exception raised, etc.) can be found back at the
@@ -1288,124 +1188,100 @@ so the full method documentation can be found back at the <a href="#Includer_Cla
 
       <h5 id="basics-1">Basics</h5>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Retrieving an instance of the includer class object</span>
-parent.&lt;singleton_name&gt; <span style="color:#777">#=&gt; instance of the includer class</span>
+      <pre><code class="language-ruby"># Retrieving an instance of the includer class object
+parent.&lt;singleton_name&gt; #=&gt; instance of the includer class
 
-<span style="color:#777"># Retrieving an instance of the includer class's componentable container</span>
+# Retrieving an instance of the includer class's componentable container
 parent.&lt;singleton_name&gt;._componentable_container
 parent.&lt;plural_name&gt;
 
-<span style="color:#777"># Retrieving the includer instance variable directly</span>
-instance_variable_get(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">@_&lt;singleton_name&gt;</span><span style="color:#710">"</span></span>.to_sym) <span style="color:#777">#=&gt; instance variable on the parent class</span>
-</pre></div>
-</div>
-      </div>
+# Retrieving the includer instance variable directly
+instance_variable_get("@_&lt;singleton_name&gt;".to_sym) #=&gt; instance variable on the parent class
+</code></pre>
 
       <p><a class="anchor" name="parent_generic_api_adding"></a></p>
 
       <h5 id="adding-1">Adding</h5>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Adding Objects</span>
-<span style="color:#777"># These methods correspond to a &lt;singleton_name&gt;.add call.</span>
+      <pre><code class="language-ruby"># Adding Objects
+# These methods correspond to a &lt;singleton_name&gt;.add call.
 parent.&lt;singleton_name&gt;(name, options={}, &amp;block)
 parent.&lt;plural_name&gt;(name, options={}, &amp;block)
 parent.add_&lt;singleton_name&gt;(name, options={}, &amp;block)
-<span style="color:#777"># add_&lt;singleton_name&gt; is aliased to:</span>
-  <span style="color:#777">#=&gt; add_&lt;includer_plural_name&gt;</span>
-</pre></div>
-</div>
-      </div>
+# add_&lt;singleton_name&gt; is aliased to:
+  #=&gt; add_&lt;includer_plural_name&gt;
+</code></pre>
 
       <p><a class="anchor" name="parent_generic_api_querying"></a></p>
 
       <h5 id="querying-1">Querying</h5>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Listing Names of Objects</span>
-<span style="color:#777"># These methods correspond to a &lt;singleton_name&gt;.list call</span>
+      <pre><code class="language-ruby"># Listing Names of Objects
+# These methods correspond to a &lt;singleton_name&gt;.list call
 parent.list_&lt;plural_name&gt;
 
-<span style="color:#777"># Querying Objects</span>
-<span style="color:#777"># These methods correspond to a &lt;singleton_name&gt;.instances_of call</span>
+# Querying Objects
+# These methods correspond to a &lt;singleton_name&gt;.instances_of call
 parent.&lt;plural_name&gt;_of_class(class_name)
-<span style="color:#777"># &lt;plural_name&gt;_of_class is aliased to:</span>
-  <span style="color:#777">#=&gt; &lt;plural_name&gt;_instances_of</span>
-  <span style="color:#777">#=&gt; &lt;plural_name&gt;_of_type</span>
-</pre></div>
-</div>
-      </div>
+# &lt;plural_name&gt;_of_class is aliased to:
+  #=&gt; &lt;plural_name&gt;_instances_of
+  #=&gt; &lt;plural_name&gt;_of_type
+</code></pre>
 
       <p><a class="anchor" name="parent_generic_api_iterating"></a></p>
 
       <h5 id="iterating-1">Iterating</h5>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Emumerating</span>
-<span style="color:#777"># These methods correspond to a &lt;singleton_name&gt;.each call</span>
+      <pre><code class="language-ruby"># Emumerating
+# These methods correspond to a &lt;singleton_name&gt;.each call
 parent.&lt;plural_name&gt;(&amp;block)
 parent.each_&lt;singleton_name&gt;(&amp;block)
-<span style="color:#777"># each_&lt;singleton_name&gt; is aliased to:</span>
-  <span style="color:#777">#=&gt; all_&lt;plural_name&gt;</span>
+# each_&lt;singleton_name&gt; is aliased to:
+  #=&gt; all_&lt;plural_name&gt;
 
-<span style="color:#777"># Selecting</span>
-<span style="color:#777"># These methods correspond to a &lt;singleton_name&gt;.select call</span>
+# Selecting
+# These methods correspond to a &lt;singleton_name&gt;.select call
 parent.select_&lt;plural_name&gt;(&amp;block)
-<span style="color:#777"># select_&lt;plural_name&gt; is aliased to:</span>
-  <span style="color:#777">#=&gt; select_&lt;singleton_name&gt;</span>
-</pre></div>
-</div>
-      </div>
+# select_&lt;plural_name&gt; is aliased to:
+  #=&gt; select_&lt;singleton_name&gt;
+</code></pre>
 
       <p><a class="anchor" name="parent_generic_api_copying_moving"></a></p>
 
       <h5 id="copying-and-moving-1">Copying and Moving</h5>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Copying</span>
-<span style="color:#777"># These methods correspond to a &lt;singleton_name&gt;.copy call</span>
+      <pre><code class="language-ruby"># Copying
+# These methods correspond to a &lt;singleton_name&gt;.copy call
 parent.copy_&lt;singleton_name&gt;(to_copy, to_location, options={})
-<span style="color:#777"># copy_&lt;singleton_name&gt; is aliased to:</span>
-  <span style="color:#777">#=&gt; copy_&lt;plural_name&gt;</span>
+# copy_&lt;singleton_name&gt; is aliased to:
+  #=&gt; copy_&lt;plural_name&gt;
 
-<span style="color:#777"># Moving</span>
-<span style="color:#777"># These methods correspond to a &lt;singleton_name&gt;.move call</span>
+# Moving
+# These methods correspond to a &lt;singleton_name&gt;.move call
 parent.move_&lt;singleton_name&gt;(to_move, to_location, options={})
-<span style="color:#777"># move_&lt;singleton_name&gt; is aliased to:</span>
-  <span style="color:#777">#=&gt; move_&lt;plural_name&gt;</span>
-</pre></div>
-</div>
-      </div>
+# move_&lt;singleton_name&gt; is aliased to:
+  #=&gt; move_&lt;plural_name&gt;
+</code></pre>
 
       <p><a class="anchor" name="parent_generic_api_deleting"></a></p>
 
       <h5 id="deleting-1">Deleting</h5>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Deleting Single Objects</span>
-<span style="color:#777"># These methods correspond to a &lt;singleton_name&gt;.delete call</span>
+      <pre><code class="language-ruby"># Deleting Single Objects
+# These methods correspond to a &lt;singleton_name&gt;.delete call
 parent.delete_&lt;singleton_name&gt;(name)
-<span style="color:#777"># delete_&lt;singleton_name&gt; is aliased to:</span>
-  <span style="color:#777">#=&gt; delete_&lt;plural_name&gt;</span>
-  <span style="color:#777">#=&gt; remove_&lt;singleton_name&gt;</span>
-  <span style="color:#777">#=&gt; remove_&lt;plural_name&gt;</span>
+# delete_&lt;singleton_name&gt; is aliased to:
+  #=&gt; delete_&lt;plural_name&gt;
+  #=&gt; remove_&lt;singleton_name&gt;
+  #=&gt; remove_&lt;plural_name&gt;
 
-<span style="color:#777"># Deleting All Objects</span>
-<span style="color:#777"># These methods correspond to a &lt;singleton_name&gt;.delete_all call</span>
+# Deleting All Objects
+# These methods correspond to a &lt;singleton_name&gt;.delete_all call
 parent.delete_all_&lt;plural_name&gt;
-<span style="color:#777"># delete_all_&lt;plural_name&gt; is aliased to:</span>
-  <span style="color:#777">#=&gt; clear_&lt;plural_name&gt;</span>
-  <span style="color:#777">#=&gt; remove_all_&lt;plural_name&gt;</span>
-</pre></div>
-</div>
-      </div>
+# delete_all_&lt;plural_name&gt; is aliased to:
+  #=&gt; clear_&lt;plural_name&gt;
+  #=&gt; remove_all_&lt;plural_name&gt;
+</code></pre>
 
       <div>    
   <a class="anchor" name="Customizing_Your_Componentable_Class"></a>          
@@ -1439,33 +1315,29 @@ and calls the &lt;/code&gt;_push_accessor&lt;/code&gt; method. Most likely, this
 can build in any defaults/settings that you want and throw errors if things are missing or incorrect. Then you can
 finish up by calling the two aforementioned methods. For example, the code for the default <code>_add</code> is just:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">_add</span>(name, options={}, &amp;block)
-  <span style="color:#777"># Add the name and parent to the options if they aren't already given</span>
-  <span style="color:#777"># If the parent isn't available on the includer class, it will remain nil.</span>
+      <pre><code class="language-ruby">def _add(name, options={}, &amp;block)
+  # Add the name and parent to the options if they aren't already given
+  # If the parent isn't available on the includer class, it will remain nil.
   options = {
-    <span style="color:#606">name</span>: name,
-    <span style="color:#606">parent</span>: parent
+    name: name,
+    parent: parent
   }.merge(options)
   
-  <span style="color:#080;font-weight:bold">if</span> block_given?
-    collector = <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Utility</span>::<span style="color:#036;font-weight:bold">Collector</span>.new
-    <span style="color:#080;font-weight:bold">yield</span> collector
+  if block_given?
+    collector = Origen::Utility::Collector.new
+    yield collector
     options.merge!(collector.store)
-  <span style="color:#080;font-weight:bold">end</span>
+  end
   
-  <span style="color:#777"># Instantiate the class. This will place the object in the @_componentable_container at the indicated name</span>
+  # Instantiate the class. This will place the object in the @_componentable_container at the indicated name
   _instantiate_class(name, options)
   
-  <span style="color:#777"># Create an accessor for the new item, if indicated to do so.</span>
+  # Create an accessor for the new item, if indicated to do so.
   _push_accessor(name, options)
   
-  <span style="color:#33B">@_componentable_container</span>[name]
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  @_componentable_container[name]
+end
+</code></pre>
 
       <p>So feel free to override that, adding some custom behavior for your class.</p>
 
@@ -1500,17 +1372,13 @@ work that most users will never see. But, there’s some assumptions that are ma
 
       <p>First, when you setup the module as:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">MyTest</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MyTest</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Componentable</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">module MyTest
+  class MyTest
+    include Origen::Model
+    include Origen::Componentable
+  end
+end
+</code></pre>
 
       <p>The line <code>include Origen::Componentable</code> will trigger <code>Componentable's included?</code> method to kick
 off. This adds the callback <a href="/origen/guides/misc/callbacks/#origen_model_init">origen_model_init</a> 
@@ -1525,24 +1393,20 @@ stuff in them. But in them event that it does have its own <code>origen_model_in
 <code>Origen::Componentable.init_parent_class(klass, self)</code>, where <code>klass</code> is the
 <code>Componentable class</code> to boot. In this case, <code>MyTest</code>. For example:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">MyTest</span>
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">origen_model_init</span>(klass, options={})
-    <span style="color:#777"># ...</span>
+      <pre><code class="language-ruby">module MyTest
+  def origen_model_init(klass, options={})
+    # ...
     
-    <span style="color:#777"># Add booting the Componentable classes</span>
-    <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Componentable</span>.init_parent_class(klass, <span style="color:#069">self</span>)
-  <span style="color:#080;font-weight:bold">end</span>
+    # Add booting the Componentable classes
+    Origen::Componentable.init_parent_class(klass, self)
+  end
   
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MyTest</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Componentable</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  class MyTest
+    include Origen::Model
+    include Origen::Componentable
+  end
+end
+</code></pre>
 
       <p>This will be called for every class containing <code>Origen::Componentable</code> in the model.</p>
 

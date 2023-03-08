@@ -471,36 +471,32 @@ This plugin will provide both the model and the controller as shown below:</p>
 
       <p>Here is a simple ATD model implementation which defines some register:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/atd_test_block/atd.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">ATDTestBlock</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">ATD</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
+      <pre><code class="language-ruby"># lib/atd_test_block/atd.rb
+module ATDTestBlock
+  class ATD
+    include Origen::Model
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options = {})
+    def initialize(options = {})
       instantiate_registers
-    <span style="color:#080;font-weight:bold">end</span>
+    end
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">instantiate_registers</span>
-      <span style="color:#777"># ATD control register</span>
-      reg <span style="color:#A60">:ctrl</span>, <span style="color:#00D">0x0024</span> <span style="color:#080;font-weight:bold">do</span> |reg|
-        reg.bit <span style="color:#00D">7</span>, <span style="color:#A60">:coco</span>, <span style="color:#606">access</span>: <span style="color:#A60">:ro</span>
-        reg.bit <span style="color:#00D">6</span>, <span style="color:#A60">:aien</span>
-        reg.bit <span style="color:#00D">5</span>, <span style="color:#A60">:diff</span>
-        reg.bit <span style="color:#00D">4</span>..<span style="color:#00D">0</span>, <span style="color:#A60">:adch</span>, <span style="color:#606">reset</span>: <span style="color:#00D">0x1F</span>
-      <span style="color:#080;font-weight:bold">end</span>
+    def instantiate_registers
+      # ATD control register
+      reg :ctrl, 0x0024 do |reg|
+        reg.bit 7, :coco, access: :ro
+        reg.bit 6, :aien
+        reg.bit 5, :diff
+        reg.bit 4..0, :adch, reset: 0x1F
+      end
 
-      <span style="color:#777"># ATD data result register</span>
-      reg <span style="color:#A60">:result</span>, <span style="color:#00D">0x0028</span> <span style="color:#080;font-weight:bold">do</span> |reg|
-        reg.bit <span style="color:#00D">15</span>..<span style="color:#00D">0</span>, <span style="color:#A60">:d</span>
-      <span style="color:#080;font-weight:bold">end</span>
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      # ATD data result register
+      reg :result, 0x0028 do |reg|
+        reg.bit 15..0, :d
+      end
+    end
+  end
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Controller_Implementation"></a>          
@@ -511,86 +507,66 @@ This plugin will provide both the model and the controller as shown below:</p>
 
       <p>Let’s create a controller to provide the user with the following API:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>result = <span style="color:#d70">$dut</span>.atd.convert(<span style="color:#00D">10</span>)   <span style="color:#777"># Perform a conversion on the voltage at ATD input channel 10 and return the result</span>
+      <pre><code class="language-ruby">result = $dut.atd.convert(10)   # Perform a conversion on the voltage at ATD input channel 10 and return the result
 
-<span style="color:#777"># The caller can then process the result as they wish, here for example to capture it to the tester</span>
+# The caller can then process the result as they wish, here for example to capture it to the tester
 result.store!
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>A controller is implemented as follows, this is just a regular Ruby class that includes the
 <code>Origen::Controller</code> module:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/atd_test_block/atd_controller.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">ATDTestBlock</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">ATDController</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Controller</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># lib/atd_test_block/atd_controller.rb
+module ATDTestBlock
+  class ATDController
+    include Origen::Controller
+  end
+end
+</code></pre>
 
       <p>Naming of controllers can be significant, here Origen will know that this this the controller for the
 <code>ATD</code> model since we have followed the naming convention:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>&lt;model name&gt;Controller
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">&lt;model name&gt;Controller
+</code></pre>
 
       <p>If you cannot follow this convention (the main reason would be if the model lives in a different namespace), 
 then you can supply the class of the model like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/atd_test_block/atd_controller.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">ATDTestBlock</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">ATDController</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Controller</span>
+      <pre><code class="language-ruby"># lib/atd_test_block/atd_controller.rb
+module ATDTestBlock
+  class ATDController
+    include Origen::Controller
 
-    model <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">SomeOtherNamespace::ATD_M325</span><span style="color:#710">"</span></span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+    model class_name: "SomeOtherNamespace::ATD_M325"
+  end
+end
+</code></pre>
 
       <p>The controller now gives us the place to create our pattern API, here is the <code>covert</code> method 
 implementation:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/atd_test_block/atd_controller.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">ATDTestBlock</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">ATDController</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Controller</span>
+      <pre><code class="language-ruby"># lib/atd_test_block/atd_controller.rb
+module ATDTestBlock
+  class ATDController
+    include Origen::Controller
 
-    <span style="color:#777"># Convert the input on the given channel to a digital representation.</span>
-    <span style="color:#777">#</span>
-    <span style="color:#777"># An Origen::Register::BitCollection will be returned containing the result.</span>
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">convert</span>(channel)
-      <span style="color:#777"># Launch the conversion by setting the channel</span>
+    # Convert the input on the given channel to a digital representation.
+    #
+    # An Origen::Register::BitCollection will be returned containing the result.
+    def convert(channel)
+      # Launch the conversion by setting the channel
       ctrl.adch.write!(channel)
-      <span style="color:#777"># Wait to complete</span>
-      tester.wait(<span style="color:#606">time_in_us</span>: <span style="color:#00D">100</span>)
-      <span style="color:#777"># Verify the conversion has completed</span>
-      ctrl.coco.assert!(<span style="color:#00D">1</span>)
-      <span style="color:#777"># Return the result (the data bits from the result register)</span>
+      # Wait to complete
+      tester.wait(time_in_us: 100)
+      # Verify the conversion has completed
+      ctrl.coco.assert!(1)
+      # Return the result (the data bits from the result register)
       result.d
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+    end
+  end
+end
+</code></pre>
 
       <p>A key point to note from the above is that the controller has direct access to the registers of
 the model that it controls, that is you can call <code>ctrl</code> instead of having to drill
@@ -604,26 +580,18 @@ down through the global namespace (<code>$dut.atd.ctrl</code>).</p>
       <p>Shadow controllers are never instantiated directly, instead Origen will automatically materialize
 them whenever a new instance of the model comes into being.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>atd = <span style="color:#036;font-weight:bold">ATDTestBlock</span>::<span style="color:#036;font-weight:bold">ATD</span>.new    <span style="color:#777"># Instantiates the model, a controller will also be created automatically</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">atd = ATDTestBlock::ATD.new    # Instantiates the model, a controller will also be created automatically
+</code></pre>
 
       <p>This is where the name comes from, whenever a model is created it is shadowed by a corresponding
 controller.</p>
 
       <p>So how do we invoke our controller API? We simply call the methods on the model:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>atd = <span style="color:#036;font-weight:bold">ATDTestBlock</span>::<span style="color:#036;font-weight:bold">ATD</span>.new
+      <pre><code class="language-ruby">atd = ATDTestBlock::ATD.new
 
-atd.convert(<span style="color:#00D">10</span>)  <span style="color:#777"># =&gt; &lt;BitCollection&gt;</span>
-</pre></div>
-</div>
-      </div>
+atd.convert(10)  # =&gt; &lt;BitCollection&gt;
+</code></pre>
 
       <p>Origen employs some Ruby trickery such that the object assigned to <code>atd</code> above will
 respond to the methods available to the model and the controller - models will proxy (send) methods
@@ -635,13 +603,9 @@ or the controller, they will respond the same.</p>
       <p>However if for some reason you really do need to deal directly with one or the other then you can
 use the following API:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>atd.model       <span style="color:#777"># =&gt; &lt;ATD instance&gt;</span>
-atd.controller  <span style="color:#777"># =&gt; &lt;ATDController instance&gt;</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">atd.model       # =&gt; &lt;ATD instance&gt;
+atd.controller  # =&gt; &lt;ATDController instance&gt;
+</code></pre>
 
       <div>    
   <a class="anchor" name="Typical_Integration"></a>          
@@ -654,31 +618,23 @@ patterns for a target device.</p>
       <p>The ATD test block’s integration guide should instruct the top-level test engineer to instantiate the
 ATD model within the top-level model like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/eagle.rb</span>
-<span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">Eagle</span>
-  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">TopLevel</span>
+      <pre><code class="language-ruby"># lib/eagle.rb
+class Eagle
+  include Origen::TopLevel
 
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options = {})
-    sub_block <span style="color:#A60">:atd</span>, <span style="color:#606">class_name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">ATDTestBlock::ATD</span><span style="color:#710">"</span></span>, <span style="color:#606">base_address</span>: <span style="color:#00D">0x1000_2000</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  def initialize(options = {})
+    sub_block :atd, class_name: "ATDTestBlock::ATD", base_address: 0x1000_2000
+  end
+end
+</code></pre>
 
       <p>The ATD API provided by the ATD test engineer is now available to the Eagle device’s test
 engineers:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$dut</span> = <span style="color:#036;font-weight:bold">Eagle</span>.new
+      <pre><code class="language-ruby">$dut = Eagle.new
 
-<span style="color:#d70">$dut</span>.atd.convert(<span style="color:#00D">10</span>)  <span style="color:#777"># =&gt; &lt;BitCollection&gt;</span>
-</pre></div>
-</div>
-      </div>
+$dut.atd.convert(10)  # =&gt; &lt;BitCollection&gt;
+</code></pre>
 
       <div>    
   <a class="anchor" name="Transitioning_to_an_Imported_Model"></a>          
@@ -688,22 +644,18 @@ engineers:</p>
       <p>If at some point the ATD test engineer gets access to an XML-based or similar definition of
 the ATD registers from the design team, then the model can be simplified like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/atd_test_block/atd.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">ATDTestBlock</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">ATD</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
-    include <span style="color:#036;font-weight:bold">CrossOrigen</span>
+      <pre><code class="language-ruby"># lib/atd_test_block/atd.rb
+module ATDTestBlock
+  class ATD
+    include Origen::Model
+    include CrossOrigen
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options = {})
-      cr_import(<span style="color:#606">path</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.root!<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">/ipxact_files/atd_regs.xml</span><span style="color:#710">"</span></span>)
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+    def initialize(options = {})
+      cr_import(path: "#{Origen.root!}/ipxact_files/atd_regs.xml")
+    end
+  end
+end
+</code></pre>
 
       <p>See the <a href="https://origen-sdk.org/cross_origen">Cross Origen</a> plugin for more details on
 importing 3rd party data formats.</p>

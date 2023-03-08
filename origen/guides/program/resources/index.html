@@ -479,33 +479,25 @@ entry.</p>
       <p>Resource files are syntactically equivalent to Flow files except that all references to
 <code>Flow</code> are replaced by <code>Resources</code>:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># program/probe_resources.rb</span>
-<span style="color:#036;font-weight:bold">Resources</span>.create <span style="color:#080;font-weight:bold">do</span>
+      <pre><code class="language-ruby"># program/probe_resources.rb
+Resources.create do
 
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+end
+</code></pre>
 
       <p>So for example without changing our interface at all we can drop some of our previous
 Flow code into the resources file (flow specific attributes such as bin numbers can
 be removed):</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># program/probe_resources.rb</span>
-<span style="color:#036;font-weight:bold">Resources</span>.create <span style="color:#080;font-weight:bold">do</span>
+      <pre><code class="language-ruby"># program/probe_resources.rb
+Resources.create do
 
-  func <span style="color:#A60">:vreg_functional</span>
+  func :vreg_functional
 
-  para <span style="color:#A60">:vreg_meas</span>, <span style="color:#606">lo</span>: <span style="color:#60E">1.12</span>, <span style="color:#606">hi</span>: <span style="color:#60E">1.34</span>
+  para :vreg_meas, lo: 1.12, hi: 1.34
 
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+end
+</code></pre>
 
       <p>This would generate the same program as before but with no flow entries for the generated
 tests.</p>
@@ -527,19 +519,15 @@ how to create templates.</p>
 the compilation of a specific file. Any arguments passed in will be accessible within the
 template via its <code>options</code> method.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># program/common_resources.rb</span>
-<span style="color:#036;font-weight:bold">Resources</span>.create <span style="color:#080;font-weight:bold">do</span>
+      <pre><code class="language-ruby"># program/common_resources.rb
+Resources.create do
 
-  compile <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">templates/j750/DCSpecs.txt</span><span style="color:#710">"</span></span>, <span style="color:#606">max_vdd</span>: <span style="color:#00D">5</span>.V
+  compile "templates/j750/DCSpecs.txt", max_vdd: 5.V
 
-  compile <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">templates/j750/GlobalSpecs.txt</span><span style="color:#710">"</span></span>, <span style="color:#606">vreg_period</span>: <span style="color:#00D">40</span>.ns
+  compile "templates/j750/GlobalSpecs.txt", vreg_period: 40.ns
 
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Separating_Test_Generation_from_Flow_Generation"></a>          
@@ -566,55 +554,47 @@ a parametric test and a functional test and so they can all use the same method.
 Here is a previous example that only contains the flow concerns (includes ‘cz’ and
 ‘bin_out’ methods since these are also flow level concerns):</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Flow</span>.create <span style="color:#080;font-weight:bold">do</span>
+      <pre><code class="language-ruby">Flow.create do
 
-  test <span style="color:#A60">:vreg_meas</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">105</span>, <span style="color:#606">id</span>: <span style="color:#A60">:vreg_meas_1</span>
+  test :vreg_meas, softbin: 105, id: :vreg_meas_1
 
-  if_failed <span style="color:#A60">:vreg_meas_1</span> <span style="color:#080;font-weight:bold">do</span>
-    <span style="color:#777"># Automatically characterize the vreg if the measurement fails</span>
-    cz <span style="color:#A60">:vreg_meas</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">107</span>
-    <span style="color:#777"># Then bin out</span>
-    bin_out <span style="color:#606">softbin</span>: <span style="color:#00D">105</span>
-  <span style="color:#080;font-weight:bold">end</span>
+  if_failed :vreg_meas_1 do
+    # Automatically characterize the vreg if the measurement fails
+    cz :vreg_meas, softbin: 107
+    # Then bin out
+    bin_out softbin: 105
+  end
 
-  <span style="color:#777"># Check if the HVST has already been run on this device</span>
-  test <span style="color:#A60">:rd_vreg_hvst_passcode</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">50</span>, <span style="color:#606">id</span>: <span style="color:#A60">:vreg_hvst_done</span>
+  # Check if the HVST has already been run on this device
+  test :rd_vreg_hvst_passcode, softbin: 50, id: :vreg_hvst_done
 
-  unless_passed <span style="color:#A60">:vreg_hvst_done</span> <span style="color:#080;font-weight:bold">do</span>
-    <span style="color:#777"># If not run it</span>
-    test <span style="color:#A60">:vreg_hvst</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">101</span>
-    <span style="color:#777"># And program the flag for next time</span>
-    test <span style="color:#A60">:pgm_vreg_hvst_passcode</span>, <span style="color:#606">softbin</span>: <span style="color:#00D">51</span>
-  <span style="color:#080;font-weight:bold">end</span>
+  unless_passed :vreg_hvst_done do
+    # If not run it
+    test :vreg_hvst, softbin: 101
+    # And program the flag for next time
+    test :pgm_vreg_hvst_passcode, softbin: 51
+  end
 
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+end
+</code></pre>
 
       <p>If you want to use the same methods in the Resources and Flow files you can use the
 <code>resources_mode?</code> method within your interface to control when the flow
 or the tests should be generated. This method will return true if the interface method
 has been called from a Resources file:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/vreg/interface.rb</span>
+      <pre><code class="language-ruby"># lib/vreg/interface.rb
 
-<span style="color:#777"># Create a functional test and call it from the flow</span>
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">func</span>(name, options={})
+# Create a functional test and call it from the flow
+def func(name, options={})
   name = namer(name, options)
-  <span style="color:#080;font-weight:bold">if</span> resources_mode?
-    <span style="color:#777"># generate the test</span>
-  <span style="color:#080;font-weight:bold">else</span>
-    <span style="color:#777"># generate the flow entry</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  if resources_mode?
+    # generate the test
+  else
+    # generate the flow entry
+  end
+end
+</code></pre>
 
       <div style="position: relative">
   <hr>

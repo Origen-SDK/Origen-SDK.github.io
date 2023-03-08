@@ -500,21 +500,17 @@ into a <code>hash</code> and can then be used as options for the given feature.<
 available as <code>Origen::Utility.collector</code>. The collector isn’t really meant to be used throughout, rather
 it is an intermediary step to join hashes and blocks. An example of using the collector is:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>block = <span style="color:#036;font-weight:bold">Proc</span>.new <span style="color:#080;font-weight:bold">do</span> |collector|
-  collector.arg1 <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">argument 1</span><span style="color:#710">'</span></span>
-  collector.arg2 <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">argument 2</span><span style="color:#710">'</span></span>
-<span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby">block = Proc.new do |collector|
+  collector.arg1 'argument 1'
+  collector.arg2 'argument 2'
+end
 
-collector = <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Utility</span>.collector
+collector = Origen::Utility.collector
 block.call(collector)
 
 collector.to_h
-<span style="color:#777">#=&gt; {arg1: 'argument 1', arg2: 'argument 2'}</span>
-</pre></div>
-</div>
-      </div>
+#=&gt; {arg1: 'argument 1', arg2: 'argument 2'}
+</code></pre>
 
       <p>The result of using the collector is that each argument given as a method is transformed into a hash key/value pair.</p>
 
@@ -522,20 +518,16 @@ collector.to_h
 
       <p>If a method is given without a value, it will be defined and set to <code>nil</code>, as shown below:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>block = <span style="color:#036;font-weight:bold">Proc</span>.new <span style="color:#080;font-weight:bold">do</span> |collector|
+      <pre><code class="language-ruby">block = Proc.new do |collector|
   collector.arg1
-<span style="color:#080;font-weight:bold">end</span>
+end
 
-collector = <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Utility</span>.collector
+collector = Origen::Utility.collector
 block.call(collector)
 
 collector.to_h
-<span style="color:#777">#=&gt; {arg1: nil}</span>
-</pre></div>
-</div>
-      </div>
+#=&gt; {arg1: nil}
+</code></pre>
 
       <div>    
   <a class="anchor" name="Using_An_Anonymous_Collector"></a>          
@@ -548,12 +540,8 @@ to be given either as a hash or as a block or both, depending on the nature of t
 these cases, it is common to just instantiate the collector, convert it to a hash, then throw it away. This can
 be done in a single line as:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>collector = <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Utility</span>.collector(&amp;block).to_h
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">collector = Origen::Utility.collector(&amp;block).to_h
+</code></pre>
 
       <div class="alert alert-danger">
 <strong>Danger!</strong> This syntax will always work, but other syntaxes have some hidden dangers. See
@@ -569,37 +557,33 @@ be done in a single line as:</p>
 and an <code>options block</code> to merge into a single <code>combined hash</code>. This can be achieved by passing in
 two options during collector initialization: <code>hash</code> and <code>merge_method</code>.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Combining a hash and block with no clashes</span>
-options = {<span style="color:#606">argA</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">arg A</span><span style="color:#710">'</span></span>, <span style="color:#606">argB</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">arg B</span><span style="color:#710">'</span></span>}
-block = <span style="color:#036;font-weight:bold">Proc</span>.new <span style="color:#080;font-weight:bold">do</span> |collector|
-  collector.arg1 <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">arg 1</span><span style="color:#710">'</span></span>
-  collector.arg2 <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">arg 2</span><span style="color:#710">'</span></span>
-<span style="color:#080;font-weight:bold">end</span>
-<span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Utility</span>.collector(<span style="color:#606">hash</span>: options, &amp;block).to_h
-  <span style="color:#777">#=&gt; {argA: 'arg A', argB: 'arg B', arg1: 'arg 1', arg2: 'arg 2'}</span>
+      <pre><code class="language-ruby"># Combining a hash and block with no clashes
+options = {argA: 'arg A', argB: 'arg B'}
+block = Proc.new do |collector|
+  collector.arg1 'arg 1'
+  collector.arg2 'arg 2'
+end
+Origen::Utility.collector(hash: options, &amp;block).to_h
+  #=&gt; {argA: 'arg A', argB: 'arg B', arg1: 'arg 1', arg2: 'arg 2'}
 
-<span style="color:#777"># Combining a hash and block with some keys clashing (default merging)</span>
-options = {<span style="color:#606">arg1</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">has arg 1</span><span style="color:#710">'</span></span>, <span style="color:#606">arg2</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">hash arg 2</span><span style="color:#710">'</span></span>}
-block = <span style="color:#036;font-weight:bold">Proc</span>.new <span style="color:#080;font-weight:bold">do</span> |collector|
-  collector.arg2 <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">block arg 2</span><span style="color:#710">'</span></span>
-  collector.arg3 <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">block arg 3</span><span style="color:#710">'</span></span>
-<span style="color:#080;font-weight:bold">end</span>
-<span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Utility</span>.collector(<span style="color:#606">hash</span>: options, &amp;block).to_h
-  <span style="color:#777">#=&gt; {arg1: 'has arg 1', arg2: 'hash arg 2', arg3: 'block arg 3'}</span>
+# Combining a hash and block with some keys clashing (default merging)
+options = {arg1: 'has arg 1', arg2: 'hash arg 2'}
+block = Proc.new do |collector|
+  collector.arg2 'block arg 2'
+  collector.arg3 'block arg 3'
+end
+Origen::Utility.collector(hash: options, &amp;block).to_h
+  #=&gt; {arg1: 'has arg 1', arg2: 'hash arg 2', arg3: 'block arg 3'}
 
-<span style="color:#777"># Combining a hash and block with explicit merge method :keep_hash (default)</span>
-options = {<span style="color:#606">arg1</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">has arg 1</span><span style="color:#710">'</span></span>, <span style="color:#606">arg2</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">hash arg 2</span><span style="color:#710">'</span></span>}
-block = <span style="color:#036;font-weight:bold">Proc</span>.new <span style="color:#080;font-weight:bold">do</span> |collector|
-  collector.arg2 <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">block arg 2</span><span style="color:#710">'</span></span>
-  collector.arg3 <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">block arg 3</span><span style="color:#710">'</span></span>
-<span style="color:#080;font-weight:bold">end</span>
-<span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Utility</span>.collector(<span style="color:#606">hash</span>: options, <span style="color:#606">merge_method</span>: <span style="color:#A60">:keep_hash</span>, &amp;block).to_h
-  <span style="color:#777">#=&gt; {arg1: 'has arg 1', arg2: 'hash arg 2', arg3: 'block arg 3'}</span>
-</pre></div>
-</div>
-      </div>
+# Combining a hash and block with explicit merge method :keep_hash (default)
+options = {arg1: 'has arg 1', arg2: 'hash arg 2'}
+block = Proc.new do |collector|
+  collector.arg2 'block arg 2'
+  collector.arg3 'block arg 3'
+end
+Origen::Utility.collector(hash: options, merge_method: :keep_hash, &amp;block).to_h
+  #=&gt; {arg1: 'has arg 1', arg2: 'hash arg 2', arg3: 'block arg 3'}
+</code></pre>
 
       <p>As shown, of the options that were given to both the hash and the block, the options in the hash were kept. This is the
 default behavior, or can be explicitly defined by providing <code>merge_method: :keep_hash</code> to avoid confusion.</p>
@@ -612,39 +596,31 @@ default behavior, or can be explicitly defined by providing <code>merge_method: 
 opposite of <code>:keep_hash</code> and <code>:fail</code> will raise an error if the same option is provided by
 both the hash and the block. Trying to set the <code>merge_method</code> to anything else will raise an error.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>options = {<span style="color:#606">arg1</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">has arg 1</span><span style="color:#710">'</span></span>, <span style="color:#606">arg2</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">hash arg 2</span><span style="color:#710">'</span></span>}
-block = <span style="color:#036;font-weight:bold">Proc</span>.new <span style="color:#080;font-weight:bold">do</span> |collector|
-  collector.arg2 <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">block arg 2</span><span style="color:#710">'</span></span>
-  collector.arg3 <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">block arg 3</span><span style="color:#710">'</span></span>
-<span style="color:#080;font-weight:bold">end</span>
-<span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Utility</span>.collector(<span style="color:#606">hash</span>: options, <span style="color:#606">merge_method</span>: <span style="color:#A60">:keep_block</span>, &amp;block).to_h
-  <span style="color:#777">#=&gt; {arg1: 'has arg 1', arg2: 'block arg 2', arg3: 'block arg 3'}</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">options = {arg1: 'has arg 1', arg2: 'hash arg 2'}
+block = Proc.new do |collector|
+  collector.arg2 'block arg 2'
+  collector.arg3 'block arg 3'
+end
+Origen::Utility.collector(hash: options, merge_method: :keep_block, &amp;block).to_h
+  #=&gt; {arg1: 'has arg 1', arg2: 'block arg 2', arg3: 'block arg 3'}
+</code></pre>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>options = {<span style="color:#606">arg1</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">has arg 1</span><span style="color:#710">'</span></span>, <span style="color:#606">arg2</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">hash arg 2</span><span style="color:#710">'</span></span>}
-block = <span style="color:#036;font-weight:bold">Proc</span>.new <span style="color:#080;font-weight:bold">do</span> |collector|
-  collector.arg3 <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">block arg 3</span><span style="color:#710">'</span></span>
-<span style="color:#080;font-weight:bold">end</span>
-<span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Utility</span>.collector(<span style="color:#606">hash</span>: options, <span style="color:#606">merge_method</span>: <span style="color:#A60">:fail</span>, &amp;block).to_h
-  <span style="color:#777">#=&gt; {arg1: 'has arg 1', arg2: 'hash arg 2', arg3: 'block arg 3'}</span>
+      <pre><code class="language-ruby">options = {arg1: 'has arg 1', arg2: 'hash arg 2'}
+block = Proc.new do |collector|
+  collector.arg3 'block arg 3'
+end
+Origen::Utility.collector(hash: options, merge_method: :fail, &amp;block).to_h
+  #=&gt; {arg1: 'has arg 1', arg2: 'hash arg 2', arg3: 'block arg 3'}
 
-options = {<span style="color:#606">arg1</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">has arg 1</span><span style="color:#710">'</span></span>, <span style="color:#606">arg2</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">hash arg 2</span><span style="color:#710">'</span></span>}
-block = <span style="color:#036;font-weight:bold">Proc</span>.new <span style="color:#080;font-weight:bold">do</span> |collector|
-  collector.arg2 <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">block arg 2</span><span style="color:#710">'</span></span>
-  collector.arg3 <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">block arg 3</span><span style="color:#710">'</span></span>
-<span style="color:#080;font-weight:bold">end</span>
-<span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Utility</span>.collector(<span style="color:#606">hash</span>: options, <span style="color:#606">merge_method</span>: <span style="color:#A60">:fail</span>, &amp;block).to_h
-  <span style="color:#777">#=&gt; Origen::OrigenError</span>
-  <span style="color:#777">#=&gt; 'Origen::Utility::Collector detected both the hash and block attempting to set :arg2 (merge_method set to :fail)'</span>
-</pre></div>
-</div>
-      </div>
+options = {arg1: 'has arg 1', arg2: 'hash arg 2'}
+block = Proc.new do |collector|
+  collector.arg2 'block arg 2'
+  collector.arg3 'block arg 3'
+end
+Origen::Utility.collector(hash: options, merge_method: :fail, &amp;block).to_h
+  #=&gt; Origen::OrigenError
+  #=&gt; 'Origen::Utility::Collector detected both the hash and block attempting to set :arg2 (merge_method set to :fail)'
+</code></pre>
 
       <div>    
   <a class="anchor" name="Failure_Conditions"></a>          
@@ -661,17 +637,13 @@ hashes are enforced on blocks.</p>
 
       <p>The collector will fail if the same method is set after multiple times. For example:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>block = <span style="color:#036;font-weight:bold">Proc</span>.new <span style="color:#080;font-weight:bold">do</span> |collector|
-  collector.arg1 <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">hi</span><span style="color:#710">'</span></span>
-  collector.arg1 = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">hello</span><span style="color:#710">'</span></span>
-<span style="color:#080;font-weight:bold">end</span>
-<span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Utility</span>.collector(&amp;block)
-  <span style="color:#777">#=&gt; ArgumentError</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">block = Proc.new do |collector|
+  collector.arg1 'hi'
+  collector.arg1 = 'hello'
+end
+Origen::Utility.collector(&amp;block)
+  #=&gt; ArgumentError
+</code></pre>
 
       <p>Even though this is technically allowed in Ruby, its the equalivent of a hash formatted
 <code>{arg1: 1, arg1: 2}</code>, which just overwrites values. There is no reason for this usage and it just
@@ -684,24 +656,20 @@ will attempting to use both an argument and a block.</p>
 
       <p>For example:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>block = <span style="color:#036;font-weight:bold">Proc</span>.new <span style="color:#080;font-weight:bold">do</span> |collector|
-  collector.arg1 <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">arg1</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">arg2</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">arg3</span><span style="color:#710">'</span></span>
-<span style="color:#080;font-weight:bold">end</span>
-<span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Utility</span>.collector(&amp;block)
-  <span style="color:#777">#=&gt; ArgumentError</span>
+      <pre><code class="language-ruby">block = Proc.new do |collector|
+  collector.arg1 'arg1', 'arg2', 'arg3'
+end
+Origen::Utility.collector(&amp;block)
+  #=&gt; ArgumentError
 
-block = <span style="color:#036;font-weight:bold">Proc</span>.new <span style="color:#080;font-weight:bold">do</span> |collector|
-  collector.arg1(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">arg1</span><span style="color:#710">'</span></span>) <span style="color:#080;font-weight:bold">do</span>
-    <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">nothing</span><span style="color:#710">'</span></span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-<span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Utility</span>.collector(&amp;block)
-  <span style="color:#777">#=&gt; ArgumentError</span>
-</pre></div>
-</div>
-      </div>
+block = Proc.new do |collector|
+  collector.arg1('arg1') do
+    'nothing'
+  end
+end
+Origen::Utility.collector(&amp;block)
+  #=&gt; ArgumentError
+</code></pre>
 
       <p>This would be the hash equalivent of <code>{arg1: 'arg1', 'arg2', 'arg3'}</code> which is a syntax error. Also,
 setting a value to just a block is accepted, just not a block and another value simultaneously.</p>
@@ -715,65 +683,49 @@ setting a value to just a block is accepted, just not a block and another value 
 means that blocks that only use the <code>collector.arg value</code> notation will always return the collector. The
 advertised means of using an anonymous collector is:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Utility</span>.collector(options, &amp;block)
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">Origen::Utility.collector(options, &amp;block)
+</code></pre>
 
       <p>However, the following may work, depending on the block:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>block.call(<span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Utility</span>.collector)
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">block.call(Origen::Utility.collector)
+</code></pre>
 
       <p>For the above case, in order to get a collector instance, the block must return the collector. If
 just using <code>collector.arg val</code> syntax, this will work, but <code>collector.arg = val</code> syntax will not.
 This is due to Ruby’s rules that <code>collector.arg = val</code> will return <code>val</code>. Likewise, adding
 other stuff at the end of the block will also change its return value:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>block = <span style="color:#036;font-weight:bold">Proc</span>.new <span style="color:#080;font-weight:bold">do</span> |collector|
-  collector.arg1 <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">arg1</span><span style="color:#710">'</span></span>
-<span style="color:#080;font-weight:bold">end</span>
-block.call(<span style="color:#036;font-weight:bold">Origen</span>::utility.collector)
-  <span style="color:#777">#=&gt; Collector Instance</span>
+      <pre><code class="language-ruby">block = Proc.new do |collector|
+  collector.arg1 'arg1'
+end
+block.call(Origen::utility.collector)
+  #=&gt; Collector Instance
 
-block = <span style="color:#036;font-weight:bold">Proc</span>.new <span style="color:#080;font-weight:bold">do</span> |collector|
-  collector.arg1 = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">arg1</span><span style="color:#710">'</span></span>
-<span style="color:#080;font-weight:bold">end</span>
-block.call(<span style="color:#036;font-weight:bold">Origen</span>::utility.collector)
-  <span style="color:#777">#=&gt; 'arg1'</span>
+block = Proc.new do |collector|
+  collector.arg1 = 'arg1'
+end
+block.call(Origen::utility.collector)
+  #=&gt; 'arg1'
 
-block = <span style="color:#036;font-weight:bold">Proc</span>.new <span style="color:#080;font-weight:bold">do</span> |collector|
-  collector.arg1 <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">arg1</span><span style="color:#710">'</span></span>
-  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">random stuff</span><span style="color:#710">'</span></span>
-<span style="color:#080;font-weight:bold">end</span>
-block.call(<span style="color:#036;font-weight:bold">Origen</span>::utility.collector)
-  <span style="color:#777">#=&gt; 'random stuff'</span>
-</pre></div>
-</div>
-      </div>
+block = Proc.new do |collector|
+  collector.arg1 'arg1'
+  'random stuff'
+end
+block.call(Origen::utility.collector)
+  #=&gt; 'random stuff'
+</code></pre>
 
       <p>However, if the block returns the collector itself, as below:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>block = <span style="color:#036;font-weight:bold">Proc</span>.new <span style="color:#080;font-weight:bold">do</span> |collector|
-  collector.arg1 <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">arg1</span><span style="color:#710">'</span></span>
-  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">random stuff</span><span style="color:#710">'</span></span>
+      <pre><code class="language-ruby">block = Proc.new do |collector|
+  collector.arg1 'arg1'
+  'random stuff'
   collector
-<span style="color:#080;font-weight:bold">end</span>
-block.call(<span style="color:#036;font-weight:bold">Origen</span>::utility.collector)
-  <span style="color:#777">#=&gt; Collector Instance</span>
-</pre></div>
-</div>
-      </div>
+end
+block.call(Origen::utility.collector)
+  #=&gt; Collector Instance
+</code></pre>
 
       <p>then this will work as expected. But, this relies on the block being written in a way that is impossible to detect
 from the collector itself.</p>
@@ -781,29 +733,25 @@ from the collector itself.</p>
       <p>The correct way to work around this is to use the advertised means of initializing an anonymous collector. This will
 give you the desired result regardless of the block’s return value.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>block = <span style="color:#036;font-weight:bold">Proc</span>.new <span style="color:#080;font-weight:bold">do</span> |collector|
-  collector.arg1 <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">arg1</span><span style="color:#710">'</span></span>
-<span style="color:#080;font-weight:bold">end</span>
-<span style="color:#036;font-weight:bold">Origen</span>::utility.collector(&amp;block)
-  <span style="color:#777">#=&gt; Collector Instance</span>
+      <pre><code class="language-ruby">block = Proc.new do |collector|
+  collector.arg1 'arg1'
+end
+Origen::utility.collector(&amp;block)
+  #=&gt; Collector Instance
 
-block = <span style="color:#036;font-weight:bold">Proc</span>.new <span style="color:#080;font-weight:bold">do</span> |collector|
-  collector.arg1 = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">arg1</span><span style="color:#710">'</span></span>
-<span style="color:#080;font-weight:bold">end</span>
-<span style="color:#036;font-weight:bold">Origen</span>::utility.collector(&amp;block)
-  <span style="color:#777">#=&gt; Collector Instance</span>
+block = Proc.new do |collector|
+  collector.arg1 = 'arg1'
+end
+Origen::utility.collector(&amp;block)
+  #=&gt; Collector Instance
 
-block = <span style="color:#036;font-weight:bold">Proc</span>.new <span style="color:#080;font-weight:bold">do</span> |collector|
-  collector.arg1 <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">arg1</span><span style="color:#710">'</span></span>
-  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">random stuff</span><span style="color:#710">'</span></span>
-<span style="color:#080;font-weight:bold">end</span>
-<span style="color:#036;font-weight:bold">Origen</span>::utility.collector(&amp;block)
-  <span style="color:#777">#=&gt; Collector Instance</span>
-</pre></div>
-</div>
-      </div>
+block = Proc.new do |collector|
+  collector.arg1 'arg1'
+  'random stuff'
+end
+Origen::utility.collector(&amp;block)
+  #=&gt; Collector Instance
+</code></pre>
 
       <div>    
   <a class="anchor" name="CSV_Data"></a>          
@@ -879,26 +827,18 @@ sections to write next.</p>
 
       <p>As a quick recap of the above, you can send an email using Origen’s mailer:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.mailer.send_email(<span style="color:#606">subject</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Hello</span><span style="color:#710">"</span></span>, <span style="color:#606">to</span>: [<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">user@domain.com</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">other_user@domain.com</span><span style="color:#710">'</span></span>], <span style="color:#606">body</span>: message)
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">Origen.mailer.send_email(subject: "Hello", to: ['user@domain.com', 'other_user@domain.com'], body: message)
+</code></pre>
 
       <p>The <code>subject</code>, <code>to</code>, and <code>from</code> options are the most used but you can get a test email
 sent to the current user (yourself) by omitting all the options:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.mailer.send_email
-  <span style="color:#777">#=&gt; to: current user's email</span>
-  <span style="color:#777">#=&gt; from: current user's email</span>
-  <span style="color:#777">#=&gt; subject: 'Hello'</span>
-  <span style="color:#777">#=&gt; body: 'Hello from Origen!'</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">Origen.mailer.send_email
+  #=&gt; to: current user's email
+  #=&gt; from: current user's email
+  #=&gt; subject: 'Hello'
+  #=&gt; body: 'Hello from Origen!'
+</code></pre>
 
       <p>However, that assumes a working mailer setup. In order to use the mailer, either the user, in the options, or the site
 administator will need to setup the mailer correctly. It is recommended that the mailer be setup in the 
@@ -913,69 +853,45 @@ When using a SMTP server, you’ll need to supply
 the <code>server</code>, <code>port</code>, and <code>domain</code> values. These can come from the site config
 as keys:</p>
 
-      <div class="language-yml highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#606">email_domain</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">company.com</span></span>
-<span style="color:#606">email_server</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">smtp.company.net</span></span>
-<span style="color:#606">email_port</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">25</span></span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-yml">email_domain: company.com
+email_server: smtp.company.net
+email_port: 25
+</code></pre>
 
       <p>Or can be passed in as options:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.mailer.send_email(
-  <span style="color:#606">domain</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">company.com</span><span style="color:#710">'</span></span>,
-  <span style="color:#606">server</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">smtp.company.net</span><span style="color:#710">'</span></span>,
-  <span style="color:#606">port</span>: <span style="color:#00D">25</span>,
+      <pre><code class="language-ruby">Origen.mailer.send_email(
+  domain: 'company.com',
+  server: 'smtp.company.net',
+  port: 25,
 )
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>For non-authenticating SMTP servers, that is usually sufficient. For servers which require that the requester supply some
 credentials, you can also supply an authentication customization either in the site config:</p>
 
-      <div class="language-yml highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#606">email_authentication</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">login</span></span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-yml">email_authentication: login
+</code></pre>
 
       <p>Or as an option:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.mailer.send_email(<span style="color:#606">authentication</span>: <span style="color:#A60">:login</span>)
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">Origen.mailer.send_email(authentication: :login)
+</code></pre>
 
       <p>The username and password will default to the current user’s credentials, <code>Origen.current_user.email</code> and
 <code>Origen.current_user.password</code> respectively, and, in general, this should be adequate.
 However, these can be overwritten if, for example, a service account is used instead of the active user’s account:</p>
 
-      <div class="language-yml highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#606">email_auth_user</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">service_user_email</span></span>
-<span style="color:#606">email_auth_password</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">service_user_password</span></span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-yml">email_auth_user: service_user_email
+email_auth_password: service_user_password
+</code></pre>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Origen</span>.mailer.send_email(
-  <span style="color:#606">authentication</span>: <span style="color:#A60">:login</span>,
-  <span style="color:#606">auth_user</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">service_user_email</span><span style="color:#710">'</span></span>,
-  <span style="color:#606">auth_password</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">service_user_password</span><span style="color:#710">'</span></span>,
+      <pre><code class="language-ruby">Origen.mailer.send_email(
+  authentication: :login,
+  auth_user: 'service_user_email',
+  auth_password: 'service_user_password',
 )
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>You can reference Origen’s wrapper around SMTP <a href="https://github.com/Origen-SDK/origen/blob/master/lib/origen/utility/mailer.rb">on Github</a>.</p>
 

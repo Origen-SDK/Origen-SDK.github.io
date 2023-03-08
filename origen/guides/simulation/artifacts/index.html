@@ -487,19 +487,15 @@ These artifacts will override each other in the order of the Array definition.</
 defaults to <code>application/artifacts</code>. This location is customizable as well with the <code>artifact_run_dir</code>
 option.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">OrigenSim</span>::cadence <span style="color:#080;font-weight:bold">do</span> |sim|
-  <span style="color:#777"># Add a user artifact directory</span>
-  sim.user_artifact_dirs [<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.app.root<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">/simulation/testbench</span><span style="color:#710">"</span></span>]
+      <pre><code class="language-ruby">OrigenSim::cadence do |sim|
+  # Add a user artifact directory
+  sim.user_artifact_dirs ["#{Origen.app.root}/simulation/testbench"]
 
-  <span style="color:#777"># Change the artifact target location, within the context of the run directory.</span>
-  <span style="color:#777"># NOTE: this is relative to the run directory. This expands to /path/to/run/dir/testbench</span>
-   sim.artifact_run_dir <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">./testbench</span><span style="color:#710">"</span></span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  # Change the artifact target location, within the context of the run directory.
+  # NOTE: this is relative to the run directory. This expands to /path/to/run/dir/testbench
+   sim.artifact_run_dir "./testbench"
+end
+</code></pre>
 
       <p>Note here that the <code>artifact_run_dir</code> is <b>implicitly relative</b> to the
 run directory. Relative paths are expanded in the context of the run directory, <b>not</b> relative to
@@ -510,42 +506,34 @@ contents and unlink to clean them. However, due to the elevated priveledges requ
 the default behavior for Windows is to just copy files. This does mean that larger, and/or a large number, of artifacts
 may take longer. This behavior can be changed however:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">OrigenSim</span>::cadence <span style="color:#080;font-weight:bold">do</span> |sim|
-  <span style="color:#777"># Force all artifacts to be copied</span>
-  artifact_populate_method <span style="color:#A60">:copy</span>
-        
-  <span style="color:#777"># Force all artifacts to be symlinked</span>
-  artifact_populate_method <span style="color:#A60">:symlink</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">OrigenSim::cadence do |sim|
+  # Force all artifacts to be copied
+  artifact_populate_method :copy
+	
+  # Force all artifacts to be symlinked
+  artifact_populate_method :symlink
+end
+</code></pre>
 
       <p>OrigemSim’s artifacts can be queried, populated, or cleaned, directly by accessing the <code>OrigenSim.artifact</code>
 object (note: the exclusion of the <i>s</i>). Some methods also exist to retrieve and list the current artifacts:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Populate all the artifacts</span>
+      <pre><code class="language-ruby"># Populate all the artifacts
 tester.simulator.artifact.populate
 
-<span style="color:#777"># Clean the currently populated artifacts</span>
+# Clean the currently populated artifacts
 tester.simulator.artifact.clean
 
-<span style="color:#777"># List the current artifact names</span>
+# List the current artifact names
 tester.simulator.list_artifacts
 
-<span style="color:#777"># Retrieve the current artifact instances (as a Hash whose keys are the names returned above)</span>
+# Retrieve the current artifact instances (as a Hash whose keys are the names returned above)
 tester.simulator.artifacts
 
-<span style="color:#777"># Retrieve a single artifact</span>
+# Retrieve a single artifact
 tester.simulator.artifacts[my_artifact]
 tester.simulator.artifact[my_artifact]
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>The <code>OrigenSim::Artifacts</code> class inherits from
 <a href="http://origen-sdk.org/origen/guides/models/componentable/#The_Parent_Class">Origen::Componentable</a>,
@@ -553,28 +541,24 @@ so any of the <i>componentable</i> methods are available.</p>
 
       <p>Additional single-artifact items can be added manually:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># in environment/sim.rb</span>
+      <pre><code class="language-ruby"># in environment/sim.rb
 
-tester = <span style="color:#036;font-weight:bold">OrigenSim</span>::cadence <span style="color:#080;font-weight:bold">do</span> |sim|
-<span style="color:#080;font-weight:bold">end</span>
+tester = OrigenSim::cadence do |sim|
+end
 
-tester.simulator.artifact(<span style="color:#A60">:my_artifact</span>) <span style="color:#080;font-weight:bold">do</span> |a|
-  <span style="color:#777"># Point to a custom target</span>
-  a.target <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">/path/to/my/artifact.mine</span><span style="color:#710">"</span></span>
+tester.simulator.artifact(:my_artifact) do |a|
+  # Point to a custom target
+  a.target "/path/to/my/artifact.mine"
 
-  <span style="color:#777"># Point to a custom run target</span>
-  <span style="color:#777"># Recall this will expand to /path/to/run/dir/custom_artifacts</span>
-  <span style="color:#777"># This ultimately places the artifact at /path/to/run/dir/custom_artifacts/artifact.mine</span>
-  a.run_target <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">./custom_artifacts</span><span style="color:#710">"</span></span>
+  # Point to a custom run target
+  # Recall this will expand to /path/to/run/dir/custom_artifacts
+  # This ultimately places the artifact at /path/to/run/dir/custom_artifacts/artifact.mine
+  a.run_target "./custom_artifacts"
 
-  <span style="color:#777"># Indicate this artifact should be copied, regardlesss of global/OS settings.</span>
-  a.populate_method <span style="color:#A60">:copy</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  # Indicate this artifact should be copied, regardlesss of global/OS settings.
+  a.populate_method :copy
+end
+</code></pre>
 
       <p>Note that this takes place <b>outside</b> of the initial tester instantiation, but can still occur in the environment
 file.</p>

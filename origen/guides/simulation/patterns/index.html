@@ -459,12 +459,8 @@
 a <a href="/origen/guides/simulation/environment">simulation environment</a>
 selected:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>origen g my_pattern -e environment/sim.rb
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">origen g my_pattern -e environment/sim.rb
+</code></pre>
 
       <p>Most of the <a href="/origen/guides/pattern/common">common pattern API</a> is supported
 by OrigenSim and therefore you should expect to find the simulation environment
@@ -503,18 +499,14 @@ a third option - to derive the required wait time from the simulation itself.</p
 
       <p>OrigenSim makes this very easy via the following API:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>cc <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Wait for the program command to complete</span><span style="color:#710">"</span></span>
+      <pre><code class="language-ruby">cc "Wait for the program command to complete"
 
-tester.sim_delay <span style="color:#A60">:program_command</span> <span style="color:#080;font-weight:bold">do</span>
-  dut.pin(<span style="color:#A60">:done</span>).assert!(<span style="color:#00D">1</span>)
-<span style="color:#080;font-weight:bold">end</span>
-dut.pin(<span style="color:#A60">:done</span>).dont_care  <span style="color:#777"># Any pin assertions/reads created within the block will persist beyond it, so</span>
-                          <span style="color:#777"># remember to clear any assertions that you don't want to carryover afterwards</span>
-</pre></div>
-</div>
-      </div>
+tester.sim_delay :program_command do
+  dut.pin(:done).assert!(1)
+end
+dut.pin(:done).dont_care  # Any pin assertions/reads created within the block will persist beyond it, so
+                          # remember to clear any assertions that you don't want to carryover afterwards
+</code></pre>
 
       <p>The <code>sim_delay</code> method provides the convenience of a match loop for the purposes of
 delay calculation but will still generate a static pattern for the ATE. It will automatically calculate how
@@ -533,26 +525,18 @@ pattern and therefore the simulation will be verifying that the delay is correct
 
       <p>If you want to re-calculate the delays during a simulation then run with the <code>--sim_capture</code> switch:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>origen g my_pattern -e environment/sim.rb --sim_capture
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">origen g my_pattern -e environment/sim.rb --sim_capture
+</code></pre>
 
       <p>Additional padding can be added to the calculated delay like this (all the usual <code>time_in_us:</code> style
 of time options are supported):</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>tester.sim_delay <span style="color:#A60">:program_command</span>, <span style="color:#606">padding</span>: { <span style="color:#606">time_in_cycles</span>: <span style="color:#00D">10</span> } <span style="color:#080;font-weight:bold">do</span>
-  dut.pin(<span style="color:#A60">:done</span>).assert!(<span style="color:#00D">1</span>)
-<span style="color:#080;font-weight:bold">end</span>
-dut.pin(<span style="color:#A60">:done</span>).dont_care  <span style="color:#777"># Any pin assertions/reads created within the block will persist beyond it, so</span>
-                          <span style="color:#777"># remember to clear any assertions that you don't want to carryover afterwards</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">tester.sim_delay :program_command, padding: { time_in_cycles: 10 } do
+  dut.pin(:done).assert!(1)
+end
+dut.pin(:done).dont_care  # Any pin assertions/reads created within the block will persist beyond it, so
+                          # remember to clear any assertions that you don't want to carryover afterwards
+</code></pre>
 
       <p>By default, the block will be evaluated constantly until it passes when calculating the delay from
 the simulation.</p>
@@ -560,29 +544,21 @@ the simulation.</p>
       <p>If the time is long and this is making your simulation run too slow, you can use lower resolution
 by supplying a <code>:resolution</code> option, either as a number of cycles:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>tester.sim_delay <span style="color:#A60">:program_command</span>, <span style="color:#606">resolution</span>: <span style="color:#00D">10</span> <span style="color:#080;font-weight:bold">do</span>
-  dut.pin(<span style="color:#A60">:done</span>).assert!(<span style="color:#00D">1</span>)
-<span style="color:#080;font-weight:bold">end</span>
-dut.pin(<span style="color:#A60">:done</span>).dont_care  <span style="color:#777"># Any pin assertions/reads created within the block will persist beyond it, so</span>
-                          <span style="color:#777"># remember to clear any assertions that you don't want to carryover afterwards</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">tester.sim_delay :program_command, resolution: 10 do
+  dut.pin(:done).assert!(1)
+end
+dut.pin(:done).dont_care  # Any pin assertions/reads created within the block will persist beyond it, so
+                          # remember to clear any assertions that you don't want to carryover afterwards
+</code></pre>
 
       <p>or by supplying a hash filled with the usual time options:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>tester.sim_delay <span style="color:#A60">:program_command</span>, <span style="color:#606">resolution</span>: { <span style="color:#606">time_in_ns</span>: <span style="color:#00D">50</span> } <span style="color:#080;font-weight:bold">do</span>
-  dut.pin(<span style="color:#A60">:done</span>).assert!(<span style="color:#00D">1</span>)
-<span style="color:#080;font-weight:bold">end</span>
-dut.pin(<span style="color:#A60">:done</span>).dont_care  <span style="color:#777"># Any pin assertions/reads created within the block will persist beyond it, so</span>
-                          <span style="color:#777"># remember to clear any assertions that you don't want to carryover afterwards</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">tester.sim_delay :program_command, resolution: { time_in_ns: 50 } do
+  dut.pin(:done).assert!(1)
+end
+dut.pin(:done).dont_care  # Any pin assertions/reads created within the block will persist beyond it, so
+                          # remember to clear any assertions that you don't want to carryover afterwards
+</code></pre>
 
       <div>    
   <a class="anchor" name="Capturing_Responses_from_the_Simulation"></a>          
@@ -598,16 +574,12 @@ expect data when the same pattern is later generated for the ATE.</p>
 
       <p>Capturing is really easy, just wrap the operation you want to capture in your pattern source code like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>tester.sim_capture <span style="color:#A60">:cmd55</span>, <span style="color:#A60">:dout</span>, <span style="color:#A60">:test_bus</span>, <span style="color:#A60">:tdo</span> <span style="color:#080;font-weight:bold">do</span>
-  dut.pins(<span style="color:#A60">:din_port</span>).drive!(<span style="color:#00D">0x1234_5678</span>)
-  dut.cmd.write!(<span style="color:#00D">0x55</span>)
-  <span style="color:#00D">60</span>.cycles
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">tester.sim_capture :cmd55, :dout, :test_bus, :tdo do
+  dut.pins(:din_port).drive!(0x1234_5678)
+  dut.cmd.write!(0x55)
+  60.cycles
+end
+</code></pre>
 
       <p>The first argument is an ID for the capture, this can be anything but the user must assign it.
 Then supply a list of pin/pin_group IDs (or pin objects) that you want to capture.</p>
@@ -627,12 +599,8 @@ then verifying the captured data.</p>
 
       <p>Add this switch to update the captures during a subsequent simulation run:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>origen g my_pattern --sim_capture
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">origen g my_pattern --sim_capture
+</code></pre>
 
       <p>To use the captured data in an ATE pattern, simply switch to an ATE target and generate as normal.</p>
 
@@ -671,18 +639,14 @@ This can be set anytime before the first call is made to <code>sim_delay</code> 
 could set the capture directory in a <a href="/origen/guides/misc/callbacks/#startup(options)">startup callback</a>,
 like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">startup</span>(options)
-  <span style="color:#777"># Only modify this if we are the current app or plugin</span>
-  <span style="color:#080;font-weight:bold">if</span> <span style="color:#036;font-weight:bold">Origen</span>.app!.current? || <span style="color:#036;font-weight:bold">Origen</span>.app!.current_plugin?
-    <span style="color:#777"># Use a directory within our root and named after the current IP block, rather than the target</span>
-    <span style="color:#036;font-weight:bold">OrigenSim</span>.capture_dir = <span style="color:#036;font-weight:bold">Origen</span>.root!.join(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">pattern</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">org</span><span style="color:#710">'</span></span>, dut.myip.name)
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">def startup(options)
+  # Only modify this if we are the current app or plugin
+  if Origen.app!.current? || Origen.app!.current_plugin?
+    # Use a directory within our root and named after the current IP block, rather than the target
+    OrigenSim.capture_dir = Origen.root!.join('pattern', 'org', dut.myip.name)
+  end
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Creating_Simulation-Only_Assertions"></a>          
@@ -696,18 +660,14 @@ patterns will work in physical environments like the ATE.</p>
 the DUT to check that it is behaving as expected. Such assertions can report useful failure information
 back to the user which may help when debugging a failed pattern simulation.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># This code must be skipped when the pattern is generating for an ATE target environment</span>
-<span style="color:#080;font-weight:bold">if</span> tester.sim?
-  value = tester.simulator.peek(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">origen.dut.path.to.net</span><span style="color:#710">"</span></span>).to_i[<span style="color:#00D">7</span>..<span style="color:#00D">4</span>]
-  <span style="color:#080;font-weight:bold">if</span> value != <span style="color:#00D">0xA</span>
-    <span style="color:#036;font-weight:bold">OrigenSim</span>.error <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">The internal node was </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>value.to_hex<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20"> instead of 0xA!</span><span style="color:#710">"</span></span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># This code must be skipped when the pattern is generating for an ATE target environment
+if tester.sim?
+  value = tester.simulator.peek("origen.dut.path.to.net").to_i[7..4]
+  if value != 0xA
+    OrigenSim.error "The internal node was #{value.to_hex} instead of 0xA!"
+  end
+end
+</code></pre>
 
       <p>Note the use of <code>OrigenSim.error</code> to report the error message, this will cause the simulation result
 to be reported as a FAIL, even if all pin level assertions otherwise pass.</p>
@@ -718,14 +678,10 @@ to be reported as a FAIL, even if all pin level assertions otherwise pass.</p>
 
       <p>So for example, if you actually wanted a given bit to be <code>Z</code> you could write your assertion as:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">unless</span> tester.simulator.peek(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">origen.dut.path.to.net</span><span style="color:#710">"</span></span>)[<span style="color:#00D">4</span>].z?
-  <span style="color:#036;font-weight:bold">OrigenSim</span>.error <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Bit 4 of some net was not in hi-Z mode!</span><span style="color:#710">"</span></span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">unless tester.simulator.peek("origen.dut.path.to.net")[4].z?
+  OrigenSim.error "Bit 4 of some net was not in hi-Z mode!"
+end
+</code></pre>
 
       <p>See the <a href="/origen/guides/simulation/direct">Direct DUT Manipulation</a> guide for more details on these
 APIs.</p>

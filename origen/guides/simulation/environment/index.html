@@ -461,29 +461,25 @@
 to enable a single Origen simulation environment setup file to support multiple DUT targets within the
 application:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># environment/sim.rb</span>
+      <pre><code class="language-ruby"># environment/sim.rb
 
-<span style="color:#080;font-weight:bold">case</span> <span style="color:#036;font-weight:bold">Origen</span>.target.name
+case Origen.target.name
 
-<span style="color:#080;font-weight:bold">when</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">my_dut1</span><span style="color:#710">"</span></span>
-  <span style="color:#036;font-weight:bold">OrigenSim</span>.cadence <span style="color:#080;font-weight:bold">do</span> |sim|
-    <span style="color:#777"># Configuration of Cadence simulator to be used for DUT1 here</span>
-  <span style="color:#080;font-weight:bold">end</span>
+when "my_dut1"
+  OrigenSim.cadence do |sim|
+    # Configuration of Cadence simulator to be used for DUT1 here
+  end
 
-<span style="color:#080;font-weight:bold">when</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">my_dut2</span><span style="color:#710">"</span></span>
-  <span style="color:#036;font-weight:bold">OrigenSim</span>.synopsys <span style="color:#080;font-weight:bold">do</span> |sim|
-    <span style="color:#777"># Configuration of Synopsys simulator to be used for DUT2 here</span>
-  <span style="color:#080;font-weight:bold">end</span>
+when "my_dut2"
+  OrigenSim.synopsys do |sim|
+    # Configuration of Synopsys simulator to be used for DUT2 here
+  end
 
-<span style="color:#080;font-weight:bold">else</span>
-  <span style="color:#036;font-weight:bold">Origen</span>.log.error <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">No simulation environment has been setup for target </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.target.name<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">, edit environment/sim.rb to add one.</span><span style="color:#710">"</span></span>
-  exit <span style="color:#00D">1</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+else
+  Origen.log.error "No simulation environment has been setup for target #{Origen.target.name}, edit environment/sim.rb to add one."
+  exit 1
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Configuring_The_Simulator"></a>          
@@ -492,20 +488,16 @@ application:</p>
 
       <p>Here is an example of configuring the simulator with some generic options that are supported by all simulators:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">OrigenSim</span>.cadence <span style="color:#080;font-weight:bold">do</span> |sim|
-  <span style="color:#777"># By default a simulation will be given 60 seconds to startup, if it fails to start within this time the</span>
-  <span style="color:#777"># simulation will be abandoned and considered failed. If a particular simulation is known to be slow to start,</span>
-  <span style="color:#777"># the timeout can be extended as shown in this example (5 minutes):</span>
-  sim.startup_timeout <span style="color:#00D">5</span> * <span style="color:#00D">60</span>
-  <span style="color:#777"># Abort the simulation when this number of errors is reached (defaults to 100).</span>
-  <span style="color:#777"># This can also be overridden at runtime via the --max_errors switch.</span>
-  sim.max_errors = <span style="color:#00D">50</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">OrigenSim.cadence do |sim|
+  # By default a simulation will be given 60 seconds to startup, if it fails to start within this time the
+  # simulation will be abandoned and considered failed. If a particular simulation is known to be slow to start,
+  # the timeout can be extended as shown in this example (5 minutes):
+  sim.startup_timeout 5 * 60
+  # Abort the simulation when this number of errors is reached (defaults to 100).
+  # This can also be overridden at runtime via the --max_errors switch.
+  sim.max_errors = 50
+end
+</code></pre>
 
       <p>Note that defining a configuration like this will also instantiate an instance of <code>OrigenSim::Tester</code> and assign it to
 the global variable <code>tester</code>.
@@ -522,29 +514,25 @@ later in this guide since it is more of an advanced topic.</p>
 
       <p>Additionally, a Cadence simulator setup supports the following vendor-specific options:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">OrigenSim</span>.cadence <span style="color:#080;font-weight:bold">do</span> |sim|
-  <span style="color:#777"># By default the simulation will be run by calling 'irun', this can be changed to anything you want, but it</span>
-  <span style="color:#777"># is usually a good idea to use this option to lock to a specific version of irun (the same version that was</span>
-  <span style="color:#777"># used to compile the DUT snapshot)</span>
-  sim.irun <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/tools/cadence/15.10.023/bin/irun</span><span style="color:#710">'</span></span>
-  <span style="color:#777"># The default wave viewer is 'simvision', this can also be changed</span>
-  sim.simvision <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/tools/cadence/15.10.023/bin/simvision</span><span style="color:#710">'</span></span>
-  <span style="color:#777"># The cadence simulator configuration does support the use of forces, though this is generally discouraged</span>
+      <pre><code class="language-ruby">OrigenSim.cadence do |sim|
+  # By default the simulation will be run by calling 'irun', this can be changed to anything you want, but it
+  # is usually a good idea to use this option to lock to a specific version of irun (the same version that was
+  # used to compile the DUT snapshot)
+  sim.irun '/tools/cadence/15.10.023/bin/irun'
+  # The default wave viewer is 'simvision', this can also be changed
+  sim.simvision '/tools/cadence/15.10.023/bin/simvision'
+  # The cadence simulator configuration does support the use of forces, though this is generally discouraged
   sim.force {
-    <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">origen.dut.vref_0v8</span><span style="color:#710">'</span></span> =&gt; <span style="color:#00D">1</span>,
-    <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">origen.dut.pmc.some.internal.node</span><span style="color:#710">'</span></span> =&gt; <span style="color:#00D">1</span>,
+    'origen.dut.vref_0v8' =&gt; 1,
+    'origen.dut.pmc.some.internal.node' =&gt; 1,
   }
-  <span style="color:#777"># Custom probes can be specified, e.g. to include memory contents in the wave dump</span>
-  sim.tcl_inputs <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">%Q(</span><span style="color:#D20">
+  # Custom probes can be specified, e.g. to include memory contents in the wave dump
+  sim.tcl_inputs %Q(
     probe -create -shm origen.dut.mems.user -all -memories -variables -unpacked 262144 -depth all
     probe -create -shm origen.dut.mems.cache -all -memories -variables -unpacked 262144 -depth all
-  </span><span style="color:#710">)</span></span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  )
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Synopsys_Specific_Configuration"></a>          
@@ -553,31 +541,23 @@ later in this guide since it is more of an advanced topic.</p>
 
       <p>Here are the vendor-specific options for Synopsys:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">OrigenSim</span>.cadence <span style="color:#080;font-weight:bold">do</span> |sim|
-  <span style="color:#777"># By default the simulation will be run by calling 'vcs', this can be changed to anything you want, but it</span>
-  <span style="color:#777"># is usually a good idea to use this option to lock to a specific version of vcs (the same version that was</span>
-  <span style="color:#777"># used to compile the DUT snapshot)</span>
-  sim.vcs <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">/tools/synopsys/L-2016.06/bin/vcs</span><span style="color:#710">"</span></span>
-  <span style="color:#777"># The default wave viewer is 'dve', this can also be changed</span>
-  sim.dve <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">/tools/synopsys/L-2016.06/bin/dve</span><span style="color:#710">"</span></span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">OrigenSim.cadence do |sim|
+  # By default the simulation will be run by calling 'vcs', this can be changed to anything you want, but it
+  # is usually a good idea to use this option to lock to a specific version of vcs (the same version that was
+  # used to compile the DUT snapshot)
+  sim.vcs "/tools/synopsys/L-2016.06/bin/vcs"
+  # The default wave viewer is 'dve', this can also be changed
+  sim.dve "/tools/synopsys/L-2016.06/bin/dve"
+end
+</code></pre>
 
       <p>Origen Sim also offers the option to use Verdi as a wave viewer instead of ‘dve’, the vendor-specific options for Synopsys w/Verdi would be:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">OrigenSim</span>.cadence <span style="color:#080;font-weight:bold">do</span> |sim|
-  sim.vcs <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">/tools/synopsys/L-2016.06/bin/vcs</span><span style="color:#710">"</span></span>
-  sim.verdi <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">/tools/synopsys/L-2016.06/bin/verdi</span><span style="color:#710">"</span></span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">OrigenSim.cadence do |sim|
+  sim.vcs "/tools/synopsys/L-2016.06/bin/vcs"
+  sim.verdi "/tools/synopsys/L-2016.06/bin/verdi"
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Icarus_Verilog_Specific_Configuration"></a>          
@@ -586,19 +566,15 @@ later in this guide since it is more of an advanced topic.</p>
 
       <p>Here are the vendor-specific options for Icarus Verilog:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">OrigenSim</span>.cadence <span style="color:#080;font-weight:bold">do</span> |sim|
-  <span style="color:#777"># By default the simulation will be run by calling 'vvp', this can be changed to anything you want, but it</span>
-  <span style="color:#777"># is usually a good idea to use this option to lock to a specific version of vvp (the same version that was</span>
-  <span style="color:#777"># used to compile the DUT snapshot)</span>
-  sim.vvp <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">/tools/icarus/0.9.7/bin/vvp</span><span style="color:#710">"</span></span>
-  <span style="color:#777"># The default wave viewer is 'gtkwave', this can also be changed</span>
-  sim.gtkwave <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">/tools/gtkwave/3.3.66/bin/gtkwave</span><span style="color:#710">"</span></span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">OrigenSim.cadence do |sim|
+  # By default the simulation will be run by calling 'vvp', this can be changed to anything you want, but it
+  # is usually a good idea to use this option to lock to a specific version of vvp (the same version that was
+  # used to compile the DUT snapshot)
+  sim.vvp "/tools/icarus/0.9.7/bin/vvp"
+  # The default wave viewer is 'gtkwave', this can also be changed
+  sim.gtkwave "/tools/gtkwave/3.3.66/bin/gtkwave"
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Custom_Simulator_Configuration"></a>          
@@ -615,31 +591,23 @@ simulator configuration.</p>
 
       <p>An example of such a configuration could be:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">OrigenSim</span>.generic <span style="color:#080;font-weight:bold">do</span> |sim|
-  sim.generic_run_cmd <span style="color:#080;font-weight:bold">do</span> |s|
-    <span style="color:#777"># Return the command to start the simulation</span>
-    <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">path/to/custom/sim/script +socket+</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>s.socket_id<span style="font-weight:bold;color:#666">}</span></span><span style="color:#710">"</span></span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">OrigenSim.generic do |sim|
+  sim.generic_run_cmd do |s|
+    # Return the command to start the simulation
+    "path/to/custom/sim/script +socket+#{s.socket_id}"
+  end
+end
+</code></pre>
 
       <p>Here is an example using the predecessor of the supported Cadence tool <code>irun</code>, <code>ncsim</code>:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">OrigenSim</span>.generic <span style="color:#080;font-weight:bold">do</span> |sim|
-  sim.testbench_top <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">na_origen</span><span style="color:#710">'</span></span>
-  sim.generic_run_cmd <span style="color:#080;font-weight:bold">do</span> |s|
-    <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">ncsim na_origen -loadpli origen.so:origen_init +socket+</span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>s.socket_id<span style="font-weight:bold;color:#666">}</span></span><span style="color:#710">"</span></span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">OrigenSim.generic do |sim|
+  sim.testbench_top 'na_origen'
+  sim.generic_run_cmd do |s|
+    "ncsim na_origen -loadpli origen.so:origen_init +socket+#{s.socket_id}"
+  end
+end
+</code></pre>
 
       <p>The following commonly used options are available to a generic simulation configuration:</p>
 
@@ -659,29 +627,25 @@ to post-process the command for any supported vendor. This block should return t
 
       <p>An example of the <code>post_process_run_cmd</code> usage is:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">OrigenSim</span>.cadence <span style="color:#080;font-weight:bold">do</span> |sim|
-  sim.post_process_run_cmd <span style="color:#080;font-weight:bold">do</span> |cmd, s|
-    <span style="color:#777"># cmd is the current command that will be run. s is the simulator object, same as sim in this case.</span>
-    <span style="color:#777"># this should return either a string or an array to be joined by ' &amp;&amp; ' (chain commands)</span>
-    <span style="color:#777"># note that we must RETURN the string. We cannot just edit it.</span>
+      <pre><code class="language-ruby">OrigenSim.cadence do |sim|
+  sim.post_process_run_cmd do |cmd, s|
+    # cmd is the current command that will be run. s is the simulator object, same as sim in this case.
+    # this should return either a string or an array to be joined by ' &amp;&amp; ' (chain commands)
+    # note that we must RETURN the string. We cannot just edit it.
     
-    <span style="color:#777"># add an environment variable and run setup script as an example</span>
-    <span style="color:#080;font-weight:bold">return</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">export PROJECT=my_rtl &amp;&amp; source </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.app.root.join(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">settings.sh</span><span style="color:#710">'</span></span>)<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20"> &amp;&amp; </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>cmd<span style="font-weight:bold;color:#666">}</span></span><span style="color:#710">"</span></span>
+    # add an environment variable and run setup script as an example
+    return "export PROJECT=my_rtl &amp;&amp; source #{Origen.app.root.join('settings.sh')} &amp;&amp; #{cmd}"
     
-    <span style="color:#777"># or, we could return</span>
-    <span style="color:#080;font-weight:bold">return</span> [
-      <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">export PROJECT=my_rtl</span><span style="color:#710">'</span></span>,
-      <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">source </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#036;font-weight:bold">Origen</span>.app.root.join(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">settings.sh</span><span style="color:#710">'</span></span>)<span style="font-weight:bold;color:#666">}</span></span><span style="color:#710">"</span></span>,
+    # or, we could return
+    return [
+      'export PROJECT=my_rtl',
+      "source #{Origen.app.root.join('settings.sh')}",
       cmd
     ]
-    <span style="color:#777">#=&gt; "export PROJECT=my_rtl &amp;&amp; source #{Origen.app.root.join('settings.sh')} &amp;&amp; #{cmd}"</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+    #=&gt; "export PROJECT=my_rtl &amp;&amp; source #{Origen.app.root.join('settings.sh')} &amp;&amp; #{cmd}"
+  end
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Simulation_Object_Checkin/Checkout"></a>          
@@ -695,15 +659,11 @@ like the simulation objects.</p>
 
       <p>Here is an example setup:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">OrigenSim</span>.synopsys <span style="color:#080;font-weight:bold">do</span> |sim|
-  sim.rc_dir_url <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">sync://sync-12345:12345/Projects/origen_sim_snapshots</span><span style="color:#710">'</span></span>
-  sim.rc_version <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Trunk</span><span style="color:#710">'</span></span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">OrigenSim.synopsys do |sim|
+  sim.rc_dir_url 'sync://sync-12345:12345/Projects/origen_sim_snapshots'
+  sim.rc_version 'Trunk'
+end
+</code></pre>
 
       <p>The <code>rc_dir_url</code> option should point to a directory in the repository where the snapshot files should be
 stored, not to the snapshot file itself.</p>

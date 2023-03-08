@@ -468,21 +468,17 @@ to our objects.</p>
       <p>Continuing our example of modelling a fictional NVM module, an obvious attribute to start with is the
 size of our NVM memory blocks, we can add this attribute like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/nvm/memory_128_b954.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">NVM</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MEMORY_128_B954</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
+      <pre><code class="language-ruby"># lib/nvm/memory_128_b954.rb
+module NVM
+  class MEMORY_128_B954
+    include Origen::Model
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options={})
-      <span style="color:#33B">@size_in_kb</span> = <span style="color:#00D">128</span>
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+    def initialize(options={})
+      @size_in_kb = 128
+    end
+  end
+end
+</code></pre>
 
       <p><code>@size_in_kb</code> is an example of an instance variable in Ruby. An instance variable
 is one where the value it contains is unique to each object instance, so for example if we have multiple
@@ -493,38 +489,30 @@ affecting the value held by the same variable in the other instances.</p>
 a reference to <code>@size_in_kb</code> from any methods that are defined within that class. However to
 access them externally we need to create a getter method:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/nvm/memory_128_b954.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">NVM</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MEMORY_128_B954</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
+      <pre><code class="language-ruby"># lib/nvm/memory_128_b954.rb
+module NVM
+  class MEMORY_128_B954
+    include Origen::Model
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options={})
-      <span style="color:#33B">@size_in_kb</span> = <span style="color:#00D">128</span>
-    <span style="color:#080;font-weight:bold">end</span>
+    def initialize(options={})
+      @size_in_kb = 128
+    end
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">size_in_kb</span>
-      <span style="color:#33B">@size_in_kb</span>
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+    def size_in_kb
+      @size_in_kb
+    end
+  end
+end
+</code></pre>
 
       <p>In Ruby a method implicitly returns the value of the last piece of code it executed, so the method we
 just added will return the value held by <code>@size_in_kb</code>.
 We can now ask a memory block it’s size:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$dut</span> = <span style="color:#036;font-weight:bold">SOC</span>::<span style="color:#036;font-weight:bold">EAGLE_M352</span>.new
+      <pre><code class="language-ruby">$dut = SOC::EAGLE_M352.new
 
-<span style="color:#d70">$dut</span>.nvm.memories.first.size_in_kb     <span style="color:#777"># =&gt; 128</span>
-</pre></div>
-</div>
-      </div>
+$dut.nvm.memories.first.size_in_kb     # =&gt; 128
+</code></pre>
 
       <p>Note that we have used a method named <code>first</code> above but we have not defined that anywhere.
 The <code>memorys</code> method created by Origen (which we aliased as <code>memories</code>
@@ -537,23 +525,19 @@ Ruby is very well documented, here is the page describing all of the methods ava
       <p>Because the above example of creating a getter method is so common, Ruby provides a shorthand. We can re-write
 the above example as:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/nvm/memory_128_b954.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">NVM</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MEMORY_128_B954</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
+      <pre><code class="language-ruby"># lib/nvm/memory_128_b954.rb
+module NVM
+  class MEMORY_128_B954
+    include Origen::Model
 
-    attr_reader <span style="color:#A60">:size_in_kb</span>
+    attr_reader :size_in_kb
     
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options={})
-      <span style="color:#33B">@size_in_kb</span> = <span style="color:#00D">128</span>
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+    def initialize(options={})
+      @size_in_kb = 128
+    end
+  end
+end
+</code></pre>
 
       <p>This creates a reader (or getter) method which will look for an instance variable of the same name and
 return it. If the variable of the same name doesn’t exist then it will return <code>nil</code>.</p>
@@ -568,83 +552,67 @@ return it. If the variable of the same name doesn’t exist then it will return 
       <p>For example within our application it may be useful to consume the size attribute in various formats,
 let’s create a method to return the size in bytes:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/nvm/memory_128_b954.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">NVM</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MEMORY_128_B954</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
+      <pre><code class="language-ruby"># lib/nvm/memory_128_b954.rb
+module NVM
+  class MEMORY_128_B954
+    include Origen::Model
 
-    attr_reader <span style="color:#A60">:size_in_kb</span>
+    attr_reader :size_in_kb
     
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options={})
-      <span style="color:#33B">@size_in_kb</span> = <span style="color:#00D">128</span>
-    <span style="color:#080;font-weight:bold">end</span>
+    def initialize(options={})
+      @size_in_kb = 128
+    end
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">size_in_bytes</span>
-      <span style="color:#33B">@size_in_kb</span> * <span style="color:#00D">1024</span>
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+    def size_in_bytes
+      @size_in_kb * 1024
+    end
+  end
+end
+</code></pre>
 
       <p>Of course such functions can also incorporate multiple attributes, here we create a method to return
 the size in longwords:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/nvm/memory_128_b954.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">NVM</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MEMORY_128_B954</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
+      <pre><code class="language-ruby"># lib/nvm/memory_128_b954.rb
+module NVM
+  class MEMORY_128_B954
+    include Origen::Model
 
-    attr_reader <span style="color:#A60">:size_in_kb</span>, <span style="color:#A60">:longword_size_in_bytes</span>
+    attr_reader :size_in_kb, :longword_size_in_bytes
     
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options={})
-      <span style="color:#33B">@size_in_kb</span> = <span style="color:#00D">128</span>
-      <span style="color:#33B">@longword_size_in_bytes</span> = <span style="color:#00D">8</span>
-    <span style="color:#080;font-weight:bold">end</span>
+    def initialize(options={})
+      @size_in_kb = 128
+      @longword_size_in_bytes = 8
+    end
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">size_in_bytes</span>
-      <span style="color:#33B">@size_in_kb</span> * <span style="color:#00D">1024</span>
-    <span style="color:#080;font-weight:bold">end</span>
+    def size_in_bytes
+      @size_in_kb * 1024
+    end
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">size_in_longwords</span>
+    def size_in_longwords
       size_in_bytes / longword_size_in_bytes
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+    end
+  end
+end
+</code></pre>
 
       <p>Note that sometimes you will see attribute or method references using the keyword <code>self</code>
 which means “the current instance”. Our size_in_longwords method could be re-written as:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">size_in_longwords</span>
-  <span style="color:#069">self</span>.size_in_bytes / <span style="color:#069">self</span>.longword_size_in_bytes
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">def size_in_longwords
+  self.size_in_bytes / self.longword_size_in_bytes
+end
+</code></pre>
 
       <p>Whether or not to use the self notation is really a matter of personal preference but be aware
 of it as you may see it used in other code whether or not you use it yourself.</p>
 
       <p>Another point to note is that the method was not written like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">size_in_longwords</span>
-  <span style="color:#33B">@size_in_bytes</span> / <span style="color:#33B">@longword_size_in_bytes</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">def size_in_longwords
+  @size_in_bytes / @longword_size_in_bytes
+end
+</code></pre>
 
       <p>While this would have worked equally well, it is generally bad practice to reference instance variables
 directly and instead it is preferable to access them through a reader method, even when referencing
@@ -665,80 +633,64 @@ cases we need a way of setting the value of the attribute in addition to reading
 the flash memory. Let’s create a new attribute to represent the data held by a location which we
 will call <code>config</code>.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/nvm/memory_128_b954.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">NVM</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MEMORY_128_B954</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
+      <pre><code class="language-ruby"># lib/nvm/memory_128_b954.rb
+module NVM
+  class MEMORY_128_B954
+    include Origen::Model
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options={})
-      <span style="color:#33B">@config_data</span> = <span style="color:#00D">0xFF</span>
-    <span style="color:#080;font-weight:bold">end</span>
+    def initialize(options={})
+      @config_data = 0xFF
+    end
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">config_data</span>
-      <span style="color:#33B">@config_data</span>
-    <span style="color:#080;font-weight:bold">end</span>
+    def config_data
+      @config_data
+    end
 
-    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">config_data=</span>(value)
-      <span style="color:#33B">@config_data</span> = value
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+    def config_data=(value)
+      @config_data = value
+    end
+  end
+end
+</code></pre>
 
       <p>With our new getter and setter methods for the <code>config_data</code> attribute we can now change
 the value of it dynamically:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#d70">$dut</span> = <span style="color:#036;font-weight:bold">SOC</span>::<span style="color:#036;font-weight:bold">EAGLE_M352</span>.new
+      <pre><code class="language-ruby">$dut = SOC::EAGLE_M352.new
 
-mem = <span style="color:#d70">$dut</span>.nvm.memories.first
+mem = $dut.nvm.memories.first
 
-mem.config_data          <span style="color:#777"># =&gt; 0xFF</span>
-mem.config_data = <span style="color:#00D">5</span>
-mem.config_data          <span style="color:#777"># =&gt; 5</span>
-</pre></div>
-</div>
-      </div>
+mem.config_data          # =&gt; 0xFF
+mem.config_data = 5
+mem.config_data          # =&gt; 5
+</code></pre>
 
       <p>Again this is such a common pattern that a shorthand exists, to create getter and setter methods equivalent to
 those above we can do:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/nvm/memory_128_b954.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">NVM</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MEMORY_128_B954</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
+      <pre><code class="language-ruby"># lib/nvm/memory_128_b954.rb
+module NVM
+  class MEMORY_128_B954
+    include Origen::Model
 
-    attr_reader <span style="color:#A60">:config_data</span>
-    attr_writer <span style="color:#A60">:config_data</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+    attr_reader :config_data
+    attr_writer :config_data
+  end
+end
+</code></pre>
 
       <p>Or to create both, a further shorthand exists:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># lib/nvm/memory_128_b954.rb</span>
-<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">NVM</span>
-  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MEMORY_128_B954</span>
-    include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
+      <pre><code class="language-ruby"># lib/nvm/memory_128_b954.rb
+module NVM
+  class MEMORY_128_B954
+    include Origen::Model
 
-    attr_accessor <span style="color:#A60">:config_data</span>
+    attr_accessor :config_data
 
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  end
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Anonymous_Sub-blocks_with_Attributes"></a>          
@@ -748,28 +700,24 @@ those above we can do:</p>
       <p>Sub-blocks without a specific class definition also support attributes, any attributes can either be
 directly written to the sub-block or supplied in the sub-block definition:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MySoC</span>
-  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">TopLevel</span>
+      <pre><code class="language-ruby">class MySoC
+  include Origen::TopLevel
 
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options={})
-    sub_block <span style="color:#A60">:ram</span>, <span style="color:#606">size_in_kb</span>: <span style="color:#00D">128</span>
+  def initialize(options={})
+    sub_block :ram, size_in_kb: 128
 
-    <span style="color:#777"># Once defined any additional attributes can be declared on the fly</span>
-    ram.clk_domain = <span style="color:#A60">:ipg</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
+    # Once defined any additional attributes can be declared on the fly
+    ram.clk_domain = :ipg
+  end
+end
 
-<span style="color:#d70">$dut</span> = <span style="color:#036;font-weight:bold">MySoC</span>.new
+$dut = MySoC.new
 
-<span style="color:#d70">$dut</span>.ram.size_in_kb        <span style="color:#777"># =&gt; 128</span>
-<span style="color:#d70">$dut</span>.ram.clk_domain        <span style="color:#777"># =&gt; :ipg</span>
-<span style="color:#d70">$dut</span>.ram.vendor = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Mentor</span><span style="color:#710">"</span></span>
-<span style="color:#d70">$dut</span>.ram.vendor            <span style="color:#777"># "Mentor"</span>
-</pre></div>
-</div>
-      </div>
+$dut.ram.size_in_kb        # =&gt; 128
+$dut.ram.clk_domain        # =&gt; :ipg
+$dut.ram.vendor = "Mentor"
+$dut.ram.vendor            # "Mentor"
+</code></pre>
 
       <div style="position: relative">
   <hr>

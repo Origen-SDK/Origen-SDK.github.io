@@ -464,14 +464,10 @@ any of the sub-directories of <code>pattern</code>.</p>
 
       <p>Each pattern file should have the following structure:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Pattern</span>.create <span style="color:#080;font-weight:bold">do</span>
-  <span style="color:#777"># Pattern specific content goes here</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">Pattern.create do
+  # Pattern specific content goes here
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Startup_and_Shutdown_Sequences"></a>          
@@ -488,67 +484,51 @@ customization of the startup/shutdown sequences.</p>
 
       <p>Here is an example of an SoC controller with some startup and shutdown callbacks implemented:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MyDeviceController</span>
-  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Controller</span>
+      <pre><code class="language-ruby">class MyDeviceController
+  include Origen::Controller
 
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">startup</span>(options)
+  def startup(options)
     options = {
-      <span style="color:#606">mode</span>: <span style="color:#A60">:functional_test</span>,
+      mode: :functional_test,
     }.merge(options)
-    <span style="color:#080;font-weight:bold">if</span> options[<span style="color:#A60">:mode</span>] == <span style="color:#A60">:functional_test</span>
+    if options[:mode] == :functional_test
       enter_functional_test_mode
-    <span style="color:#080;font-weight:bold">elsif</span> options[<span style="color:#A60">:mode</span>] == <span style="color:#A60">:bist</span>
+    elsif options[:mode] == :bist
       enter_bist_test_mode
-    <span style="color:#080;font-weight:bold">else</span>
-      raise <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Unknown mode requested - </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>options[<span style="color:#A60">:mode</span>]<span style="font-weight:bold;color:#666">}</span></span><span style="color:#710">"</span></span>
-    <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#080;font-weight:bold">end</span>
+    else
+      raise "Unknown mode requested - #{options[:mode]}"
+    end
+  end
 
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">shutdown</span>(options)
+  def shutdown(options)
     options = {
-      <span style="color:#606">reset</span>: <span style="color:#069">true</span>,
+      reset: true,
     }.merge(options)
-    reset_device <span style="color:#080;font-weight:bold">if</span> options[<span style="color:#A60">:reset</span>]
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+    reset_device if options[:reset]
+  end
+end
+</code></pre>
 
       <p>So by default this pattern will enter functional test mode at the start and reset the device at the end:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Pattern</span>.create <span style="color:#080;font-weight:bold">do</span>
-  <span style="color:#777"># Pattern specific content goes here</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">Pattern.create do
+  # Pattern specific content goes here
+end
+</code></pre>
 
       <p>This one will enter BIST mode instead at the start:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Pattern</span>.create(<span style="color:#606">mode</span>: <span style="color:#A60">:bist</span>) <span style="color:#080;font-weight:bold">do</span>
-  <span style="color:#777"># Pattern specific content goes here</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">Pattern.create(mode: :bist) do
+  # Pattern specific content goes here
+end
+</code></pre>
 
       <p>and this one would exit without resetting the device:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Pattern</span>.create(<span style="color:#606">mode</span>: <span style="color:#A60">:bist</span>, <span style="color:#606">reset</span>: <span style="color:#069">false</span>) <span style="color:#080;font-weight:bold">do</span>
-  <span style="color:#777"># Pattern specific content goes here</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">Pattern.create(mode: :bist, reset: false) do
+  # Pattern specific content goes here
+end
+</code></pre>
 
       <div class="alert alert-info">
   <strong>Note</strong> - The top-level is guaranteed to be called first and last for the startup and shutdown
@@ -586,36 +566,24 @@ See the <a href="/origen/guides/controllers/introduction">Controller guides</a> 
       <p>If the above rules are followed pattern source files should typically be very small and should
 generally only call a handful of methods on the target object(s), here are a few examples:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Pattern to measure the output of the Vreg module</span>
-<span style="color:#036;font-weight:bold">Pattern</span>.create <span style="color:#080;font-weight:bold">do</span>
-  <span style="color:#d70">$dut</span>.vreg.measure
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># Pattern to measure the output of the Vreg module
+Pattern.create do
+  $dut.vreg.measure
+end
+</code></pre>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Pattern to measure the output of the Vreg module for a specific setting</span>
-<span style="color:#036;font-weight:bold">Pattern</span>.create <span style="color:#080;font-weight:bold">do</span>
-  <span style="color:#d70">$dut</span>.vreg.measure(<span style="color:#606">setting</span>: <span style="color:#00D">12</span>)
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># Pattern to measure the output of the Vreg module for a specific setting
+Pattern.create do
+  $dut.vreg.measure(setting: 12)
+end
+</code></pre>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Pattern to program a checkerboard and then read it</span>
-<span style="color:#036;font-weight:bold">Pattern</span>.create <span style="color:#080;font-weight:bold">do</span>
-  <span style="color:#d70">$dut</span>.nvm.program(<span style="color:#606">pattern</span>: <span style="color:#A60">:ckbd</span>)
-  <span style="color:#d70">$dut</span>.nvm.read(<span style="color:#606">pattern</span>: <span style="color:#A60">:ckbd</span>)
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># Pattern to program a checkerboard and then read it
+Pattern.create do
+  $dut.nvm.program(pattern: :ckbd)
+  $dut.nvm.read(pattern: :ckbd)
+end
+</code></pre>
 
       <div style="position: relative">
   <hr>

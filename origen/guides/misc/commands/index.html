@@ -471,26 +471,22 @@ So in fact it is also possible to override the built-in commands if you ever hav
 
       <p>An empty command file has this structure:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>aliases ={
+      <pre><code class="language-ruby">aliases ={
 }
 
-<span style="color:#777"># The requested command is passed in here as @command, this checks it against</span>
-<span style="color:#777"># the above alias table and should not be removed.</span>
-<span style="color:#33B">@command</span> = aliases[<span style="color:#33B">@command</span>] || <span style="color:#33B">@command</span>
+# The requested command is passed in here as @command, this checks it against
+# the above alias table and should not be removed.
+@command = aliases[@command] || @command
 
-<span style="color:#777"># Now branch to the specific task code</span>
-<span style="color:#080;font-weight:bold">case</span> <span style="color:#33B">@command</span>
+# Now branch to the specific task code
+case @command
 
-<span style="color:#080;font-weight:bold">else</span>
-  <span style="color:#33B">@application_commands</span> = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&lt;&lt;-END</span></span><span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">
-  END</span></span>
+else
+  @application_commands = &lt;&lt;-END
+  END
 
-<span style="color:#080;font-weight:bold">end</span> 
-</pre></div>
-</div>
-      </div>
+end 
+</code></pre>
 
       <p>When the command is launched the first argument, the command name, will be available in the instance
 variable <code>@command</code>.
@@ -501,32 +497,28 @@ requests are simply passed through to Origen by default).</p>
       <p>Let’s say for example that we want to implement a command that will print the current time, we could
 accomplish this like so:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>aliases ={
-  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">time</span><span style="color:#710">"</span></span> =&gt; <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">current_time</span><span style="color:#710">"</span></span>
+      <pre><code class="language-ruby">aliases ={
+  "time" =&gt; "current_time"
 }
 
-<span style="color:#777"># The requested command is passed in here as @command, this checks it against</span>
-<span style="color:#777"># the above alias table and should not be removed.</span>
-<span style="color:#33B">@command</span> = aliases[<span style="color:#33B">@command</span>] || <span style="color:#33B">@command</span>
+# The requested command is passed in here as @command, this checks it against
+# the above alias table and should not be removed.
+@command = aliases[@command] || @command
 
-<span style="color:#777"># Now branch to the specific task code</span>
-<span style="color:#080;font-weight:bold">case</span> <span style="color:#33B">@command</span>
+# Now branch to the specific task code
+case @command
 
-<span style="color:#080;font-weight:bold">when</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">current_time</span><span style="color:#710">"</span></span>
-  puts <span style="color:#036;font-weight:bold">Time</span>.now
-  exit <span style="color:#00D">0</span>
+when "current_time"
+  puts Time.now
+  exit 0
 
-<span style="color:#080;font-weight:bold">else</span>
-  <span style="color:#33B">@application_commands</span> = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&lt;&lt;-END</span></span><span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">
- current_time      Print the current time (aliased as "time") </span><span style="color:#710">
-  END</span></span>
+else
+  @application_commands = &lt;&lt;-END
+ current_time      Print the current time (aliased as "time") 
+  END
 
-<span style="color:#080;font-weight:bold">end</span> 
-</pre></div>
-</div>
-      </div>
+end 
+</code></pre>
 
       <p>The following points are worth noting from this example:</p>
 
@@ -559,16 +551,12 @@ via <code>Origen.root</code>.</p>
 
       <p>For example:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">MyClass</span>.do_something    <span style="color:#777"># =&gt; I want to access my code here but this is giving an error</span>
+      <pre><code class="language-ruby">MyClass.do_something    # =&gt; I want to access my code here but this is giving an error
 
-<span style="color:#036;font-weight:bold">Origen</span>.app   <span style="color:#777"># Make a reference to the application, this will load it if is not already loaded</span>
+Origen.app   # Make a reference to the application, this will load it if is not already loaded
 
-<span style="color:#036;font-weight:bold">MyClass</span>.do_something    <span style="color:#777"># =&gt; Now it works</span>
-</pre></div>
-</div>
-      </div>
+MyClass.do_something    # =&gt; Now it works
+</code></pre>
 
       <div>    
   <a class="anchor" name="Loading_the_Target"></a>          
@@ -604,48 +592,44 @@ which makes it very easy to both parse user options and to document them.</p>
 in by using the <a href="http://www.ruby-doc.org/core-2.2.0/Time.html#method-i-strftime">strftime</a> method. This could
 be accomplished like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>aliases ={
-  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">time</span><span style="color:#710">"</span></span> =&gt; <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">current_time</span><span style="color:#710">"</span></span>
+      <pre><code class="language-ruby">aliases ={
+  "time" =&gt; "current_time"
 }
 
-<span style="color:#777"># The requested command is passed in here as @command, this checks it against</span>
-<span style="color:#777"># the above alias table and should not be removed.</span>
-<span style="color:#33B">@command</span> = aliases[<span style="color:#33B">@command</span>] || <span style="color:#33B">@command</span>
+# The requested command is passed in here as @command, this checks it against
+# the above alias table and should not be removed.
+@command = aliases[@command] || @command
 
-<span style="color:#777"># Now branch to the specific task code</span>
-<span style="color:#080;font-weight:bold">case</span> <span style="color:#33B">@command</span>
+# Now branch to the specific task code
+case @command
 
-<span style="color:#080;font-weight:bold">when</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">current_time</span><span style="color:#710">"</span></span>
+when "current_time"
   options = {}
-  opt_parser = <span style="color:#036;font-weight:bold">OptionParser</span>.new <span style="color:#080;font-weight:bold">do</span> |opts|
-    opts.banner = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&lt;&lt;-END_DESC</span></span><span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">
+  opt_parser = OptionParser.new do |opts|
+    opts.banner = &lt;&lt;-END_DESC
  origen time - This command will print the current time using the default Time
-               format, alternatively specify your own format via the -f option.</span><span style="color:#710">
-    END_DESC</span></span>
-    opts.on(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">-f</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">--format FORMAT</span><span style="color:#710">"</span></span>, <span style="color:#036;font-weight:bold">String</span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">FORMAT should use strftime notation</span><span style="color:#710">"</span></span>) { |t| options[<span style="color:#A60">:format</span>] = t }
-    opts.separator <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#710">"</span></span>
-    opts.on(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">-h</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">--help</span><span style="color:#710">"</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Show this message</span><span style="color:#710">"</span></span>) { puts opts; exit }
-  <span style="color:#080;font-weight:bold">end</span>
-  opt_parser.parse! <span style="color:#069">ARGV</span>
+               format, alternatively specify your own format via the -f option.
+    END_DESC
+    opts.on("-f", "--format FORMAT", String, "FORMAT should use strftime notation") { |t| options[:format] = t }
+    opts.separator ""
+    opts.on("-h", "--help", "Show this message") { puts opts; exit }
+  end
+  opt_parser.parse! ARGV
 
-  <span style="color:#080;font-weight:bold">if</span> options[<span style="color:#A60">:format</span>]
-    puts <span style="color:#036;font-weight:bold">Time</span>.now.strftime(options[<span style="color:#A60">:format</span>])
-  <span style="color:#080;font-weight:bold">else</span>
-    puts <span style="color:#036;font-weight:bold">Time</span>.now
-  <span style="color:#080;font-weight:bold">end</span>
-  exit <span style="color:#00D">0</span>
+  if options[:format]
+    puts Time.now.strftime(options[:format])
+  else
+    puts Time.now
+  end
+  exit 0
 
-<span style="color:#080;font-weight:bold">else</span>
-  <span style="color:#33B">@application_commands</span> = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&lt;&lt;-END</span></span><span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">
- current_time      Print the current time (aliased as "time") </span><span style="color:#710">
-  END</span></span>
+else
+  @application_commands = &lt;&lt;-END
+ current_time      Print the current time (aliased as "time") 
+  END
 
-<span style="color:#080;font-weight:bold">end</span> 
-</pre></div>
-</div>
-      </div>
+end 
+</code></pre>
 
       <p>Note the following in the above example:</p>
 
@@ -674,32 +658,28 @@ of having them all dumped into a single file.</p>
       <p>In this case we could extract the command code above into the application library, <code>lib/commands/current_time.rb</code>, 
 for example, and then include it like this:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>aliases ={
-  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">time</span><span style="color:#710">"</span></span> =&gt; <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">current_time</span><span style="color:#710">"</span></span>
+      <pre><code class="language-ruby">aliases ={
+  "time" =&gt; "current_time"
 }
 
-<span style="color:#777"># The requested command is passed in here as @command, this checks it against</span>
-<span style="color:#777"># the above alias table and should not be removed.</span>
-<span style="color:#33B">@command</span> = aliases[<span style="color:#33B">@command</span>] || <span style="color:#33B">@command</span>
+# The requested command is passed in here as @command, this checks it against
+# the above alias table and should not be removed.
+@command = aliases[@command] || @command
 
-<span style="color:#777"># Now branch to the specific task code</span>
-<span style="color:#080;font-weight:bold">case</span> <span style="color:#33B">@command</span>
+# Now branch to the specific task code
+case @command
 
-<span style="color:#080;font-weight:bold">when</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">current_time</span><span style="color:#710">"</span></span>
-  require <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">commands/current_time</span><span style="color:#710">"</span></span>
-  exit <span style="color:#00D">0</span>
+when "current_time"
+  require "commands/current_time"
+  exit 0
 
-<span style="color:#080;font-weight:bold">else</span>
-  <span style="color:#33B">@application_commands</span> = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&lt;&lt;-END</span></span><span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#D20">
- current_time      Print the current time (aliased as "time") </span><span style="color:#710">
-  END</span></span>
+else
+  @application_commands = &lt;&lt;-END
+ current_time      Print the current time (aliased as "time") 
+  END
 
-<span style="color:#080;font-weight:bold">end</span> 
-</pre></div>
-</div>
-      </div>
+end 
+</code></pre>
 
       <div>    
   <a class="anchor" name="More_Examples"></a>          

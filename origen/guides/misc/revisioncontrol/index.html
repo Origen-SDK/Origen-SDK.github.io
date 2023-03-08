@@ -490,57 +490,45 @@ regardless of the underlying system that is being used.</p>
 requires a reference to the remote repository, and the path to the local root directory (which
 doesn’t have to exist yet):</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>rc = <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">RevisionControl</span>.new <span style="color:#606">remote</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">ssh://git@github.com:myaccount/myproj.git</span><span style="color:#710">"</span></span>, <span style="color:#606">local</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">my/path</span><span style="color:#710">"</span></span>
-rc.git?   <span style="color:#777"># =&gt; true</span>
+      <pre><code class="language-ruby">rc = Origen::RevisionControl.new remote: "ssh://git@github.com:myaccount/myproj.git", local: "my/path"
+rc.git?   # =&gt; true
 
-rc = <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">RevisionControl</span>.new <span style="color:#606">remote</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">sync://sync-15000:15000/myaccount/myproj</span><span style="color:#710">"</span></span>, <span style="color:#606">local</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">my/path</span><span style="color:#710">"</span></span>
-rc.dssc?   <span style="color:#777"># =&gt; true</span>
+rc = Origen::RevisionControl.new remote: "sync://sync-15000:15000/myaccount/myproj", local: "my/path"
+rc.dssc?   # =&gt; true
 
-rc = <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">RevisionControl</span>.new <span style="color:#606">remote</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">p4://server:port//myaccount/myproj</span><span style="color:#710">"</span></span>, <span style="color:#606">local</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">my/path</span><span style="color:#710">"</span></span>
-rc.p4?   <span style="color:#777"># =&gt; true</span>
-</pre></div>
-</div>
-      </div>
+rc = Origen::RevisionControl.new remote: "p4://server:port//myaccount/myproj", local: "my/path"
+rc.p4?   # =&gt; true
+</code></pre>
 
       <p>In the case of an Origen application, a short cut is available (assuming the application has
 set <code>config.rc_url</code> in <code>config/application.rb</code>):</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>rc = <span style="color:#036;font-weight:bold">Origen</span>.app.rc
-rc.git?   <span style="color:#777"># =&gt; true</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">rc = Origen.app.rc
+rc.git?   # =&gt; true
+</code></pre>
 
       <p>This revision controller object provides the <a href="/origen/api/Origen/RevisionControl/Base.html">Revision Control API described here</a>.</p>
 
       <p>Here are some examples:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>rc.local_modifications
-  <span style="color:#777"># =&gt; ["lib/my_app/model1.rb", "lib/my_app/model2.rb", "lib/my_app/model3.rb", "lib/my_app/model4.rb"]</span>
+      <pre><code class="language-ruby">rc.local_modifications
+  # =&gt; ["lib/my_app/model1.rb", "lib/my_app/model2.rb", "lib/my_app/model3.rb", "lib/my_app/model4.rb"]
 
-<span style="color:#777"># Check in a single file</span>
-rc.checkin <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">lib/my_app/model2.rb</span><span style="color:#710">"</span></span>
+# Check in a single file
+rc.checkin "lib/my_app/model2.rb"
 
-rc.local_modifications    <span style="color:#777"># =&gt; ["lib/my_app/model1.rb", "lib/my_app/model3.rb", "lib/my_app/model4.rb"]</span>
+rc.local_modifications    # =&gt; ["lib/my_app/model1.rb", "lib/my_app/model3.rb", "lib/my_app/model4.rb"]
   
-<span style="color:#777"># Checkout latest version of a single file, forcing overwrite of local mods</span>
-rc.checkout <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">lib/my_app/model4.rb</span><span style="color:#710">"</span></span>, <span style="color:#606">force</span>: <span style="color:#069">true</span>
+# Checkout latest version of a single file, forcing overwrite of local mods
+rc.checkout "lib/my_app/model4.rb", force: true
 
-rc.local_modifications    <span style="color:#777"># =&gt; ["lib/my_app/model1.rb", "lib/my_app/model3.rb"]</span>
+rc.local_modifications    # =&gt; ["lib/my_app/model1.rb", "lib/my_app/model3.rb"]
   
-<span style="color:#777"># Check in everything</span>
-rc.checkin <span style="color:#606">comment</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Added a cool feature</span><span style="color:#710">"</span></span>
+# Check in everything
+rc.checkin comment: "Added a cool feature"
 
-rc.local_modifications    <span style="color:#777"># =&gt; []</span>
-</pre></div>
-</div>
-      </div>
+rc.local_modifications    # =&gt; []
+</code></pre>
 
       <div>    
   <a class="anchor" name="Revision_Control_Command"></a>          
@@ -558,9 +546,7 @@ the command maintainers will ensure that you are using it in an efficient and co
 
       <p>Here are some examples:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>origen rc co            # Checkout the latest version of the application, local edits will be merged
+      <pre><code class="language-text">origen rc co            # Checkout the latest version of the application, local edits will be merged
 origen rc co -v v1.2.3  # As above but a specific version
 origen rc co -f         # As above but force overwrite of local edits
 origen rc co file.txt   # As above but on a specific file or directory, -v and -f will work to
@@ -573,9 +559,7 @@ origen rc new file.txt  # Create the given file and check in an initial version 
 origen rc unman         # Show unmanaged files
 origen rc mods          # Show modified files in local workspace
 origen rc tag           # Tag and release the application
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>See <code>origen rc -h</code> for an up to date list of supported commands.</p>
 

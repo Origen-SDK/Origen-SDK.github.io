@@ -532,22 +532,18 @@ Instead, Origen tightly controls when each one is allowed to run in a determinis
 which guarantees that the output will be exactly the same each time the generator is run.
 The execution sequence can be summarized by this code snippet:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Keep going until all threads are finished (pattern is complete)</span>
-<span style="color:#080;font-weight:bold">until</span> active_threads.empty?
-  <span style="color:#777"># Allow each thread to advance until it is ready for the next cycle</span>
-  active_threads.each <span style="color:#080;font-weight:bold">do</span> |thread|
+      <pre><code class="language-ruby"># Keep going until all threads are finished (pattern is complete)
+until active_threads.empty?
+  # Allow each thread to advance until it is ready for the next cycle
+  active_threads.each do |thread|
     thread.run_until_next_cycle
-  <span style="color:#080;font-weight:bold">end</span>
-  <span style="color:#777"># All threads are now ready to cycle</span>
+  end
+  # All threads are now ready to cycle
   tester.cycle
-  <span style="color:#777"># Remove any threads that have now completed</span>
+  # Remove any threads that have now completed
   active_threads.reject! { |thread| thread.completed? }
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+end
+</code></pre>
 
       <p>It is important to understand that clobbering can occur because
 all threads are sharing access to a single DUT. For example, if
@@ -598,45 +594,37 @@ to make Origen aware of the places that it must serialize thread access.</p>
       <p>For example, consider that we have the following register transaction methods implemented in
 our top-level controller:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">read_register</span>(reg, options={})
+      <pre><code class="language-ruby">def read_register(reg, options={})
   arm_debug.mem_ap.read_register(reg, options)
-<span style="color:#080;font-weight:bold">end</span>
+end
 
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">write_register</span>(reg, options={})
+def write_register(reg, options={})
   arm_debug.mem_ap.write_register(reg, options)
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+end
+</code></pre>
 
       <p>Here we have a single ARM debug system and physical port and only one transaction at a time
 can be handled.
 Our transaction methods should be modified like this to make them concurrent-ready:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">read_register</span>(reg, options={})
-  <span style="color:#777"># This will block concurrent threads, allowing only one at a time to execute this (while being ignored when</span>
-  <span style="color:#777"># generating a regular pattern).</span>
-  <span style="color:#777"># :arm_debug is just an identifier for this resource and the same ID should be used to block off access to the</span>
-  <span style="color:#777"># same resource in other places.</span>
-  <span style="color:#036;font-weight:bold">PatSeq</span>.serialize <span style="color:#A60">:arm_debug</span> <span style="color:#080;font-weight:bold">do</span>
+      <pre><code class="language-ruby">def read_register(reg, options={})
+  # This will block concurrent threads, allowing only one at a time to execute this (while being ignored when
+  # generating a regular pattern).
+  # :arm_debug is just an identifier for this resource and the same ID should be used to block off access to the
+  # same resource in other places.
+  PatSeq.serialize :arm_debug do
     arm_debug.mem_ap.read_register(reg, options)
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
+  end
+end
 
-<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">write_register</span>(reg, options={})
-  <span style="color:#777"># Here we use the same resource identifier, :arm_debug, to link this with the read serialize wrapper - meaning</span>
-  <span style="color:#777"># that if a thread is wanting to write, it will have to wait if another thread is currently performing a read.</span>
-  <span style="color:#036;font-weight:bold">PatSeq</span>.serialize <span style="color:#A60">:arm_debug</span> <span style="color:#080;font-weight:bold">do</span>
+def write_register(reg, options={})
+  # Here we use the same resource identifier, :arm_debug, to link this with the read serialize wrapper - meaning
+  # that if a thread is wanting to write, it will have to wait if another thread is currently performing a read.
+  PatSeq.serialize :arm_debug do
     arm_debug.mem_ap.write_register(reg, options)
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  end
+end
+</code></pre>
 
       <p>Note that Origen does not automatically serialize access to the read/write register methods
 since some applications may choose to use different ports/protocols depending on what register/IP is being
@@ -647,19 +635,15 @@ desired in all cases.</p>
 utilize a single silicon resource which may be used by multiple concurrent threads. Here is another
 example of where a method exists to use an on-chip ADC to perform an embedded measurement:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">measure_voltage</span>
-  <span style="color:#777"># This will block concurrent threads, allowing only one at a time to execute this, while being ignored when</span>
-  <span style="color:#777"># generating a regular pattern. Again, :adc is just an identifier for this resource, and the same ID should</span>
-  <span style="color:#777"># to this same resource in other places where it is used.</span>
-  <span style="color:#036;font-weight:bold">PatSeq</span>.serialize <span style="color:#A60">:adc</span> <span style="color:#080;font-weight:bold">do</span>
+      <pre><code class="language-ruby">def measure_voltage
+  # This will block concurrent threads, allowing only one at a time to execute this, while being ignored when
+  # generating a regular pattern. Again, :adc is just an identifier for this resource, and the same ID should
+  # to this same resource in other places where it is used.
+  PatSeq.serialize :adc do
     dut.adc.do_something
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  end
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Creating_Concurrent_Sequences"></a>          
@@ -673,22 +657,14 @@ combined concurrent pattern.</p>
       <p>For example, say that we have two existing patterns called <code>ip1_test.rb</code> and <code>ip2_test.rb</code>, these
 could be generated as two separate patterns like this:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>origen g ip1_test ip2_test
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">origen g ip1_test ip2_test
+</code></pre>
 
       <p>To generate them as a concurrent pattern, what Origen calls a pattern sequence, then simply add the
 <code>--seq(uence)</code> option and give a name for the concurrent output pattern:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>origen g ip1_test ip2_test --seq my_concurrent_pattern
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-text">origen g ip1_test ip2_test --seq my_concurrent_pattern
+</code></pre>
 
       <p>This approach to concurrency provides the key benefit that IP-level tests can be
 developed and validated on silicon as standalone patterns, and then once everything is working they can be
@@ -705,9 +681,7 @@ either the thread was finished or it was completely blocked while waiting to acc
 A half-block means that it was active for &lt; 50% of that time interval and a full block means that it
 was active for &gt; 50% of the given interval.</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>      |-------------------------|-------------------------|-------------------------|-------------------------|----
+      <pre><code class="language-text">      |-------------------------|-------------------------|-------------------------|-------------------------|----
       0                         10.0ms                    20.0ms                    30.0ms                    40.0m
 
 main: ▄____________________________________________________________________________________________________________
@@ -715,9 +689,7 @@ main: ▄_______________________________________________________________________
 ip1:  █████████████████████████████████████████████████████████████████████████████████████████████████████████████
 
 ip2:  ▄███████████████████████████████████████████████████████████████████████████████▄____________________________
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>All patterns always have a main thread and when generating a concurrent pattern like this it never
 does very much. Most of the activity will occur in the threads that have been created to generate
@@ -744,14 +716,10 @@ it is possible to create pattern sources files which define a concurrent test se
       <p>Test sequence source files should be created in the conventional pattern directory, but internally
 they should call <code>Pattern.sequence</code> instead of <code>Pattern.create</code> as shown below:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Pattern</span>.sequence <span style="color:#080;font-weight:bold">do</span> |seq|
+      <pre><code class="language-ruby">Pattern.sequence do |seq|
 
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+end
+</code></pre>
 
       <p>Any options passed into <code>Pattern.sequence</code> will be passed into your startup/shutdown in the same
 way as per conventional patterns.</p>
@@ -759,122 +727,96 @@ way as per conventional patterns.</p>
       <p>In fact, conventional patterns can be written as pattern sequences if you want to, these will
 generate identical output patterns:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Pattern</span>.create <span style="color:#080;font-weight:bold">do</span>
+      <pre><code class="language-ruby">Pattern.create do
   dut.ip1.do_something
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+end
+</code></pre>
 
       <p>is equivalent to:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Pattern</span>.sequence <span style="color:#080;font-weight:bold">do</span> |seq|
+      <pre><code class="language-ruby">Pattern.sequence do |seq|
   dut.ip1.do_something
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+end
+</code></pre>
 
       <p>The sequencer object that is passed into the main block allows other pattern sources to be run. This
 next example will look for pattern sources called <code>ip1_test</code> and <code>ip2_test</code> and generate them to
 run sequentially within a single pattern. So aside from concurrency, pattern sequences can also be
 used to compose sequential patterns which are comprised of multiple conventional patterns.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Pattern</span>.sequence <span style="color:#080;font-weight:bold">do</span> |seq|
-  seq.run <span style="color:#A60">:ip1_test</span>
-  seq.run <span style="color:#A60">:ip2_test</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">Pattern.sequence do |seq|
+  seq.run :ip1_test
+  seq.run :ip2_test
+end
+</code></pre>
 
       <p>To make these run concurrently we need to create parallel threads to run them in, and in fact
 this is exactly equivalent to what Origen will do when generating multiple patterns with the
 <code>--sequence</code> option:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Pattern</span>.sequence <span style="color:#080;font-weight:bold">do</span> |seq|
-  <span style="color:#777"># Start a concurrent thread, :ip1 is just a name here to identify this thread, it can be called anything</span>
-  seq.thread <span style="color:#A60">:ip1</span> <span style="color:#080;font-weight:bold">do</span>
-    seq.run <span style="color:#A60">:ip1_test</span>
-  <span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby">Pattern.sequence do |seq|
+  # Start a concurrent thread, :ip1 is just a name here to identify this thread, it can be called anything
+  seq.thread :ip1 do
+    seq.run :ip1_test
+  end
 
-  <span style="color:#777"># Start another parallel thread, note that since the above has created a parallel thread,</span>
-  <span style="color:#777"># it will not block the main thread's execution of this sequence, meaning that both of these</span>
-  <span style="color:#777"># threads are effectively launched at the same time</span>
-  seq.thread <span style="color:#A60">:ip2</span> <span style="color:#080;font-weight:bold">do</span>
-    seq.run <span style="color:#A60">:ip2_test</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  # Start another parallel thread, note that since the above has created a parallel thread,
+  # it will not block the main thread's execution of this sequence, meaning that both of these
+  # threads are effectively launched at the same time
+  seq.thread :ip2 do
+    seq.run :ip2_test
+  end
+end
+</code></pre>
 
       <p>There is no requirement for a parallel thread to be associated with another pattern source, and
 you can program any operations that you like within the parallel blocks:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Pattern</span>.sequence <span style="color:#080;font-weight:bold">do</span> |seq|
-  <span style="color:#777"># Since this is in the main thread it will block and this will fully generate before proceeding</span>
+      <pre><code class="language-ruby">Pattern.sequence do |seq|
+  # Since this is in the main thread it will block and this will fully generate before proceeding
   dut.do_something
 
-  <span style="color:#777"># Start a concurrent thread, this will not block which means that it will generate concurrently</span>
-  <span style="color:#777"># with anything that follows it</span>
-  seq.thread <span style="color:#A60">:th1</span> <span style="color:#080;font-weight:bold">do</span>
+  # Start a concurrent thread, this will not block which means that it will generate concurrently
+  # with anything that follows it
+  seq.thread :th1 do
     dut.do_something_else
-  <span style="color:#080;font-weight:bold">end</span>
+  end
 
-  <span style="color:#777"># Another concurrent thread, there is no limit to the amount of these you can create, though there</span>
-  <span style="color:#777"># will be a sweet spot for efficiency if you have too many all competing for finite shared resources</span>
-  seq.thread <span style="color:#A60">:th2</span> <span style="color:#080;font-weight:bold">do</span>
+  # Another concurrent thread, there is no limit to the amount of these you can create, though there
+  # will be a sweet spot for efficiency if you have too many all competing for finite shared resources
+  seq.thread :th2 do
     dut.and_another_thing
-  <span style="color:#080;font-weight:bold">end</span>
+  end
 
-  <span style="color:#777"># Let's do something else in the main thread for the sake of it, since the above two operations</span>
-  <span style="color:#777"># are in parallel threads we now have 3 operations running concurrentl</span>
+  # Let's do something else in the main thread for the sake of it, since the above two operations
+  # are in parallel threads we now have 3 operations running concurrentl
   dut.one_more_for_fun
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+end
+</code></pre>
 
       <p>To try and illustrate the above point, lets replicate it with some fixed delays:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Pattern</span>.sequence <span style="color:#080;font-weight:bold">do</span> |seq|
-  <span style="color:#00D">10</span>.ms!
+      <pre><code class="language-ruby">Pattern.sequence do |seq|
+  10.ms!
 
-  seq.thread <span style="color:#A60">:th1</span> <span style="color:#080;font-weight:bold">do</span>
-    <span style="color:#00D">10</span>.ms!
-  <span style="color:#080;font-weight:bold">end</span>
+  seq.thread :th1 do
+    10.ms!
+  end
 
-  seq.thread <span style="color:#A60">:th2</span> <span style="color:#080;font-weight:bold">do</span>
-    <span style="color:#00D">20</span>.ms!
-  <span style="color:#080;font-weight:bold">end</span>
+  seq.thread :th2 do
+    20.ms!
+  end
 
-  <span style="color:#00D">5</span>.ms!
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  5.ms!
+end
+</code></pre>
 
       <p>How long should that pattern take to run?</p>
 
       <p>Answer: 30ms. The 10ms up front in the main thread blocks everything else, then the long pole is the
 20ms in thread 2:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>      |-------------------------|-------------------------|-------------------------|
+      <pre><code class="language-text">      |-------------------------|-------------------------|-------------------------|
       0                         10.0ms                    20.0ms                    30.0ms
 
 main: ████████████████████████████████████████_______________________________________
@@ -882,9 +824,7 @@ main: ████████████████████████�
 th1:  __________________________███████████████████████████__________________________
 
 th2:  __________________________█████████████████████████████████████████████████████
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>Note that the <code>5.ms!</code> from the main thread is running in parallel to the <code>10.ms!</code> and <code>20.ms!</code> from
 threads 1 and 2, respectively.</p>
@@ -899,52 +839,38 @@ end of a pattern for everything to finish before checking for a result.
 This can be done by making the following method call to block the thread from which it is called
 until all other threads complete:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">PatSeq</span>.wait_for_threads_to_complete
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">PatSeq.wait_for_threads_to_complete
+</code></pre>
 
       <p>or to wait for a specific thread(s):</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">PatSeq</span>.wait_for_thread_to_complete <span style="color:#A60">:th1</span>
-<span style="color:#036;font-weight:bold">Patseq</span>.wait_for_threads_to_complete <span style="color:#A60">:th1</span>, <span style="color:#A60">:th2</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">PatSeq.wait_for_thread_to_complete :th1
+Patseq.wait_for_threads_to_complete :th1, :th2
+</code></pre>
 
       <p>If we add that to our previous example, how long will it take to run now?</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">Pattern</span>.sequence <span style="color:#080;font-weight:bold">do</span> |seq|
-  <span style="color:#00D">10</span>.ms!
+      <pre><code class="language-ruby">Pattern.sequence do |seq|
+  10.ms!
 
-  seq.thread <span style="color:#A60">:th1</span> <span style="color:#080;font-weight:bold">do</span>
-    <span style="color:#00D">10</span>.ms!
-  <span style="color:#080;font-weight:bold">end</span>
+  seq.thread :th1 do
+    10.ms!
+  end
 
-  seq.thread <span style="color:#A60">:th2</span> <span style="color:#080;font-weight:bold">do</span>
-    <span style="color:#00D">20</span>.ms!
-  <span style="color:#080;font-weight:bold">end</span>
+  seq.thread :th2 do
+    20.ms!
+  end
 
-  <span style="color:#036;font-weight:bold">PatSeq</span>.wait_for_threads_to_complete
+  PatSeq.wait_for_threads_to_complete
 
-  <span style="color:#00D">5</span>.ms!
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  5.ms!
+end
+</code></pre>
 
       <p>The answer is 35ms, since the <code>5.ms!</code> in the main thread is now blocked until threads 1 and 2
 complete:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>      |-------------------------|-------------------------|-------------------------|-------------
+      <pre><code class="language-text">      |-------------------------|-------------------------|-------------------------|-------------
       0                         10.0ms                    20.0ms                    30.0ms
 
 main: ██████████████████████████____________________________________________________██████████████
@@ -952,48 +878,40 @@ main: ████████████████████████�
 th1:  __________________________███████████████████████████_______________________________________
 
 th2:  __________________________████████████████████████████████████████████████████______________
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <p>It is also possible to sync up threads to a common point in the code by calling <code>PatSeq.sync_up</code>,
 consider the following example:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">sync_up</span>
-  <span style="color:#036;font-weight:bold">PatSeq</span>.sync_up
-<span style="color:#080;font-weight:bold">end</span>
+      <pre><code class="language-ruby">def sync_up
+  PatSeq.sync_up
+end
 
-<span style="color:#036;font-weight:bold">Pattern</span>.sequence <span style="color:#080;font-weight:bold">do</span> |seq|
-  <span style="color:#00D">5</span>.ms!
+Pattern.sequence do |seq|
+  5.ms!
 
-  seq.thread <span style="color:#A60">:th1</span> <span style="color:#080;font-weight:bold">do</span>
-    <span style="color:#00D">5</span>.ms!
+  seq.thread :th1 do
+    5.ms!
     sync_up
-    <span style="color:#00D">5</span>.ms!
-  <span style="color:#080;font-weight:bold">end</span>
+    5.ms!
+  end
 
-  seq.thread <span style="color:#A60">:th2</span> <span style="color:#080;font-weight:bold">do</span>
+  seq.thread :th2 do
     sync_up
-    <span style="color:#00D">20</span>.ms!
-  <span style="color:#080;font-weight:bold">end</span>
+    20.ms!
+  end
 
-  <span style="color:#036;font-weight:bold">PatSeq</span>.wait_for_threads_to_complete
+  PatSeq.wait_for_threads_to_complete
 
-  <span style="color:#00D">5</span>.ms!
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  5.ms!
+end
+</code></pre>
 
       <p>What would that execution profile look like?</p>
 
       <p>In this case the 20ms in thread 2 will be blocked until thread 1 reaches the sync up point after executing for 5ms:</p>
 
-      <div class="language-text highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre>      |-------------------------|-------------------------|-------------------------|-------------
+      <pre><code class="language-text">      |-------------------------|-------------------------|-------------------------|-------------
       0                         10.0ms                    20.0ms                    30.0ms
 
 main: █████████████_________________________________________________________________██████████████
@@ -1001,9 +919,7 @@ main: █████████████___________________________________
 th1:  _____________███████████████████████████____________________________________________________
 
 th2:  __________________________████████████████████████████████████████████████████______________
-</pre></div>
-</div>
-      </div>
+</code></pre>
 
       <div class="alert alert-info">
   <strong>Note!</strong> 
@@ -1018,21 +934,13 @@ Normally, that is what most applications would naturally mean since the main thr
 and is usually just used as a launching point for concurrent threads.
 If you wish to wait for all threads including main, then use:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">PatSeq</span>.sync_up <span style="color:#606">include_main</span>: <span style="color:#069">true</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">PatSeq.sync_up include_main: true
+</code></pre>
 
       <p>You can also wait for specific threads, e.g.</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#036;font-weight:bold">PatSeq</span>.sync_up <span style="color:#A60">:th1</span>, <span style="color:#A60">:th2</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby">PatSeq.sync_up :th1, :th2
+</code></pre>
 
       <p>In that example if either <code>:th1</code> or <code>:th2</code> reached that code it would wait there until the other thread arrived.</p>
 
@@ -1046,37 +954,29 @@ If you wish to wait for all threads including main, then use:</p>
       <p>Access to serialized resources can be reserved by wrapping application logic in the following
 code:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># This means that when a thread that executes this gets access to the ARM debug port, it won't release</span>
-<span style="color:#777"># it until the end of the block</span>
-<span style="color:#036;font-weight:bold">PatSeq</span>.reserve <span style="color:#A60">:arm_debug</span> <span style="color:#080;font-weight:bold">do</span>
+      <pre><code class="language-ruby"># This means that when a thread that executes this gets access to the ARM debug port, it won't release
+# it until the end of the block
+PatSeq.reserve :arm_debug do
 
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+end
+</code></pre>
 
       <p>An example may be if you have multiple transactions and you want to be guaranteed that they occur
 within the time specified and/or that they do not separated by transactions from other threads:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># When launching a command we want to verify that it started, so let's guarantee that the verify transaction</span>
-<span style="color:#777"># will occur after the specified 10 cycles, otherwise we risk the command starting and completing before</span>
-<span style="color:#777"># we check if it got underway</span>
-<span style="color:#036;font-weight:bold">PatSeq</span>.reserve <span style="color:#A60">:arm_debug</span> <span style="color:#080;font-weight:bold">do</span>
-  <span style="color:#777"># Launch some command operation</span>
+      <pre><code class="language-ruby"># When launching a command we want to verify that it started, so let's guarantee that the verify transaction
+# will occur after the specified 10 cycles, otherwise we risk the command starting and completing before
+# we check if it got underway
+PatSeq.reserve :arm_debug do
+  # Launch some command operation
   cmd.write!(code)
 
-  <span style="color:#00D">10</span>.cycles
+  10.cycles
 
-  <span style="color:#777"># Verify the command started correctly</span>
-  status.busy.read!(<span style="color:#00D">1</span>)
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  # Verify the command started correctly
+  status.busy.read!(1)
+end
+</code></pre>
 
       <div style="position: relative">
   <hr>

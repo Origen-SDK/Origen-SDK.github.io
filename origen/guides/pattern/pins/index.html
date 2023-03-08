@@ -513,40 +513,36 @@ modules can talk to the pins/signals that they know about.</p>
 
       <p>Here is an example of how to implement this scheme in a top-level SoC model:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">MySoC</span>
-  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">TopLevel</span>
+      <pre><code class="language-ruby">class MySoC
+  include Origen::TopLevel
 
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>(options)
+  def initialize(options)
     instantiate_pins(options)
-  <span style="color:#080;font-weight:bold">end</span>
+  end
 
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">instantiate_pins</span>(options)
-    <span style="color:#777"># Common pins required by all to support mode entry sequences</span>
-    add_pin <span style="color:#A60">:tclk</span>,      <span style="color:#606">reset</span>: <span style="color:#A60">:drive_lo</span>
-    add_pin <span style="color:#A60">:trst</span>,      <span style="color:#606">reset</span>: <span style="color:#A60">:drive_hi</span>
-    add_pin <span style="color:#A60">:extal</span>
-    add_pin <span style="color:#A60">:xtal</span>,      <span style="color:#606">reset</span>: <span style="color:#A60">:drive_lo</span>
-    add_pin <span style="color:#A60">:tms</span>
-    add_pin <span style="color:#A60">:tdo</span>
-    add_pin <span style="color:#A60">:tdi</span>
-    add_pin <span style="color:#A60">:resetb</span>
+  def instantiate_pins(options)
+    # Common pins required by all to support mode entry sequences
+    add_pin :tclk,      reset: :drive_lo
+    add_pin :trst,      reset: :drive_hi
+    add_pin :extal
+    add_pin :xtal,      reset: :drive_lo
+    add_pin :tms
+    add_pin :tdo
+    add_pin :tdi
+    add_pin :resetb
 
-    add_pins <span style="color:#A60">:data</span>, <span style="color:#606">size</span>: <span style="color:#00D">8</span>
+    add_pins :data, size: 8
 
-    <span style="color:#777"># Add NVM BIST mode functions</span>
-    pin(<span style="color:#A60">:extal</span>).add_function <span style="color:#A60">:nvm_clk</span>
-    pin(<span style="color:#A60">:data</span>)[<span style="color:#00D">2</span>].add_function <span style="color:#A60">:nvm_fail</span>
-    pin(<span style="color:#A60">:data</span>)[<span style="color:#00D">3</span>].add_function <span style="color:#A60">:nvm_done</span>
-    pin(<span style="color:#A60">:data</span>)[<span style="color:#00D">4</span>].add_function <span style="color:#A60">:nvm_invoke</span>
+    # Add NVM BIST mode functions
+    pin(:extal).add_function :nvm_clk
+    pin(:data)[2].add_function :nvm_fail
+    pin(:data)[3].add_function :nvm_done
+    pin(:data)[4].add_function :nvm_invoke
 
-    <span style="color:#777"># Add additional function groups here... </span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+    # Add additional function groups here... 
+  end
+end
+</code></pre>
 
       <div>    
   <a class="anchor" name="Controlling_the_Pattern_Pin_Order"></a>          
@@ -558,19 +554,15 @@ than others, or to otherwise order them to make them most readable for debugging
 
       <p>This can be achieved by calling the <code>pin_pattern_order</code> method:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">NVM</span>
-  include <span style="color:#036;font-weight:bold">Origen</span>::<span style="color:#036;font-weight:bold">Model</span>
+      <pre><code class="language-ruby">class NVM
+  include Origen::Model
 
-  <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">initialize</span>
-    <span style="color:#777"># Unspecified pins will appear in arbitrary order at the end</span>
-    pin_pattern_order <span style="color:#A60">:nvm_clk</span>, <span style="color:#A60">:nvm_invoke</span>, <span style="color:#A60">:nvm_done</span>, <span style="color:#A60">:nvm_fail</span>
-  <span style="color:#080;font-weight:bold">end</span>
-<span style="color:#080;font-weight:bold">end</span>
-</pre></div>
-</div>
-      </div>
+  def initialize
+    # Unspecified pins will appear in arbitrary order at the end
+    pin_pattern_order :nvm_clk, :nvm_invoke, :nvm_done, :nvm_fail
+  end
+end
+</code></pre>
 
       <p>Aside from specifying the order of the pins this also specifies what the name should be, i.e. if a given
 pin/pin group has multiple aliases then the one used to refer to the pin in the <code>pin_pattern_order</code>
@@ -579,24 +571,16 @@ is that one that will appear in the generated pattern.</p>
       <p>By default any unspecified pins will appear in arbitrary order at the end. To include only the pins
 specified then append the <code>:only</code> option at the end:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Only include these pins in the output pattern and in this order</span>
-pin_pattern_order <span style="color:#A60">:nvm_clk</span>, <span style="color:#A60">:nvm_invoke</span>, <span style="color:#A60">:nvm_done</span>, <span style="color:#A60">:nvm_fail</span>, <span style="color:#606">only</span>: <span style="color:#069">true</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># Only include these pins in the output pattern and in this order
+pin_pattern_order :nvm_clk, :nvm_invoke, :nvm_done, :nvm_fail, only: true
+</code></pre>
 
       <p>Alternatively specific pins or pin groups can be excluded from appearing in the output file via
 the <code>pin_pattern_exclude</code> method:</p>
 
-      <div class="language-ruby highlighter-coderay">
-<div class="CodeRay">
-  <div class="code"><pre><span style="color:#777"># Don't include these pins in the pattern</span>
-pin_pattern_exclude <span style="color:#A60">:porte</span>, <span style="color:#A60">:portf</span>
-</pre></div>
-</div>
-      </div>
+      <pre><code class="language-ruby"># Don't include these pins in the pattern
+pin_pattern_exclude :porte, :portf
+</code></pre>
 
       <p>An error will be raised if the same pin appears in both <code>pin_pattern_order</code> and <code>pin_pattern_exclude</code>.</p>
 
