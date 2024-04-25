@@ -6,7 +6,7 @@
 <title>
   Class: OrigenTesters::SmartestBasedTester::Base::Processors::ExtractFlowVars
   
-    &mdash; Origen Testers 0.51.5
+    &mdash; Origen Testers 0.52.0
   
 </title>
 
@@ -129,7 +129,8 @@
         <dt id="CATEGORIES-constant" class="">CATEGORIES =
           
         </dt>
-        <dd><pre class="code"><span class='lbracket'>[</span><span class='symbol'>:jobs</span><span class='comma'>,</span> <span class='symbol'>:referenced_flags</span><span class='comma'>,</span> <span class='symbol'>:set_flags</span><span class='comma'>,</span> <span class='symbol'>:set_flags_extern</span><span class='comma'>,</span>
+        <dd><pre class="code"><span class='lbracket'>[</span><span class='symbol'>:jobs</span><span class='comma'>,</span> <span class='symbol'>:referenced_flags</span><span class='comma'>,</span> <span class='symbol'>:set_flags</span><span class='comma'>,</span> <span class='symbol'>:unset_flags</span><span class='comma'>,</span> <span class='symbol'>:add_flags</span><span class='comma'>,</span>
+<span class='symbol'>:set_flags_extern</span><span class='comma'>,</span> <span class='symbol'>:unset_flags_extern</span><span class='comma'>,</span> <span class='symbol'>:add_flags_extern</span><span class='comma'>,</span>
 <span class='symbol'>:referenced_enables</span><span class='comma'>,</span> <span class='symbol'>:set_enables</span><span class='rbracket'>]</span></pre></dd>
       
     </dl>
@@ -148,6 +149,28 @@
     </h2>
 
     <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#on_add_flag-instance_method" title="#on_add_flag (instance method)">#<strong>on_add_flag</strong>(node)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
       
         <li class="public ">
   <span class="summary_signature">
@@ -314,6 +337,28 @@
         <li class="public ">
   <span class="summary_signature">
     
+      <a href="#on_unset_flag-instance_method" title="#on_unset_flag (instance method)">#<strong>on_unset_flag</strong>(node)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#run-instance_method" title="#run (instance method)">#<strong>run</strong>(node, options = {})  &#x21d2; Object </a>
     
 
@@ -355,7 +400,45 @@
 
     
       <div class="method_details first">
-  <h3 class="signature first" id="on_enable-instance_method">
+  <h3 class="signature first" id="on_add_flag-instance_method">
+  
+    #<strong>on_add_flag</strong>(node)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+84
+85
+86
+87
+88
+89
+90</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/smartest_based_tester/base/processors/extract_flow_vars.rb', line 84</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_on_add_flag'>on_add_flag</span><span class='lparen'>(</span><span class='id identifier rubyid_node'>node</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_add'>add</span> <span class='id identifier rubyid_generate_flag_name'>generate_flag_name</span><span class='lparen'>(</span><span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_value'>value</span><span class='rparen'>)</span><span class='comma'>,</span> <span class='symbol'>:add_flags</span>
+  <span class='comment'># Also separate flags which have been set and which should be externally visible
+</span>  <span class='kw'>if</span> <span class='op'>!</span><span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_to_a'>to_a</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>auto_generated</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='op'>||</span> <span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_to_a'>to_a</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>extern</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_add'>add</span> <span class='id identifier rubyid_generate_flag_name'>generate_flag_name</span><span class='lparen'>(</span><span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_value'>value</span><span class='rparen'>)</span><span class='comma'>,</span> <span class='symbol'>:add_flags_extern</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="on_enable-instance_method">
   
     #<strong>on_enable</strong>(node)  &#x21d2; <tt>Object</tt> 
   
@@ -373,13 +456,13 @@
       <pre class="lines">
 
 
-84
-85
-86
-87</pre>
+101
+102
+103
+104</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/smartest_based_tester/base/processors/extract_flow_vars.rb', line 84</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/smartest_based_tester/base/processors/extract_flow_vars.rb', line 101</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_on_enable'>on_enable</span><span class='lparen'>(</span><span class='id identifier rubyid_node'>node</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_flag'>flag</span> <span class='op'>=</span> <span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_value'>value</span><span class='period'>.</span><span class='id identifier rubyid_upcase'>upcase</span>
@@ -409,16 +492,16 @@
       <pre class="lines">
 
 
-75
-76
-77
-78
-79
-80
-81</pre>
+92
+93
+94
+95
+96
+97
+98</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/smartest_based_tester/base/processors/extract_flow_vars.rb', line 75</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/smartest_based_tester/base/processors/extract_flow_vars.rb', line 92</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_on_if_enabled'>on_if_enabled</span><span class='lparen'>(</span><span class='id identifier rubyid_node'>node</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_flag'>flag</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_nodes'>nodes</span> <span class='op'>=</span> <span class='op'>*</span><span class='id identifier rubyid_node'>node</span>
@@ -451,16 +534,16 @@
       <pre class="lines">
 
 
-58
 59
 60
 61
 62
 63
-64</pre>
+64
+65</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/smartest_based_tester/base/processors/extract_flow_vars.rb', line 58</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/smartest_based_tester/base/processors/extract_flow_vars.rb', line 59</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_on_if_flag'>on_if_flag</span><span class='lparen'>(</span><span class='id identifier rubyid_node'>node</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_flag'>flag</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_nodes'>nodes</span> <span class='op'>=</span> <span class='op'>*</span><span class='id identifier rubyid_node'>node</span>
@@ -493,13 +576,13 @@
       <pre class="lines">
 
 
-52
 53
 54
-55</pre>
+55
+56</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/smartest_based_tester/base/processors/extract_flow_vars.rb', line 52</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/smartest_based_tester/base/processors/extract_flow_vars.rb', line 53</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_on_if_job'>on_if_job</span><span class='lparen'>(</span><span class='id identifier rubyid_node'>node</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_add'>add</span> <span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>JOB</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='symbol'>:jobs</span>
@@ -525,13 +608,13 @@
       <pre class="lines">
 
 
-90
-91
-92
-93</pre>
+107
+108
+109
+110</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/smartest_based_tester/base/processors/extract_flow_vars.rb', line 90</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/smartest_based_tester/base/processors/extract_flow_vars.rb', line 107</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_on_set'>on_set</span><span class='lparen'>(</span><span class='id identifier rubyid_node'>node</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_flag'>flag</span> <span class='op'>=</span> <span class='id identifier rubyid_generate_flag_name'>generate_flag_name</span><span class='lparen'>(</span><span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_to_a'>to_a</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='rparen'>)</span>
@@ -557,16 +640,16 @@
       <pre class="lines">
 
 
-67
 68
 69
 70
 71
 72
-73</pre>
+73
+74</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/smartest_based_tester/base/processors/extract_flow_vars.rb', line 67</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/smartest_based_tester/base/processors/extract_flow_vars.rb', line 68</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_on_set_flag'>on_set_flag</span><span class='lparen'>(</span><span class='id identifier rubyid_node'>node</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_add'>add</span> <span class='id identifier rubyid_generate_flag_name'>generate_flag_name</span><span class='lparen'>(</span><span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_value'>value</span><span class='rparen'>)</span><span class='comma'>,</span> <span class='symbol'>:set_flags</span>
@@ -595,7 +678,6 @@
       <pre class="lines">
 
 
-39
 40
 41
 42
@@ -606,10 +688,11 @@
 47
 48
 49
-50</pre>
+50
+51</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/smartest_based_tester/base/processors/extract_flow_vars.rb', line 39</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/smartest_based_tester/base/processors/extract_flow_vars.rb', line 40</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_on_sub_flow'>on_sub_flow</span><span class='lparen'>(</span><span class='id identifier rubyid_node'>node</span><span class='rparen'>)</span>
   <span class='ivar'>@sub_flow_depth</span> <span class='op'>+=</span> <span class='int'>1</span>
@@ -622,6 +705,44 @@
   <span class='ivar'>@sub_flow_depth</span> <span class='op'>-=</span> <span class='int'>1</span>
   <span class='id identifier rubyid_process_all'>process_all</span><span class='lparen'>(</span><span class='id identifier rubyid_on_fail'>on_fail</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_process_all'>process_all</span><span class='lparen'>(</span><span class='id identifier rubyid_on_pass'>on_pass</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="on_unset_flag-instance_method">
+  
+    #<strong>on_unset_flag</strong>(node)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+76
+77
+78
+79
+80
+81
+82</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/smartest_based_tester/base/processors/extract_flow_vars.rb', line 76</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_on_unset_flag'>on_unset_flag</span><span class='lparen'>(</span><span class='id identifier rubyid_node'>node</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_add'>add</span> <span class='id identifier rubyid_generate_flag_name'>generate_flag_name</span><span class='lparen'>(</span><span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_value'>value</span><span class='rparen'>)</span><span class='comma'>,</span> <span class='symbol'>:unset_flags</span>
+  <span class='comment'># Also separate flags which have been set and which should be externally visible
+</span>  <span class='kw'>if</span> <span class='op'>!</span><span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_to_a'>to_a</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>auto_generated</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='op'>||</span> <span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_to_a'>to_a</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>extern</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_add'>add</span> <span class='id identifier rubyid_generate_flag_name'>generate_flag_name</span><span class='lparen'>(</span><span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_value'>value</span><span class='rparen'>)</span><span class='comma'>,</span> <span class='symbol'>:unset_flags_extern</span>
+  <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -643,7 +764,6 @@
       <pre class="lines">
 
 
-13
 14
 15
 16
@@ -667,10 +787,11 @@
 34
 35
 36
-37</pre>
+37
+38</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen_testers/smartest_based_tester/base/processors/extract_flow_vars.rb', line 13</span>
+      <pre class="code"><span class="info file"># File 'lib/origen_testers/smartest_based_tester/base/processors/extract_flow_vars.rb', line 14</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_run'>run</span><span class='lparen'>(</span><span class='id identifier rubyid_node'>node</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='ivar'>@variables</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
@@ -707,9 +828,9 @@
 </div>
 
       <div id="footer">
-  Generated on Thu Apr 11 08:45:16 2024 by
+  Generated on Thu Apr 25 16:57:49 2024 by
   <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.28 (ruby-2.7.6).
+  0.9.28 (ruby-2.6.0).
 </div>
 
     </div>
