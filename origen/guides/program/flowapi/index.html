@@ -798,6 +798,19 @@ end
 
       <p>In all cases the <code>$</code> will be removed from the final flag name that appears in the test program.</p>
 
+      <p>Whenever you set a flag or automation initializes a variable, you can remove the variable from initialization flow by labeling as a global flag
+with the <code>add_global_flag</code> API. The below example will set the <code>global</code> variable in the flow but not initialize it to a value. <code>non_global</code> will behave as normal.</p>
+
+      <pre><code class="language-ruby">add_global_flag :global
+test :global_test1, on_fail: { set_flag: :$non_global }, continue: true
+unless_flag "$global" do
+  set_flag '$non_global'
+end
+if_flag "$non_global" do
+  set_flag '$global'
+end
+</code></pre>
+
       <div>    
   <a class="anchor" name="Adding_the_V93K_bypass_option:"></a>          
   <h4><a href="#Adding_the_V93K_bypass_option:">Adding the V93K bypass option:</a></h4>          
