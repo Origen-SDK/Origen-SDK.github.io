@@ -19,8 +19,8 @@
     <link rel="author" href="https://plus.google.com/u/1/b/106463981272125989995/106463981272125989">
   
   
-    <meta property="og:url" content="https://origen-sdk.org/origen/home/priykuma/">
-    <meta name="twitter:url" content="https://origen-sdk.org/origen/home/priykuma/">
+    <meta property="og:url" content="https://origen-sdk.org/origen/users/priykuma/origen_gems/peologin_v7p5_gems/">
+    <meta name="twitter:url" content="https://origen-sdk.org/origen/users/priykuma/origen_gems/peologin_v7p5_gems/">
   
   
     <meta property="og:image" content="https://origen-sdk.org/favicon-260x260.png">
@@ -774,6 +774,9 @@ test :test2, if_flag: :my_pass_flag
 unless_flag :my_pass_flag do
   test :test3
 end
+
+log "Example of manually unsetting flag"
+test :test4, on_pass: { unset_flag :my_custom_flag1 }
 </code></pre>
 
       <p>Note that flag names will usually be forced to uppercase, this is to institute a convention that
@@ -794,6 +797,13 @@ unless_enable "$MCEn_test" do
   test :test1
   test :test2
 end
+</code></pre>
+
+      <p>For custom environment libraries, there might be a need to reference a flag without using the native
+flag API. <code>add_flag</code> will allow the flow and sub-flow to have access to the flag without adding to the flow.</p>
+
+      <pre><code class="language-ruby">log "Example of manually adding a flag to a flow without calling the flag"
+add_flag :my_custom_flag2
 </code></pre>
 
       <p>In all cases the <code>$</code> will be removed from the final flag name that appears in the test program.</p>
@@ -843,8 +853,8 @@ end
 </code></pre>
 
       <div>    
-  <a class="anchor" name="Flow_Loops_for_V93k_(SMT7_only)"></a>          
-  <h4><a href="#Flow_Loops_for_V93k_(SMT7_only)">Flow Loops for V93k (SMT7 only)</a></h4>          
+  <a class="anchor" name="Flow_Loops_for_V93k"></a>          
+  <h4><a href="#Flow_Loops_for_V93k">Flow Loops for V93k</a></h4>          
 </div>
       <p>Use flow loop control to permit re-running tests without using additional sequence labels.</p>
 
@@ -855,25 +865,39 @@ end
 
       <p>Indicating step value is optional, default is 1.</p>
 
-      <p>These loops can also be nested:
-~~~ruby
-loop from: 0, to: 9, step: 2, var: ‘$LOOP_VARIABLE1’do
-  loop from: 1, to: 10, step: 1, var: ‘$LOOP_VARIABLE2’ do
-    loop from: 1, to: 5, step: 1, var: ‘$LOOP_VARIABLE3’ do
+      <p>These loops can also be nested:</p>
+
+      <pre><code class="language-ruby">loop from: 0, to: 9, step: 2, var: '$LOOP_VARIABLE1'do
+  loop from: 1, to: 10, step: 1, var: '$LOOP_VARIABLE2' do
+    loop from: 1, to: 5, step: 1, var: '$LOOP_VARIABLE3' do
       func :test_myloop5, number: 56400
     end
   end
 end
-~~~</p>
+</code></pre>
 
-      <p>You can also indicate a test number increment if desired (default is 1):
-~~~ruby
-loop from: 0, to: 5, var: ‘$LOOP_VARIABLE’, test_num_inc: 2 do
+      <p>You can also indicate a test number increment if desired (default is 1):</p>
+
+      <pre><code class="language-ruby">loop from: 0, to: 5, var: '$LOOP_VARIABLE', test_num_inc: 2 do
     func :test_myloop3, number: 56200
 end
-~~~</p>
+</code></pre>
+
+      <p>You can also provide a variable starting point:</p>
+
+      <pre><code class="language-ruby">loop from: '$TEST_VARIABLE', to: 5, var: '$LOOP_VARIABLE' do
+    func :test_myloop6, number: 56600
+end
+</code></pre>
 
       <p>Decrementing loops, having <code>from:</code> value &gt; <code>to:</code> value and using negative <code>step:</code>, is also supported.</p>
+
+      <h5 id="loop-rules-for-each-environment">Loop Rules For Each Environment</h5>
+
+      <p><code>SMT7</code> cannot support a variable stop location. Only the <code>from:</code> parameter is allowed to be a variable.</p>
+
+      <p><code>SMT8</code> cannot have a step other than -1 or 1. The limitations of the range flow restrict those steps.
+The <code>to:</code> parameter can be a flow variable just like <code>from:</code>.</p>
 
       <div style="position: relative">
   <hr>

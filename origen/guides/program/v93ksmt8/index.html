@@ -19,8 +19,8 @@
     <link rel="author" href="https://plus.google.com/u/1/b/106463981272125989995/106463981272125989">
   
   
-    <meta property="og:url" content="https://origen-sdk.org/origen/home/priykuma/">
-    <meta name="twitter:url" content="https://origen-sdk.org/origen/home/priykuma/">
+    <meta property="og:url" content="https://origen-sdk.org/origen/users/priykuma/origen_gems/peologin_v7p5_gems/">
+    <meta name="twitter:url" content="https://origen-sdk.org/origen/users/priykuma/origen_gems/peologin_v7p5_gems/">
   
   
     <meta property="og:image" content="https://origen-sdk.org/favicon-260x260.png">
@@ -555,6 +555,40 @@ It generates an <code>ENABLE</code> flow parameter which could be used something
         MY_FLOW_2.execute();
     }
 }
+</code></pre>
+
+      <div>    
+  <a class="anchor" name="Auxiliary_Flows"></a>          
+  <h4><a href="#Auxiliary_Flows">Auxiliary Flows</a></h4>          
+</div>
+
+      <p>SMT8 utilizes auxiliary flows to perform recurring actions. <code>add_auxiliary_flow</code> API exists to symlink to a predefined auxiliary flow.
+This API does not allow variables to be passed to or from the auxiliary flow since they are stand alone flows.</p>
+
+      <pre><code class="language-ruby">add_auxiliary_flow :POWERDOWN, 'testflow.POWERDOWN'
+</code></pre>
+
+      <pre><code class="language-java">flow Main {
+    setup {
+        flow POWERDOWN calls testflow.POWERDOWN {}
+    }
+
+    execute {
+        POWERDOWN.execute();
+    }
+}
+</code></pre>
+
+      <div>    
+  <a class="anchor" name="Flow_Variable_Grouping"></a>          
+  <h4><a href="#Flow_Variable_Grouping">Flow Variable Grouping</a></h4>          
+</div>
+
+      <p>Sub-flow variable passing causes variables before and after the execution call to populate the flow.
+If you wish to have a collapse-able block for the variables, you need to set the flow_variable_grouping variable to true.</p>
+
+      <pre><code># add this line to your origen_site_config.yml
+flow_variable_grouping: true
 </code></pre>
 
       <div style="position: relative">
