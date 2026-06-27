@@ -6,13 +6,13 @@
 <title>
   Class: OrigenTesters::ATP::Processors::Condition
   
-    &mdash; Origen Testers 0.52.15
+    &mdash; Origen Testers 0.53.0
   
 </title>
 
-  <link rel="stylesheet" href="../../../css/style.css" type="text/css" />
+  <link rel="stylesheet" href="../../../css/style.css" type="text/css">
 
-  <link rel="stylesheet" href="../../../css/common.css" type="text/css" />
+  <link rel="stylesheet" href="../../../css/common.css" type="text/css">
 
 <script type="text/javascript">
   pathId = "OrigenTesters::ATP::Processors::Condition";
@@ -27,6 +27,8 @@
 
   </head>
   <body>
+    <div id="main_progress" aria-hidden="true"></div>
+
     <div class="nav_wrap">
       <iframe id="nav" src="../../../class_list.html?1"></iframe>
       <div id="resizer"></div>
@@ -96,56 +98,52 @@
   
   <dl>
     <dt>Defined in:</dt>
-    <dd>lib/origen_testers/atp/processors/condition.rb</dd>
+    <dd>lib/origen_testers/atp/processors/condition.rb
+</dd>
   </dl>
   
 </div>
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    
-<p>This optimizes the condition nodes such that any adjacent flow nodes that have the same condition, will be grouped together under a single condition wrapper.</p>
-
+    <p>This optimizes the condition nodes such that any adjacent flow nodes that
+have the same condition, will be grouped together under a single condition
+wrapper.</p>
 <p>For example this AST:</p>
-
 <pre class="code ruby"><code class="ruby">(flow
-  (group
-    (name &quot;g1&quot;)
-    (test
-      (name &quot;test1&quot;))
-    (flow-flag &quot;bitmap&quot; true
-      (test
-        (name &quot;test2&quot;))))
+(group
+  (name &quot;g1&quot;)
+  (test
+    (name &quot;test1&quot;))
   (flow-flag &quot;bitmap&quot; true
-    (group
-      (name &quot;g1&quot;)
-      (flow-flag &quot;x&quot; true
-        (test
-          (name &quot;test3&quot;)))
-      (flow-flag &quot;y&quot; true
-        (flow-flag &quot;x&quot; true
-          (test
-            (name &quot;test4&quot;)))))))
-</code></pre>
-
-<p>Will be optimized to this:</p>
-
-<pre class="code ruby"><code class="ruby">(flow
+    (test
+      (name &quot;test2&quot;))))
+(flow-flag &quot;bitmap&quot; true
   (group
     (name &quot;g1&quot;)
-    (test
-      (name &quot;test1&quot;))
-    (flow-flag &quot;bitmap&quot; true
+    (flow-flag &quot;x&quot; true
       (test
-        (name &quot;test2&quot;))
+        (name &quot;test3&quot;)))
+    (flow-flag &quot;y&quot; true
       (flow-flag &quot;x&quot; true
         (test
-          (name &quot;test3&quot;))
-        (flow-flag &quot;y&quot; true
-          (test
-            (name &quot;test4&quot;)))))))
+          (name &quot;test4&quot;)))))))
 </code></pre>
-
+<p>Will be optimized to this:</p>
+<pre class="code ruby"><code class="ruby">(flow
+(group
+  (name &quot;g1&quot;)
+  (test
+    (name &quot;test1&quot;))
+  (flow-flag &quot;bitmap&quot; true
+    (test
+      (name &quot;test2&quot;))
+    (flow-flag &quot;x&quot; true
+      (test
+        (name &quot;test3&quot;))
+      (flow-flag &quot;y&quot; true
+        (test
+          (name &quot;test4&quot;)))))))</code></pre>
 
   </div>
 </div>
@@ -388,9 +386,11 @@
 
       
     </ul>
+    
   
 
 
+  
   
   
   
@@ -963,9 +963,9 @@
 </div>
 
       <div id="footer">
-  Generated on Mon Jan 12 11:05:56 2026 by
+  Generated on Sat Jun 27 16:58:38 2026 by
   <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.37 (ruby-2.6.0).
+  0.9.44 (ruby-4.0.1).
 </div>
 
     </div>
