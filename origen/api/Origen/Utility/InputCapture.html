@@ -6,7 +6,7 @@
 <title>
   Module: Origen::Utility::InputCapture
   
-    &mdash; Origen Core 0.61.2
+    &mdash; Origen Core 0.61.3
   
 </title>
 
@@ -207,14 +207,14 @@ can be found</p>
       <pre class="lines">
 
 
-120
-121
-122
-123
-124</pre>
+127
+128
+129
+130
+131</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/utility/input_capture.rb', line 120</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/utility/input_capture.rb', line 127</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_find_space'>find_space</span><span class='lparen'>(</span><span class='id identifier rubyid_line'>line</span><span class='comma'>,</span> <span class='id identifier rubyid_max_position'>max_position</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_x'>x</span> <span class='op'>=</span> <span class='id identifier rubyid_max_position'>max_position</span>
@@ -336,7 +336,14 @@ Supply an optional default value in the event that the user enters nothing</p>
 96
 97
 98
-99</pre>
+99
+100
+101
+102
+103
+104
+105
+106</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/origen/utility/input_capture.rb', line 14</span>
@@ -369,7 +376,14 @@ Supply an optional default value in the event that the user enters nothing</p>
   <span class='kw'>end</span>
 
   <span class='kw'>while</span> <span class='id identifier rubyid_line'>line</span> <span class='op'>!=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>.</span><span class='tstring_end'>&#39;</span></span>
-    <span class='id identifier rubyid_orig_line'>orig_line</span> <span class='op'>=</span> <span class='const'>Readline</span><span class='period'>.</span><span class='id identifier rubyid_readline'>readline</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='kw'>false</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_chomp'>chomp</span><span class='period'>.</span><span class='id identifier rubyid_rstrip'>rstrip</span>
+    <span class='comment'># readline was extracted from the stdlib in Ruby 4.0 and may not be
+</span>    <span class='comment'># installed. Fall back to plain $stdin input when it is unavailable so
+</span>    <span class='comment'># interactive prompts still work (e.g. `origen rc tag`).
+</span>    <span class='id identifier rubyid_orig_line'>orig_line</span> <span class='op'>=</span> <span class='kw'>if</span> <span class='kw'>defined?</span><span class='lparen'>(</span><span class='const'>Readline</span><span class='rparen'>)</span>
+                  <span class='const'>Readline</span><span class='period'>.</span><span class='id identifier rubyid_readline'>readline</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='kw'>false</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='period'>.</span><span class='id identifier rubyid_chomp'>chomp</span><span class='period'>.</span><span class='id identifier rubyid_rstrip'>rstrip</span>
+                <span class='kw'>else</span>
+                  <span class='lparen'>(</span><span class='gvar'>$stdin</span><span class='period'>.</span><span class='id identifier rubyid_gets'>gets</span> <span class='op'>||</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>quit\n</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_chomp'>chomp</span><span class='period'>.</span><span class='id identifier rubyid_rstrip'>rstrip</span>
+                <span class='kw'>end</span>
     <span class='id identifier rubyid_line'>line</span> <span class='op'>=</span> <span class='id identifier rubyid_orig_line'>orig_line</span><span class='period'>.</span><span class='id identifier rubyid_strip'>strip</span>
     <span class='kw'>if</span> <span class='lparen'>(</span><span class='id identifier rubyid_line'>line</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span> <span class='op'>||</span> <span class='id identifier rubyid_line'>line</span> <span class='op'>==</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>.</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_text'>text</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='lbracket'>[</span><span class='symbol'>:default</span><span class='rbracket'>]</span>
       <span class='id identifier rubyid_text'>text</span> <span class='op'>=</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='lbracket'>[</span><span class='symbol'>:default</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span>
@@ -456,13 +470,6 @@ Supply an optional default value in the event that the user enters nothing</p>
       <pre class="lines">
 
 
-102
-103
-104
-105
-106
-107
-108
 109
 110
 111
@@ -470,10 +477,17 @@ Supply an optional default value in the event that the user enters nothing</p>
 113
 114
 115
-116</pre>
+116
+117
+118
+119
+120
+121
+122
+123</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/utility/input_capture.rb', line 102</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/utility/input_capture.rb', line 109</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_split_long_line'>split_long_line</span><span class='lparen'>(</span><span class='id identifier rubyid_line'>line</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_line'>line</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span> <span class='op'>&lt;=</span> <span class='int'>90</span>
@@ -500,7 +514,7 @@ Supply an optional default value in the event that the user enters nothing</p>
 </div>
 
       <div id="footer">
-  Generated on Sat Jun 27 16:25:13 2026 by
+  Generated on Sat Jun 27 16:54:48 2026 by
   <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.44 (ruby-4.0.1).
 </div>
