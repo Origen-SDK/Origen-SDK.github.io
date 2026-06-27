@@ -6,13 +6,13 @@
 <title>
   Class: Origen::RegressionManager
   
-    &mdash; Origen Core 0.60.18
+    &mdash; Origen Core 0.61.2
   
 </title>
 
-  <link rel="stylesheet" href="../css/style.css" type="text/css" />
+  <link rel="stylesheet" href="../css/style.css" type="text/css">
 
-  <link rel="stylesheet" href="../css/common.css" type="text/css" />
+  <link rel="stylesheet" href="../css/common.css" type="text/css">
 
 <script type="text/javascript">
   pathId = "Origen::RegressionManager";
@@ -27,6 +27,8 @@
 
   </head>
   <body>
+    <div id="main_progress" aria-hidden="true"></div>
+
     <div class="nav_wrap">
       <iframe id="nav" src="../class_list.html?1"></iframe>
       <div id="resizer"></div>
@@ -99,33 +101,26 @@
   
   <dl>
     <dt>Defined in:</dt>
-    <dd>lib/origen/regression_manager.rb</dd>
+    <dd>lib/origen/regression_manager.rb
+</dd>
   </dl>
   
 </div>
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    
-<p>Supports executing code regression testing.</p>
-
-<p>Reference workspace used for comparison will automatically be populated based on tag selected (default: latest).</p>
-
-<p>An instance of this class is hooked up to:</p>
-
-<pre class="code ruby"><code class="ruby"><span class='const'><span class='object_link'><a href="../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_regression_manager'><span class='object_link'><a href="../Origen.html#regression_manager-class_method" title="Origen.regression_manager (method)">regression_manager</a></span></span>
-</code></pre>
-
-<h2 id="label-Basic+Usage">Basic Usage</h2>
-
-<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='lbracket'>[</span><span class='symbol'>:target</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='qwords_beg'>%w{</span><span class='tstring_content'>target1.rb</span><span class='words_sep'> </span><span class='tstring_content'>target2.rb</span><span class='words_sep'> </span><span class='tstring_content'>target3.rb</span><span class='tstring_end'>}</span></span>
-<span class='const'><span class='object_link'><a href="../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_regression_manager'><span class='object_link'><a href="../Origen.html#regression_manager-class_method" title="Origen.regression_manager (method)">regression_manager</a></span></span><span class='period'>.</span><span class='id identifier rubyid_run'>run</span><span class='lparen'>(</span><span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='op'>|</span>
-  <span class='const'><span class='object_link'><a href="../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_target'><span class='object_link'><a href="../Origen.html#target-class_method" title="Origen.target (method)">target</a></span></span><span class='period'>.</span><span class='id identifier rubyid_loop'>loop</span><span class='lparen'>(</span><span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='op'>|</span>
-    <span class='const'><span class='object_link'><a href="../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_lsf'><span class='object_link'><a href="../Origen.html#lsf-class_method" title="Origen.lsf (method)">lsf</a></span></span><span class='period'>.</span><span class='id identifier rubyid_submit_origen_job'>submit_origen_job</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>generate regression.list -t </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='lbracket'>[</span><span class='symbol'>:target</span><span class='rbracket'>]</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
-  <span class='kw'>end</span>
-<span class='kw'>end</span>
-</code></pre>
-
+    <p>Supports executing code regression testing.</p>
+<p>Reference workspace used for comparison will automatically be
+populated based on tag selected (default: latest).</p>
+<p>An instance of this class is hooked up to:
+Origen.regression_manager</p>
+<h2 id="Basic_Usage">Basic Usage</h2>
+<p><a href=":target">options</a> = %wtarget2.rb target3.rb
+Origen.regression_manager.run(options) do |options|
+Origen.target.loop(options) do |options|
+Origen.lsf.submit_origen_job &quot;generate regression.list -t #options[:target]&quot;
+end
+end</p>
 
   </div>
 </div>
@@ -164,9 +159,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>We want the reference workspace to run the same regression as the local workspace, so copy the current version of the regression command file across.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>We want the reference workspace to run the same regression as the local workspace, so copy the current version of the regression command file across.</p></div></span>
   
 </li>
 
@@ -276,9 +269,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Cycle through all targets in the upcoming run to ensure that all output directories exist.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Cycle through all targets in the upcoming run to ensure that all output directories exist.</p></div></span>
   
 </li>
 
@@ -322,9 +313,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Returns a full path to the regression command file within the local application.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Returns a full path to the regression command file within the local application.</p></div></span>
   
 </li>
 
@@ -346,9 +335,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Serves to execute a regression.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Serves to execute a regression.</p></div></span>
   
 </li>
 
@@ -392,9 +379,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Saves all generated output (to the reference dir) and then deletes the output directory to save space.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Saves all generated output (to the reference dir) and then deletes the output directory to save space.</p></div></span>
   
 </li>
 
@@ -554,9 +539,11 @@
 
       
     </ul>
+    
   
 
 
+  
   
   
   
@@ -568,6 +555,7 @@
   <h3 class="inherited">Methods included from <span class='object_link'><a href="Users.html" title="Origen::Users (module)">Users</a></span></h3>
   <p class="inherited"><span class='object_link'><a href="Users.html#admins-instance_method" title="Origen::Users#admins (method)">#admins</a></span>, <span class='object_link'><a href="Users.html#app_users-instance_method" title="Origen::Users#app_users (method)">#app_users</a></span>, <span class='object_link'><a href="Users.html#current_user-instance_method" title="Origen::Users#current_user (method)">#current_user</a></span></p>
 
+  
   
   
   
@@ -595,9 +583,9 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>We want the reference workspace to run the same regression as the local workspace, so copy the current version of the regression command file across.</p>
-
+    <p>We want the reference workspace to run the same regression as the local
+workspace, so copy the current version of the regression command file
+across.</p>
 
   </div>
 </div>
@@ -840,9 +828,8 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Cycle through all targets in the upcoming run to ensure that all output directories exist</p>
-
+    <p>Cycle through all targets in the upcoming run to ensure
+that all output directories exist</p>
 
   </div>
 </div>
@@ -933,9 +920,7 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Returns a full path to the regression command file within the local application</p>
-
+    <p>Returns a full path to the regression command file within the local application</p>
 
   </div>
 </div>
@@ -980,9 +965,8 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Serves to execute a regression. Any block of code passed to this method will receive regression check</p>
-
+    <p>Serves to execute a regression.
+Any block of code passed to this method will receive regression check</p>
 
   </div>
 </div>
@@ -1002,9 +986,7 @@
       
       
         &mdash;
-        <div class='inline'>
-<p>Options to customize the run instance</p>
-</div>
+        <div class='inline'><p>Options to customize the run instance</p></div>
       
     </li>
   
@@ -1023,9 +1005,7 @@
             
           </span>
           
-            &mdash; <div class='inline'>
-<p>String Array of target names on which to run regression</p>
-</div>
+            &mdash; <div class='inline'><p>String Array of target names on which to run regression</p></div>
           
         </li>
       
@@ -1039,9 +1019,7 @@
             
           </span>
           
-            &mdash; <div class='inline'>
-<p>Build reference workspace automatically</p>
-</div>
+            &mdash; <div class='inline'><p>Build reference workspace automatically</p></div>
           
         </li>
       
@@ -1055,9 +1033,7 @@
             
           </span>
           
-            &mdash; <div class='inline'>
-<p>whether to use a git init or git clone method to build the workspace</p>
-</div>
+            &mdash; <div class='inline'><p>whether to use a git init or git clone method to build the workspace</p></div>
           
         </li>
       
@@ -1071,9 +1047,7 @@
             
           </span>
           
-            &mdash; <div class='inline'>
-<p>Send results email when regression complete</p>
-</div>
+            &mdash; <div class='inline'><p>Send results email when regression complete</p></div>
           
         </li>
       
@@ -1087,9 +1061,7 @@
             
           </span>
           
-            &mdash; <div class='inline'>
-<p>If sending email, whether to email all developers or just user</p>
-</div>
+            &mdash; <div class='inline'><p>If sending email, whether to email all developers or just user</p></div>
           
         </li>
       
@@ -1103,9 +1075,7 @@
             
           </span>
           
-            &mdash; <div class='inline'>
-<p>Whether to report results inline to console</p>
-</div>
+            &mdash; <div class='inline'><p>Whether to report results inline to console</p></div>
           
         </li>
       
@@ -1232,7 +1202,7 @@
       <span class='const'><span class='object_link'><a href="../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_with_origen_root'><span class='object_link'><a href="../Origen.html#with_origen_root-class_method" title="Origen.with_origen_root (method)">with_origen_root</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_reference_origen_root'>reference_origen_root</span><span class='rparen'>)</span> <span class='kw'>do</span>
         <span class='id identifier rubyid_disable_origen_version_check'>disable_origen_version_check</span> <span class='kw'>do</span>
           <span class='const'>Dir</span><span class='period'>.</span><span class='id identifier rubyid_chdir'>chdir</span> <span class='id identifier rubyid_reference_origen_root'>reference_origen_root</span> <span class='kw'>do</span>
-            <span class='const'>Bundler</span><span class='period'>.</span><span class='id identifier rubyid_with_clean_env'>with_clean_env</span> <span class='kw'>do</span>
+            <span class='id identifier rubyid__origen_with_bundler_clean_env'><span class='object_link'><a href="../top-level-namespace.html#_origen_with_bundler_clean_env-instance_method" title="#_origen_with_bundler_clean_env (method)">_origen_with_bundler_clean_env</a></span></span> <span class='kw'>do</span>
               <span class='comment'># Origen 0.40.0 started using origen-owned binstubs
 </span>              <span class='id identifier rubyid_system'>system</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>rm -rf lbin</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>if</span> <span class='const'>Gem</span><span class='op'>::</span><span class='const'>Version</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_version'><span class='object_link'><a href="../Origen.html#version-class_method" title="Origen.version (method)">version</a></span></span><span class='rparen'>)</span> <span class='op'>&lt;</span> <span class='const'>Gem</span><span class='op'>::</span><span class='const'>Version</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>0.40.0</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
               <span class='comment'># If regression is run using a service account, we need to setup the path/bundler manually
@@ -1357,9 +1327,8 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Saves all generated output (to the reference dir) and then deletes the output directory to save space</p>
-
+    <p>Saves all generated output (to the reference dir) and then
+deletes the output directory to save space</p>
 
   </div>
 </div>
@@ -1394,7 +1363,7 @@
   <span class='const'><span class='object_link'><a href="../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_lsf'><span class='object_link'><a href="../Origen.html#lsf-class_method" title="Origen.lsf (method)">lsf</a></span></span><span class='period'>.</span><span class='id identifier rubyid_build_log'>build_log</span><span class='lparen'>(</span><span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='rparen'>)</span>
   <span class='const'><span class='object_link'><a href="../Origen.html" title="Origen (module)">Origen</a></span></span><span class='period'>.</span><span class='id identifier rubyid_log'><span class='object_link'><a href="../Origen.html#log-class_method" title="Origen.log (method)">log</a></span></span><span class='period'>.</span><span class='id identifier rubyid_flush'>flush</span>
   <span class='const'>Dir</span><span class='period'>.</span><span class='id identifier rubyid_chdir'>chdir</span> <span class='id identifier rubyid_reference_origen_root'>reference_origen_root</span> <span class='kw'>do</span>
-    <span class='const'>Bundler</span><span class='period'>.</span><span class='id identifier rubyid_with_clean_env'>with_clean_env</span> <span class='kw'>do</span>
+    <span class='id identifier rubyid__origen_with_bundler_clean_env'><span class='object_link'><a href="../top-level-namespace.html#_origen_with_bundler_clean_env-instance_method" title="#_origen_with_bundler_clean_env (method)">_origen_with_bundler_clean_env</a></span></span> <span class='kw'>do</span>
       <span class='kw'>if</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='lbracket'>[</span><span class='symbol'>:log_file</span><span class='rbracket'>]</span>
         <span class='id identifier rubyid_system'>system</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>bundle exec origen save all -f log/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_options'><span class='object_link'><a href="GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='lbracket'>[</span><span class='symbol'>:log_file</span><span class='rbracket'>]</span><span class='embexpr_end'>}</span><span class='tstring_content'>.txt</span><span class='tstring_end'>&quot;</span></span>
       <span class='kw'>else</span>
@@ -1750,9 +1719,9 @@
 </div>
 
       <div id="footer">
-  Generated on Mon Jan 13 12:07:36 2025 by
+  Generated on Sat Jun 27 16:25:19 2026 by
   <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.36 (ruby-2.6.0).
+  0.9.44 (ruby-4.0.1).
 </div>
 
     </div>

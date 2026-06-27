@@ -6,13 +6,13 @@
 <title>
   Module: Origen::ModelInitializer::ClassMethods
   
-    &mdash; Origen Core 0.60.18
+    &mdash; Origen Core 0.61.2
   
 </title>
 
-  <link rel="stylesheet" href="../../css/style.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/style.css" type="text/css">
 
-  <link rel="stylesheet" href="../../css/common.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/common.css" type="text/css">
 
 <script type="text/javascript">
   pathId = "Origen::ModelInitializer::ClassMethods";
@@ -27,6 +27,8 @@
 
   </head>
   <body>
+    <div id="main_progress" aria-hidden="true"></div>
+
     <div class="nav_wrap">
       <iframe id="nav" src="../../class_list.html?1"></iframe>
       <div id="resizer"></div>
@@ -78,7 +80,8 @@
   
   <dl>
     <dt>Defined in:</dt>
-    <dd>lib/origen/model_initializer.rb</dd>
+    <dd>lib/origen/model_initializer.rb
+</dd>
   </dl>
   
 </div>
@@ -115,14 +118,13 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>This overrides the new method of any class which includes this module to force the newly created instance to be registered as a top-level listener.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>This overrides the new method of any class which includes this module to force the newly created instance to be registered as a top-level listener.</p></div></span>
   
 </li>
 
       
     </ul>
+    
   
 
 
@@ -142,9 +144,9 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>This overrides the new method of any class which includes this module to force the newly created instance to be registered as a top-level listener.</p>
-
+    <p>This overrides the new method of any class which includes this
+module to force the newly created instance to be registered as
+a top-level listener.</p>
 
   </div>
 </div>
@@ -231,7 +233,17 @@
 80
 81
 82
-83</pre>
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/origen/model_initializer.rb', line 9</span>
@@ -298,10 +310,20 @@
     <span class='kw'>if</span> <span class='id identifier rubyid_x'>x</span><span class='period'>.</span><span class='id identifier rubyid_try'>try</span><span class='lparen'>(</span><span class='symbol'>:is_a_model_and_controller</span><span class='rparen'>)</span>
       <span class='id identifier rubyid_m'>m</span> <span class='op'>=</span> <span class='id identifier rubyid_x'>x</span><span class='period'>.</span><span class='id identifier rubyid_model'>model</span>
       <span class='id identifier rubyid_c'>c</span> <span class='op'>=</span> <span class='id identifier rubyid_x'>x</span><span class='period'>.</span><span class='id identifier rubyid_controller'>controller</span>
-      <span class='id identifier rubyid_m'>m</span><span class='period'>.</span><span class='id identifier rubyid_on_create'>on_create</span> <span class='kw'>if</span> <span class='id identifier rubyid_m'>m</span><span class='period'>.</span><span class='id identifier rubyid_respond_to_directly?'>respond_to_directly?</span><span class='lparen'>(</span><span class='symbol'>:on_create</span><span class='rparen'>)</span>
+      <span class='kw'>if</span> <span class='id identifier rubyid_m'>m</span><span class='period'>.</span><span class='id identifier rubyid_respond_to_directly?'>respond_to_directly?</span><span class='lparen'>(</span><span class='symbol'>:on_create</span><span class='rparen'>)</span>
+        <span class='kw'>unless</span> <span class='id identifier rubyid_m_on_create_called'>m_on_create_called</span> <span class='op'>=</span> <span class='id identifier rubyid_m'>m</span><span class='period'>.</span><span class='id identifier rubyid_instance_variable_get'>instance_variable_get</span><span class='lparen'>(</span><span class='symbol'>:@_on_create_called</span><span class='rparen'>)</span>
+          <span class='id identifier rubyid_m'>m</span><span class='period'>.</span><span class='id identifier rubyid_instance_variable_set'>instance_variable_set</span><span class='lparen'>(</span><span class='symbol'>:@_on_create_called</span><span class='comma'>,</span> <span class='kw'>true</span><span class='rparen'>)</span>
+          <span class='id identifier rubyid_m'>m</span><span class='period'>.</span><span class='id identifier rubyid_on_create'>on_create</span>
+        <span class='kw'>end</span>
+      <span class='kw'>end</span>
       <span class='id identifier rubyid_c'>c</span><span class='period'>.</span><span class='id identifier rubyid_on_create'>on_create</span> <span class='kw'>if</span> <span class='id identifier rubyid_c'>c</span><span class='period'>.</span><span class='id identifier rubyid_respond_to_directly?'>respond_to_directly?</span><span class='lparen'>(</span><span class='symbol'>:on_create</span><span class='rparen'>)</span>
     <span class='kw'>else</span>
-      <span class='id identifier rubyid_x'>x</span><span class='period'>.</span><span class='id identifier rubyid_on_create'>on_create</span> <span class='kw'>if</span> <span class='id identifier rubyid_x'>x</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:on_create</span><span class='rparen'>)</span>
+      <span class='kw'>if</span> <span class='id identifier rubyid_x'>x</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:on_create</span><span class='rparen'>)</span>
+        <span class='kw'>unless</span> <span class='id identifier rubyid_x_on_create_called'>x_on_create_called</span> <span class='op'>=</span> <span class='id identifier rubyid_x'>x</span><span class='period'>.</span><span class='id identifier rubyid_instance_variable_get'>instance_variable_get</span><span class='lparen'>(</span><span class='symbol'>:@_on_create_called</span><span class='rparen'>)</span>
+          <span class='id identifier rubyid_x'>x</span><span class='period'>.</span><span class='id identifier rubyid_instance_variable_set'>instance_variable_set</span><span class='lparen'>(</span><span class='symbol'>:@_on_create_called</span><span class='comma'>,</span> <span class='kw'>true</span><span class='rparen'>)</span>
+          <span class='id identifier rubyid_x'>x</span><span class='period'>.</span><span class='id identifier rubyid_on_create'>on_create</span>
+        <span class='kw'>end</span>
+      <span class='kw'>end</span>
     <span class='kw'>end</span>
   <span class='kw'>end</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_is_top_level'>is_top_level</span>
@@ -321,9 +343,9 @@
 </div>
 
       <div id="footer">
-  Generated on Mon Jan 13 12:07:31 2025 by
+  Generated on Sat Jun 27 16:25:13 2026 by
   <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.36 (ruby-2.6.0).
+  0.9.44 (ruby-4.0.1).
 </div>
 
     </div>

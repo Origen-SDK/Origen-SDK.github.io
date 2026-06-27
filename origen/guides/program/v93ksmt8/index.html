@@ -19,8 +19,8 @@
     <link rel="author" href="https://plus.google.com/u/1/b/106463981272125989995/106463981272125989">
   
   
-    <meta property="og:url" content="https://origen-sdk.org/origen/users/chorton/origen_gems/peologin_v7p9_gems/">
-    <meta name="twitter:url" content="https://origen-sdk.org/origen/users/chorton/origen_gems/peologin_v7p9_gems/">
+    <meta property="og:url" content="https://origen-sdk.org/origen/home/priykuma/">
+    <meta name="twitter:url" content="https://origen-sdk.org/origen/home/priykuma/">
   
   
     <meta property="og:image" content="https://origen-sdk.org/favicon-260x260.png">
@@ -509,7 +509,11 @@ OrigenTesters::V93K.new smt_version: 8,
       <p>A top-level test program flow file in Origen will generate a correspondingly named file in the <code>flows/</code> directory,
 where the name of the generated file is the upper-cased version of the source file name.
 If the flow imports sub-flows or contains groups, then those will be contained in a directory named after the
-lower-cased version of the flow name.</p>
+lower-cased version of the flow name. For sub-flow imports, this can be disabled by passing the option
+<code>disable_sub_flow_on_group: true</code> to the import call, or by setting the disable_group option in your sub-flow:
+<code>Flow.create(disable_group: true)</code>. Note that if both are provided, the import option value will take priority.
+When the group is disabled this way, the content of the sub-flow will simply be inserted as if it was defined
+in the calling flow instead of a sub flow.</p>
 
       <h5 id="limits">limits/</h5>
 
@@ -589,6 +593,67 @@ If you wish to have a collapse-able block for the variables, you need to set the
 
       <pre><code># add this line to your origen_site_config.yml
 flow_variable_grouping: true
+</code></pre>
+
+      <div>    
+  <a class="anchor" name="Built-In_Shmoo_Element"></a>          
+  <h4><a href="#Built-In_Shmoo_Element">Built-In Shmoo Element</a></h4>          
+</div>
+
+      <p>SMT8 provides a built in shmoo element that can be used to shmoo a test suite or test flow.
+In order to add setup and execute code to the flow, create the shmoo_test object using <code>shmoo_tests.run(name, options)</code> and add it to the flow with <code>flow.test</code> method.</p>
+
+      <p>Example of integrating the shmoo api in an interface:</p>
+
+      <pre><code class="language-ruby">def shmoo(name, targets, options = {})
+  if tester.v93k? &amp;&amp; tester.smt8?
+    targets = [targets] unless targets.is_a?(Array)
+    st = shmoo_tests.run(name, { targets: targets }.merge(options))
+    flow.test st, options
+  end
+end
+</code></pre>
+
+      <p>Then in the flow, you can add the shmoo element to the flow with the following code:</p>
+
+      <pre><code class="language-ruby">Flow.create
+  ...
+  range = { start: 3.0, stop: 5.0, steps: 10 }
+  axis = { name: :axis1, resource_type: 'specVariable', resource_name: 'vcc', range: range }
+  shmoo :shmoo_over_ts_1D, :cc_test_0, title: 'shmooOverTest', execution_order: :horizontal, axis: axis
+  ...
+end
+</code></pre>
+
+      <p>Please see Advantest TDC Topic 253309 for details ahbout Shmoo parameters.</p>
+
+      <p>The above code will generate the following flow code:</p>
+
+      <pre><code class="language-java">flow &lt;FLOW&gt; {
+    setup {
+        ...
+        shmoo shmoo_over_ts_1D {
+            target = cc_test_0;
+            resultTitle = "shmooOverTest";
+            executionOrder = horizontal;
+		
+            axis [axis1] = {
+                resourceType = specVariable;
+                resourceName = "vcc";
+                range.start = 3.0;
+                range.stop = 5.0;
+                range.steps = 10;
+            };
+        }
+        ...
+    }
+
+    execute {
+        ...
+        shmoo_over_ts_1D.execute();
+        ...
+    }
+}
 </code></pre>
 
       <div style="position: relative">

@@ -19,8 +19,8 @@
     <link rel="author" href="https://plus.google.com/u/1/b/106463981272125989995/106463981272125989">
   
   
-    <meta property="og:url" content="https://origen-sdk.org/origen/users/chorton/origen_gems/peologin_v7p9_gems/">
-    <meta name="twitter:url" content="https://origen-sdk.org/origen/users/chorton/origen_gems/peologin_v7p9_gems/">
+    <meta property="og:url" content="https://origen-sdk.org/origen/home/priykuma/">
+    <meta name="twitter:url" content="https://origen-sdk.org/origen/home/priykuma/">
   
   
     <meta property="og:image" content="https://origen-sdk.org/favicon-260x260.png">
@@ -566,6 +566,62 @@ end
 </code></pre>
 
       <p>This same API may be used to implement similar features on other platforms in future, but for now only the V93K is implemented.</p>
+
+      <div>    
+  <a class="anchor" name="Changing_default_flow_variable_values"></a>          
+  <h4><a href="#Changing_default_flow_variable_values">Changing default flow variable values</a></h4>          
+</div>
+
+      <p>The default values for global_var are 0 since the loading of the file only happens once. However if you want to change the default,
+you can add <code>set_flow_variables(vars)</code> to your Interface class. An example is provided below:</p>
+
+      <pre><code class="language-ruby">def set_flow_variables(vars)
+  [:referenced_enables, :set_enables].each do |key|
+    new_array = []
+    vars[:all][key].each do |var|
+      if var.to_s.match(/MY_VAR_NAME/) 
+        new_array &lt;&lt; [var, 1]
+      else
+        new_array &lt;&lt; var
+      end
+    end
+    vars[:all][key] = new_array
+  end
+end
+</code></pre>
+
+      <div>    
+  <a class="anchor" name="Grouping_on_sub-flows"></a>          
+  <h4><a href="#Grouping_on_sub-flows">Grouping on sub-flows</a></h4>          
+</div>
+
+      <p>By default, imported sub-flows are wrapped in a group named by the passed <code>:name</code> option if provided, otherwise the name of the file is used.</p>
+
+      <pre><code class="language-ruby">import 'my_sub_flow' # sub flow contains single test 'my_test'
+
+# Results in the following output in the .tf file:
+#   {
+#      run(my_test);
+#   }, open,"my_sub_flow", ""
+</code></pre>
+
+      <p>To disable this behavior, you can either pass to your import call the option <code>disable_group_on_sub_flow: true</code>,
+or set <code>disable_group: true</code> in your Flow.create() parameters:</p>
+
+      <pre><code class="language-ruby"># Pass option to import
+import 'my_sub_flow', { disable_group_on_sub_flow: true }
+
+# Or set in Flow.create() in _my_sub_flow.rb
+Flow.create(disable_group: true) do
+  func :my_test
+end
+
+# Results in the following output in the .tf file:
+#   run(my_test);
+</code></pre>
+
+      <p>Note that the import option takes priority, so if <code>Flow.create(disable_group: true)</code>
+is set but import is passed <code>disable_group_on_sub_flow: false</code> then a group will still be created.</p>
 
       <div>    
   <a class="anchor" name="Test_Name_Uniqueness"></a>          

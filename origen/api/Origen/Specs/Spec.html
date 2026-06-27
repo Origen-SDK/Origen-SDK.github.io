@@ -6,13 +6,13 @@
 <title>
   Class: Origen::Specs::Spec
   
-    &mdash; Origen Core 0.60.18
+    &mdash; Origen Core 0.61.2
   
 </title>
 
-  <link rel="stylesheet" href="../../css/style.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/style.css" type="text/css">
 
-  <link rel="stylesheet" href="../../css/common.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/common.css" type="text/css">
 
 <script type="text/javascript">
   pathId = "Origen::Specs::Spec";
@@ -27,6 +27,8 @@
 
   </head>
   <body>
+    <div id="main_progress" aria-hidden="true"></div>
+
     <div class="nav_wrap">
       <iframe id="nav" src="../../class_list.html?1"></iframe>
       <div id="resizer"></div>
@@ -104,7 +106,8 @@
   
   <dl>
     <dt>Defined in:</dt>
-    <dd>lib/origen/specs/spec.rb</dd>
+    <dd>lib/origen/specs/spec.rb
+</dd>
   </dl>
   
 </div>
@@ -216,9 +219,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Add a specification note.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Add a specification note.</p></div></span>
   
 </li>
 
@@ -240,9 +241,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Do a &#39;diff&#39; from the current spec (self) and the compare spec Returns a hash with attribute as key and an array of the attribute values that differed.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Do a 'diff' from the current spec (self) and the compare spec Returns a hash with attribute as key and an array of the attribute values that differed.</p></div></span>
   
 </li>
 
@@ -264,9 +263,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Monkey patch of hash/array include? method needed because Origen::Specs#specs can return a single Spec instance or an Array of Specs.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Monkey patch of hash/array include? method needed because Origen::Specs#specs can return a single Spec instance or an Array of Specs.</p></div></span>
   
 </li>
 
@@ -290,9 +287,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>There are at least three attributes needed to define a unique spec.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>There are at least three attributes needed to define a unique spec.</p></div></span>
   
 </li>
 
@@ -358,9 +353,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Returns the number of notes as an Integer.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Returns the number of notes as an Integer.</p></div></span>
   
 </li>
 
@@ -382,9 +375,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Returns a Note object from the notes hash.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Returns a Note object from the notes hash.</p></div></span>
   
 </li>
 
@@ -406,9 +397,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Returns the trace_matrix name.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>Returns the trace_matrix name.</p></div></span>
   
 </li>
 
@@ -430,17 +419,17 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>This will create the trace matrix name to be placed into a dita phrase element End goal will be code:xml   &lt;ph audience=“internal”&gt;trace_matrix_name&lt;/ph&gt; code.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'><p>This will create the trace matrix name to be placed into a dita phrase element End goal will be code:xml   <ph audience="internal">trace_matrix_name</ph> code.</p></div></span>
   
 </li>
 
       
     </ul>
+    
   
 
 
+  
   
   
   
@@ -465,25 +454,21 @@
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>There are at least three attributes needed to define a unique spec.</p>
-
-<pre class="code ruby"><code class="ruby">1) name (e.g. :vdd)
-2) type (e.g. :dc)  Possible values are [:dc, :ac, :temperature]
-3) mode (e.g. :global).  mode defaults to the current mode found for the parent object
-</code></pre>
-
-<p>A mode is defined as a device state that requires some sequence of actions to be enabled. A type is a classification moniker that exists without any stimulus required. Some specs require a fourth attribute sub_type to be uniquely defined. For example, a global device level VDD specification would require four attributes to be unique. Here is an example of two spec definitions for a VDD power supply</p>
-
-<pre class="code ruby"><code class="ruby">name = :vdd, type: :dc, mode: :global, sub_type: typical_operating_conditions, typ = &quot;1.0V +/- 30mV&quot;
+    <p>There are at least three attributes needed to define a unique spec.</p>
+<ol>
+<li>name (e.g. :vdd)</li>
+<li>type (e.g. :dc)  Possible values are [:dc, :ac, :temperature]</li>
+<li>mode (e.g. :global).  mode defaults to the current mode found for the parent object
+A mode is defined as a device state that requires some sequence of actions to be enabled.
+A type is a classification moniker that exists without any stimulus required.
+Some specs require a fourth attribute sub_type to be uniquely defined.
+For example, a global device level VDD specification would require four attributes to be unique.
+Here is an example of two spec definitions for a VDD power supply
+name = :vdd, type: :dc, mode: :global, sub_type: typical_operating_conditions, typ = &quot;1.0V +/- 30mV&quot;
 name = :vdd, type: :dc, mode: :global, sub_type: maximum_operating_conditions, min = -0.3V, max = 1.8V
-</code></pre>
-
-<p>Whereas a typical DDR timing specification might only need three attributes to be unique</p>
-
-<pre class="code ruby"><code class="ruby">name: :tddkhas, type: :ac, mode: ddr4dr2400, sub_type: nil
-</code></pre>
-
+Whereas a typical DDR timing specification might only need three attributes to be unique
+name: :tddkhas, type: :ac, mode: ddr4dr2400, sub_type: nil</li>
+</ol>
 
   </div>
 </div>
@@ -645,9 +630,7 @@ name = :vdd, type: :dc, mode: :global, sub_type: maximum_operating_conditions, m
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Add a specification note</p>
-
+    <p>Add a specification note</p>
 
   </div>
 </div>
@@ -694,9 +677,9 @@ name = :vdd, type: :dc, mode: :global, sub_type: maximum_operating_conditions, m
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Do a &#39;diff&#39; from the current spec (self) and the compare spec Returns a hash with attribute as key and an array of the attribute values that differed</p>
-
+    <p>Do a 'diff' from the current spec (self) and the compare spec
+Returns a hash with attribute as key and an array of the
+attribute values that differed</p>
 
   </div>
 </div>
@@ -819,9 +802,8 @@ name = :vdd, type: :dc, mode: :global, sub_type: maximum_operating_conditions, m
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Monkey patch of hash/array include? method needed because Origen::Specs#specs can return a single Spec instance or an Array of Specs</p>
-
+    <p>Monkey patch of hash/array include? method needed because
+Origen::Specs#specs can return a single Spec instance or an Array of Specs</p>
 
   </div>
 </div>
@@ -907,9 +889,7 @@ name = :vdd, type: :dc, mode: :global, sub_type: maximum_operating_conditions, m
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Returns the number of notes as an Integer</p>
-
+    <p>Returns the number of notes as an Integer</p>
 
   </div>
 </div>
@@ -948,9 +928,7 @@ name = :vdd, type: :dc, mode: :global, sub_type: maximum_operating_conditions, m
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Returns a Note object from the notes hash</p>
-
+    <p>Returns a Note object from the notes hash</p>
 
   </div>
 </div>
@@ -993,18 +971,13 @@ name = :vdd, type: :dc, mode: :global, sub_type: maximum_operating_conditions, m
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>Returns the trace_matrix name.  The Trace Matrix Name is composed of</p>
-<ul><li>
-<p>@name</p>
-</li><li>
-<p>@type</p>
-</li><li>
-<p>@subtype</p>
-</li><li>
-<p>@mode</p>
-</li></ul>
-
+    <p>Returns the trace_matrix name.  The Trace Matrix Name is composed of</p>
+<ul>
+<li>@name</li>
+<li>@type</li>
+<li>@subtype</li>
+<li>@mode</li>
+</ul>
 
   </div>
 </div>
@@ -1119,14 +1092,11 @@ name = :vdd, type: :dc, mode: :global, sub_type: maximum_operating_conditions, m
   
 </h3><div class="docstring">
   <div class="discussion">
-    
-<p>This will create the trace matrix name to be placed into a dita phrase element End goal will be code:xml</p>
-
-<pre class="code ruby"><code class="ruby">&lt;ph audience=&quot;internal&quot;&gt;trace_matrix_name&lt;/ph&gt;
-</code></pre>
-
-<p>code</p>
-
+    <p>This will create the trace matrix name to be placed into a dita phrase element
+End goal will be
+code:xml
+<ph audience="internal">trace_matrix_name</ph>
+code</p>
 
   </div>
 </div>
@@ -1175,9 +1145,9 @@ name = :vdd, type: :dc, mode: :global, sub_type: maximum_operating_conditions, m
 </div>
 
       <div id="footer">
-  Generated on Mon Jan 13 12:07:33 2025 by
+  Generated on Sat Jun 27 16:25:15 2026 by
   <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.36 (ruby-2.6.0).
+  0.9.44 (ruby-4.0.1).
 </div>
 
     </div>

@@ -19,8 +19,8 @@
     <link rel="author" href="https://plus.google.com/u/1/b/106463981272125989995/106463981272125989">
   
   
-    <meta property="og:url" content="https://origen-sdk.org/origen/users/chorton/origen_gems/peologin_v7p9_gems/">
-    <meta name="twitter:url" content="https://origen-sdk.org/origen/users/chorton/origen_gems/peologin_v7p9_gems/">
+    <meta property="og:url" content="https://origen-sdk.org/origen/home/priykuma/">
+    <meta name="twitter:url" content="https://origen-sdk.org/origen/home/priykuma/">
   
   
     <meta property="og:image" content="https://origen-sdk.org/favicon-260x260.png">
@@ -799,6 +799,90 @@ session to contain the called profile as the current instance to generate agains
   end
 
 end
+</code></pre>
+
+      <div>    
+  <a class="anchor" name="Custom_Placement_Example"></a>          
+  <h4><a href="#Custom_Placement_Example">Custom Placement Example</a></h4>          
+</div>
+
+      <p>For an example of adding new placements lets say we want to insert a charz test if the parent
+test fails, but not until after a later test in the flow “testB” has ran. To do so:</p>
+
+      <ul>
+        <li>The profile needs to know that this new placement is valid and then target it</li>
+        <li>The charz tests themselves need a placement specific constructor method that collects the results for later use</li>
+        <li>Lastly, a method for calling the collected constructors and inserting them into the flow</li>
+      </ul>
+
+      <h5 id="adding-valid-placements">Adding valid placements</h5>
+
+      <p>To add new valid placements, you can do so either on a per-profile basis or across all profiles
+for the current interface:</p>
+
+      <pre><code class="language-ruby"># Per-Profile
+add_charz_profile :my_profile |p|
+  # ...
+  p.valid_placements = [:on_fail_after_testB]
+  p.placement = :on_fail_after_testB
+end
+
+# Across Interface via interface instance variable:
+@default_valid_charz_placements = [:inline, :eof, :on_fail_after_testB]
+
+add_charz_profile :my_profile |p|
+  # ...
+  p.placement = :on_fail_after_testB
+end
+</code></pre>
+
+      <h5 id="placement-constructor-and-collection">Placement Constructor and Collection</h5>
+
+      <p>So that the charz API knows how to handle this placement, it will expect a method to be defined
+named as <code>create_&lt;placement&gt;_charz_tests(options, &amp;block)</code>. This method will need to store the
+current context in a manner that can be called later. To collect multiple tests, we’ll use
+an interface instance variable.</p>
+
+      <pre><code class="language-ruby"># collect the current instance and options into a proc,
+# which will be stored in @on_fail_after_testB_charz_tests to be called later
+def create_on_fail_after_testB_charz_tests(options, &amp;block)
+  # we'll need to save the current charz instance as it is now as its used in the test creation
+  current_instance = charz_instance.clone
+
+  # Store the setup instructions in a proc to be called later
+  @on_fail_after_testB_charz_tests ||= []
+  @on_fail_after_testB_charz_tests &lt;&lt; proc do
+    # these are existing methods in the charz API
+    set_charz_instance(current_instance)
+    create_charz_group(options, &amp;block)
+  end
+end
+</code></pre>
+
+      <h5 id="inserting-collected-tests-into-the-flow">Inserting collected tests into the flow</h5>
+
+      <p>Now all thats left is to define the generator to call the collected tests, then
+we can apply our charz profile to the tests of interest and call the generator after testB
+has ran.</p>
+
+      <pre><code class="language-ruby"># simple generator to call each collected proc
+def generate_on_fail_after_testB_charz_tests
+  @on_fail_after_testB_charz_tests.map(&amp;:call)
+  @on_fail_after_testB_charz_tests = [] # clear to prevent accidental repeats
+end
+</code></pre>
+
+      <p>And then finally in the flow:</p>
+
+      <pre><code class="language-ruby">charz_on :my_profile do
+  func :test_i_want_to_charz1, id: :t1
+  func :test_i_want_to_charz2, id: :t2
+end
+
+# ...
+
+func :testB
+generate_on_fail_after_testB_charz_tests
 </code></pre>
 
       <div style="position: relative">
