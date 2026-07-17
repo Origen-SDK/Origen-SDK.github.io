@@ -513,7 +513,7 @@ module NVM
     bug :low_vref, :affected_version =&gt; 11
     bug :low_iref, :affected_versions =&gt; [11, 12]
     bug :dac_code, :fixed_on_version =&gt; 12
-    bug :unfixable
+    bug :bug1, :unfixable =&gt; true
 
     def initialize(options={})
     end
@@ -521,8 +521,11 @@ module NVM
 end
 </code></pre>
 
-      <p>We have defined these bugs in terms of the affected versions and since our models already contain
-version information the presence of bugs will be modelled accurately.</p>
+      <p>The first three bugs are defined in terms of affected versions, and since our models already contain
+version information their presence will be modelled accurately. Mark a bug as unfixable with
+<code>unfixable: true</code>, for example <code>bug :my_bug, unfixable: true</code>. The option—not the bug name—makes it
+present on every version, and it can be queried with <code>has_bug?</code> on a model that has no version. All other
+bugs require the model to provide a version.</p>
 
       <p>We can test this in the console:</p>
 
@@ -531,14 +534,14 @@ $dut = SOC::EAGLE_M352.new(version: 0)
 $dut.nvm.analog.has_bug?(:low_vref)    # =&gt; true
 $dut.nvm.analog.has_bug?(:low_iref)    # =&gt; true
 $dut.nvm.analog.has_bug?(:dac_code)    # =&gt; true
-$dut.nvm.analog.has_bug?(:unfixable)   # =&gt; true
+$dut.nvm.analog.has_bug?(:bug1)        # =&gt; true
 
 # This will instantiate version 12 of the analog block
 $dut = SOC::EAGLE_M352.new(version: 1)
 $dut.nvm.analog.has_bug?(:low_vref)    # =&gt; false
 $dut.nvm.analog.has_bug?(:low_iref)    # =&gt; true
 $dut.nvm.analog.has_bug?(:dac_code)    # =&gt; false
-$dut.nvm.analog.has_bug?(:unfixable)   # =&gt; true
+$dut.nvm.analog.has_bug?(:bug1)        # =&gt; true
 </code></pre>
 
       <p>When we get to the point of implementing a template or source file we will then be able to deal with these

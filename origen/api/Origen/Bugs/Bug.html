@@ -6,7 +6,7 @@
 <title>
   Class: Origen::Bugs::Bug
   
-    &mdash; Origen Core 0.61.4
+    &mdash; Origen Core 0.62.0
   
 </title>
 
@@ -246,6 +246,28 @@
 </li>
 
       
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#unfixable%3F-instance_method" title="#unfixable? (instance method)">#<strong>unfixable?</strong>  &#x21d2; Boolean </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>An unfixable bug applies regardless of the IP version.</p></div></span>
+  
+</li>
+
+      
     </ul>
     
   
@@ -281,7 +303,8 @@
 10
 11
 12
-13</pre>
+13
+14</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/origen/bugs/bug.rb', line 9</span>
@@ -290,6 +313,7 @@
   <span class='ivar'>@name</span> <span class='op'>=</span> <span class='id identifier rubyid_name'>name</span>
   <span class='ivar'>@affected_versions</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='lbracket'>[</span><span class='symbol'>:affected_version</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='lbracket'>[</span><span class='symbol'>:affected_versions</span><span class='rbracket'>]</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_flatten'>flatten</span><span class='period'>.</span><span class='id identifier rubyid_compact'>compact</span>
   <span class='ivar'>@fixed_on_version</span> <span class='op'>=</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='lbracket'>[</span><span class='symbol'>:fixed_on_version</span><span class='rbracket'>]</span>
+  <span class='ivar'>@unfixable</span> <span class='op'>=</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='lbracket'>[</span><span class='symbol'>:unfixable</span><span class='rbracket'>]</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -409,16 +433,16 @@
       <pre class="lines">
 
 
-27
-28
-29
-30
-31
-32
-33</pre>
+35
+36
+37
+38
+39
+40
+41</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/bugs/bug.rb', line 27</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/bugs/bug.rb', line 35</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_fixed_on_version'>fixed_on_version</span>
   <span class='ivar'>@fixed_on_version</span> <span class='op'>||</span> <span class='kw'>begin</span>
@@ -469,22 +493,26 @@
       <pre class="lines">
 
 
-15
-16
-17
-18
-19
-20
 21
 22
 23
 24
-25</pre>
+25
+26
+27
+28
+29
+30
+31
+32
+33</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/bugs/bug.rb', line 15</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/bugs/bug.rb', line 21</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_present_on_version?'>present_on_version?</span><span class='lparen'>(</span><span class='id identifier rubyid_version'>version</span><span class='comma'>,</span> <span class='id identifier rubyid__options'>_options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
+  <span class='kw'>return</span> <span class='kw'>true</span> <span class='kw'>if</span> <span class='id identifier rubyid_unfixable?'>unfixable?</span>
+
   <span class='kw'>if</span> <span class='id identifier rubyid_affected_versions'>affected_versions</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
     <span class='kw'>if</span> <span class='id identifier rubyid_fixed_on_version'>fixed_on_version</span>
       <span class='id identifier rubyid_version'>version</span> <span class='op'>&lt;</span> <span class='id identifier rubyid_fixed_on_version'>fixed_on_version</span>
@@ -500,12 +528,64 @@
 </table>
 </div>
     
+      <div class="method_details ">
+  <h3 class="signature " id="unfixable?-instance_method">
+  
+    #<strong>unfixable?</strong>  &#x21d2; <tt>Boolean</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>An unfixable bug applies regardless of the IP version.</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+17
+18
+19</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/origen/bugs/bug.rb', line 17</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_unfixable?'>unfixable?</span>
+  <span class='op'>!</span><span class='op'>!</span><span class='ivar'>@unfixable</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
   </div>
 
 </div>
 
       <div id="footer">
-  Generated on Sun Jun 28 12:49:44 2026 by
+  Generated on Fri Jul 17 13:19:15 2026 by
   <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.44 (ruby-4.0.1).
 </div>
