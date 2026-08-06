@@ -6,7 +6,7 @@
 <title>
   Class: Origen::Utility::Diff
   
-    &mdash; Origen Core 0.62.0
+    &mdash; Origen Core 0.63.0
   
 </title>
 
@@ -327,7 +327,9 @@ set later.</p>
 34
 35
 36
-37</pre>
+37
+38
+39</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/origen/utility/diff.rb', line 28</span>
@@ -336,10 +338,12 @@ set later.</p>
   <span class='ivar'>@file_a</span> <span class='op'>=</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='lbracket'>[</span><span class='symbol'>:file_a</span><span class='rbracket'>]</span>
   <span class='ivar'>@file_b</span> <span class='op'>=</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='lbracket'>[</span><span class='symbol'>:file_b</span><span class='rbracket'>]</span>
   <span class='ivar'>@ignore_blank_lines</span> <span class='op'>=</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='lbracket'>[</span><span class='symbol'>:ignore_blank_lines</span><span class='rbracket'>]</span>
-  <span class='ivar'>@comment_char</span> <span class='op'>=</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='lbracket'>[</span><span class='symbol'>:comment_char</span><span class='rbracket'>]</span>
+  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_comment_char'>comment_char</span> <span class='op'>=</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='lbracket'>[</span><span class='symbol'>:comment_char</span><span class='rbracket'>]</span>
   <span class='ivar'>@suspend_string</span> <span class='op'>=</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='lbracket'>[</span><span class='symbol'>:suspend_string</span><span class='rbracket'>]</span> <span class='comment'># permits suspending diff check based on a string
 </span>  <span class='ivar'>@resume_string</span>  <span class='op'>=</span> <span class='id identifier rubyid_options'><span class='object_link'><a href="../GlobalMethods.html#options-instance_method" title="Origen::GlobalMethods#options (method)">options</a></span></span><span class='lbracket'>[</span><span class='symbol'>:resume_string</span><span class='rbracket'>]</span>  <span class='comment'># permits resuming diff check based on a string
-</span>  <span class='ivar'>@suspend_diff</span> <span class='op'>=</span> <span class='kw'>false</span>
+</span>  <span class='ivar'>@suspend_regex</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="../../Regexp.html" title="Regexp (class)">Regexp</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='ivar'>@suspend_string</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='ivar'>@suspend_string</span>
+  <span class='ivar'>@resume_regex</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="../../Regexp.html" title="Regexp (class)">Regexp</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='ivar'>@resume_string</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='ivar'>@resume_string</span>
+  <span class='ivar'>@suspend_diff</span> <span class='op'>=</span> <span class='kw'>false</span>
   <span class='ivar'>@resume_diff</span> <span class='op'>=</span> <span class='kw'>false</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -563,17 +567,6 @@ current configuration</p>
       <pre class="lines">
 
 
-41
-42
-43
-44
-45
-46
-47
-48
-49
-50
-51
 52
 53
 54
@@ -590,10 +583,21 @@ current configuration</p>
 65
 66
 67
-68</pre>
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/origen/utility/diff.rb', line 41</span>
+      <pre class="code"><span class="info file"># File 'lib/origen/utility/diff.rb', line 52</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_diffs?'>diffs?</span>
   <span class='id identifier rubyid_initialize_counters'>initialize_counters</span>
@@ -633,9 +637,9 @@ current configuration</p>
 </div>
 
       <div id="footer">
-  Generated on Fri Jul 17 13:19:18 2026 by
+  Generated on Thu Aug  6 09:18:54 2026 by
   <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.44 (ruby-4.0.1).
+  0.9.45 (ruby-2.6.0).
 </div>
 
     </div>
