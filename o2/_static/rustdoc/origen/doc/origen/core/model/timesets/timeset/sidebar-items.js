@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["EventActions",""]],"fn":[["default_resolver",""]],"struct":[["Event",""],["SimpleTimeset",""],["Timeset",""],["Wave",""],["WaveGroup",""],["Wavetable",""]]});
+window.SIDEBAR_ITEMS = {"enum":["EventActions"],"fn":["default_resolver"],"struct":["Event","SimpleTimeset","Timeset","Wave","WaveGroup","Wavetable"]};

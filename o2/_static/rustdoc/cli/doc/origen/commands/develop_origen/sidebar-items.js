@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["BASE_CMD"],"fn":["add_commands","add_helps","run"],"mod":["build","fmt","publish","update_supported_python"]};

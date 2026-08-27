@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["Acknowledgements",""]],"struct":[["Service",""]]});
+window.SIDEBAR_ITEMS = {"enum":["Acknowledgements"],"struct":["Service"]};

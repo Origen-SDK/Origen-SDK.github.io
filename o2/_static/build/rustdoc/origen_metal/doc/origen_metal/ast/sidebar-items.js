@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["Return"],"fn":["to_string"],"struct":["AST","Meta","Node"],"trait":["Attrs","Processor"]};

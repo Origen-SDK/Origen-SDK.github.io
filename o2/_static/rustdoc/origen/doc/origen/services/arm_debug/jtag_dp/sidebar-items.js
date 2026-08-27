@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["JtagDP",""]]});
+window.SIDEBAR_ITEMS = {"struct":["JtagDP"]};

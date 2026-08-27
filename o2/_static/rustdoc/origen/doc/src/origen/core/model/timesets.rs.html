@@ -1,423 +1,207 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src\core\model\timesets.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>timesets.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script src="../../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../../down-arrow.png");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../../origen/index.html'><div class='logo-container'><img src='../../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../../brush.png" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../../settings.html"><img src="../../../../wheel.png" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
-<span id="2">  2</span>
-<span id="3">  3</span>
-<span id="4">  4</span>
-<span id="5">  5</span>
-<span id="6">  6</span>
-<span id="7">  7</span>
-<span id="8">  8</span>
-<span id="9">  9</span>
-<span id="10"> 10</span>
-<span id="11"> 11</span>
-<span id="12"> 12</span>
-<span id="13"> 13</span>
-<span id="14"> 14</span>
-<span id="15"> 15</span>
-<span id="16"> 16</span>
-<span id="17"> 17</span>
-<span id="18"> 18</span>
-<span id="19"> 19</span>
-<span id="20"> 20</span>
-<span id="21"> 21</span>
-<span id="22"> 22</span>
-<span id="23"> 23</span>
-<span id="24"> 24</span>
-<span id="25"> 25</span>
-<span id="26"> 26</span>
-<span id="27"> 27</span>
-<span id="28"> 28</span>
-<span id="29"> 29</span>
-<span id="30"> 30</span>
-<span id="31"> 31</span>
-<span id="32"> 32</span>
-<span id="33"> 33</span>
-<span id="34"> 34</span>
-<span id="35"> 35</span>
-<span id="36"> 36</span>
-<span id="37"> 37</span>
-<span id="38"> 38</span>
-<span id="39"> 39</span>
-<span id="40"> 40</span>
-<span id="41"> 41</span>
-<span id="42"> 42</span>
-<span id="43"> 43</span>
-<span id="44"> 44</span>
-<span id="45"> 45</span>
-<span id="46"> 46</span>
-<span id="47"> 47</span>
-<span id="48"> 48</span>
-<span id="49"> 49</span>
-<span id="50"> 50</span>
-<span id="51"> 51</span>
-<span id="52"> 52</span>
-<span id="53"> 53</span>
-<span id="54"> 54</span>
-<span id="55"> 55</span>
-<span id="56"> 56</span>
-<span id="57"> 57</span>
-<span id="58"> 58</span>
-<span id="59"> 59</span>
-<span id="60"> 60</span>
-<span id="61"> 61</span>
-<span id="62"> 62</span>
-<span id="63"> 63</span>
-<span id="64"> 64</span>
-<span id="65"> 65</span>
-<span id="66"> 66</span>
-<span id="67"> 67</span>
-<span id="68"> 68</span>
-<span id="69"> 69</span>
-<span id="70"> 70</span>
-<span id="71"> 71</span>
-<span id="72"> 72</span>
-<span id="73"> 73</span>
-<span id="74"> 74</span>
-<span id="75"> 75</span>
-<span id="76"> 76</span>
-<span id="77"> 77</span>
-<span id="78"> 78</span>
-<span id="79"> 79</span>
-<span id="80"> 80</span>
-<span id="81"> 81</span>
-<span id="82"> 82</span>
-<span id="83"> 83</span>
-<span id="84"> 84</span>
-<span id="85"> 85</span>
-<span id="86"> 86</span>
-<span id="87"> 87</span>
-<span id="88"> 88</span>
-<span id="89"> 89</span>
-<span id="90"> 90</span>
-<span id="91"> 91</span>
-<span id="92"> 92</span>
-<span id="93"> 93</span>
-<span id="94"> 94</span>
-<span id="95"> 95</span>
-<span id="96"> 96</span>
-<span id="97"> 97</span>
-<span id="98"> 98</span>
-<span id="99"> 99</span>
-<span id="100">100</span>
-<span id="101">101</span>
-<span id="102">102</span>
-<span id="103">103</span>
-<span id="104">104</span>
-<span id="105">105</span>
-<span id="106">106</span>
-<span id="107">107</span>
-<span id="108">108</span>
-<span id="109">109</span>
-<span id="110">110</span>
-<span id="111">111</span>
-<span id="112">112</span>
-<span id="113">113</span>
-<span id="114">114</span>
-<span id="115">115</span>
-<span id="116">116</span>
-<span id="117">117</span>
-<span id="118">118</span>
-<span id="119">119</span>
-<span id="120">120</span>
-<span id="121">121</span>
-<span id="122">122</span>
-<span id="123">123</span>
-<span id="124">124</span>
-<span id="125">125</span>
-<span id="126">126</span>
-<span id="127">127</span>
-<span id="128">128</span>
-<span id="129">129</span>
-<span id="130">130</span>
-<span id="131">131</span>
-<span id="132">132</span>
-<span id="133">133</span>
-<span id="134">134</span>
-<span id="135">135</span>
-<span id="136">136</span>
-<span id="137">137</span>
-<span id="138">138</span>
-<span id="139">139</span>
-<span id="140">140</span>
-<span id="141">141</span>
-<span id="142">142</span>
-<span id="143">143</span>
-<span id="144">144</span>
-<span id="145">145</span>
-<span id="146">146</span>
-<span id="147">147</span>
-<span id="148">148</span>
-<span id="149">149</span>
-<span id="150">150</span>
-<span id="151">151</span>
-<span id="152">152</span>
-<span id="153">153</span>
-<span id="154">154</span>
-<span id="155">155</span>
-<span id="156">156</span>
-<span id="157">157</span>
-<span id="158">158</span>
-<span id="159">159</span>
-<span id="160">160</span>
-<span id="161">161</span>
-<span id="162">162</span>
-<span id="163">163</span>
-<span id="164">164</span>
-<span id="165">165</span>
-<span id="166">166</span>
-<span id="167">167</span>
-<span id="168">168</span>
-<span id="169">169</span>
-<span id="170">170</span>
-<span id="171">171</span>
-<span id="172">172</span>
-<span id="173">173</span>
-<span id="174">174</span>
-<span id="175">175</span>
-<span id="176">176</span>
-<span id="177">177</span>
-<span id="178">178</span>
-<span id="179">179</span>
-<span id="180">180</span>
-<span id="181">181</span>
-<span id="182">182</span>
-<span id="183">183</span>
-<span id="184">184</span>
-<span id="185">185</span>
-<span id="186">186</span>
-<span id="187">187</span>
-<span id="188">188</span>
-<span id="189">189</span>
-<span id="190">190</span>
-<span id="191">191</span>
-<span id="192">192</span>
-<span id="193">193</span>
-<span id="194">194</span>
-<span id="195">195</span>
-<span id="196">196</span>
-<span id="197">197</span>
-<span id="198">198</span>
-<span id="199">199</span>
-<span id="200">200</span>
-<span id="201">201</span>
-<span id="202">202</span>
-<span id="203">203</span>
-<span id="204">204</span>
-<span id="205">205</span>
-<span id="206">206</span>
-<span id="207">207</span>
-<span id="208">208</span>
-<span id="209">209</span>
-<span id="210">210</span>
-</pre><div class="example-wrap"><pre class="rust ">
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">timeset</span>;
-
-<span class="kw">use</span> <span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">dut</span>::<span class="ident">Dut</span>;
-<span class="kw">use</span> <span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">tester</span>::<span class="ident">TesterSource</span>;
-<span class="kw">use</span> <span class="kw">super</span>::<span class="ident">Model</span>;
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">Error</span>;
-<span class="kw">use</span> <span class="ident">timeset</span>::{<span class="ident">Event</span>, <span class="ident">Timeset</span>, <span class="ident">Wave</span>, <span class="ident">WaveGroup</span>, <span class="ident">Wavetable</span>};
-
-<span class="doccomment">/// Returns an Origen Error with pre-formatted message complaining that</span>
-<span class="doccomment">/// something already exists.</span>
-<span class="attribute">#[<span class="ident">macro_export</span>]</span>
-<span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">duplicate_error</span> {
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">container</span>:<span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">model_name</span>:<span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">duplicate_name</span>:<span class="ident">expr</span>) <span class="op">=</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="macro">format</span><span class="macro">!</span>(
-            <span class="string">&quot;The block &#39;{}&#39; already contains a(n) {} called &#39;{}&#39;&quot;</span>,
-            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">model_name</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">container</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">duplicate_name</span>
-        )))
-    };
-}
-
-<span class="doccomment">/// Returns a error stating that the backend doesn&#39;t have an expected ID.</span>
-<span class="doccomment">/// This signals a bug somewhere and should only be used when we&#39;re expecting</span>
-<span class="doccomment">/// something to exists.</span>
-<span class="attribute">#[<span class="ident">macro_export</span>]</span>
-<span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">backend_lookup_error</span> {
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">container</span>:<span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">expr</span>) <span class="op">=</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="macro">format</span><span class="macro">!</span>(
-            <span class="string">&quot;Something has gone wrong, no {} exists with ID &#39;{}&#39;&quot;</span>,
-            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">container</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>
-        )))
-    };
-}
-
-<span class="attribute">#[<span class="ident">macro_export</span>]</span>
-<span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">lookup_error</span> {
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">container</span>:<span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">expr</span>) <span class="op">=</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="macro">format</span><span class="macro">!</span>(
-            <span class="string">&quot;Could not find {} named {}!&quot;</span>,
-            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">container</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>
-        )))
-    };
-}
-
-<span class="kw">impl</span> <span class="ident">Model</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_timeset</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
-        <span class="ident">model_id</span>: <span class="ident">usize</span>,
-        <span class="ident">instance_id</span>: <span class="ident">usize</span>,
-        <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-        <span class="ident">period</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">std</span>::<span class="ident">string</span>::<span class="ident">ToString</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-        <span class="ident">default_period</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>,
-        <span class="ident">targets</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">TesterSource</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Timeset</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">t</span> <span class="op">=</span> <span class="ident">Timeset</span>::<span class="ident">new</span>(<span class="ident">model_id</span>, <span class="ident">instance_id</span>, <span class="ident">name</span>, <span class="ident">period</span>, <span class="ident">default_period</span>, <span class="ident">targets</span>);
-        <span class="self">self</span>.<span class="ident">timesets</span>.<span class="ident">insert</span>(<span class="ident">String</span>::<span class="ident">from</span>(<span class="ident">name</span>), <span class="ident">instance_id</span>);
-        <span class="prelude-val">Ok</span>(<span class="ident">t</span>)
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_timeset_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">timesets</span>.<span class="ident">get</span>(<span class="ident">name</span>) {
-            <span class="prelude-val">Some</span>(<span class="ident">t</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="kw-2">*</span><span class="ident">t</span>),
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">None</span>,
-        }
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">contains_timeset</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">timesets</span>.<span class="ident">contains_key</span>(<span class="ident">name</span>)
-    }
-}
-
-<span class="kw">impl</span> <span class="ident">Dut</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create_timeset</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
-        <span class="ident">model_id</span>: <span class="ident">usize</span>,
-        <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-        <span class="ident">period</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">std</span>::<span class="ident">string</span>::<span class="ident">ToString</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-        <span class="ident">default_period</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>,
-        <span class="ident">targets</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">TesterSource</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Timeset</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">id</span>;
-        {
-            <span class="ident">id</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">timesets</span>.<span class="ident">len</span>();
-        }
-
-        <span class="kw">let</span> <span class="ident">t</span>;
-        {
-            <span class="kw">let</span> <span class="ident">model</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_mut_model</span>(<span class="ident">model_id</span>)<span class="question-mark">?</span>;
-            <span class="kw">if</span> <span class="ident">model</span>.<span class="ident">contains_timeset</span>(<span class="ident">name</span>) {
-                <span class="kw">return</span> <span class="macro">duplicate_error</span><span class="macro">!</span>(<span class="string">&quot;timeset&quot;</span>, <span class="ident">model</span>.<span class="ident">name</span>, <span class="ident">name</span>);
-            }
-
-            <span class="ident">t</span> <span class="op">=</span> <span class="ident">model</span>.<span class="ident">add_timeset</span>(<span class="ident">model_id</span>, <span class="ident">id</span>, <span class="ident">name</span>, <span class="ident">period</span>, <span class="ident">default_period</span>, <span class="ident">targets</span>)<span class="question-mark">?</span>;
-        }
-        <span class="self">self</span>.<span class="ident">timesets</span>.<span class="ident">push</span>(<span class="ident">t</span>);
-        <span class="prelude-val">Ok</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">timesets</span>[<span class="ident">id</span>])
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create_wavetable</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">timeset_id</span>: <span class="ident">usize</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Wavetable</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">id</span>;
-        {
-            <span class="ident">id</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">wavetables</span>.<span class="ident">len</span>();
-        }
-
-        <span class="kw">let</span> <span class="ident">w</span>;
-        {
-            <span class="kw">let</span> <span class="ident">t</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">timesets</span>[<span class="ident">timeset_id</span>];
-            <span class="kw">if</span> <span class="ident">t</span>.<span class="ident">contains_wavetable</span>(<span class="ident">name</span>) {
-                <span class="kw">return</span> <span class="macro">duplicate_error</span><span class="macro">!</span>(<span class="string">&quot;wavetable&quot;</span>, <span class="ident">t</span>.<span class="ident">name</span>, <span class="ident">name</span>);
-            }
-
-            <span class="ident">w</span> <span class="op">=</span> <span class="ident">t</span>.<span class="ident">register_wavetable</span>(<span class="ident">id</span>, <span class="ident">name</span>)<span class="question-mark">?</span>;
-        }
-        <span class="self">self</span>.<span class="ident">wavetables</span>.<span class="ident">push</span>(<span class="ident">w</span>);
-        <span class="prelude-val">Ok</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">wavetables</span>[<span class="ident">id</span>])
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create_wave_group</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
-        <span class="ident">wavetable_id</span>: <span class="ident">usize</span>,
-        <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-        <span class="ident">derived_from</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">WaveGroup</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">id</span>;
-        {
-            <span class="ident">id</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">wave_groups</span>.<span class="ident">len</span>();
-        }
-
-        <span class="kw">let</span> <span class="ident">wgrp</span>;
-        {
-            <span class="kw">let</span> <span class="ident">wtbl</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">wavetables</span>[<span class="ident">wavetable_id</span>];
-            <span class="kw">if</span> <span class="ident">wtbl</span>.<span class="ident">contains_wave_group</span>(<span class="ident">name</span>) {
-                <span class="kw">return</span> <span class="macro">duplicate_error</span><span class="macro">!</span>(<span class="string">&quot;wave group&quot;</span>, <span class="ident">wtbl</span>.<span class="ident">name</span>, <span class="ident">name</span>);
-            }
-
-            <span class="ident">wgrp</span> <span class="op">=</span> <span class="ident">wtbl</span>.<span class="ident">register_wave_group</span>(<span class="ident">id</span>, <span class="ident">name</span>, <span class="ident">derived_from</span>)<span class="question-mark">?</span>;
-        }
-        <span class="self">self</span>.<span class="ident">wave_groups</span>.<span class="ident">push</span>(<span class="ident">wgrp</span>);
-        <span class="prelude-val">Ok</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">wave_groups</span>[<span class="ident">id</span>])
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create_wave</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
-        <span class="ident">wave_group_id</span>: <span class="ident">usize</span>,
-        <span class="ident">indicator</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-        <span class="ident">derived_from</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Wave</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">id</span>;
-        {
-            <span class="ident">id</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">waves</span>.<span class="ident">len</span>();
-        }
-
-        <span class="kw">let</span> <span class="ident">w</span>;
-        {
-            <span class="kw">let</span> <span class="ident">wgrp</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">wave_groups</span>[<span class="ident">wave_group_id</span>];
-            <span class="kw">if</span> <span class="ident">wgrp</span>.<span class="ident">contains_wave</span>(<span class="ident">indicator</span>) {
-                <span class="kw">return</span> <span class="macro">duplicate_error</span><span class="macro">!</span>(<span class="string">&quot;wave&quot;</span>, <span class="ident">wgrp</span>.<span class="ident">name</span>, <span class="ident">indicator</span>);
-            }
-
-            <span class="ident">w</span> <span class="op">=</span> <span class="ident">wgrp</span>.<span class="ident">register_wave</span>(<span class="ident">id</span>, <span class="ident">indicator</span>)<span class="question-mark">?</span>;
-        }
-        <span class="self">self</span>.<span class="ident">waves</span>.<span class="ident">push</span>(<span class="ident">w</span>);
-
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">bases</span>) <span class="op">=</span> <span class="ident">derived_from</span> {
-            <span class="kw">for</span> <span class="ident">base</span> <span class="kw">in</span> <span class="ident">bases</span>.<span class="ident">iter</span>() {
-                <span class="kw">let</span> <span class="ident">base_wave</span>: <span class="ident">Wave</span>;
-                {
-                    <span class="ident">base_wave</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">_get_cloned_wave</span>(<span class="ident">wave_group_id</span>, <span class="ident">base</span>)<span class="question-mark">?</span>;
-                }
-                {
-                    <span class="comment">// Todo: Need to further define how wave inheritance should look.</span>
-                    <span class="comment">// In the wave is independent, so we&#39;re recreating the events, not just storing a reference to the derived wave&#39;s events.</span>
-                    <span class="comment">// We&#39;re also allowing one wave to come in an knock out the events of another, if it includes any events.</span>
-                    <span class="comment">// So, we&#39;ll only overwrite events if the another wave includes them. But, there&#39;s no way to know this ahead of time without doing a second pass.</span>
-                    <span class="kw">for</span> <span class="ident">e_id</span> <span class="kw">in</span> <span class="ident">base_wave</span>.<span class="ident">events</span>.<span class="ident">iter</span>() {
-                        <span class="kw">let</span> <span class="ident">e</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">wave_events</span>[<span class="kw-2">*</span><span class="ident">e_id</span>].<span class="ident">clone</span>();
-                        <span class="self">self</span>.<span class="ident">create_event</span>(<span class="ident">id</span>, <span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">e</span>.<span class="ident">at</span>), <span class="ident">e</span>.<span class="ident">unit</span>, <span class="kw-2">&amp;</span><span class="ident">e</span>.<span class="ident">action</span>)<span class="question-mark">?</span>;
-                    }
-                }
-                <span class="comment">// If given, pull the following out of the wave:</span>
-                <span class="comment">//  * pins</span>
-                <span class="comment">//  * events</span>
-                <span class="comment">// Todo - add waveform inheritance</span>
-                <span class="comment">// let w = &amp;mut self.waves[id];</span>
-                <span class="comment">// w.pins = base_wave.pins.clone();</span>
-            }
-        }
-        <span class="prelude-val">Ok</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">waves</span>[<span class="ident">id</span>])
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create_event</span>(
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
-        <span class="ident">wave_id</span>: <span class="ident">usize</span>,
-        <span class="ident">at</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">std</span>::<span class="ident">string</span>::<span class="ident">ToString</span><span class="op">&gt;</span>,
-        <span class="ident">unit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-        <span class="ident">action</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Event</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">e_id</span>;
-        {
-            <span class="ident">e_id</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">wave_events</span>.<span class="ident">len</span>();
-        }
-
-        <span class="kw">let</span> <span class="ident">event</span>;
-        {
-            <span class="kw">let</span> <span class="ident">w</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">waves</span>[<span class="ident">wave_id</span>];
-            <span class="ident">event</span> <span class="op">=</span> <span class="ident">w</span>.<span class="ident">push_event</span>(<span class="ident">e_id</span>, <span class="ident">at</span>, <span class="ident">unit</span>, <span class="ident">action</span>)<span class="question-mark">?</span>;
-        }
-        <span class="self">self</span>.<span class="ident">wave_events</span>.<span class="ident">push</span>(<span class="ident">event</span>);
-        <span class="prelude-val">Ok</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">wave_events</span>[<span class="ident">e_id</span>])
-    }
-}
-</pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../../";window.currentCrate = "origen";</script><script src="../../../../main.js"></script><script src="../../../../source-script.js"></script><script src="../../../../source-files.js"></script><script defer src="../../../../search-index.js"></script></body></html>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/core/model/timesets.rs`."><title>timesets.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-916cea96.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="origen" data-themes="" data-resource-suffix="" data-rustdoc-version="1.87.0 (17067e9ac 2025-05-09)" data-channel="1.87.0" data-search-js="search-e7298875.js" data-settings-js="settings-d72f25bb.js" ><script src="../../../../static.files/storage-82c7156e.js"></script><script defer src="../../../../static.files/src-script-63605ae7.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-fb8c74a8.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">origen/core/model/</div>timesets.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-3"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="kw">pub mod </span>timeset;
+<a href=#2 id=2 data-nosnippet>2</a>
+<a href=#3 id=3 data-nosnippet>3</a><span class="kw">use </span><span class="kw">super</span>::<span class="kw">super</span>::dut::Dut;
+<a href=#4 id=4 data-nosnippet>4</a><span class="kw">use </span><span class="kw">super</span>::<span class="kw">super</span>::tester::TesterSource;
+<a href=#5 id=5 data-nosnippet>5</a><span class="kw">use </span><span class="kw">super</span>::Model;
+<a href=#6 id=6 data-nosnippet>6</a><span class="kw">use </span><span class="kw">crate</span>::Result;
+<a href=#7 id=7 data-nosnippet>7</a><span class="kw">use </span>timeset::{Event, Timeset, Wave, WaveGroup, Wavetable};
+<a href=#8 id=8 data-nosnippet>8</a>
+<a href=#9 id=9 data-nosnippet>9</a><span class="doccomment">/// Returns an Origen Error with pre-formatted message complaining that
+<a href=#10 id=10 data-nosnippet>10</a>/// something already exists.
+<a href=#11 id=11 data-nosnippet>11</a></span><span class="attr">#[macro_export]
+<a href=#12 id=12 data-nosnippet>12</a></span><span class="macro">macro_rules!</span> duplicate_error {
+<a href=#13 id=13 data-nosnippet>13</a>    (<span class="macro-nonterminal">$container</span>:expr, <span class="macro-nonterminal">$model_name</span>:expr, <span class="macro-nonterminal">$duplicate_name</span>:expr) =&gt; {
+<a href=#14 id=14 data-nosnippet>14</a>        <span class="prelude-val">Err</span>(<span class="macro">error!</span>(
+<a href=#15 id=15 data-nosnippet>15</a>            <span class="string">"The block '{}' already contains a(n) {} called '{}'"</span>,
+<a href=#16 id=16 data-nosnippet>16</a>            <span class="macro-nonterminal">$model_name</span>, <span class="macro-nonterminal">$container</span>, <span class="macro-nonterminal">$duplicate_name
+<a href=#17 id=17 data-nosnippet>17</a>        </span>))
+<a href=#18 id=18 data-nosnippet>18</a>    };
+<a href=#19 id=19 data-nosnippet>19</a>}
+<a href=#20 id=20 data-nosnippet>20</a>
+<a href=#21 id=21 data-nosnippet>21</a><span class="doccomment">/// Returns a error stating that the backend doesn't have an expected ID.
+<a href=#22 id=22 data-nosnippet>22</a>/// This signals a bug somewhere and should only be used when we're expecting
+<a href=#23 id=23 data-nosnippet>23</a>/// something to exists.
+<a href=#24 id=24 data-nosnippet>24</a></span><span class="attr">#[macro_export]
+<a href=#25 id=25 data-nosnippet>25</a></span><span class="macro">macro_rules!</span> backend_lookup_error {
+<a href=#26 id=26 data-nosnippet>26</a>    (<span class="macro-nonterminal">$container</span>:expr, <span class="macro-nonterminal">$name</span>:expr) =&gt; {
+<a href=#27 id=27 data-nosnippet>27</a>        <span class="prelude-val">Err</span>(<span class="macro">error!</span>(
+<a href=#28 id=28 data-nosnippet>28</a>            <span class="string">"Something has gone wrong, no {} exists with ID '{}'"</span>,
+<a href=#29 id=29 data-nosnippet>29</a>            <span class="macro-nonterminal">$container</span>, <span class="macro-nonterminal">$name
+<a href=#30 id=30 data-nosnippet>30</a>        </span>))
+<a href=#31 id=31 data-nosnippet>31</a>    };
+<a href=#32 id=32 data-nosnippet>32</a>}
+<a href=#33 id=33 data-nosnippet>33</a>
+<a href=#34 id=34 data-nosnippet>34</a><span class="attr">#[macro_export]
+<a href=#35 id=35 data-nosnippet>35</a></span><span class="macro">macro_rules!</span> lookup_error {
+<a href=#36 id=36 data-nosnippet>36</a>    (<span class="macro-nonterminal">$container</span>:expr, <span class="macro-nonterminal">$name</span>:expr) =&gt; {
+<a href=#37 id=37 data-nosnippet>37</a>        <span class="prelude-val">Err</span>(<span class="macro">error!</span>(<span class="string">"Could not find {} named {}!"</span>, <span class="macro-nonterminal">$container</span>, <span class="macro-nonterminal">$name</span>))
+<a href=#38 id=38 data-nosnippet>38</a>    };
+<a href=#39 id=39 data-nosnippet>39</a>}
+<a href=#40 id=40 data-nosnippet>40</a>
+<a href=#41 id=41 data-nosnippet>41</a><span class="kw">impl </span>Model {
+<a href=#42 id=42 data-nosnippet>42</a>    <span class="kw">pub fn </span>add_timeset(
+<a href=#43 id=43 data-nosnippet>43</a>        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+<a href=#44 id=44 data-nosnippet>44</a>        model_id: usize,
+<a href=#45 id=45 data-nosnippet>45</a>        instance_id: usize,
+<a href=#46 id=46 data-nosnippet>46</a>        name: <span class="kw-2">&amp;</span>str,
+<a href=#47 id=47 data-nosnippet>47</a>        period: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>std::string::ToString&gt;&gt;,
+<a href=#48 id=48 data-nosnippet>48</a>        default_period: <span class="prelude-ty">Option</span>&lt;f64&gt;,
+<a href=#49 id=49 data-nosnippet>49</a>        targets: Vec&lt;<span class="kw-2">&amp;</span>TesterSource&gt;,
+<a href=#50 id=50 data-nosnippet>50</a>    ) -&gt; <span class="prelude-ty">Result</span>&lt;Timeset&gt; {
+<a href=#51 id=51 data-nosnippet>51</a>        <span class="kw">let </span>t = Timeset::new(model_id, instance_id, name, period, default_period, targets);
+<a href=#52 id=52 data-nosnippet>52</a>        <span class="self">self</span>.timesets.insert(String::from(name), instance_id);
+<a href=#53 id=53 data-nosnippet>53</a>        <span class="prelude-val">Ok</span>(t)
+<a href=#54 id=54 data-nosnippet>54</a>    }
+<a href=#55 id=55 data-nosnippet>55</a>
+<a href=#56 id=56 data-nosnippet>56</a>    <span class="kw">pub fn </span>get_timeset_id(<span class="kw-2">&amp;</span><span class="self">self</span>, name: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Option</span>&lt;usize&gt; {
+<a href=#57 id=57 data-nosnippet>57</a>        <span class="kw">match </span><span class="self">self</span>.timesets.get(name) {
+<a href=#58 id=58 data-nosnippet>58</a>            <span class="prelude-val">Some</span>(t) =&gt; <span class="prelude-val">Some</span>(<span class="kw-2">*</span>t),
+<a href=#59 id=59 data-nosnippet>59</a>            <span class="prelude-val">None </span>=&gt; <span class="prelude-val">None</span>,
+<a href=#60 id=60 data-nosnippet>60</a>        }
+<a href=#61 id=61 data-nosnippet>61</a>    }
+<a href=#62 id=62 data-nosnippet>62</a>
+<a href=#63 id=63 data-nosnippet>63</a>    <span class="kw">pub fn </span>contains_timeset(<span class="kw-2">&amp;</span><span class="self">self</span>, name: <span class="kw-2">&amp;</span>str) -&gt; bool {
+<a href=#64 id=64 data-nosnippet>64</a>        <span class="self">self</span>.timesets.contains_key(name)
+<a href=#65 id=65 data-nosnippet>65</a>    }
+<a href=#66 id=66 data-nosnippet>66</a>}
+<a href=#67 id=67 data-nosnippet>67</a>
+<a href=#68 id=68 data-nosnippet>68</a><span class="kw">impl </span>Dut {
+<a href=#69 id=69 data-nosnippet>69</a>    <span class="kw">pub fn </span>create_timeset(
+<a href=#70 id=70 data-nosnippet>70</a>        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+<a href=#71 id=71 data-nosnippet>71</a>        model_id: usize,
+<a href=#72 id=72 data-nosnippet>72</a>        name: <span class="kw-2">&amp;</span>str,
+<a href=#73 id=73 data-nosnippet>73</a>        period: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>std::string::ToString&gt;&gt;,
+<a href=#74 id=74 data-nosnippet>74</a>        default_period: <span class="prelude-ty">Option</span>&lt;f64&gt;,
+<a href=#75 id=75 data-nosnippet>75</a>        targets: Vec&lt;<span class="kw-2">&amp;</span>TesterSource&gt;,
+<a href=#76 id=76 data-nosnippet>76</a>    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;</span>Timeset&gt; {
+<a href=#77 id=77 data-nosnippet>77</a>        <span class="kw">let </span>id;
+<a href=#78 id=78 data-nosnippet>78</a>        {
+<a href=#79 id=79 data-nosnippet>79</a>            id = <span class="self">self</span>.timesets.len();
+<a href=#80 id=80 data-nosnippet>80</a>        }
+<a href=#81 id=81 data-nosnippet>81</a>
+<a href=#82 id=82 data-nosnippet>82</a>        <span class="kw">let </span>t;
+<a href=#83 id=83 data-nosnippet>83</a>        {
+<a href=#84 id=84 data-nosnippet>84</a>            <span class="kw">let </span>model = <span class="self">self</span>.get_mut_model(model_id)<span class="question-mark">?</span>;
+<a href=#85 id=85 data-nosnippet>85</a>            <span class="kw">if </span>model.contains_timeset(name) {
+<a href=#86 id=86 data-nosnippet>86</a>                <span class="kw">return </span><span class="macro">duplicate_error!</span>(<span class="string">"timeset"</span>, model.name, name);
+<a href=#87 id=87 data-nosnippet>87</a>            }
+<a href=#88 id=88 data-nosnippet>88</a>
+<a href=#89 id=89 data-nosnippet>89</a>            t = model.add_timeset(model_id, id, name, period, default_period, targets)<span class="question-mark">?</span>;
+<a href=#90 id=90 data-nosnippet>90</a>        }
+<a href=#91 id=91 data-nosnippet>91</a>        <span class="self">self</span>.timesets.push(t);
+<a href=#92 id=92 data-nosnippet>92</a>        <span class="prelude-val">Ok</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.timesets[id])
+<a href=#93 id=93 data-nosnippet>93</a>    }
+<a href=#94 id=94 data-nosnippet>94</a>
+<a href=#95 id=95 data-nosnippet>95</a>    <span class="kw">pub fn </span>create_wavetable(<span class="kw-2">&amp;mut </span><span class="self">self</span>, timeset_id: usize, name: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;</span>Wavetable&gt; {
+<a href=#96 id=96 data-nosnippet>96</a>        <span class="kw">let </span>id;
+<a href=#97 id=97 data-nosnippet>97</a>        {
+<a href=#98 id=98 data-nosnippet>98</a>            id = <span class="self">self</span>.wavetables.len();
+<a href=#99 id=99 data-nosnippet>99</a>        }
+<a href=#100 id=100 data-nosnippet>100</a>
+<a href=#101 id=101 data-nosnippet>101</a>        <span class="kw">let </span>w;
+<a href=#102 id=102 data-nosnippet>102</a>        {
+<a href=#103 id=103 data-nosnippet>103</a>            <span class="kw">let </span>t = <span class="kw-2">&amp;mut </span><span class="self">self</span>.timesets[timeset_id];
+<a href=#104 id=104 data-nosnippet>104</a>            <span class="kw">if </span>t.contains_wavetable(name) {
+<a href=#105 id=105 data-nosnippet>105</a>                <span class="kw">return </span><span class="macro">duplicate_error!</span>(<span class="string">"wavetable"</span>, t.name, name);
+<a href=#106 id=106 data-nosnippet>106</a>            }
+<a href=#107 id=107 data-nosnippet>107</a>
+<a href=#108 id=108 data-nosnippet>108</a>            w = t.register_wavetable(id, name)<span class="question-mark">?</span>;
+<a href=#109 id=109 data-nosnippet>109</a>        }
+<a href=#110 id=110 data-nosnippet>110</a>        <span class="self">self</span>.wavetables.push(w);
+<a href=#111 id=111 data-nosnippet>111</a>        <span class="prelude-val">Ok</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.wavetables[id])
+<a href=#112 id=112 data-nosnippet>112</a>    }
+<a href=#113 id=113 data-nosnippet>113</a>
+<a href=#114 id=114 data-nosnippet>114</a>    <span class="kw">pub fn </span>create_wave_group(
+<a href=#115 id=115 data-nosnippet>115</a>        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+<a href=#116 id=116 data-nosnippet>116</a>        wavetable_id: usize,
+<a href=#117 id=117 data-nosnippet>117</a>        name: <span class="kw-2">&amp;</span>str,
+<a href=#118 id=118 data-nosnippet>118</a>        derived_from: <span class="prelude-ty">Option</span>&lt;Vec&lt;usize&gt;&gt;,
+<a href=#119 id=119 data-nosnippet>119</a>    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;</span>WaveGroup&gt; {
+<a href=#120 id=120 data-nosnippet>120</a>        <span class="kw">let </span>id;
+<a href=#121 id=121 data-nosnippet>121</a>        {
+<a href=#122 id=122 data-nosnippet>122</a>            id = <span class="self">self</span>.wave_groups.len();
+<a href=#123 id=123 data-nosnippet>123</a>        }
+<a href=#124 id=124 data-nosnippet>124</a>
+<a href=#125 id=125 data-nosnippet>125</a>        <span class="kw">let </span>wgrp;
+<a href=#126 id=126 data-nosnippet>126</a>        {
+<a href=#127 id=127 data-nosnippet>127</a>            <span class="kw">let </span>wtbl = <span class="kw-2">&amp;mut </span><span class="self">self</span>.wavetables[wavetable_id];
+<a href=#128 id=128 data-nosnippet>128</a>            <span class="kw">if </span>wtbl.contains_wave_group(name) {
+<a href=#129 id=129 data-nosnippet>129</a>                <span class="kw">return </span><span class="macro">duplicate_error!</span>(<span class="string">"wave group"</span>, wtbl.name, name);
+<a href=#130 id=130 data-nosnippet>130</a>            }
+<a href=#131 id=131 data-nosnippet>131</a>
+<a href=#132 id=132 data-nosnippet>132</a>            wgrp = wtbl.register_wave_group(id, name, derived_from)<span class="question-mark">?</span>;
+<a href=#133 id=133 data-nosnippet>133</a>        }
+<a href=#134 id=134 data-nosnippet>134</a>        <span class="self">self</span>.wave_groups.push(wgrp);
+<a href=#135 id=135 data-nosnippet>135</a>        <span class="prelude-val">Ok</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.wave_groups[id])
+<a href=#136 id=136 data-nosnippet>136</a>    }
+<a href=#137 id=137 data-nosnippet>137</a>
+<a href=#138 id=138 data-nosnippet>138</a>    <span class="kw">pub fn </span>create_wave(
+<a href=#139 id=139 data-nosnippet>139</a>        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+<a href=#140 id=140 data-nosnippet>140</a>        wave_group_id: usize,
+<a href=#141 id=141 data-nosnippet>141</a>        indicator: <span class="kw-2">&amp;</span>str,
+<a href=#142 id=142 data-nosnippet>142</a>        derived_from: <span class="prelude-ty">Option</span>&lt;Vec&lt;String&gt;&gt;,
+<a href=#143 id=143 data-nosnippet>143</a>    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;</span>Wave&gt; {
+<a href=#144 id=144 data-nosnippet>144</a>        <span class="kw">let </span>id;
+<a href=#145 id=145 data-nosnippet>145</a>        {
+<a href=#146 id=146 data-nosnippet>146</a>            id = <span class="self">self</span>.waves.len();
+<a href=#147 id=147 data-nosnippet>147</a>        }
+<a href=#148 id=148 data-nosnippet>148</a>
+<a href=#149 id=149 data-nosnippet>149</a>        <span class="kw">let </span>w;
+<a href=#150 id=150 data-nosnippet>150</a>        {
+<a href=#151 id=151 data-nosnippet>151</a>            <span class="kw">let </span>wgrp = <span class="kw-2">&amp;mut </span><span class="self">self</span>.wave_groups[wave_group_id];
+<a href=#152 id=152 data-nosnippet>152</a>            <span class="kw">if </span>wgrp.contains_wave(indicator) {
+<a href=#153 id=153 data-nosnippet>153</a>                <span class="kw">return </span><span class="macro">duplicate_error!</span>(<span class="string">"wave"</span>, wgrp.name, indicator);
+<a href=#154 id=154 data-nosnippet>154</a>            }
+<a href=#155 id=155 data-nosnippet>155</a>
+<a href=#156 id=156 data-nosnippet>156</a>            w = wgrp.register_wave(id, indicator)<span class="question-mark">?</span>;
+<a href=#157 id=157 data-nosnippet>157</a>        }
+<a href=#158 id=158 data-nosnippet>158</a>        <span class="self">self</span>.waves.push(w);
+<a href=#159 id=159 data-nosnippet>159</a>
+<a href=#160 id=160 data-nosnippet>160</a>        <span class="kw">if let </span><span class="prelude-val">Some</span>(bases) = derived_from {
+<a href=#161 id=161 data-nosnippet>161</a>            <span class="kw">for </span>base <span class="kw">in </span>bases.iter() {
+<a href=#162 id=162 data-nosnippet>162</a>                <span class="kw">let </span>base_wave: Wave;
+<a href=#163 id=163 data-nosnippet>163</a>                {
+<a href=#164 id=164 data-nosnippet>164</a>                    base_wave = <span class="self">self</span>._get_cloned_wave(wave_group_id, base)<span class="question-mark">?</span>;
+<a href=#165 id=165 data-nosnippet>165</a>                }
+<a href=#166 id=166 data-nosnippet>166</a>                {
+<a href=#167 id=167 data-nosnippet>167</a>                    <span class="comment">// Todo: Need to further define how wave inheritance should look.
+<a href=#168 id=168 data-nosnippet>168</a>                    // In the wave is independent, so we're recreating the events, not just storing a reference to the derived wave's events.
+<a href=#169 id=169 data-nosnippet>169</a>                    // We're also allowing one wave to come in an knock out the events of another, if it includes any events.
+<a href=#170 id=170 data-nosnippet>170</a>                    // So, we'll only overwrite events if the another wave includes them. But, there's no way to know this ahead of time without doing a second pass.
+<a href=#171 id=171 data-nosnippet>171</a>                    </span><span class="kw">for </span>e_id <span class="kw">in </span>base_wave.events.iter() {
+<a href=#172 id=172 data-nosnippet>172</a>                        <span class="kw">let </span>e = <span class="self">self</span>.wave_events[<span class="kw-2">*</span>e_id].clone();
+<a href=#173 id=173 data-nosnippet>173</a>                        <span class="self">self</span>.create_event(id, Box::new(e.at), e.unit, <span class="kw-2">&amp;</span>e.action)<span class="question-mark">?</span>;
+<a href=#174 id=174 data-nosnippet>174</a>                    }
+<a href=#175 id=175 data-nosnippet>175</a>                }
+<a href=#176 id=176 data-nosnippet>176</a>                <span class="comment">// If given, pull the following out of the wave:
+<a href=#177 id=177 data-nosnippet>177</a>                //  * pins
+<a href=#178 id=178 data-nosnippet>178</a>                //  * events
+<a href=#179 id=179 data-nosnippet>179</a>                // Todo - add waveform inheritance
+<a href=#180 id=180 data-nosnippet>180</a>                // let w = &amp;mut self.waves[id];
+<a href=#181 id=181 data-nosnippet>181</a>                // w.pins = base_wave.pins.clone();
+<a href=#182 id=182 data-nosnippet>182</a>            </span>}
+<a href=#183 id=183 data-nosnippet>183</a>        }
+<a href=#184 id=184 data-nosnippet>184</a>        <span class="prelude-val">Ok</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.waves[id])
+<a href=#185 id=185 data-nosnippet>185</a>    }
+<a href=#186 id=186 data-nosnippet>186</a>
+<a href=#187 id=187 data-nosnippet>187</a>    <span class="kw">pub fn </span>create_event(
+<a href=#188 id=188 data-nosnippet>188</a>        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+<a href=#189 id=189 data-nosnippet>189</a>        wave_id: usize,
+<a href=#190 id=190 data-nosnippet>190</a>        at: Box&lt;<span class="kw">dyn </span>std::string::ToString&gt;,
+<a href=#191 id=191 data-nosnippet>191</a>        unit: <span class="prelude-ty">Option</span>&lt;String&gt;,
+<a href=#192 id=192 data-nosnippet>192</a>        action: <span class="kw-2">&amp;</span>str,
+<a href=#193 id=193 data-nosnippet>193</a>    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;</span>Event&gt; {
+<a href=#194 id=194 data-nosnippet>194</a>        <span class="kw">let </span>e_id;
+<a href=#195 id=195 data-nosnippet>195</a>        {
+<a href=#196 id=196 data-nosnippet>196</a>            e_id = <span class="self">self</span>.wave_events.len();
+<a href=#197 id=197 data-nosnippet>197</a>        }
+<a href=#198 id=198 data-nosnippet>198</a>
+<a href=#199 id=199 data-nosnippet>199</a>        <span class="kw">let </span>event;
+<a href=#200 id=200 data-nosnippet>200</a>        {
+<a href=#201 id=201 data-nosnippet>201</a>            <span class="kw">let </span>w = <span class="kw-2">&amp;mut </span><span class="self">self</span>.waves[wave_id];
+<a href=#202 id=202 data-nosnippet>202</a>            event = w.push_event(e_id, at, unit, action)<span class="question-mark">?</span>;
+<a href=#203 id=203 data-nosnippet>203</a>        }
+<a href=#204 id=204 data-nosnippet>204</a>        <span class="self">self</span>.wave_events.push(event);
+<a href=#205 id=205 data-nosnippet>205</a>        <span class="prelude-val">Ok</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.wave_events[e_id])
+<a href=#206 id=206 data-nosnippet>206</a>    }
+<a href=#207 id=207 data-nosnippet>207</a>}</code></pre></div></section></main></body></html>

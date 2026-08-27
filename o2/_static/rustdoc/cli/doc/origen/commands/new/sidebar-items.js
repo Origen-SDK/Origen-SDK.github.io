@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["run",""]],"mod":[["new_resource",""]],"static":[["PY_APP",""],["PY_BLOCK",""]],"struct":[["App",""]]});
+window.SIDEBAR_ITEMS = {"constant":["APP_CMD","BASE_CMD","PL_CMD","WS_CMD"],"fn":["add_commands","add_helps","current_user_to_author","run"],"macro":["common_new_args"],"static":["PY_APP","PY_BLOCK","SHARED","WORKSPACE"],"struct":["APP_NS_DIR"]};

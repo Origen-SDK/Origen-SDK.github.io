@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["exec","exec_and_capture","exec_and_capture_cmd","log_stderr","log_stdout","log_stdout_and_stderr"],"struct":["ExecResult"]};

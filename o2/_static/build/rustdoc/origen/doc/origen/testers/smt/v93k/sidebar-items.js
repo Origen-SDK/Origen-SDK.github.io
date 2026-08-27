@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["smt7",""],["smt8",""]]});
+window.SIDEBAR_ITEMS = {"mod":["smt7","smt8"]};

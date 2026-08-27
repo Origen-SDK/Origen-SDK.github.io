@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["MemAP",""]]});
+window.SIDEBAR_ITEMS = {"struct":["MemAP"]};

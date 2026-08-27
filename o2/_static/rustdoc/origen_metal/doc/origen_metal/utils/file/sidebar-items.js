@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["FilePermissions"],"fn":["cd","search_backwards_for","search_backwards_for_first","search_backwards_for_from_pwd","symlink","with_dir"]};

@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["UltraFlex",""]]});
+window.SIDEBAR_ITEMS = {"struct":["UltraFlex"]};

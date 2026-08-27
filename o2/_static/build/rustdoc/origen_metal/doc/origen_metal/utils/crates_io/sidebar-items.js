@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["get_crate_versions","is_crate_version_available"]};

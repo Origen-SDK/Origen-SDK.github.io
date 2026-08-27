@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["PASSWORD_MOTIVE"],"struct":["Mailer","MailerTOMLConfig","Maillist","Maillists","MaillistsTOMLConfig"]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"mod":["clap_arg_actions"],"struct":["Arg","Command","IndexMap"],"type":["App","Result","RunInput"]};

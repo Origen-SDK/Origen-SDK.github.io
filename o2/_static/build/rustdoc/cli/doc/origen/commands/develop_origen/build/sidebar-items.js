@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["BASE_CMD"],"fn":["build_cmd","build_metal","change_pyapi_wheel_version","hash","run","write_version"]};

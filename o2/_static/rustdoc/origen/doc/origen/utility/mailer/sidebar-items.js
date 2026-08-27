@@ -1,1 +1,0 @@
-initSidebarItems({"enum":[["SupportedAuths",""]],"struct":[["Mailer",""],["Maillist",""],["MaillistConfig",""]]});

@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["timeset",""]]});
+window.SIDEBAR_ITEMS = {"mod":["timeset"]};

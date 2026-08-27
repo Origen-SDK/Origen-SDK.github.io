@@ -1,1 +1,1 @@
-initSidebarItems({"constant":[["ONE",""],["UNDEFINED",""],["ZERO",""]],"struct":[["Bit",""]]});
+window.SIDEBAR_ITEMS = {"constant":["ONE","UNDEFINED","ZERO"],"struct":["Bit","Overlay"]};

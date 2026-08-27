@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["APP_COMMANDS"],"fn":["add_commands","add_helps"],"struct":["AppCmds"]};

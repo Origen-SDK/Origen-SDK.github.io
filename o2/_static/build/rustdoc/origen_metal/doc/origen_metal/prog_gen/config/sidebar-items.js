@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["Config","SMT7Config","SMT8Config"]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["BASE_CMD"],"fn":["run","update_pyproject","update_supported_python_cmd"]};

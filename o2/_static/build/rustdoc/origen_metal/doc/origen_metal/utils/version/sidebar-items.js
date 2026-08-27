@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["ReleaseType","VersionSpec"],"struct":["Version","VersionWithTOML"]};

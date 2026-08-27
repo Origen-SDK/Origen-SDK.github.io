@@ -1,0 +1,9 @@
+(function() {
+    var implementors = Object.fromEntries([["origen_metal",[["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.87.0/core/marker/trait.Copy.html\" title=\"trait core::marker::Copy\">Copy</a> for <a class=\"enum\" href=\"origen_metal/prog_gen/enum.IGXLResourceKind.html\" title=\"enum origen_metal::prog_gen::IGXLResourceKind\">IGXLResourceKind</a>"],["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.87.0/core/marker/trait.Copy.html\" title=\"trait core::marker::Copy\">Copy</a> for <a class=\"enum\" href=\"origen_metal/prog_gen/enum.PatternReferenceType.html\" title=\"enum origen_metal::prog_gen::PatternReferenceType\">PatternReferenceType</a>"],["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.87.0/core/marker/trait.Copy.html\" title=\"trait core::marker::Copy\">Copy</a> for <a class=\"enum\" href=\"origen_metal/prog_gen/enum.PatternType.html\" title=\"enum origen_metal::prog_gen::PatternType\">PatternType</a>"],["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.87.0/core/marker/trait.Copy.html\" title=\"trait core::marker::Copy\">Copy</a> for <a class=\"enum\" href=\"origen_metal/prog_gen/enum.SupportedTester.html\" title=\"enum origen_metal::prog_gen::SupportedTester\">SupportedTester</a>"],["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.87.0/core/marker/trait.Copy.html\" title=\"trait core::marker::Copy\">Copy</a> for <a class=\"enum\" href=\"origen_metal/prog_gen/enum.VariableType.html\" title=\"enum origen_metal::prog_gen::VariableType\">VariableType</a>"]]]]);
+    if (window.register_implementors) {
+        window.register_implementors(implementors);
+    } else {
+        window.pending_implementors = implementors;
+    }
+})()
+//{"start":57,"fragment_lengths":[1495]}

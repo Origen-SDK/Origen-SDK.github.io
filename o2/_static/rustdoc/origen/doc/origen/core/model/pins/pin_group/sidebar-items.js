@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["PinGroup",""]]});
+window.SIDEBAR_ITEMS = {"struct":["PinGroup"]};

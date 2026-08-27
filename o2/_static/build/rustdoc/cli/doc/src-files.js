@@ -1,0 +1,3 @@
+var srcIndex = new Map(JSON.parse('[["origen",["",[["_generated",[],["mod.rs","python.rs"]],["commands",[["_prelude",[],["clap_arg_actions.rs","mod.rs"]],["develop_origen",[],["build.rs","fmt.rs","mod.rs","publish.rs","update_supported_python.rs"]],["env",[],["migration.rs"]],["new",[],["mod.rs"]]],["app.rs","aux_cmds.rs","credentials.rs","env.rs","eval.rs","exec.rs","generate.rs","interactive.rs","mod.rs","plugin.rs","plugins.rs","rc.rs","save_ref.rs","target.rs","web.rs"]],["framework",[],["app_cmds.rs","aux_cmds.rs","cmd_gen_helpers.rs","core_cmds.rs","extensions.rs","helps.rs","mod.rs","plugins.rs"]]],["bin.rs","python.rs"]]]]'));
+createSrcSidebar();
+//{"start":36,"fragment_lengths":[601]}

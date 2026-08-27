@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["controller",""]]});
+window.SIDEBAR_ITEMS = {"mod":["controller"]};

@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["Service",""]],"mod":[["arm_debug",""],["jtag",""],["swd",""]],"struct":[["Services",""]]});
+window.SIDEBAR_ITEMS = {"enum":["Service"],"mod":["arm_debug","jtag","simple","swd"],"struct":["Services"]};

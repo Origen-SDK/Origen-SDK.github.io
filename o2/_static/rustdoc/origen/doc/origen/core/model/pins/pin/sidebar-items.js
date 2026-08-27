@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["PinRoles","Available Pin Roles"]],"struct":[["Pin","Model for single pin."],["PinAction","Single 'action' applicable to a pin"],["Resolver",""]],"trait":[["ResolvePinActions",""]]});
+window.SIDEBAR_ITEMS = {"enum":["PinRoles"],"struct":["Pin","PinAction","Resolver"],"trait":["ResolvePinActions"]};

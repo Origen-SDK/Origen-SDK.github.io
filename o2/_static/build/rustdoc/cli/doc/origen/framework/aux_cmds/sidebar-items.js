@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["add_aux_ns_helps","aux_ns_subcmd"],"struct":["AuxCmdNamespace","AuxCmds","CommandsToml"]};

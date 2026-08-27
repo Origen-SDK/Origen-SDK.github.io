@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["SupportedSystems"],"mod":["frontend","supported"],"struct":["Credentials","RevisionControl","Status"],"trait":["RevisionControlAPI"]};

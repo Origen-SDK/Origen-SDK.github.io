@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["j750",""],["ultraflex",""]]});
+window.SIDEBAR_ITEMS = {"mod":["j750","ultraflex"],"trait":["IGXLBase"]};

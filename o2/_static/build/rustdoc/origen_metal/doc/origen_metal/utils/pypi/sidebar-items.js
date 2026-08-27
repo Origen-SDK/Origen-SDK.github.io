@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["get_package_details","get_package_details_from","get_package_details_from_test_server","get_package_versions","get_package_versions_from","get_package_versions_from_test_server","is_package_version_available","is_package_version_available_on_test_server"],"struct":["PYPI_TEST_URL_BASE","PYPI_URL_BASE"]};

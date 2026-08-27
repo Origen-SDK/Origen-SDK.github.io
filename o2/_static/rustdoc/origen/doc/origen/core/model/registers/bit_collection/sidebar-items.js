@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["BitCollection",""]]});
+window.SIDEBAR_ITEMS = {"struct":["BitCollection"]};

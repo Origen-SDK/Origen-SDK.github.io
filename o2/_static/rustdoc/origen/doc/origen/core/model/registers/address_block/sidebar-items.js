@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["AddressBlock","Represents a single, contiguous block of memory in a memory map."]]});
+window.SIDEBAR_ITEMS = {"struct":["AddressBlock"]};

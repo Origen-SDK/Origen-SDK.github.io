@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["Operation",""]],"fn":[["get_home_dir",""],["search_for",""],["search_for_from_pwd",""]],"struct":[["Status","Exposes some status information about the runtime environment, e.g. whether an application workspace is present"]]});
+window.SIDEBAR_ITEMS = {"enum":["DependencySrc","Operation"],"fn":["app_present","get_home_dir","in_app_invocation","in_global_invocation","search_for","search_for_from_pwd"],"struct":["Status"]};

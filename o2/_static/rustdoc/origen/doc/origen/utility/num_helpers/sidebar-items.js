@@ -1,1 +1,1 @@
-initSidebarItems({"trait":[["NumHelpers",""]]});
+window.SIDEBAR_ITEMS = {"trait":["NumHelpers"]};

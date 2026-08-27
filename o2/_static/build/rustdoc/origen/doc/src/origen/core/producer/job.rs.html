@@ -1,221 +1,119 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src\core\producer\job.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>job.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script src="../../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../../down-arrow.png");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../../origen/index.html'><div class='logo-container'><img src='../../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../../brush.png" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../../settings.html"><img src="../../../../wheel.png" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
-<span id="2">  2</span>
-<span id="3">  3</span>
-<span id="4">  4</span>
-<span id="5">  5</span>
-<span id="6">  6</span>
-<span id="7">  7</span>
-<span id="8">  8</span>
-<span id="9">  9</span>
-<span id="10"> 10</span>
-<span id="11"> 11</span>
-<span id="12"> 12</span>
-<span id="13"> 13</span>
-<span id="14"> 14</span>
-<span id="15"> 15</span>
-<span id="16"> 16</span>
-<span id="17"> 17</span>
-<span id="18"> 18</span>
-<span id="19"> 19</span>
-<span id="20"> 20</span>
-<span id="21"> 21</span>
-<span id="22"> 22</span>
-<span id="23"> 23</span>
-<span id="24"> 24</span>
-<span id="25"> 25</span>
-<span id="26"> 26</span>
-<span id="27"> 27</span>
-<span id="28"> 28</span>
-<span id="29"> 29</span>
-<span id="30"> 30</span>
-<span id="31"> 31</span>
-<span id="32"> 32</span>
-<span id="33"> 33</span>
-<span id="34"> 34</span>
-<span id="35"> 35</span>
-<span id="36"> 36</span>
-<span id="37"> 37</span>
-<span id="38"> 38</span>
-<span id="39"> 39</span>
-<span id="40"> 40</span>
-<span id="41"> 41</span>
-<span id="42"> 42</span>
-<span id="43"> 43</span>
-<span id="44"> 44</span>
-<span id="45"> 45</span>
-<span id="46"> 46</span>
-<span id="47"> 47</span>
-<span id="48"> 48</span>
-<span id="49"> 49</span>
-<span id="50"> 50</span>
-<span id="51"> 51</span>
-<span id="52"> 52</span>
-<span id="53"> 53</span>
-<span id="54"> 54</span>
-<span id="55"> 55</span>
-<span id="56"> 56</span>
-<span id="57"> 57</span>
-<span id="58"> 58</span>
-<span id="59"> 59</span>
-<span id="60"> 60</span>
-<span id="61"> 61</span>
-<span id="62"> 62</span>
-<span id="63"> 63</span>
-<span id="64"> 64</span>
-<span id="65"> 65</span>
-<span id="66"> 66</span>
-<span id="67"> 67</span>
-<span id="68"> 68</span>
-<span id="69"> 69</span>
-<span id="70"> 70</span>
-<span id="71"> 71</span>
-<span id="72"> 72</span>
-<span id="73"> 73</span>
-<span id="74"> 74</span>
-<span id="75"> 75</span>
-<span id="76"> 76</span>
-<span id="77"> 77</span>
-<span id="78"> 78</span>
-<span id="79"> 79</span>
-<span id="80"> 80</span>
-<span id="81"> 81</span>
-<span id="82"> 82</span>
-<span id="83"> 83</span>
-<span id="84"> 84</span>
-<span id="85"> 85</span>
-<span id="86"> 86</span>
-<span id="87"> 87</span>
-<span id="88"> 88</span>
-<span id="89"> 89</span>
-<span id="90"> 90</span>
-<span id="91"> 91</span>
-<span id="92"> 92</span>
-<span id="93"> 93</span>
-<span id="94"> 94</span>
-<span id="95"> 95</span>
-<span id="96"> 96</span>
-<span id="97"> 97</span>
-<span id="98"> 98</span>
-<span id="99"> 99</span>
-<span id="100">100</span>
-<span id="101">101</span>
-<span id="102">102</span>
-<span id="103">103</span>
-<span id="104">104</span>
-<span id="105">105</span>
-<span id="106">106</span>
-<span id="107">107</span>
-<span id="108">108</span>
-<span id="109">109</span>
-</pre><div class="example-wrap"><pre class="rust ">
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="prelude-ty">Result</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::{<span class="ident">Path</span>, <span class="ident">PathBuf</span>};
-
-<span class="doccomment">/// A job represents the execution of an Origen application source file.</span>
-<span class="doccomment">/// For example, if the user runs `origen g &lt;pat1&gt; &lt;pat2&gt;` then two jobs will be created,</span>
-<span class="doccomment">/// one for each pattern source file.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Job</span> {
-    <span class="kw">pub</span> <span class="ident">command</span>: <span class="ident">String</span>,
-    <span class="kw">pub</span> <span class="ident">results</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">usize</span>,
-    <span class="doccomment">/// A stack of source files executed by the job. The first one is typically the file</span>
-    <span class="doccomment">/// supplied by the user, then if that file imports other files, e.g. a sub-flow, then</span>
-    <span class="doccomment">/// that will be added to this stack and then popped off when completed.</span>
-    <span class="kw">pub</span> <span class="ident">files</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">PathBuf</span><span class="op">&gt;</span>,
-}
-
-<span class="kw">impl</span> <span class="ident">Job</span> {
-    <span class="doccomment">/// Returns the file at the root of the job or None if the job has no file association.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">source_file</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">PathBuf</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">files</span>.<span class="ident">first</span>()
-    }
-
-    <span class="doccomment">/// Returns the current file being processed by the job or None if the job has no file association.</span>
-    <span class="doccomment">/// This can be the same as source_file() or it can be different, for example if a flow job has</span>
-    <span class="doccomment">/// included a sub-flow which is currently being processed.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">current_file</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">PathBuf</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">files</span>.<span class="ident">last</span>()
-    }
-
-    <span class="doccomment">/// Rerturns the origen command that would be run to replicate the job, e.g. &quot;origen g some_file.py&quot;</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">command</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cmd</span> <span class="op">=</span> <span class="string">&quot;origen &quot;</span>.<span class="ident">to_string</span>();
-        <span class="ident">cmd</span> <span class="op">+</span><span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">command</span>;
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">p</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">files</span>.<span class="ident">first</span>() {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">f</span>) <span class="op">=</span> <span class="ident">p</span>.<span class="ident">to_str</span>() {
-                <span class="ident">cmd</span> <span class="op">+</span><span class="op">=</span> <span class="string">&quot; &quot;</span>;
-                <span class="ident">cmd</span> <span class="op">+</span><span class="op">=</span> <span class="ident">f</span>;
-            }
-        }
-        <span class="ident">cmd</span>
-    }
-
-    <span class="doccomment">/// Tries to resolve a reference to a file by the following rules:</span>
-    <span class="doccomment">///   * Its an absolute file reference</span>
-    <span class="doccomment">///   * Its a relative reference from the job&#39;s latest file</span>
-    <span class="doccomment">///   * Its a relative reference from the job&#39;s original source file</span>
-    <span class="doccomment">///   * Its a relative reference from the app&#39;s app dir</span>
-    <span class="doccomment">///   * Its a relative reference from the app&#39;s root</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Optionally a list of possible extensions can be given and the above will be retried</span>
-    <span class="doccomment">/// with the given extension(s) appended if required.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">resolve_file_reference</span>(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">file</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>,
-        <span class="ident">extensions</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">PathBuf</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">f</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">_resolve_file_reference</span>(<span class="ident">file</span>);
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">f</span>) <span class="op">=</span> <span class="ident">f</span> {
-            <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">f</span>);
-        }
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">exts</span>) <span class="op">=</span> <span class="ident">extensions</span> {
-            <span class="kw">for</span> <span class="ident">ext</span> <span class="kw">in</span> <span class="ident">exts</span> {
-                <span class="kw">let</span> <span class="ident">f</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">_resolve_file_reference</span>(<span class="kw-2">&amp;</span><span class="ident">file</span>.<span class="ident">with_extension</span>(<span class="ident">ext</span>));
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">f</span>) <span class="op">=</span> <span class="ident">f</span> {
-                    <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">f</span>);
-                }
-            }
-        }
-        <span class="macro">error</span><span class="macro">!</span>(<span class="string">&quot;Could not find &#39;{}&#39;&quot;</span>, <span class="ident">file</span>.<span class="ident">display</span>())
-    }
-
-    <span class="kw">fn</span> <span class="ident">_resolve_file_reference</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">file</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PathBuf</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="ident">file</span>.<span class="ident">is_absolute</span>() {
-            <span class="kw">if</span> <span class="ident">file</span>.<span class="ident">exists</span>() {
-                <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">file</span>.<span class="ident">to_path_buf</span>());
-            }
-        } <span class="kw">else</span> {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">root</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">files</span>.<span class="ident">last</span>() {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">dir</span>) <span class="op">=</span> <span class="ident">root</span>.<span class="ident">parent</span>() {
-                    <span class="kw">let</span> <span class="ident">f</span> <span class="op">=</span> <span class="ident">dir</span>.<span class="ident">join</span>(<span class="ident">file</span>);
-                    <span class="kw">if</span> <span class="ident">f</span>.<span class="ident">exists</span>() {
-                        <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">f</span>.<span class="ident">to_path_buf</span>());
-                    }
-                }
-            }
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">root</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">files</span>.<span class="ident">first</span>() {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">dir</span>) <span class="op">=</span> <span class="ident">root</span>.<span class="ident">parent</span>() {
-                    <span class="kw">let</span> <span class="ident">f</span> <span class="op">=</span> <span class="ident">dir</span>.<span class="ident">join</span>(<span class="ident">file</span>);
-                    <span class="kw">if</span> <span class="ident">f</span>.<span class="ident">exists</span>() {
-                        <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">f</span>.<span class="ident">to_path_buf</span>());
-                    }
-                }
-            }
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">app</span>) <span class="op">=</span> <span class="kw">crate</span>::<span class="ident">app</span>() {
-                <span class="kw">let</span> <span class="ident">dir</span> <span class="op">=</span> <span class="ident">app</span>.<span class="ident">app_dir</span>();
-                <span class="kw">let</span> <span class="ident">f</span> <span class="op">=</span> <span class="ident">dir</span>.<span class="ident">join</span>(<span class="ident">file</span>);
-                <span class="kw">if</span> <span class="ident">f</span>.<span class="ident">exists</span>() {
-                    <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">f</span>.<span class="ident">to_path_buf</span>());
-                }
-                <span class="kw">let</span> <span class="ident">dir</span> <span class="op">=</span> <span class="ident">app</span>.<span class="ident">root</span>.<span class="ident">clone</span>();
-                <span class="kw">let</span> <span class="ident">f</span> <span class="op">=</span> <span class="ident">dir</span>.<span class="ident">join</span>(<span class="ident">file</span>);
-                <span class="kw">if</span> <span class="ident">f</span>.<span class="ident">exists</span>() {
-                    <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">f</span>.<span class="ident">to_path_buf</span>());
-                }
-            }
-        }
-        <span class="prelude-val">None</span>
-    }
-}
-</pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../../";window.currentCrate = "origen";</script><script src="../../../../main.js"></script><script src="../../../../source-script.js"></script><script src="../../../../source-files.js"></script><script defer src="../../../../search-index.js"></script></body></html>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/core/producer/job.rs`."><title>job.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-916cea96.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="origen" data-themes="" data-resource-suffix="" data-rustdoc-version="1.87.0 (17067e9ac 2025-05-09)" data-channel="1.87.0" data-search-js="search-e7298875.js" data-settings-js="settings-d72f25bb.js" ><script src="../../../../static.files/storage-82c7156e.js"></script><script defer src="../../../../static.files/src-script-63605ae7.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-fb8c74a8.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">origen/core/producer/</div>job.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-3"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="kw">use </span><span class="kw">crate</span>::Result;
+<a href=#2 id=2 data-nosnippet>2</a><span class="kw">use </span>normpath::PathExt;
+<a href=#3 id=3 data-nosnippet>3</a><span class="kw">use </span>std::path::{Path, PathBuf};
+<a href=#4 id=4 data-nosnippet>4</a>
+<a href=#5 id=5 data-nosnippet>5</a><span class="doccomment">/// A job represents the execution of an Origen application source file.
+<a href=#6 id=6 data-nosnippet>6</a>/// For example, if the user runs `origen g &lt;pat1&gt; &lt;pat2&gt;` then two jobs will be created,
+<a href=#7 id=7 data-nosnippet>7</a>/// one for each pattern source file.
+<a href=#8 id=8 data-nosnippet>8</a></span><span class="kw">pub struct </span>Job {
+<a href=#9 id=9 data-nosnippet>9</a>    <span class="kw">pub </span>command: String,
+<a href=#10 id=10 data-nosnippet>10</a>    <span class="kw">pub </span>results: <span class="prelude-ty">Option</span>&lt;String&gt;,
+<a href=#11 id=11 data-nosnippet>11</a>    <span class="kw">pub </span>id: usize,
+<a href=#12 id=12 data-nosnippet>12</a>    <span class="doccomment">/// A stack of source files executed by the job. The first one is typically the file
+<a href=#13 id=13 data-nosnippet>13</a>    /// supplied by the user, then if that file imports other files, e.g. a sub-flow, then
+<a href=#14 id=14 data-nosnippet>14</a>    /// that will be added to this stack and then popped off when completed.
+<a href=#15 id=15 data-nosnippet>15</a>    </span><span class="kw">pub </span>files: Vec&lt;PathBuf&gt;,
+<a href=#16 id=16 data-nosnippet>16</a>}
+<a href=#17 id=17 data-nosnippet>17</a>
+<a href=#18 id=18 data-nosnippet>18</a><span class="kw">impl </span>Job {
+<a href=#19 id=19 data-nosnippet>19</a>    <span class="doccomment">/// Returns the file at the root of the job or None if the job has no file association.
+<a href=#20 id=20 data-nosnippet>20</a>    </span><span class="kw">pub fn </span>source_file(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>PathBuf&gt; {
+<a href=#21 id=21 data-nosnippet>21</a>        <span class="self">self</span>.files.first()
+<a href=#22 id=22 data-nosnippet>22</a>    }
+<a href=#23 id=23 data-nosnippet>23</a>
+<a href=#24 id=24 data-nosnippet>24</a>    <span class="doccomment">/// Returns the current file being processed by the job or None if the job has no file association.
+<a href=#25 id=25 data-nosnippet>25</a>    /// This can be the same as source_file() or it can be different, for example if a flow job has
+<a href=#26 id=26 data-nosnippet>26</a>    /// included a sub-flow which is currently being processed.
+<a href=#27 id=27 data-nosnippet>27</a>    </span><span class="kw">pub fn </span>current_file(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>PathBuf&gt; {
+<a href=#28 id=28 data-nosnippet>28</a>        <span class="self">self</span>.files.last()
+<a href=#29 id=29 data-nosnippet>29</a>    }
+<a href=#30 id=30 data-nosnippet>30</a>
+<a href=#31 id=31 data-nosnippet>31</a>    <span class="doccomment">/// Rerturns the origen command that would be run to replicate the job, e.g. "origen g some_file.py"
+<a href=#32 id=32 data-nosnippet>32</a>    </span><span class="kw">pub fn </span>command(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; String {
+<a href=#33 id=33 data-nosnippet>33</a>        <span class="kw">let </span><span class="kw-2">mut </span>cmd = <span class="string">"origen "</span>.to_string();
+<a href=#34 id=34 data-nosnippet>34</a>        cmd += <span class="kw-2">&amp;</span><span class="self">self</span>.command;
+<a href=#35 id=35 data-nosnippet>35</a>        <span class="kw">if let </span><span class="prelude-val">Some</span>(p) = <span class="self">self</span>.files.first() {
+<a href=#36 id=36 data-nosnippet>36</a>            <span class="kw">if let </span><span class="prelude-val">Some</span>(f) = p.to_str() {
+<a href=#37 id=37 data-nosnippet>37</a>                cmd += <span class="string">" "</span>;
+<a href=#38 id=38 data-nosnippet>38</a>                cmd += f;
+<a href=#39 id=39 data-nosnippet>39</a>            }
+<a href=#40 id=40 data-nosnippet>40</a>        }
+<a href=#41 id=41 data-nosnippet>41</a>        cmd
+<a href=#42 id=42 data-nosnippet>42</a>    }
+<a href=#43 id=43 data-nosnippet>43</a>
+<a href=#44 id=44 data-nosnippet>44</a>    <span class="doccomment">/// Tries to resolve a reference to a file by the following rules:
+<a href=#45 id=45 data-nosnippet>45</a>    ///   * Its an absolute file reference
+<a href=#46 id=46 data-nosnippet>46</a>    ///   * Its a relative reference from the job's latest file
+<a href=#47 id=47 data-nosnippet>47</a>    ///   * Its a relative reference from the job's original source file
+<a href=#48 id=48 data-nosnippet>48</a>    ///   * Its a relative reference from the app's app dir
+<a href=#49 id=49 data-nosnippet>49</a>    ///   * Its a relative reference from the app's root
+<a href=#50 id=50 data-nosnippet>50</a>    ///
+<a href=#51 id=51 data-nosnippet>51</a>    /// Optionally a list of possible extensions can be given and the above will be retried
+<a href=#52 id=52 data-nosnippet>52</a>    /// with the given extension(s) appended if required.
+<a href=#53 id=53 data-nosnippet>53</a>    </span><span class="kw">pub fn </span>resolve_file_reference(
+<a href=#54 id=54 data-nosnippet>54</a>        <span class="kw-2">&amp;</span><span class="self">self</span>,
+<a href=#55 id=55 data-nosnippet>55</a>        file: <span class="kw-2">&amp;</span>Path,
+<a href=#56 id=56 data-nosnippet>56</a>        extensions: <span class="prelude-ty">Option</span>&lt;Vec&lt;<span class="kw-2">&amp;</span>str&gt;&gt;,
+<a href=#57 id=57 data-nosnippet>57</a>    ) -&gt; <span class="prelude-ty">Result</span>&lt;PathBuf&gt; {
+<a href=#58 id=58 data-nosnippet>58</a>        <span class="kw">let </span>f = <span class="self">self</span>._resolve_file_reference(file);
+<a href=#59 id=59 data-nosnippet>59</a>        <span class="kw">if let </span><span class="prelude-val">Some</span>(f) = f {
+<a href=#60 id=60 data-nosnippet>60</a>            <span class="kw">return </span><span class="prelude-val">Ok</span>(f);
+<a href=#61 id=61 data-nosnippet>61</a>        }
+<a href=#62 id=62 data-nosnippet>62</a>        <span class="kw">if let </span><span class="prelude-val">Some</span>(exts) = extensions {
+<a href=#63 id=63 data-nosnippet>63</a>            <span class="kw">for </span>ext <span class="kw">in </span>exts {
+<a href=#64 id=64 data-nosnippet>64</a>                <span class="kw">let </span>f = <span class="self">self</span>._resolve_file_reference(<span class="kw-2">&amp;</span>file.with_extension(ext));
+<a href=#65 id=65 data-nosnippet>65</a>                <span class="kw">if let </span><span class="prelude-val">Some</span>(f) = f {
+<a href=#66 id=66 data-nosnippet>66</a>                    <span class="kw">return </span><span class="prelude-val">Ok</span>(f);
+<a href=#67 id=67 data-nosnippet>67</a>                }
+<a href=#68 id=68 data-nosnippet>68</a>            }
+<a href=#69 id=69 data-nosnippet>69</a>        }
+<a href=#70 id=70 data-nosnippet>70</a>        <span class="macro">bail!</span>(<span class="string">"Could not find '{}'"</span>, file.display())
+<a href=#71 id=71 data-nosnippet>71</a>    }
+<a href=#72 id=72 data-nosnippet>72</a>
+<a href=#73 id=73 data-nosnippet>73</a>    <span class="kw">fn </span>_resolve_file_reference(<span class="kw-2">&amp;</span><span class="self">self</span>, file: <span class="kw-2">&amp;</span>Path) -&gt; <span class="prelude-ty">Option</span>&lt;PathBuf&gt; {
+<a href=#74 id=74 data-nosnippet>74</a>        <span class="kw">if </span>file.is_absolute() {
+<a href=#75 id=75 data-nosnippet>75</a>            <span class="kw">if </span>file.exists() {
+<a href=#76 id=76 data-nosnippet>76</a>                <span class="kw">return </span><span class="prelude-val">Some</span>(file.to_path_buf());
+<a href=#77 id=77 data-nosnippet>77</a>            }
+<a href=#78 id=78 data-nosnippet>78</a>        } <span class="kw">else </span>{
+<a href=#79 id=79 data-nosnippet>79</a>            <span class="kw">if let </span><span class="prelude-val">Some</span>(root) = <span class="self">self</span>.files.last() {
+<a href=#80 id=80 data-nosnippet>80</a>                <span class="kw">let </span>root_norm = root.normalize().unwrap();
+<a href=#81 id=81 data-nosnippet>81</a>                <span class="kw">if let </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(dir)) = root_norm.parent() {
+<a href=#82 id=82 data-nosnippet>82</a>                    <span class="kw">let </span>f = dir.join(file);
+<a href=#83 id=83 data-nosnippet>83</a>                    <span class="kw">if </span>f.exists() {
+<a href=#84 id=84 data-nosnippet>84</a>                        <span class="kw">return </span><span class="prelude-val">Some</span>(f.into_path_buf());
+<a href=#85 id=85 data-nosnippet>85</a>                    }
+<a href=#86 id=86 data-nosnippet>86</a>                    <span class="kw">match </span>f.canonicalize() {
+<a href=#87 id=87 data-nosnippet>87</a>                        <span class="prelude-val">Ok</span>(f) =&gt; {
+<a href=#88 id=88 data-nosnippet>88</a>                            <span class="kw">if </span>f.exists() {
+<a href=#89 id=89 data-nosnippet>89</a>                                <span class="kw">return </span><span class="prelude-val">Some</span>(f.into_path_buf());
+<a href=#90 id=90 data-nosnippet>90</a>                            }
+<a href=#91 id=91 data-nosnippet>91</a>                        }
+<a href=#92 id=92 data-nosnippet>92</a>                        <span class="prelude-val">Err</span>(_e) =&gt; {}
+<a href=#93 id=93 data-nosnippet>93</a>                    }
+<a href=#94 id=94 data-nosnippet>94</a>                }
+<a href=#95 id=95 data-nosnippet>95</a>            }
+<a href=#96 id=96 data-nosnippet>96</a>            <span class="kw">if let </span><span class="prelude-val">Some</span>(root) = <span class="self">self</span>.files.first() {
+<a href=#97 id=97 data-nosnippet>97</a>                <span class="kw">if let </span><span class="prelude-val">Some</span>(dir) = root.parent() {
+<a href=#98 id=98 data-nosnippet>98</a>                    <span class="kw">let </span>f = dir.join(file);
+<a href=#99 id=99 data-nosnippet>99</a>                    <span class="kw">if </span>f.exists() {
+<a href=#100 id=100 data-nosnippet>100</a>                        <span class="kw">return </span><span class="prelude-val">Some</span>(f.to_path_buf());
+<a href=#101 id=101 data-nosnippet>101</a>                    }
+<a href=#102 id=102 data-nosnippet>102</a>                }
+<a href=#103 id=103 data-nosnippet>103</a>            }
+<a href=#104 id=104 data-nosnippet>104</a>            <span class="kw">if let </span><span class="prelude-val">Some</span>(app) = <span class="kw">crate</span>::app() {
+<a href=#105 id=105 data-nosnippet>105</a>                <span class="kw">let </span>dir = app.app_dir();
+<a href=#106 id=106 data-nosnippet>106</a>                <span class="kw">let </span>f = dir.join(file);
+<a href=#107 id=107 data-nosnippet>107</a>                <span class="kw">if </span>f.exists() {
+<a href=#108 id=108 data-nosnippet>108</a>                    <span class="kw">return </span><span class="prelude-val">Some</span>(f.to_path_buf());
+<a href=#109 id=109 data-nosnippet>109</a>                }
+<a href=#110 id=110 data-nosnippet>110</a>                <span class="kw">let </span>dir = app.root.clone();
+<a href=#111 id=111 data-nosnippet>111</a>                <span class="kw">let </span>f = dir.join(file);
+<a href=#112 id=112 data-nosnippet>112</a>                <span class="kw">if </span>f.exists() {
+<a href=#113 id=113 data-nosnippet>113</a>                    <span class="kw">return </span><span class="prelude-val">Some</span>(f.to_path_buf());
+<a href=#114 id=114 data-nosnippet>114</a>                }
+<a href=#115 id=115 data-nosnippet>115</a>            }
+<a href=#116 id=116 data-nosnippet>116</a>        }
+<a href=#117 id=117 data-nosnippet>117</a>        <span class="prelude-val">None
+<a href=#118 id=118 data-nosnippet>118</a>    </span>}
+<a href=#119 id=119 data-nosnippet>119</a>}</code></pre></div></section></main></body></html>

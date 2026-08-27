@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Renderer",""]],"trait":[["RendererAPI",""]]});
+window.SIDEBAR_ITEMS = {"struct":["Renderer"],"trait":["RendererAPI"]};

@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["Endianness",""]],"mod":[["pin",""],["pin_group",""],["pin_header",""],["pin_store",""]],"struct":[["PinCollection",""],["StateTracker",""]],"type":[["PinGroupIdendifer",""]]});
+window.SIDEBAR_ITEMS = {"enum":["Endianness"],"mod":["pin","pin_group","pin_header","pin_store"],"struct":["PinCollection","StateTracker"],"type":["PinGroupIdendifer"]};

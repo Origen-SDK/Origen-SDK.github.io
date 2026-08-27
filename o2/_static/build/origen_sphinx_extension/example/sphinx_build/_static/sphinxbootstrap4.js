@@ -77,25 +77,15 @@ $(function() {
         .find('a.reference').addClass('nav-link').end()
 
     
-    $(".sphinxsidebar").addClass("col-md-3");
-    $(".document").addClass("col-md-9");
-    sidebarTreeView();
+    $(".document").addClass("col-md-12")
+        .children(".documentwrapper").addClass("container");
     
     $(".related").addClass("col-md-12");
     $(".footer").addClass("col-md-12");
 
-    
-    // Navbar Globaltoc Style
-    $("#navbar-pages li.toctree-l1").unwrap();
-    $('#navbar-pages > ul').children('li')
-        .find('a').addClass('dropdown-item').end()
-        .has('ul').addClass('dropdown')
-            .find('ul').addClass('dropdown-menu');
-    $("#navbar-pages > ul").find("li").has("ul").children("a").addClass("arrow");// Tables
+    // Tables
     $("table.docutils").addClass("table table-sm table-bordered table-striped")
         .find("thead")
-        
-        .addClass("thead-inverse")
         
 
     // Admonition
@@ -111,12 +101,6 @@ $(function() {
     // download
     $("a.download").prepend('<div class="icon"><div class="download"></div></div>');
 
-    
-    // This is causing jitteriness if there isn't sufficent page content to fully expand the sidebar.
-    // Need to investigate further. It's a nice feature but needs some integration work.
-    // Update - The more I mess with this the more buggy it gets and, tbh, I just don't like how the page looks
-    //          with two scrollbars on overflow content. Probably just keep this off. If anything, can make the breadcrumbs section sticky.
-    // stickySidebar();
     
 
 });

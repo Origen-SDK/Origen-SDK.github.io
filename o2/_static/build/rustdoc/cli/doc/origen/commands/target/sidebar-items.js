@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["run",""]]});
+window.SIDEBAR_ITEMS = {"constant":["BASE_CMD","FULL_PATHS_OPT","TARGETS_OPT"],"fn":["add_commands","add_helps","run","view_targets"],"macro":["full_paths_opt","targets_arg","tnames","view"]};

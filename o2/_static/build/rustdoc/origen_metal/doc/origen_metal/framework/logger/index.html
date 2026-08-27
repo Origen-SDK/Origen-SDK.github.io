@@ -1,0 +1,39 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="The Origen logger is implemented as a singleton and data is logged via globally available macros."><title>origen_metal::framework::logger - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../../static.files/rustdoc-916cea96.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="origen_metal" data-themes="" data-resource-suffix="" data-rustdoc-version="1.87.0 (17067e9ac 2025-05-09)" data-channel="1.87.0" data-search-js="search-e7298875.js" data-settings-js="settings-d72f25bb.js" ><script src="../../../static.files/storage-82c7156e.js"></script><script defer src="../sidebar-items.js"></script><script defer src="../../../static.files/main-fb8c74a8.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-044be391.svg"></head><body class="rustdoc mod"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../../../origen_metal/index.html">origen_<wbr>metal</a><span class="version">1.5.1</span></h2></div><div class="sidebar-elems"><section id="rustdoc-toc"><h2 class="location"><a href="#">Module logger</a></h2><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#examples" title="Examples">Examples</a></li><li><a href="#log-levels" title="Log Levels">Log Levels</a></li></ul><h3><a href="#structs">Module Items</a></h3><ul class="block"><li><a href="#structs" title="Structs">Structs</a></li></ul></section><div id="rustdoc-modnav"><h2><a href="../index.html">In origen_<wbr>metal::<wbr>framework</a></h2></div></div></nav><div class="sidebar-resizer"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><div class="rustdoc-breadcrumbs"><a href="../../index.html">origen_metal</a>::<wbr><a href="../index.html">framework</a></div><h1>Module <span>logger</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../../../src/origen_metal/framework/logger.rs.html#1-616">Source</a> </span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>The Origen logger is implemented as a singleton and data is logged via globally available macros.</p>
+<p>All log macros operate similar to the println! macro, accepting a string argument and optionally
+some variables to be substituted into the message.</p>
+<h3 id="examples"><a class="doc-anchor" href="#examples">§</a>Examples</h3>
+<p>Display is like a log aware print, the data will always appear in the console without any timestamp
+or other decoration and will be written to the log file with timestamp info.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="macro">display!</span>(<span class="string">"Some msg"</span>);       <span class="comment">// This one is equivalent to print! but appears in the log
+</span><span class="macro">displayln!</span>(<span class="string">"Some msg"</span>);     <span class="comment">// Like println!
+
+</span><span class="kw">let </span>x = <span class="number">10</span>;
+<span class="macro">displayln!</span>(<span class="string">"The value of x is {}"</span>, x);
+
+<span class="comment">// There are also red/green versions of display:
+</span><span class="macro">display_green!</span>(<span class="string">"The value of x is {}"</span>, x);
+<span class="macro">display_redln!</span>(<span class="string">"The value of x is {}"</span>, x);
+</code></pre></div>
+<p>Similar macros exist to display messages at different log levels, all of these appear with timestamps
+in both the console and the log file:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let </span>x = <span class="number">10</span>;
+
+<span class="macro">log_error!</span>(<span class="string">"The value of x is {}"</span>, x);
+<span class="macro">log_info!</span>(<span class="string">"The value of x is {}"</span>, x);
+<span class="macro">log_success!</span>(<span class="string">"The value of x is {}"</span>, x);
+<span class="macro">log_warning!</span>(<span class="string">"The value of x is {}"</span>, x);
+<span class="macro">log_deprecated!</span>(<span class="string">"The value of x is {}"</span>, x);
+<span class="macro">log_debug!</span>(<span class="string">"The value of x is {}"</span>, x);
+<span class="macro">log_trace!</span>(<span class="string">"The value of x is {}"</span>, x);</code></pre></div>
+<h3 id="log-levels"><a class="doc-anchor" href="#log-levels">§</a>Log Levels</h3>
+<p>The log verbosity mapping is shown below, level 0 is equivalent to running with no verbosity switch,
+level 1 is -v, level 2 is -vv, etc.</p>
+<ul>
+<li>Level 0 - display, log_error</li>
+<li>Level 1 - log_info, log_success, log_warning, log_deprecated</li>
+<li>Level 2 - log_debug</li>
+<li>Level 3 - log_trace</li>
+</ul>
+</div></details><h2 id="structs" class="section-header">Structs<a href="#structs" class="anchor">§</a></h2><dl class="item-table"><dt><a class="struct" href="struct.CustomLoggerPrefix.html" title="struct origen_metal::framework::logger::CustomLoggerPrefix">Custom<wbr>Logger<wbr>Prefix</a></dt><dt><a class="struct" href="struct.Inner.html" title="struct origen_metal::framework::logger::Inner">Inner</a></dt><dt><a class="struct" href="struct.Logger.html" title="struct origen_metal::framework::logger::Logger">Logger</a></dt></dl></section></div></main></body></html>

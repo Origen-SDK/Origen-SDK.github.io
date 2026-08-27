@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["clean_sessions","setup_sessions","unload","with_app_session","with_app_session_group","with_mut_app_session_group"],"static":["APP_GROUP_NAME","APP_SESSIONS_FILE_PERMISSIONS","DEFAULT_APP_PATH_OFFSET"]};

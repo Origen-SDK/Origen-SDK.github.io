@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["apply_all_changed_refs","apply_all_new_refs","apply_ref","clear_save_refs","create_changed_ref","create_new_ref","set_save_ref_dir"]};

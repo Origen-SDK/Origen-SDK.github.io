@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["add_pl_ns_helps","add_pl_ns_subcmds"],"struct":["Plugin","Plugins"]};

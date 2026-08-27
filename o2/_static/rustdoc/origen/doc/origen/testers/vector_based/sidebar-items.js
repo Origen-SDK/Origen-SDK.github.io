@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["api",""],["pattern_renderer",""]],"trait":[["VectorBased",""]]});
+window.SIDEBAR_ITEMS = {"mod":["api","pattern_renderer"],"trait":["VectorBased"]};

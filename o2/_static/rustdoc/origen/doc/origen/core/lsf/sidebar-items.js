@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["is_running_remotely",""]]});
+window.SIDEBAR_ITEMS = {"fn":["is_running_remotely"]};

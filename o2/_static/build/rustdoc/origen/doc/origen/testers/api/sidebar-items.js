@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["comment",""]],"trait":[["ControllerAPI",""]]});
+window.SIDEBAR_ITEMS = {"fn":["comment"],"trait":["ControllerAPI"]};

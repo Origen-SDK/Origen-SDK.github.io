@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["dp",""],["jtag_dp",""],["mem_ap",""]],"struct":[["ArmDebug",""]]});
+window.SIDEBAR_ITEMS = {"mod":["dp","jtag_dp","mem_ap"],"struct":["ArmDebug"]};

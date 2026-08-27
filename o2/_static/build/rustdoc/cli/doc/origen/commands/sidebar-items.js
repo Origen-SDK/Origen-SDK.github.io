@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["launch","Launch the given command in Python"]],"mod":[["app",""],["build",""],["env","Some notes on how Origen's Python environment is setup and invoked:"],["exec",""],["fmt",""],["interactive",""],["mode",""],["new",""],["proj",""],["save_ref",""],["target",""]]});
+window.SIDEBAR_ITEMS = {"fn":["launch","launch_as","launch_from_invocation"],"mod":["_prelude","app","aux_cmds","credentials","develop_origen","env","eval","exec","generate","interactive","new","plugin","plugins","rc","save_ref","target","web"]};

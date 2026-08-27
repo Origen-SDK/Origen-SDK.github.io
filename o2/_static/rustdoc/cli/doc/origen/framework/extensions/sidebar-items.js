@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["EXT_BASE_NAME","EXT_BASE_PREFIX"],"enum":["ExtensionSource"],"macro":["ext_opt"],"struct":["Extension","ExtensionTOML","Extensions"]};

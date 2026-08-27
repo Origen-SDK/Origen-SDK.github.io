@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["BASE_CMD"],"fn":["cargo_fmt","fmt_cmd","py_fmt","run","starting"]};

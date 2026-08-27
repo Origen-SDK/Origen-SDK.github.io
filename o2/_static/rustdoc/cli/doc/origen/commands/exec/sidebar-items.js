@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["run",""]]});
+window.SIDEBAR_ITEMS = {"constant":["BASE_CMD","EXEC_HELP"],"fn":["add_commands","add_helps","add_prephase_cmds","config_exec_cmd","run_pre_phase"]};

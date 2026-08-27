@@ -1,1 +1,0 @@
-initSidebarItems({"fn":[["log_dir",""]],"struct":[["Inner",""],["Logger",""]]});

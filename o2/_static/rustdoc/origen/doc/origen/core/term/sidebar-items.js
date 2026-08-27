@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["cyan",""],["cyanln",""],["green",""],["greenln",""],["grey",""],["greyln",""],["red",""],["redln",""],["standardln",""],["teal",""],["tealln",""],["yellow",""],["yellowln",""]]});
+window.SIDEBAR_ITEMS = {"fn":["cyan","cyanln","green","greenln","grey","greyln","red","redln","standardln","teal","tealln","yellow","yellowln"]};

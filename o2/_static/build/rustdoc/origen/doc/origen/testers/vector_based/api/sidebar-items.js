@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["cycle",""],["cycle_node",""],["repeat",""],["repeat2",""],["repeat2_node",""],["repeat_node",""]]});
+window.SIDEBAR_ITEMS = {"fn":["cycle","cycle_node","repeat","repeat2","repeat2_node","repeat_node"]};

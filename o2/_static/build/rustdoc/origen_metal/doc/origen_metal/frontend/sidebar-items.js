@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["frontend_set","require","reset","set_frontend","with_frontend","with_optional_frontend"],"mod":["data_store","data_store_category"],"struct":["Frontend"],"trait":["FrontendAPI"]};

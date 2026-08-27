@@ -1,1 +1,0 @@
-initSidebarItems({"enum":[["Attrs",""]],"struct":[["AST","An AST provides an API for constructing a node tree, when completed it can be unwrapped to a node by calling the unwrap() method"],["Meta",""],["Node",""]]});

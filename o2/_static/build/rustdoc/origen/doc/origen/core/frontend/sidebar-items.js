@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["emit_callback","with_frontend","with_frontend_app","with_optional_frontend"],"mod":["callbacks"],"struct":["Handle"],"trait":["App","Frontend","Linter","Publisher","ReleaseScribe","UnitTester","Website"]};

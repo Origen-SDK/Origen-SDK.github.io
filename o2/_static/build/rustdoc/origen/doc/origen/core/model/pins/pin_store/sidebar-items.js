@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["PinStore","Model for an anonymous pin group"]]});
+window.SIDEBAR_ITEMS = {"struct":["PinStore"]};

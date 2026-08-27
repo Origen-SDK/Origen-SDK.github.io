@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"mod":["config","frontend","session_store"]};

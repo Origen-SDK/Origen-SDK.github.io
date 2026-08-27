@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["delete_virtual_env",""],["install_poetry",""],["run",""]]});
+window.SIDEBAR_ITEMS = {"constant":["BASE_CMD"],"fn":["add_commands","add_helps","add_prephase_cmds","discovered_python_executable","ensure_uv_available","guard_uv_manifest","is_installable_project","needs_pip_provisioning","provision","provision_with_pip","require_python","require_uv","run","run_pre_phase","run_python","run_uv"],"mod":["migration"],"static":["MINIMUM_UV_LAUNCHER_PYTHON","MINIMUM_UV_VERSION"]};

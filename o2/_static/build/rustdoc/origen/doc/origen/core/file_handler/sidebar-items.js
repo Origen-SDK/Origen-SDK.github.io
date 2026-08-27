@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["File",""],["FileHandler","This is an iterator + external API for consuming the file list"]]});
+window.SIDEBAR_ITEMS = {"struct":["File","FileHandler"]};

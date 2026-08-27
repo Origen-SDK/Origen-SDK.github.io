@@ -1,1209 +1,624 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src\standard_sub_blocks\arm_debug.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>arm_debug.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.png");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../_origen/index.html'><div class='logo-container'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.png" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.png" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
-<span id="2">  2</span>
-<span id="3">  3</span>
-<span id="4">  4</span>
-<span id="5">  5</span>
-<span id="6">  6</span>
-<span id="7">  7</span>
-<span id="8">  8</span>
-<span id="9">  9</span>
-<span id="10"> 10</span>
-<span id="11"> 11</span>
-<span id="12"> 12</span>
-<span id="13"> 13</span>
-<span id="14"> 14</span>
-<span id="15"> 15</span>
-<span id="16"> 16</span>
-<span id="17"> 17</span>
-<span id="18"> 18</span>
-<span id="19"> 19</span>
-<span id="20"> 20</span>
-<span id="21"> 21</span>
-<span id="22"> 22</span>
-<span id="23"> 23</span>
-<span id="24"> 24</span>
-<span id="25"> 25</span>
-<span id="26"> 26</span>
-<span id="27"> 27</span>
-<span id="28"> 28</span>
-<span id="29"> 29</span>
-<span id="30"> 30</span>
-<span id="31"> 31</span>
-<span id="32"> 32</span>
-<span id="33"> 33</span>
-<span id="34"> 34</span>
-<span id="35"> 35</span>
-<span id="36"> 36</span>
-<span id="37"> 37</span>
-<span id="38"> 38</span>
-<span id="39"> 39</span>
-<span id="40"> 40</span>
-<span id="41"> 41</span>
-<span id="42"> 42</span>
-<span id="43"> 43</span>
-<span id="44"> 44</span>
-<span id="45"> 45</span>
-<span id="46"> 46</span>
-<span id="47"> 47</span>
-<span id="48"> 48</span>
-<span id="49"> 49</span>
-<span id="50"> 50</span>
-<span id="51"> 51</span>
-<span id="52"> 52</span>
-<span id="53"> 53</span>
-<span id="54"> 54</span>
-<span id="55"> 55</span>
-<span id="56"> 56</span>
-<span id="57"> 57</span>
-<span id="58"> 58</span>
-<span id="59"> 59</span>
-<span id="60"> 60</span>
-<span id="61"> 61</span>
-<span id="62"> 62</span>
-<span id="63"> 63</span>
-<span id="64"> 64</span>
-<span id="65"> 65</span>
-<span id="66"> 66</span>
-<span id="67"> 67</span>
-<span id="68"> 68</span>
-<span id="69"> 69</span>
-<span id="70"> 70</span>
-<span id="71"> 71</span>
-<span id="72"> 72</span>
-<span id="73"> 73</span>
-<span id="74"> 74</span>
-<span id="75"> 75</span>
-<span id="76"> 76</span>
-<span id="77"> 77</span>
-<span id="78"> 78</span>
-<span id="79"> 79</span>
-<span id="80"> 80</span>
-<span id="81"> 81</span>
-<span id="82"> 82</span>
-<span id="83"> 83</span>
-<span id="84"> 84</span>
-<span id="85"> 85</span>
-<span id="86"> 86</span>
-<span id="87"> 87</span>
-<span id="88"> 88</span>
-<span id="89"> 89</span>
-<span id="90"> 90</span>
-<span id="91"> 91</span>
-<span id="92"> 92</span>
-<span id="93"> 93</span>
-<span id="94"> 94</span>
-<span id="95"> 95</span>
-<span id="96"> 96</span>
-<span id="97"> 97</span>
-<span id="98"> 98</span>
-<span id="99"> 99</span>
-<span id="100">100</span>
-<span id="101">101</span>
-<span id="102">102</span>
-<span id="103">103</span>
-<span id="104">104</span>
-<span id="105">105</span>
-<span id="106">106</span>
-<span id="107">107</span>
-<span id="108">108</span>
-<span id="109">109</span>
-<span id="110">110</span>
-<span id="111">111</span>
-<span id="112">112</span>
-<span id="113">113</span>
-<span id="114">114</span>
-<span id="115">115</span>
-<span id="116">116</span>
-<span id="117">117</span>
-<span id="118">118</span>
-<span id="119">119</span>
-<span id="120">120</span>
-<span id="121">121</span>
-<span id="122">122</span>
-<span id="123">123</span>
-<span id="124">124</span>
-<span id="125">125</span>
-<span id="126">126</span>
-<span id="127">127</span>
-<span id="128">128</span>
-<span id="129">129</span>
-<span id="130">130</span>
-<span id="131">131</span>
-<span id="132">132</span>
-<span id="133">133</span>
-<span id="134">134</span>
-<span id="135">135</span>
-<span id="136">136</span>
-<span id="137">137</span>
-<span id="138">138</span>
-<span id="139">139</span>
-<span id="140">140</span>
-<span id="141">141</span>
-<span id="142">142</span>
-<span id="143">143</span>
-<span id="144">144</span>
-<span id="145">145</span>
-<span id="146">146</span>
-<span id="147">147</span>
-<span id="148">148</span>
-<span id="149">149</span>
-<span id="150">150</span>
-<span id="151">151</span>
-<span id="152">152</span>
-<span id="153">153</span>
-<span id="154">154</span>
-<span id="155">155</span>
-<span id="156">156</span>
-<span id="157">157</span>
-<span id="158">158</span>
-<span id="159">159</span>
-<span id="160">160</span>
-<span id="161">161</span>
-<span id="162">162</span>
-<span id="163">163</span>
-<span id="164">164</span>
-<span id="165">165</span>
-<span id="166">166</span>
-<span id="167">167</span>
-<span id="168">168</span>
-<span id="169">169</span>
-<span id="170">170</span>
-<span id="171">171</span>
-<span id="172">172</span>
-<span id="173">173</span>
-<span id="174">174</span>
-<span id="175">175</span>
-<span id="176">176</span>
-<span id="177">177</span>
-<span id="178">178</span>
-<span id="179">179</span>
-<span id="180">180</span>
-<span id="181">181</span>
-<span id="182">182</span>
-<span id="183">183</span>
-<span id="184">184</span>
-<span id="185">185</span>
-<span id="186">186</span>
-<span id="187">187</span>
-<span id="188">188</span>
-<span id="189">189</span>
-<span id="190">190</span>
-<span id="191">191</span>
-<span id="192">192</span>
-<span id="193">193</span>
-<span id="194">194</span>
-<span id="195">195</span>
-<span id="196">196</span>
-<span id="197">197</span>
-<span id="198">198</span>
-<span id="199">199</span>
-<span id="200">200</span>
-<span id="201">201</span>
-<span id="202">202</span>
-<span id="203">203</span>
-<span id="204">204</span>
-<span id="205">205</span>
-<span id="206">206</span>
-<span id="207">207</span>
-<span id="208">208</span>
-<span id="209">209</span>
-<span id="210">210</span>
-<span id="211">211</span>
-<span id="212">212</span>
-<span id="213">213</span>
-<span id="214">214</span>
-<span id="215">215</span>
-<span id="216">216</span>
-<span id="217">217</span>
-<span id="218">218</span>
-<span id="219">219</span>
-<span id="220">220</span>
-<span id="221">221</span>
-<span id="222">222</span>
-<span id="223">223</span>
-<span id="224">224</span>
-<span id="225">225</span>
-<span id="226">226</span>
-<span id="227">227</span>
-<span id="228">228</span>
-<span id="229">229</span>
-<span id="230">230</span>
-<span id="231">231</span>
-<span id="232">232</span>
-<span id="233">233</span>
-<span id="234">234</span>
-<span id="235">235</span>
-<span id="236">236</span>
-<span id="237">237</span>
-<span id="238">238</span>
-<span id="239">239</span>
-<span id="240">240</span>
-<span id="241">241</span>
-<span id="242">242</span>
-<span id="243">243</span>
-<span id="244">244</span>
-<span id="245">245</span>
-<span id="246">246</span>
-<span id="247">247</span>
-<span id="248">248</span>
-<span id="249">249</span>
-<span id="250">250</span>
-<span id="251">251</span>
-<span id="252">252</span>
-<span id="253">253</span>
-<span id="254">254</span>
-<span id="255">255</span>
-<span id="256">256</span>
-<span id="257">257</span>
-<span id="258">258</span>
-<span id="259">259</span>
-<span id="260">260</span>
-<span id="261">261</span>
-<span id="262">262</span>
-<span id="263">263</span>
-<span id="264">264</span>
-<span id="265">265</span>
-<span id="266">266</span>
-<span id="267">267</span>
-<span id="268">268</span>
-<span id="269">269</span>
-<span id="270">270</span>
-<span id="271">271</span>
-<span id="272">272</span>
-<span id="273">273</span>
-<span id="274">274</span>
-<span id="275">275</span>
-<span id="276">276</span>
-<span id="277">277</span>
-<span id="278">278</span>
-<span id="279">279</span>
-<span id="280">280</span>
-<span id="281">281</span>
-<span id="282">282</span>
-<span id="283">283</span>
-<span id="284">284</span>
-<span id="285">285</span>
-<span id="286">286</span>
-<span id="287">287</span>
-<span id="288">288</span>
-<span id="289">289</span>
-<span id="290">290</span>
-<span id="291">291</span>
-<span id="292">292</span>
-<span id="293">293</span>
-<span id="294">294</span>
-<span id="295">295</span>
-<span id="296">296</span>
-<span id="297">297</span>
-<span id="298">298</span>
-<span id="299">299</span>
-<span id="300">300</span>
-<span id="301">301</span>
-<span id="302">302</span>
-<span id="303">303</span>
-<span id="304">304</span>
-<span id="305">305</span>
-<span id="306">306</span>
-<span id="307">307</span>
-<span id="308">308</span>
-<span id="309">309</span>
-<span id="310">310</span>
-<span id="311">311</span>
-<span id="312">312</span>
-<span id="313">313</span>
-<span id="314">314</span>
-<span id="315">315</span>
-<span id="316">316</span>
-<span id="317">317</span>
-<span id="318">318</span>
-<span id="319">319</span>
-<span id="320">320</span>
-<span id="321">321</span>
-<span id="322">322</span>
-<span id="323">323</span>
-<span id="324">324</span>
-<span id="325">325</span>
-<span id="326">326</span>
-<span id="327">327</span>
-<span id="328">328</span>
-<span id="329">329</span>
-<span id="330">330</span>
-<span id="331">331</span>
-<span id="332">332</span>
-<span id="333">333</span>
-<span id="334">334</span>
-<span id="335">335</span>
-<span id="336">336</span>
-<span id="337">337</span>
-<span id="338">338</span>
-<span id="339">339</span>
-<span id="340">340</span>
-<span id="341">341</span>
-<span id="342">342</span>
-<span id="343">343</span>
-<span id="344">344</span>
-<span id="345">345</span>
-<span id="346">346</span>
-<span id="347">347</span>
-<span id="348">348</span>
-<span id="349">349</span>
-<span id="350">350</span>
-<span id="351">351</span>
-<span id="352">352</span>
-<span id="353">353</span>
-<span id="354">354</span>
-<span id="355">355</span>
-<span id="356">356</span>
-<span id="357">357</span>
-<span id="358">358</span>
-<span id="359">359</span>
-<span id="360">360</span>
-<span id="361">361</span>
-<span id="362">362</span>
-<span id="363">363</span>
-<span id="364">364</span>
-<span id="365">365</span>
-<span id="366">366</span>
-<span id="367">367</span>
-<span id="368">368</span>
-<span id="369">369</span>
-<span id="370">370</span>
-<span id="371">371</span>
-<span id="372">372</span>
-<span id="373">373</span>
-<span id="374">374</span>
-<span id="375">375</span>
-<span id="376">376</span>
-<span id="377">377</span>
-<span id="378">378</span>
-<span id="379">379</span>
-<span id="380">380</span>
-<span id="381">381</span>
-<span id="382">382</span>
-<span id="383">383</span>
-<span id="384">384</span>
-<span id="385">385</span>
-<span id="386">386</span>
-<span id="387">387</span>
-<span id="388">388</span>
-<span id="389">389</span>
-<span id="390">390</span>
-<span id="391">391</span>
-<span id="392">392</span>
-<span id="393">393</span>
-<span id="394">394</span>
-<span id="395">395</span>
-<span id="396">396</span>
-<span id="397">397</span>
-<span id="398">398</span>
-<span id="399">399</span>
-<span id="400">400</span>
-<span id="401">401</span>
-<span id="402">402</span>
-<span id="403">403</span>
-<span id="404">404</span>
-<span id="405">405</span>
-<span id="406">406</span>
-<span id="407">407</span>
-<span id="408">408</span>
-<span id="409">409</span>
-<span id="410">410</span>
-<span id="411">411</span>
-<span id="412">412</span>
-<span id="413">413</span>
-<span id="414">414</span>
-<span id="415">415</span>
-<span id="416">416</span>
-<span id="417">417</span>
-<span id="418">418</span>
-<span id="419">419</span>
-<span id="420">420</span>
-<span id="421">421</span>
-<span id="422">422</span>
-<span id="423">423</span>
-<span id="424">424</span>
-<span id="425">425</span>
-<span id="426">426</span>
-<span id="427">427</span>
-<span id="428">428</span>
-<span id="429">429</span>
-<span id="430">430</span>
-<span id="431">431</span>
-<span id="432">432</span>
-<span id="433">433</span>
-<span id="434">434</span>
-<span id="435">435</span>
-<span id="436">436</span>
-<span id="437">437</span>
-<span id="438">438</span>
-<span id="439">439</span>
-<span id="440">440</span>
-<span id="441">441</span>
-<span id="442">442</span>
-<span id="443">443</span>
-<span id="444">444</span>
-<span id="445">445</span>
-<span id="446">446</span>
-<span id="447">447</span>
-<span id="448">448</span>
-<span id="449">449</span>
-<span id="450">450</span>
-<span id="451">451</span>
-<span id="452">452</span>
-<span id="453">453</span>
-<span id="454">454</span>
-<span id="455">455</span>
-<span id="456">456</span>
-<span id="457">457</span>
-<span id="458">458</span>
-<span id="459">459</span>
-<span id="460">460</span>
-<span id="461">461</span>
-<span id="462">462</span>
-<span id="463">463</span>
-<span id="464">464</span>
-<span id="465">465</span>
-<span id="466">466</span>
-<span id="467">467</span>
-<span id="468">468</span>
-<span id="469">469</span>
-<span id="470">470</span>
-<span id="471">471</span>
-<span id="472">472</span>
-<span id="473">473</span>
-<span id="474">474</span>
-<span id="475">475</span>
-<span id="476">476</span>
-<span id="477">477</span>
-<span id="478">478</span>
-<span id="479">479</span>
-<span id="480">480</span>
-<span id="481">481</span>
-<span id="482">482</span>
-<span id="483">483</span>
-<span id="484">484</span>
-<span id="485">485</span>
-<span id="486">486</span>
-<span id="487">487</span>
-<span id="488">488</span>
-<span id="489">489</span>
-<span id="490">490</span>
-<span id="491">491</span>
-<span id="492">492</span>
-<span id="493">493</span>
-<span id="494">494</span>
-<span id="495">495</span>
-<span id="496">496</span>
-<span id="497">497</span>
-<span id="498">498</span>
-<span id="499">499</span>
-<span id="500">500</span>
-<span id="501">501</span>
-<span id="502">502</span>
-<span id="503">503</span>
-<span id="504">504</span>
-<span id="505">505</span>
-<span id="506">506</span>
-<span id="507">507</span>
-<span id="508">508</span>
-<span id="509">509</span>
-<span id="510">510</span>
-<span id="511">511</span>
-<span id="512">512</span>
-<span id="513">513</span>
-<span id="514">514</span>
-<span id="515">515</span>
-<span id="516">516</span>
-<span id="517">517</span>
-<span id="518">518</span>
-<span id="519">519</span>
-<span id="520">520</span>
-<span id="521">521</span>
-<span id="522">522</span>
-<span id="523">523</span>
-<span id="524">524</span>
-<span id="525">525</span>
-<span id="526">526</span>
-<span id="527">527</span>
-<span id="528">528</span>
-<span id="529">529</span>
-<span id="530">530</span>
-<span id="531">531</span>
-<span id="532">532</span>
-<span id="533">533</span>
-<span id="534">534</span>
-<span id="535">535</span>
-<span id="536">536</span>
-<span id="537">537</span>
-<span id="538">538</span>
-<span id="539">539</span>
-<span id="540">540</span>
-<span id="541">541</span>
-<span id="542">542</span>
-<span id="543">543</span>
-<span id="544">544</span>
-<span id="545">545</span>
-<span id="546">546</span>
-<span id="547">547</span>
-<span id="548">548</span>
-<span id="549">549</span>
-<span id="550">550</span>
-<span id="551">551</span>
-<span id="552">552</span>
-<span id="553">553</span>
-<span id="554">554</span>
-<span id="555">555</span>
-<span id="556">556</span>
-<span id="557">557</span>
-<span id="558">558</span>
-<span id="559">559</span>
-<span id="560">560</span>
-<span id="561">561</span>
-<span id="562">562</span>
-<span id="563">563</span>
-<span id="564">564</span>
-<span id="565">565</span>
-<span id="566">566</span>
-<span id="567">567</span>
-<span id="568">568</span>
-<span id="569">569</span>
-<span id="570">570</span>
-<span id="571">571</span>
-<span id="572">572</span>
-<span id="573">573</span>
-<span id="574">574</span>
-<span id="575">575</span>
-<span id="576">576</span>
-<span id="577">577</span>
-<span id="578">578</span>
-<span id="579">579</span>
-<span id="580">580</span>
-<span id="581">581</span>
-<span id="582">582</span>
-<span id="583">583</span>
-<span id="584">584</span>
-<span id="585">585</span>
-<span id="586">586</span>
-<span id="587">587</span>
-<span id="588">588</span>
-<span id="589">589</span>
-<span id="590">590</span>
-<span id="591">591</span>
-<span id="592">592</span>
-<span id="593">593</span>
-<span id="594">594</span>
-<span id="595">595</span>
-<span id="596">596</span>
-<span id="597">597</span>
-<span id="598">598</span>
-<span id="599">599</span>
-<span id="600">600</span>
-<span id="601">601</span>
-<span id="602">602</span>
-<span id="603">603</span>
-</pre><div class="example-wrap"><pre class="rust ">
-<span class="comment">// use origen::standard_sub_blocks::ArmDebug as OrigenArmDebug;</span>
-<span class="kw">use</span> <span class="ident">origen</span>::<span class="ident">services</span>::<span class="ident">arm_debug</span>::<span class="ident">ArmDebug</span> <span class="kw">as</span> <span class="ident">OrigenArmDebug</span>;
-<span class="comment">// use origen::standard_sub_blocks::arm_debug::DP as OrigenDP;</span>
-<span class="kw">use</span> <span class="ident">origen</span>::<span class="ident">services</span>::<span class="ident">arm_debug</span>::<span class="ident">JtagDP</span> <span class="kw">as</span> <span class="ident">OrigenJtagDP</span>;
-<span class="kw">use</span> <span class="ident">origen</span>::<span class="ident">services</span>::<span class="ident">arm_debug</span>::<span class="ident">MemAP</span> <span class="kw">as</span> <span class="ident">OrigenMemAP</span>;
-<span class="kw">use</span> <span class="ident">origen</span>::<span class="ident">services</span>::<span class="ident">arm_debug</span>::<span class="ident">DP</span> <span class="kw">as</span> <span class="ident">OrigenDP</span>;
-<span class="comment">// use origen::standard_sub_blocks::arm_debug::mem_ap::MemAP as OrigenMemAP;</span>
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">registers</span>::<span class="ident">bit_collection</span>::<span class="ident">BitCollection</span>;
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">extract_value</span>, <span class="ident">unpack_transaction_options</span>};
-<span class="kw">use</span> <span class="ident">pyo3</span>::<span class="ident">exceptions</span>;
-<span class="kw">use</span> <span class="ident">pyo3</span>::<span class="ident">prelude</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">pyo3</span>::<span class="ident">types</span>::{<span class="ident">PyAny</span>, <span class="ident">PyDict</span>, <span class="ident">PyTuple</span>, <span class="ident">PyType</span>};
-<span class="kw">use</span> <span class="ident">pyo3</span>::<span class="ident">ToPyObject</span>;
-
-<span class="attribute">#[<span class="ident">pymodule</span>]</span>
-<span class="doccomment">/// Implements the module _origen.standard_sub_blocks in Python and ties together</span>
-<span class="doccomment">/// the PyAPI with the Rust backend.</span>
-<span class="doccomment">/// Put another way, this is the Python-side controller for the backend-side model/controller.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">arm_debug</span>(<span class="ident">_py</span>: <span class="ident">Python</span>, <span class="ident">m</span>: <span class="kw-2">&amp;</span><span class="ident">PyModule</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-    <span class="ident">m</span>.<span class="ident">add_class</span>::<span class="op">&lt;</span><span class="ident">ArmDebug</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
-    <span class="ident">m</span>.<span class="ident">add_class</span>::<span class="op">&lt;</span><span class="ident">DP</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
-    <span class="ident">m</span>.<span class="ident">add_class</span>::<span class="op">&lt;</span><span class="ident">JtagDP</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
-    <span class="ident">m</span>.<span class="ident">add_class</span>::<span class="op">&lt;</span><span class="ident">MemAP</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
-    <span class="prelude-val">Ok</span>(())
-}
-
-<span class="doccomment">/// Checks for an SWD attribute on the DUT</span>
-<span class="doccomment">/// Note: this must be run after the DUT has loaded or else it&#39;ll cause a lockup</span>
-<span class="kw">fn</span> <span class="ident">check_for_swd</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python</span>::<span class="ident">acquire_gil</span>();
-    <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
-    <span class="kw">let</span> <span class="ident">locals</span> <span class="op">=</span> <span class="ident">PyDict</span>::<span class="ident">new</span>(<span class="ident">py</span>);
-    <span class="ident">locals</span>.<span class="ident">set_item</span>(<span class="string">&quot;origen&quot;</span>, <span class="ident">py</span>.<span class="ident">import</span>(<span class="string">&quot;origen&quot;</span>)<span class="question-mark">?</span>.<span class="ident">to_object</span>(<span class="ident">py</span>))<span class="question-mark">?</span>;
-    <span class="ident">locals</span>.<span class="ident">set_item</span>(<span class="string">&quot;builtins&quot;</span>, <span class="ident">py</span>.<span class="ident">import</span>(<span class="string">&quot;builtins&quot;</span>)<span class="question-mark">?</span>.<span class="ident">to_object</span>(<span class="ident">py</span>))<span class="question-mark">?</span>;
-    <span class="ident">locals</span>.<span class="ident">set_item</span>(<span class="string">&quot;dut&quot;</span>, <span class="ident">py</span>.<span class="ident">eval</span>(<span class="string">&quot;origen.dut&quot;</span>, <span class="prelude-val">Some</span>(<span class="ident">locals</span>.<span class="ident">clone</span>()), <span class="prelude-val">None</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
-    <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">py</span>.<span class="ident">eval</span>(<span class="string">&quot;builtins.hasattr(dut, \&quot;swd\&quot;)&quot;</span>, <span class="prelude-val">Some</span>(<span class="ident">locals</span>), <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
-
-    <span class="kw">if</span> <span class="ident">m</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>()<span class="question-mark">?</span> {
-        <span class="kw">let</span> <span class="ident">pyswd</span> <span class="op">=</span> <span class="ident">py</span>.<span class="ident">eval</span>(<span class="string">&quot;dut.swd&quot;</span>, <span class="prelude-val">Some</span>(<span class="ident">locals</span>), <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">swd</span>) <span class="op">=</span> <span class="ident">pyswd</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">PyRefMut</span><span class="op">&lt;</span><span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">services</span>::<span class="ident">swd</span>::<span class="ident">SWD</span><span class="op">&gt;</span><span class="op">&gt;</span>() {
-            <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">swd</span>.<span class="ident">id</span>()<span class="question-mark">?</span>))
-        } <span class="kw">else</span> {
-            <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
-        }
-    } <span class="kw">else</span> {
-        <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
-    }
-}
-
-<span class="kw">fn</span> <span class="ident">check_for_jtag</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python</span>::<span class="ident">acquire_gil</span>();
-    <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
-    <span class="kw">let</span> <span class="ident">locals</span> <span class="op">=</span> <span class="ident">PyDict</span>::<span class="ident">new</span>(<span class="ident">py</span>);
-    <span class="ident">locals</span>.<span class="ident">set_item</span>(<span class="string">&quot;origen&quot;</span>, <span class="ident">py</span>.<span class="ident">import</span>(<span class="string">&quot;origen&quot;</span>)<span class="question-mark">?</span>.<span class="ident">to_object</span>(<span class="ident">py</span>))<span class="question-mark">?</span>;
-    <span class="ident">locals</span>.<span class="ident">set_item</span>(<span class="string">&quot;builtins&quot;</span>, <span class="ident">py</span>.<span class="ident">import</span>(<span class="string">&quot;builtins&quot;</span>)<span class="question-mark">?</span>.<span class="ident">to_object</span>(<span class="ident">py</span>))<span class="question-mark">?</span>;
-    <span class="ident">locals</span>.<span class="ident">set_item</span>(<span class="string">&quot;dut&quot;</span>, <span class="ident">py</span>.<span class="ident">eval</span>(<span class="string">&quot;origen.dut&quot;</span>, <span class="prelude-val">Some</span>(<span class="ident">locals</span>.<span class="ident">clone</span>()), <span class="prelude-val">None</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
-    <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">py</span>.<span class="ident">eval</span>(<span class="string">&quot;builtins.hasattr(dut, \&quot;jtag\&quot;)&quot;</span>, <span class="prelude-val">Some</span>(<span class="ident">locals</span>), <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
-
-    <span class="kw">if</span> <span class="ident">m</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>()<span class="question-mark">?</span> {
-        <span class="kw">let</span> <span class="ident">pyjtag</span> <span class="op">=</span> <span class="ident">py</span>.<span class="ident">eval</span>(<span class="string">&quot;dut.jtag&quot;</span>, <span class="prelude-val">Some</span>(<span class="ident">locals</span>), <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">jtag</span>) <span class="op">=</span> <span class="ident">pyjtag</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">PyRefMut</span><span class="op">&lt;</span><span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">services</span>::<span class="ident">jtag</span>::<span class="ident">JTAG</span><span class="op">&gt;</span><span class="op">&gt;</span>() {
-            <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">jtag</span>.<span class="ident">id</span>()<span class="question-mark">?</span>))
-        } <span class="kw">else</span> {
-            <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
-        }
-    } <span class="kw">else</span> {
-        <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
-    }
-}
-
-<span class="attribute">#[<span class="ident">pyclass</span>(<span class="ident">subclass</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
-<span class="doccomment">/// Controller connecting the :class:`origen.blocks.arm_debug.controller.Controller` view</span>
-<span class="doccomment">/// with the :link-to:`backend model &lt;backend_arm_debug_model&gt;`.</span>
-<span class="doccomment">/// The controller here is responsible for instantiating and initializing the</span>
-<span class="doccomment">/// ArmDebug model.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ArmDebug</span> {
-    <span class="ident">arm_debug_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-}
-
-<span class="attribute">#[<span class="ident">pymethods</span>]</span>
-<span class="kw">impl</span> <span class="ident">ArmDebug</span> {
-    <span class="attribute">#[<span class="ident">classmethod</span>]</span>
-    <span class="kw">fn</span> <span class="ident">__init__</span>(<span class="ident">_cls</span>: <span class="kw-2">&amp;</span><span class="ident">PyType</span>, <span class="ident">_instance</span>: <span class="kw-2">&amp;</span><span class="ident">PyAny</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="prelude-val">Ok</span>(())
-    }
-
-    <span class="attribute">#[<span class="ident">new</span>]</span>
-    <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="self">Self</span> { <span class="ident">arm_debug_id</span>: <span class="prelude-val">None</span> }
-    }
-
-    <span class="attribute">#[<span class="ident">classmethod</span>]</span>
-    <span class="kw">fn</span> <span class="ident">model_init</span>(<span class="ident">_cls</span>: <span class="kw-2">&amp;</span><span class="ident">PyType</span>, <span class="ident">instance</span>: <span class="kw-2">&amp;</span><span class="ident">PyAny</span>, <span class="ident">block_options</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">PyDict</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">crate</span>::<span class="ident">dut</span>::<span class="ident">PyDUT</span>::<span class="ident">ensure_pins</span>(<span class="string">&quot;dut&quot;</span>)<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">swd_id</span> <span class="op">=</span> <span class="ident">check_for_swd</span>()<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">jtag_id</span> <span class="op">=</span> <span class="ident">check_for_jtag</span>()<span class="question-mark">?</span>;
-
-        <span class="comment">// Create the Arm Debug instance</span>
-        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python</span>::<span class="ident">acquire_gil</span>();
-        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
-        <span class="kw">let</span> <span class="ident">arm_debug_id</span>;
-        {
-            <span class="kw">let</span> <span class="ident">model_id</span> <span class="op">=</span> <span class="ident">instance</span>.<span class="ident">getattr</span>(<span class="string">&quot;model_id&quot;</span>)<span class="question-mark">?</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">dut</span> <span class="op">=</span> <span class="ident">origen</span>::<span class="ident">dut</span>();
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">services</span> <span class="op">=</span> <span class="ident">origen</span>::<span class="ident">services</span>();
-            <span class="ident">arm_debug_id</span> <span class="op">=</span>
-                <span class="ident">OrigenArmDebug</span>::<span class="ident">model_init</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">dut</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">services</span>, <span class="ident">model_id</span>, <span class="ident">swd_id</span>, <span class="ident">jtag_id</span>)<span class="question-mark">?</span>;
-        }
-
-        <span class="comment">// Add the DP subblock</span>
-        <span class="kw">let</span> <span class="ident">args</span> <span class="op">=</span> <span class="ident">PyTuple</span>::<span class="ident">new</span>(
-            <span class="ident">py</span>,
-            <span class="kw-2">&amp;</span>[<span class="string">&quot;dp&quot;</span>.<span class="ident">to_object</span>(<span class="ident">py</span>), <span class="string">&quot;origen.arm_debug.dp&quot;</span>.<span class="ident">to_object</span>(<span class="ident">py</span>)],
-        );
-        <span class="kw">let</span> <span class="ident">kwargs</span> <span class="op">=</span> <span class="ident">PyDict</span>::<span class="ident">new</span>(<span class="ident">py</span>);
-        <span class="kw">let</span> <span class="ident">sb_options</span> <span class="op">=</span> <span class="ident">PyDict</span>::<span class="ident">new</span>(<span class="ident">py</span>);
-        <span class="ident">sb_options</span>.<span class="ident">set_item</span>(<span class="string">&quot;arm_debug_id&quot;</span>, <span class="ident">arm_debug_id</span>)<span class="question-mark">?</span>;
-        <span class="ident">kwargs</span>.<span class="ident">set_item</span>(<span class="string">&quot;sb_options&quot;</span>, <span class="ident">sb_options</span>.<span class="ident">to_object</span>(<span class="ident">py</span>))<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">py_dp_obj</span> <span class="op">=</span> <span class="ident">instance</span>.<span class="ident">downcast</span>::<span class="op">&lt;</span><span class="ident">PyCell</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span>()<span class="question-mark">?</span>.<span class="ident">call_method</span>(
-            <span class="string">&quot;add_sub_block&quot;</span>,
-            <span class="ident">args</span>,
-            <span class="prelude-val">Some</span>(<span class="ident">kwargs</span>),
-        )<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">py_dp</span> <span class="op">=</span> <span class="ident">py_dp_obj</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">DP</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">dp_id</span> <span class="op">=</span> <span class="ident">py_dp</span>.<span class="ident">dp_id</span>.<span class="ident">unwrap</span>();
-
-        <span class="comment">// Now go back and add the DP ID to arm debug</span>
-        {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">services</span> <span class="op">=</span> <span class="ident">origen</span>::<span class="ident">services</span>();
-            <span class="kw">let</span> <span class="ident">origen_arm_debug</span> <span class="op">=</span> <span class="ident">services</span>.<span class="ident">get_as_mut_arm_debug</span>(<span class="ident">arm_debug_id</span>)<span class="question-mark">?</span>;
-            <span class="ident">origen_arm_debug</span>.<span class="ident">set_dp_id</span>(<span class="ident">dp_id</span>)<span class="question-mark">?</span>;
-        }
-
-        <span class="comment">// If a jtag protocol was provided, add the JTAG DP</span>
-        <span class="kw">if</span> <span class="ident">jtag_id</span>.<span class="ident">is_some</span>() {
-            <span class="kw">let</span> <span class="ident">args</span> <span class="op">=</span> <span class="ident">PyTuple</span>::<span class="ident">new</span>(
-                <span class="ident">py</span>,
-                <span class="kw-2">&amp;</span>[
-                    <span class="string">&quot;jtag_dp&quot;</span>.<span class="ident">to_object</span>(<span class="ident">py</span>),
-                    <span class="string">&quot;origen.arm_debug.jtag_dp&quot;</span>.<span class="ident">to_object</span>(<span class="ident">py</span>),
-                ],
-            );
-            <span class="kw">let</span> <span class="ident">kwargs</span> <span class="op">=</span> <span class="ident">PyDict</span>::<span class="ident">new</span>(<span class="ident">py</span>);
-            <span class="kw">let</span> <span class="ident">sb_options</span> <span class="op">=</span> <span class="ident">PyDict</span>::<span class="ident">new</span>(<span class="ident">py</span>);
-            <span class="ident">sb_options</span>.<span class="ident">set_item</span>(<span class="string">&quot;arm_debug_id&quot;</span>, <span class="ident">arm_debug_id</span>)<span class="question-mark">?</span>;
-            <span class="ident">kwargs</span>.<span class="ident">set_item</span>(<span class="string">&quot;sb_options&quot;</span>, <span class="ident">sb_options</span>.<span class="ident">to_object</span>(<span class="ident">py</span>))<span class="question-mark">?</span>;
-            <span class="kw">let</span> <span class="ident">py_jtag_dp_obj</span> <span class="op">=</span> <span class="ident">instance</span>.<span class="ident">downcast</span>::<span class="op">&lt;</span><span class="ident">PyCell</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span>()<span class="question-mark">?</span>.<span class="ident">call_method</span>(
-                <span class="string">&quot;add_sub_block&quot;</span>,
-                <span class="ident">args</span>,
-                <span class="prelude-val">Some</span>(<span class="ident">kwargs</span>),
-            )<span class="question-mark">?</span>;
-            <span class="kw">let</span> <span class="ident">py_jtag_dp</span> <span class="op">=</span> <span class="ident">py_jtag_dp_obj</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">JtagDP</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
-            <span class="kw">let</span> <span class="ident">jtag_dp_id</span> <span class="op">=</span> <span class="ident">py_jtag_dp</span>.<span class="ident">id</span>.<span class="ident">unwrap</span>();
-
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">services</span> <span class="op">=</span> <span class="ident">origen</span>::<span class="ident">services</span>();
-            <span class="kw">let</span> <span class="ident">origen_arm_debug</span> <span class="op">=</span> <span class="ident">services</span>.<span class="ident">get_as_mut_arm_debug</span>(<span class="ident">arm_debug_id</span>)<span class="question-mark">?</span>;
-            <span class="ident">origen_arm_debug</span>.<span class="ident">set_jtag_dp_id</span>(<span class="ident">jtag_dp_id</span>)<span class="question-mark">?</span>;
-        }
-
-        {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">slf</span> <span class="op">=</span> <span class="ident">instance</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">PyRefMut</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
-            <span class="ident">slf</span>.<span class="ident">arm_debug_id</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">arm_debug_id</span>);
-        }
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">opts</span>) <span class="op">=</span> <span class="ident">block_options</span> {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">mem_aps</span>) <span class="op">=</span> <span class="ident">opts</span>.<span class="ident">get_item</span>(<span class="string">&quot;mem_aps&quot;</span>) {
-                <span class="kw">let</span> <span class="ident">aps</span> <span class="op">=</span> <span class="ident">mem_aps</span>.<span class="ident">downcast</span>::<span class="op">&lt;</span><span class="ident">PyDict</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
-                <span class="kw">for</span> (<span class="ident">ap_name</span>, <span class="ident">ap_opts</span>) <span class="kw">in</span> <span class="ident">aps</span>.<span class="ident">iter</span>() {
-                    <span class="kw">let</span> <span class="ident">ap_opts_dict</span> <span class="op">=</span> <span class="ident">ap_opts</span>.<span class="ident">downcast</span>::<span class="op">&lt;</span><span class="ident">PyDict</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
-                    <span class="self">Self</span>::<span class="ident">add_mem_ap</span>(
-                        <span class="ident">instance</span>.<span class="ident">downcast</span>::<span class="op">&lt;</span><span class="ident">PyCell</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span>()<span class="question-mark">?</span>,
-                        <span class="kw-2">&amp;</span><span class="ident">ap_name</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>()<span class="question-mark">?</span>,
-                        {
-                            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">ap_addr</span>) <span class="op">=</span> <span class="ident">ap_opts_dict</span>.<span class="ident">get_item</span>(<span class="string">&quot;ap&quot;</span>) {
-                                <span class="prelude-val">Some</span>(<span class="ident">ap_addr</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>()<span class="question-mark">?</span>)
-                            } <span class="kw">else</span> {
-                                <span class="prelude-val">None</span>
-                            }
-                        },
-                        {
-                            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">csw_reset</span>) <span class="op">=</span> <span class="ident">ap_opts_dict</span>.<span class="ident">get_item</span>(<span class="string">&quot;csw_reset&quot;</span>) {
-                                <span class="prelude-val">Some</span>(<span class="ident">csw_reset</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>()<span class="question-mark">?</span>)
-                            } <span class="kw">else</span> {
-                                <span class="prelude-val">None</span>
-                            }
-                        },
-                    )<span class="question-mark">?</span>;
-                }
-            }
-        }
-        <span class="prelude-val">Ok</span>(())
-    }
-
-    <span class="kw">fn</span> <span class="ident">add_mem_ap</span>(
-        <span class="ident">slf</span>: <span class="kw-2">&amp;</span><span class="ident">PyCell</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>,
-        <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-        <span class="ident">ap</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>,
-        <span class="ident">csw_reset</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python</span>::<span class="ident">acquire_gil</span>();
-        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
-
-        <span class="kw">let</span> <span class="ident">args</span> <span class="op">=</span> <span class="ident">PyTuple</span>::<span class="ident">new</span>(
-            <span class="ident">py</span>,
-            <span class="kw-2">&amp;</span>[<span class="ident">name</span>.<span class="ident">to_object</span>(<span class="ident">py</span>), <span class="string">&quot;origen.arm_debug.mem_ap&quot;</span>.<span class="ident">to_object</span>(<span class="ident">py</span>)],
-        );
-        <span class="kw">let</span> <span class="ident">kwargs</span> <span class="op">=</span> <span class="ident">PyDict</span>::<span class="ident">new</span>(<span class="ident">py</span>);
-        <span class="kw">let</span> <span class="ident">sb_options</span> <span class="op">=</span> <span class="ident">PyDict</span>::<span class="ident">new</span>(<span class="ident">py</span>);
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">_ap</span>) <span class="op">=</span> <span class="ident">ap</span> {
-            <span class="ident">sb_options</span>.<span class="ident">set_item</span>(<span class="string">&quot;ap&quot;</span>, <span class="ident">_ap</span>)<span class="question-mark">?</span>;
-        }
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">_csw_reset</span>) <span class="op">=</span> <span class="ident">csw_reset</span> {
-            <span class="ident">sb_options</span>.<span class="ident">set_item</span>(<span class="string">&quot;csw_reset&quot;</span>, <span class="ident">_csw_reset</span>)<span class="question-mark">?</span>;
-        }
-        <span class="kw">let</span> <span class="ident">arm_debug</span> <span class="op">=</span> <span class="ident">slf</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">PyRefMut</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
-        <span class="ident">sb_options</span>.<span class="ident">set_item</span>(<span class="string">&quot;arm_debug_id&quot;</span>, <span class="ident">arm_debug</span>.<span class="ident">arm_debug_id</span>)<span class="question-mark">?</span>;
-        <span class="ident">kwargs</span>.<span class="ident">set_item</span>(<span class="string">&quot;sb_options&quot;</span>, <span class="ident">sb_options</span>.<span class="ident">to_object</span>(<span class="ident">py</span>))<span class="question-mark">?</span>;
-
-        <span class="ident">slf</span>.<span class="ident">call_method</span>(<span class="string">&quot;add_sub_block&quot;</span>, <span class="ident">args</span>, <span class="prelude-val">Some</span>(<span class="ident">kwargs</span>))<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(())
-    }
-
-    <span class="kw">fn</span> <span class="ident">switch_to_swd</span>(<span class="ident">slf</span>: <span class="ident">PyRefMut</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">Py</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">services</span> <span class="op">=</span> <span class="ident">origen</span>::<span class="ident">services</span>();
-        <span class="kw">let</span> <span class="ident">arm_debug</span> <span class="op">=</span> <span class="ident">services</span>.<span class="ident">get_as_arm_debug</span>(<span class="ident">slf</span>.<span class="ident">arm_debug_id</span>.<span class="ident">unwrap</span>())<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">dut</span> <span class="op">=</span> <span class="ident">origen</span>::<span class="ident">dut</span>();
-        <span class="ident">arm_debug</span>.<span class="ident">switch_to_swd</span>(<span class="kw-2">&amp;</span><span class="ident">dut</span>, <span class="kw-2">&amp;</span><span class="ident">services</span>)<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(<span class="ident">slf</span>.<span class="ident">into</span>())
-    }
-}
-
-<span class="attribute">#[<span class="ident">pyclass</span>(<span class="ident">subclass</span>)]</span>
-<span class="attribute">#[<span class="ident">text_signature</span> <span class="op">=</span> <span class="string">&quot;()&quot;</span>]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
-<span class="kw">struct</span> <span class="ident">DP</span> {
-    <span class="kw">pub</span> <span class="ident">dp_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">arm_debug_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-}
-
-<span class="attribute">#[<span class="ident">pymethods</span>]</span>
-<span class="kw">impl</span> <span class="ident">DP</span> {
-    <span class="attribute">#[<span class="ident">classmethod</span>]</span>
-    <span class="kw">fn</span> <span class="ident">__init__</span>(<span class="ident">_cls</span>: <span class="kw-2">&amp;</span><span class="ident">PyType</span>, <span class="ident">_instance</span>: <span class="kw-2">&amp;</span><span class="ident">PyAny</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="prelude-val">Ok</span>(())
-    }
-
-    <span class="attribute">#[<span class="ident">new</span>]</span>
-    <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">dp_id</span>: <span class="prelude-val">None</span>,
-            <span class="ident">arm_debug_id</span>: <span class="prelude-val">None</span>,
-        }
-    }
-
-    <span class="attribute">#[<span class="ident">classmethod</span>]</span>
-    <span class="attribute">#[<span class="ident">args</span>(<span class="ident">_block_options</span> <span class="op">=</span> <span class="string">&quot;**&quot;</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">model_init</span>(<span class="ident">_cls</span>: <span class="kw-2">&amp;</span><span class="ident">PyType</span>, <span class="ident">instance</span>: <span class="kw-2">&amp;</span><span class="ident">PyAny</span>, <span class="ident">block_options</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">PyDict</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="comment">// Require an ArmDebug ID to tie this DP to an ArmDebug instance</span>
-        <span class="kw">let</span> <span class="ident">arm_debug_id</span>;
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">opts</span>) <span class="op">=</span> <span class="ident">block_options</span> {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">ad_id</span>) <span class="op">=</span> <span class="ident">opts</span>.<span class="ident">get_item</span>(<span class="string">&quot;arm_debug_id&quot;</span>) {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">id</span>) <span class="op">=</span> <span class="ident">ad_id</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>() {
-                    <span class="ident">arm_debug_id</span> <span class="op">=</span> <span class="ident">id</span>;
-                } <span class="kw">else</span> {
-                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">PyErr</span>::<span class="ident">new</span>::<span class="op">&lt;</span><span class="ident">exceptions</span>::<span class="ident">RuntimeError</span>, <span class="kw">_</span><span class="op">&gt;</span>(
-                        <span class="string">&quot;Subblock arm_debug.dp was given an arm_debug _id block option but could not extract it as an integer&quot;</span>
-                    ));
-                }
-            } <span class="kw">else</span> {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">PyErr</span>::<span class="ident">new</span>::<span class="op">&lt;</span><span class="ident">exceptions</span>::<span class="ident">RuntimeError</span>, <span class="kw">_</span><span class="op">&gt;</span>(
-                    <span class="string">&quot;Subblock arm_debug.dp was not given required block option &#39;arm_debug_id&#39;&quot;</span>,
-                ));
-            }
-        } <span class="kw">else</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">PyErr</span>::<span class="ident">new</span>::<span class="op">&lt;</span><span class="ident">exceptions</span>::<span class="ident">RuntimeError</span>, <span class="kw">_</span><span class="op">&gt;</span>(
-                <span class="string">&quot;Subblock arm_debug.dp requires an arm_debug_id block option, but no block options were given.&quot;</span>
-            ));
-        }
-
-        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python</span>::<span class="ident">acquire_gil</span>();
-        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
-        <span class="kw">let</span> <span class="ident">obj</span> <span class="op">=</span> <span class="ident">instance</span>.<span class="ident">to_object</span>(<span class="ident">py</span>);
-        <span class="kw">let</span> <span class="ident">args</span> <span class="op">=</span> <span class="ident">PyTuple</span>::<span class="ident">new</span>(<span class="ident">py</span>, <span class="kw-2">&amp;</span>[<span class="string">&quot;default&quot;</span>.<span class="ident">to_object</span>(<span class="ident">py</span>), <span class="string">&quot;default&quot;</span>.<span class="ident">to_object</span>(<span class="ident">py</span>)]);
-        <span class="kw">let</span> <span class="ident">dp_id</span>;
-        {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">dut</span> <span class="op">=</span> <span class="ident">origen</span>::<span class="ident">dut</span>();
-            <span class="kw">let</span> <span class="ident">model_id</span> <span class="op">=</span> <span class="ident">obj</span>.<span class="ident">getattr</span>(<span class="ident">py</span>, <span class="string">&quot;model_id&quot;</span>)<span class="question-mark">?</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>(<span class="ident">py</span>)<span class="question-mark">?</span>;
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">services</span> <span class="op">=</span> <span class="ident">origen</span>::<span class="ident">services</span>();
-            <span class="ident">dp_id</span> <span class="op">=</span> <span class="ident">OrigenDP</span>::<span class="ident">model_init</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">dut</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">services</span>, <span class="ident">model_id</span>, <span class="ident">arm_debug_id</span>)<span class="question-mark">?</span>;
-        }
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">slf</span> <span class="op">=</span> <span class="ident">instance</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">PyRefMut</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
-        <span class="ident">slf</span>.<span class="ident">dp_id</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">dp_id</span>);
-        <span class="ident">obj</span>.<span class="ident">call_method1</span>(<span class="ident">py</span>, <span class="string">&quot;_set_as_default_address_block&quot;</span>, <span class="ident">args</span>)<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(())
-    }
-
-    <span class="attribute">#[<span class="ident">args</span>(<span class="ident">write_opts</span> <span class="op">=</span> <span class="string">&quot;**&quot;</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">write_register</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">bits</span>: <span class="kw-2">&amp;</span><span class="ident">PyAny</span>, <span class="ident">_write_opts</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">PyDict</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">bc</span> <span class="op">=</span> <span class="ident">bits</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">PyRef</span><span class="op">&lt;</span><span class="ident">BitCollection</span><span class="op">&gt;</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">dut</span> <span class="op">=</span> <span class="ident">origen</span>::<span class="ident">dut</span>();
-        <span class="kw">let</span> <span class="ident">services</span> <span class="op">=</span> <span class="ident">origen</span>::<span class="ident">services</span>();
-        <span class="kw">let</span> <span class="ident">dp</span> <span class="op">=</span> <span class="ident">services</span>.<span class="ident">get_as_dp</span>(<span class="self">self</span>.<span class="ident">dp_id</span>.<span class="ident">unwrap</span>())<span class="question-mark">?</span>;
-        <span class="ident">dp</span>.<span class="ident">write_register</span>(<span class="kw-2">&amp;</span><span class="ident">dut</span>, <span class="kw-2">&amp;</span><span class="ident">services</span>, <span class="kw-2">&amp;</span><span class="ident">bc</span>.<span class="ident">materialize</span>(<span class="kw-2">&amp;</span><span class="ident">dut</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(())
-    }
-
-    <span class="attribute">#[<span class="ident">args</span>(<span class="ident">verify_opts</span> <span class="op">=</span> <span class="string">&quot;**&quot;</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">verify_register</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">bits</span>: <span class="kw-2">&amp;</span><span class="ident">PyAny</span>, <span class="ident">_verify_opts</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">PyDict</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">bc</span> <span class="op">=</span> <span class="ident">bits</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">PyRef</span><span class="op">&lt;</span><span class="ident">BitCollection</span><span class="op">&gt;</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">dut</span> <span class="op">=</span> <span class="ident">origen</span>::<span class="ident">dut</span>();
-        <span class="kw">let</span> <span class="ident">services</span> <span class="op">=</span> <span class="ident">origen</span>::<span class="ident">services</span>();
-        <span class="kw">let</span> <span class="ident">dp</span> <span class="op">=</span> <span class="ident">services</span>.<span class="ident">get_as_dp</span>(<span class="self">self</span>.<span class="ident">dp_id</span>.<span class="ident">unwrap</span>())<span class="question-mark">?</span>;
-        <span class="ident">dp</span>.<span class="ident">verify_register</span>(<span class="kw-2">&amp;</span><span class="ident">dut</span>, <span class="kw-2">&amp;</span><span class="ident">services</span>, <span class="kw-2">&amp;</span><span class="ident">bc</span>.<span class="ident">materialize</span>(<span class="kw-2">&amp;</span><span class="ident">dut</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(())
-    }
-
-    <span class="kw">fn</span> <span class="ident">power_up</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">dut</span> <span class="op">=</span> <span class="ident">origen</span>::<span class="ident">dut</span>();
-        <span class="kw">let</span> <span class="ident">services</span> <span class="op">=</span> <span class="ident">origen</span>::<span class="ident">services</span>();
-        <span class="kw">let</span> <span class="ident">dp</span> <span class="op">=</span> <span class="ident">services</span>.<span class="ident">get_as_dp</span>(<span class="self">self</span>.<span class="ident">dp_id</span>.<span class="ident">unwrap</span>())<span class="question-mark">?</span>;
-        <span class="ident">dp</span>.<span class="ident">power_up</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">dut</span>, <span class="kw-2">&amp;</span><span class="ident">services</span>)<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(())
-    }
-
-    <span class="kw">fn</span> <span class="ident">verify_powered_up</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">dut</span> <span class="op">=</span> <span class="ident">origen</span>::<span class="ident">dut</span>();
-        <span class="kw">let</span> <span class="ident">services</span> <span class="op">=</span> <span class="ident">origen</span>::<span class="ident">services</span>();
-        <span class="kw">let</span> <span class="ident">dp</span> <span class="op">=</span> <span class="ident">services</span>.<span class="ident">get_as_dp</span>(<span class="self">self</span>.<span class="ident">dp_id</span>.<span class="ident">unwrap</span>())<span class="question-mark">?</span>;
-        <span class="ident">dp</span>.<span class="ident">verify_powered_up</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">dut</span>, <span class="kw-2">&amp;</span><span class="ident">services</span>)<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(())
-    }
-}
-
-<span class="attribute">#[<span class="ident">pyclass</span>(<span class="ident">subclass</span>)]</span>
-<span class="attribute">#[<span class="ident">text_signature</span> <span class="op">=</span> <span class="string">&quot;()&quot;</span>]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
-<span class="kw">struct</span> <span class="ident">JtagDP</span> {
-    <span class="kw">pub</span> <span class="ident">id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">arm_debug_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-}
-
-<span class="attribute">#[<span class="ident">pymethods</span>]</span>
-<span class="kw">impl</span> <span class="ident">JtagDP</span> {
-    <span class="attribute">#[<span class="ident">classmethod</span>]</span>
-    <span class="kw">fn</span> <span class="ident">__init__</span>(<span class="ident">_cls</span>: <span class="kw-2">&amp;</span><span class="ident">PyType</span>, <span class="ident">_instance</span>: <span class="kw-2">&amp;</span><span class="ident">PyAny</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="prelude-val">Ok</span>(())
-    }
-
-    <span class="attribute">#[<span class="ident">new</span>]</span>
-    <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">id</span>: <span class="prelude-val">None</span>,
-            <span class="ident">arm_debug_id</span>: <span class="prelude-val">None</span>,
-        }
-    }
-
-    <span class="attribute">#[<span class="ident">classmethod</span>]</span>
-    <span class="attribute">#[<span class="ident">args</span>(<span class="ident">_block_options</span> <span class="op">=</span> <span class="string">&quot;**&quot;</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">model_init</span>(<span class="ident">_cls</span>: <span class="kw-2">&amp;</span><span class="ident">PyType</span>, <span class="ident">instance</span>: <span class="kw-2">&amp;</span><span class="ident">PyAny</span>, <span class="ident">block_options</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">PyDict</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="comment">// Require an ArmDebug ID to tie this DP to an ArmDebug instance</span>
-        <span class="kw">let</span> <span class="ident">arm_debug_id</span>;
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">opts</span>) <span class="op">=</span> <span class="ident">block_options</span> {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">ad_id</span>) <span class="op">=</span> <span class="ident">opts</span>.<span class="ident">get_item</span>(<span class="string">&quot;arm_debug_id&quot;</span>) {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">id</span>) <span class="op">=</span> <span class="ident">ad_id</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>() {
-                    <span class="ident">arm_debug_id</span> <span class="op">=</span> <span class="ident">id</span>;
-                } <span class="kw">else</span> {
-                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">PyErr</span>::<span class="ident">new</span>::<span class="op">&lt;</span><span class="ident">exceptions</span>::<span class="ident">RuntimeError</span>, <span class="kw">_</span><span class="op">&gt;</span>(
-                        <span class="string">&quot;Subblock arm_debug.dp was given an arm_debug _id block option but could not extract it as an integer&quot;</span>
-                    ));
-                }
-            } <span class="kw">else</span> {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">PyErr</span>::<span class="ident">new</span>::<span class="op">&lt;</span><span class="ident">exceptions</span>::<span class="ident">RuntimeError</span>, <span class="kw">_</span><span class="op">&gt;</span>(
-                    <span class="string">&quot;Subblock arm_debug.dp was not given required block option &#39;arm_debug_id&#39;&quot;</span>,
-                ));
-            }
-        } <span class="kw">else</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">PyErr</span>::<span class="ident">new</span>::<span class="op">&lt;</span><span class="ident">exceptions</span>::<span class="ident">RuntimeError</span>, <span class="kw">_</span><span class="op">&gt;</span>(
-                <span class="string">&quot;Subblock arm_debug.dp requires an arm_debug_id block option, but no block options were given.&quot;</span>
-            ));
-        }
-
-        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python</span>::<span class="ident">acquire_gil</span>();
-        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
-        <span class="kw">let</span> <span class="ident">obj</span> <span class="op">=</span> <span class="ident">instance</span>.<span class="ident">to_object</span>(<span class="ident">py</span>);
-        <span class="kw">let</span> <span class="ident">args</span> <span class="op">=</span> <span class="ident">PyTuple</span>::<span class="ident">new</span>(<span class="ident">py</span>, <span class="kw-2">&amp;</span>[<span class="string">&quot;default&quot;</span>.<span class="ident">to_object</span>(<span class="ident">py</span>), <span class="string">&quot;default&quot;</span>.<span class="ident">to_object</span>(<span class="ident">py</span>)]);
-        <span class="kw">let</span> <span class="ident">id</span>;
-        {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">dut</span> <span class="op">=</span> <span class="ident">origen</span>::<span class="ident">dut</span>();
-            <span class="kw">let</span> <span class="ident">model_id</span> <span class="op">=</span> <span class="ident">obj</span>.<span class="ident">getattr</span>(<span class="ident">py</span>, <span class="string">&quot;model_id&quot;</span>)<span class="question-mark">?</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>(<span class="ident">py</span>)<span class="question-mark">?</span>;
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">services</span> <span class="op">=</span> <span class="ident">origen</span>::<span class="ident">services</span>();
-            <span class="ident">id</span> <span class="op">=</span> <span class="ident">OrigenJtagDP</span>::<span class="ident">model_init</span>(
-                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">dut</span>,
-                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">services</span>,
-                <span class="ident">model_id</span>,
-                <span class="ident">arm_debug_id</span>,
-                {
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">opts</span>) <span class="op">=</span> <span class="ident">block_options</span> {
-                        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">default_ir_size</span>) <span class="op">=</span> <span class="ident">opts</span>.<span class="ident">get_item</span>(<span class="string">&quot;default_ir_size&quot;</span>) {
-                            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">_default_ir_size</span>) <span class="op">=</span> <span class="ident">default_ir_size</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>() {
-                                <span class="prelude-val">Some</span>(<span class="ident">_default_ir_size</span>)
-                            } <span class="kw">else</span> {
-                                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">PyErr</span>::<span class="ident">new</span>::<span class="op">&lt;</span><span class="ident">exceptions</span>::<span class="ident">RuntimeError</span>, <span class="kw">_</span><span class="op">&gt;</span>(
-                                    <span class="string">&quot;Subblock arm_debug.jtag_dp was given a &#39;default_ifr_size&#39; block option but could not extract it as an integer&quot;</span>
-                                ));
-                            }
-                        } <span class="kw">else</span> {
-                            <span class="prelude-val">None</span>
-                        }
-                    } <span class="kw">else</span> {
-                        <span class="prelude-val">None</span>
-                    }
-                },
-                {
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">opts</span>) <span class="op">=</span> <span class="ident">block_options</span> {
-                        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">default_idcode</span>) <span class="op">=</span> <span class="ident">opts</span>.<span class="ident">get_item</span>(<span class="string">&quot;default_idcode&quot;</span>) {
-                            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">_default_idcode</span>) <span class="op">=</span> <span class="ident">default_idcode</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>() {
-                                <span class="prelude-val">Some</span>(<span class="ident">_default_idcode</span>)
-                            } <span class="kw">else</span> {
-                                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">PyErr</span>::<span class="ident">new</span>::<span class="op">&lt;</span><span class="ident">exceptions</span>::<span class="ident">RuntimeError</span>, <span class="kw">_</span><span class="op">&gt;</span>(
-                                    <span class="string">&quot;Subblock arm_debug.jtag_dp was given a &#39;default_idcode&#39; block option but could not extract it as an integer&quot;</span>
-                                ));
-                            }
-                        } <span class="kw">else</span> {
-                            <span class="prelude-val">None</span>
-                        }
-                    } <span class="kw">else</span> {
-                        <span class="prelude-val">None</span>
-                    }
-                },
-                {
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">opts</span>) <span class="op">=</span> <span class="ident">block_options</span> {
-                        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">dpacc_select</span>) <span class="op">=</span> <span class="ident">opts</span>.<span class="ident">get_item</span>(<span class="string">&quot;dpacc_select&quot;</span>) {
-                            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">_dpacc_select</span>) <span class="op">=</span> <span class="ident">dpacc_select</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>() {
-                                <span class="prelude-val">Some</span>(<span class="ident">_dpacc_select</span>)
-                            } <span class="kw">else</span> {
-                                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">PyErr</span>::<span class="ident">new</span>::<span class="op">&lt;</span><span class="ident">exceptions</span>::<span class="ident">RuntimeError</span>, <span class="kw">_</span><span class="op">&gt;</span>(
-                                    <span class="string">&quot;Subblock arm_debug.jtag_dp was given a &#39;dpacc_select&#39; block option but could not extract it as an integer&quot;</span>
-                                ));
-                            }
-                        } <span class="kw">else</span> {
-                            <span class="prelude-val">None</span>
-                        }
-                    } <span class="kw">else</span> {
-                        <span class="prelude-val">None</span>
-                    }
-                },
-                {
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">opts</span>) <span class="op">=</span> <span class="ident">block_options</span> {
-                        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">apacc_select</span>) <span class="op">=</span> <span class="ident">opts</span>.<span class="ident">get_item</span>(<span class="string">&quot;apacc_select&quot;</span>) {
-                            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">_apacc_select</span>) <span class="op">=</span> <span class="ident">apacc_select</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>() {
-                                <span class="prelude-val">Some</span>(<span class="ident">_apacc_select</span>)
-                            } <span class="kw">else</span> {
-                                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">PyErr</span>::<span class="ident">new</span>::<span class="op">&lt;</span><span class="ident">exceptions</span>::<span class="ident">RuntimeError</span>, <span class="kw">_</span><span class="op">&gt;</span>(
-                                    <span class="string">&quot;Subblock arm_debug.jtag_dp was given a &#39;apacc_select&#39; block option but could not extract it as an integer&quot;</span>
-                                ));
-                            }
-                        } <span class="kw">else</span> {
-                            <span class="prelude-val">None</span>
-                        }
-                    } <span class="kw">else</span> {
-                        <span class="prelude-val">None</span>
-                    }
-                },
-            )<span class="question-mark">?</span>;
-        }
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">slf</span> <span class="op">=</span> <span class="ident">instance</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">PyRefMut</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
-        <span class="ident">slf</span>.<span class="ident">id</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">id</span>);
-        <span class="ident">obj</span>.<span class="ident">call_method1</span>(<span class="ident">py</span>, <span class="string">&quot;_set_as_default_address_block&quot;</span>, <span class="ident">args</span>)<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(())
-    }
-
-    <span class="attribute">#[<span class="ident">args</span>(<span class="ident">write_opts</span> <span class="op">=</span> <span class="string">&quot;**&quot;</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">write_register</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">bits</span>: <span class="kw-2">&amp;</span><span class="ident">PyAny</span>, <span class="ident">write_opts</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">PyDict</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">dut</span> <span class="op">=</span> <span class="ident">origen</span>::<span class="ident">dut</span>();
-        <span class="kw">let</span> <span class="ident">services</span> <span class="op">=</span> <span class="ident">origen</span>::<span class="ident">services</span>();
-        <span class="kw">let</span> <span class="ident">jtag_dp</span> <span class="op">=</span> <span class="ident">services</span>.<span class="ident">get_as_jtag_dp</span>(<span class="self">self</span>.<span class="ident">id</span>.<span class="ident">unwrap</span>())<span class="question-mark">?</span>;
-
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">extract_value</span>(<span class="ident">bits</span>, <span class="prelude-val">Some</span>(<span class="number">32</span>), <span class="kw-2">&amp;</span><span class="ident">dut</span>)<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">trans</span> <span class="op">=</span> <span class="ident">value</span>.<span class="ident">to_write_transaction</span>(<span class="kw-2">&amp;</span><span class="ident">dut</span>)<span class="question-mark">?</span>;
-        <span class="ident">unpack_transaction_options</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">trans</span>, <span class="ident">write_opts</span>)<span class="question-mark">?</span>;
-        <span class="ident">jtag_dp</span>.<span class="ident">write_register</span>(<span class="kw-2">&amp;</span><span class="ident">dut</span>, <span class="kw-2">&amp;</span><span class="ident">services</span>, <span class="ident">trans</span>)<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(())
-    }
-
-    <span class="attribute">#[<span class="ident">args</span>(<span class="ident">verify_opts</span> <span class="op">=</span> <span class="string">&quot;**&quot;</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">verify_register</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">bits</span>: <span class="kw-2">&amp;</span><span class="ident">PyAny</span>, <span class="ident">verify_opts</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">PyDict</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">dut</span> <span class="op">=</span> <span class="ident">origen</span>::<span class="ident">dut</span>();
-        <span class="kw">let</span> <span class="ident">services</span> <span class="op">=</span> <span class="ident">origen</span>::<span class="ident">services</span>();
-        <span class="kw">let</span> <span class="ident">jtag_dp</span> <span class="op">=</span> <span class="ident">services</span>.<span class="ident">get_as_jtag_dp</span>(<span class="self">self</span>.<span class="ident">id</span>.<span class="ident">unwrap</span>())<span class="question-mark">?</span>;
-
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">extract_value</span>(<span class="ident">bits</span>, <span class="prelude-val">Some</span>(<span class="number">32</span>), <span class="kw-2">&amp;</span><span class="ident">dut</span>)<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">trans</span> <span class="op">=</span> <span class="ident">value</span>.<span class="ident">to_verify_transaction</span>(<span class="kw-2">&amp;</span><span class="ident">dut</span>)<span class="question-mark">?</span>;
-        <span class="ident">unpack_transaction_options</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">trans</span>, <span class="ident">verify_opts</span>)<span class="question-mark">?</span>;
-        <span class="ident">jtag_dp</span>.<span class="ident">verify_register</span>(<span class="kw-2">&amp;</span><span class="ident">dut</span>, <span class="kw-2">&amp;</span><span class="ident">services</span>, <span class="ident">trans</span>)<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(())
-    }
-}
-
-<span class="attribute">#[<span class="ident">pyclass</span>(<span class="ident">subclass</span>)]</span>
-<span class="kw">struct</span> <span class="ident">MemAP</span> {
-    <span class="kw">pub</span> <span class="ident">mem_ap_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-}
-
-<span class="attribute">#[<span class="ident">pymethods</span>]</span>
-<span class="kw">impl</span> <span class="ident">MemAP</span> {
-    <span class="attribute">#[<span class="ident">classmethod</span>]</span>
-    <span class="kw">fn</span> <span class="ident">__init__</span>(<span class="ident">_cls</span>: <span class="kw-2">&amp;</span><span class="ident">PyType</span>, <span class="ident">_instance</span>: <span class="kw-2">&amp;</span><span class="ident">PyAny</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="prelude-val">Ok</span>(())
-    }
-
-    <span class="attribute">#[<span class="ident">new</span>]</span>
-    <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="self">Self</span> { <span class="ident">mem_ap_id</span>: <span class="prelude-val">None</span> }
-    }
-
-    <span class="attribute">#[<span class="ident">classmethod</span>]</span>
-    <span class="kw">fn</span> <span class="ident">model_init</span>(<span class="ident">_cls</span>: <span class="kw-2">&amp;</span><span class="ident">PyType</span>, <span class="ident">instance</span>: <span class="kw-2">&amp;</span><span class="ident">PyAny</span>, <span class="ident">block_options</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">PyDict</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="comment">// Require an ArmDebug ID to tie this DP to an ArmDebug instance</span>
-        <span class="kw">let</span> <span class="ident">arm_debug_id</span>;
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">opts</span>) <span class="op">=</span> <span class="ident">block_options</span> {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">ad_id</span>) <span class="op">=</span> <span class="ident">opts</span>.<span class="ident">get_item</span>(<span class="string">&quot;arm_debug_id&quot;</span>) {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">id</span>) <span class="op">=</span> <span class="ident">ad_id</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>() {
-                    <span class="ident">arm_debug_id</span> <span class="op">=</span> <span class="ident">id</span>;
-                } <span class="kw">else</span> {
-                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">PyErr</span>::<span class="ident">new</span>::<span class="op">&lt;</span><span class="ident">exceptions</span>::<span class="ident">RuntimeError</span>, <span class="kw">_</span><span class="op">&gt;</span>(
-                        <span class="string">&quot;Subblock arm_debug.mem_ap was given an arm_debug _id block option but could not extract it as an integer&quot;</span>
-                    ));
-                }
-            } <span class="kw">else</span> {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">PyErr</span>::<span class="ident">new</span>::<span class="op">&lt;</span><span class="ident">exceptions</span>::<span class="ident">RuntimeError</span>, <span class="kw">_</span><span class="op">&gt;</span>(
-                    <span class="string">&quot;Subblock arm_debug.mem_ap was not given required block option &#39;arm_debug_id&#39;&quot;</span>,
-                ));
-            }
-        } <span class="kw">else</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">PyErr</span>::<span class="ident">new</span>::<span class="op">&lt;</span><span class="ident">exceptions</span>::<span class="ident">RuntimeError</span>, <span class="kw">_</span><span class="op">&gt;</span>(
-                <span class="string">&quot;Subblock arm_debug.mem_ap requires an arm_debug_id block option, but no block options were given.&quot;</span>
-            ));
-        }
-
-        <span class="kw">let</span> <span class="ident">addr</span>;
-        <span class="comment">//let csw_reset;</span>
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">ap_opts_dict</span>) <span class="op">=</span> <span class="ident">block_options</span> {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">ap_addr</span>) <span class="op">=</span> <span class="ident">ap_opts_dict</span>.<span class="ident">get_item</span>(<span class="string">&quot;ap&quot;</span>) {
-                <span class="ident">addr</span> <span class="op">=</span> <span class="ident">ap_addr</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
-            } <span class="kw">else</span> {
-                <span class="ident">addr</span> <span class="op">=</span> <span class="number">0</span>;
-            }
-        } <span class="kw">else</span> {
-            <span class="ident">addr</span> <span class="op">=</span> <span class="number">0</span>;
-        }
-
-        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python</span>::<span class="ident">acquire_gil</span>();
-        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
-        <span class="kw">let</span> <span class="ident">obj</span> <span class="op">=</span> <span class="ident">instance</span>.<span class="ident">to_object</span>(<span class="ident">py</span>);
-        <span class="kw">let</span> <span class="ident">args</span> <span class="op">=</span> <span class="ident">PyTuple</span>::<span class="ident">new</span>(<span class="ident">py</span>, <span class="kw-2">&amp;</span>[<span class="string">&quot;default&quot;</span>.<span class="ident">to_object</span>(<span class="ident">py</span>), <span class="string">&quot;default&quot;</span>.<span class="ident">to_object</span>(<span class="ident">py</span>)]);
-        <span class="kw">let</span> <span class="ident">mem_ap_id</span>;
-        {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">dut</span> <span class="op">=</span> <span class="ident">origen</span>::<span class="ident">dut</span>();
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">services</span> <span class="op">=</span> <span class="ident">origen</span>::<span class="ident">services</span>();
-            <span class="kw">let</span> <span class="ident">model_id</span> <span class="op">=</span> <span class="ident">obj</span>.<span class="ident">getattr</span>(<span class="ident">py</span>, <span class="string">&quot;model_id&quot;</span>)<span class="question-mark">?</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>(<span class="ident">py</span>)<span class="question-mark">?</span>;
-            <span class="ident">mem_ap_id</span> <span class="op">=</span>
-                <span class="ident">OrigenMemAP</span>::<span class="ident">model_init</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">dut</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">services</span>, <span class="ident">model_id</span>, <span class="ident">arm_debug_id</span>, <span class="ident">addr</span>)<span class="question-mark">?</span>;
-        }
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">slf</span> <span class="op">=</span> <span class="ident">instance</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">PyRefMut</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
-        <span class="ident">slf</span>.<span class="ident">mem_ap_id</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">mem_ap_id</span>);
-        <span class="ident">obj</span>.<span class="ident">call_method1</span>(<span class="ident">py</span>, <span class="string">&quot;_set_as_default_address_block&quot;</span>, <span class="ident">args</span>)<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(())
-    }
-
-    <span class="doccomment">/// Initiates an ArmDebug MemAP write based on the given register (passed in as</span>
-    <span class="doccomment">/// a BitCollection).</span>
-    <span class="doccomment">/// Assumes that all posturing has been completed - that is, the bits&#39; data, overlay</span>
-    <span class="doccomment">/// status, etc. is current.</span>
-    <span class="attribute">#[<span class="ident">args</span>(<span class="ident">write_opts</span> <span class="op">=</span> <span class="string">&quot;**&quot;</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">write_register</span>(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">bits</span>: <span class="kw-2">&amp;</span><span class="ident">PyAny</span>,
-        <span class="ident">_latency</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>,
-        <span class="ident">_write_opts</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">PyDict</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">bc</span> <span class="op">=</span> <span class="ident">bits</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">PyRef</span><span class="op">&lt;</span><span class="ident">BitCollection</span><span class="op">&gt;</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">dut</span> <span class="op">=</span> <span class="ident">origen</span>::<span class="ident">dut</span>();
-        <span class="kw">let</span> <span class="ident">services</span> <span class="op">=</span> <span class="ident">origen</span>::<span class="ident">services</span>();
-        <span class="kw">let</span> <span class="ident">ap</span> <span class="op">=</span> <span class="ident">services</span>.<span class="ident">get_as_mem_ap</span>(<span class="self">self</span>.<span class="ident">mem_ap_id</span>.<span class="ident">unwrap</span>())<span class="question-mark">?</span>;
-        <span class="ident">ap</span>.<span class="ident">write_register</span>(<span class="kw-2">&amp;</span><span class="ident">dut</span>, <span class="kw-2">&amp;</span><span class="ident">services</span>, <span class="kw-2">&amp;</span><span class="ident">bc</span>.<span class="ident">materialize</span>(<span class="kw-2">&amp;</span><span class="ident">dut</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(())
-    }
-
-    <span class="attribute">#[<span class="ident">args</span>(<span class="ident">verify_opts</span> <span class="op">=</span> <span class="string">&quot;**&quot;</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">verify_register</span>(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">bits</span>: <span class="kw-2">&amp;</span><span class="ident">PyAny</span>,
-        <span class="ident">_latency</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>,
-        <span class="ident">_verify_opts</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">PyDict</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">bc</span> <span class="op">=</span> <span class="ident">bits</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">PyRef</span><span class="op">&lt;</span><span class="ident">BitCollection</span><span class="op">&gt;</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">dut</span> <span class="op">=</span> <span class="ident">origen</span>::<span class="ident">dut</span>();
-        <span class="kw">let</span> <span class="ident">services</span> <span class="op">=</span> <span class="ident">origen</span>::<span class="ident">services</span>();
-        <span class="kw">let</span> <span class="ident">ap</span> <span class="op">=</span> <span class="ident">services</span>.<span class="ident">get_as_mem_ap</span>(<span class="self">self</span>.<span class="ident">mem_ap_id</span>.<span class="ident">unwrap</span>())<span class="question-mark">?</span>;
-        <span class="ident">ap</span>.<span class="ident">verify_register</span>(<span class="kw-2">&amp;</span><span class="ident">dut</span>, <span class="kw-2">&amp;</span><span class="ident">services</span>, <span class="kw-2">&amp;</span><span class="ident">bc</span>.<span class="ident">materialize</span>(<span class="kw-2">&amp;</span><span class="ident">dut</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(())
-    }
-}
-</pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../";window.currentCrate = "_origen";</script><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script><script defer src="../../../search-index.js"></script></body></html>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/standard_sub_blocks/arm_debug.rs`."><title>arm_debug.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../../static.files/rustdoc-916cea96.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="_origen" data-themes="" data-resource-suffix="" data-rustdoc-version="1.87.0 (17067e9ac 2025-05-09)" data-channel="1.87.0" data-search-js="search-e7298875.js" data-settings-js="settings-d72f25bb.js" ><script src="../../../static.files/storage-82c7156e.js"></script><script defer src="../../../static.files/src-script-63605ae7.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-fb8c74a8.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">_origen/standard_sub_blocks/</div>arm_debug.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-3"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="comment">// use origen::standard_sub_blocks::ArmDebug as OrigenArmDebug;
+<a href=#2 id=2 data-nosnippet>2</a></span><span class="kw">use </span>origen::services::arm_debug::ArmDebug <span class="kw">as </span>OrigenArmDebug;
+<a href=#3 id=3 data-nosnippet>3</a><span class="comment">// use origen::standard_sub_blocks::arm_debug::DP as OrigenDP;
+<a href=#4 id=4 data-nosnippet>4</a></span><span class="kw">use </span>origen::services::arm_debug::JtagDP <span class="kw">as </span>OrigenJtagDP;
+<a href=#5 id=5 data-nosnippet>5</a><span class="kw">use </span>origen::services::arm_debug::MemAP <span class="kw">as </span>OrigenMemAP;
+<a href=#6 id=6 data-nosnippet>6</a><span class="kw">use </span>origen::services::arm_debug::DP <span class="kw">as </span>OrigenDP;
+<a href=#7 id=7 data-nosnippet>7</a><span class="comment">// use origen::standard_sub_blocks::arm_debug::mem_ap::MemAP as OrigenMemAP;
+<a href=#8 id=8 data-nosnippet>8</a></span><span class="kw">use </span><span class="kw">crate</span>::registers::bit_collection::BitCollection;
+<a href=#9 id=9 data-nosnippet>9</a><span class="kw">use crate</span>::{extract_value, resolve_transaction, unpack_transaction_options};
+<a href=#10 id=10 data-nosnippet>10</a><span class="kw">use </span>pyo3::exceptions;
+<a href=#11 id=11 data-nosnippet>11</a><span class="kw">use </span>pyo3::prelude::<span class="kw-2">*</span>;
+<a href=#12 id=12 data-nosnippet>12</a><span class="kw">use </span>pyo3::types::{PyAny, PyDict, PyTuple, PyType};
+<a href=#13 id=13 data-nosnippet>13</a><span class="kw">use </span>pyo3::ToPyObject;
+<a href=#14 id=14 data-nosnippet>14</a>
+<a href=#15 id=15 data-nosnippet>15</a><span class="kw">pub fn </span>define(py: Python, m: <span class="kw-2">&amp;</span>PyModule) -&gt; PyResult&lt;()&gt; {
+<a href=#16 id=16 data-nosnippet>16</a>    <span class="kw">let </span>subm = PyModule::new(py, <span class="string">"arm_debug"</span>)<span class="question-mark">?</span>;
+<a href=#17 id=17 data-nosnippet>17</a>    subm.add_class::&lt;ArmDebug&gt;()<span class="question-mark">?</span>;
+<a href=#18 id=18 data-nosnippet>18</a>    subm.add_class::&lt;DP&gt;()<span class="question-mark">?</span>;
+<a href=#19 id=19 data-nosnippet>19</a>    subm.add_class::&lt;JtagDP&gt;()<span class="question-mark">?</span>;
+<a href=#20 id=20 data-nosnippet>20</a>    subm.add_class::&lt;MemAP&gt;()<span class="question-mark">?</span>;
+<a href=#21 id=21 data-nosnippet>21</a>    m.add_submodule(subm)<span class="question-mark">?</span>;
+<a href=#22 id=22 data-nosnippet>22</a>    <span class="prelude-val">Ok</span>(())
+<a href=#23 id=23 data-nosnippet>23</a>}
+<a href=#24 id=24 data-nosnippet>24</a>
+<a href=#25 id=25 data-nosnippet>25</a><span class="doccomment">/// Checks for an SWD attribute on the DUT
+<a href=#26 id=26 data-nosnippet>26</a>/// Note: this must be run after the DUT has loaded or else it'll cause a lockup
+<a href=#27 id=27 data-nosnippet>27</a></span><span class="kw">fn </span>check_for_swd(py: Python) -&gt; PyResult&lt;<span class="prelude-ty">Option</span>&lt;usize&gt;&gt; {
+<a href=#28 id=28 data-nosnippet>28</a>    <span class="kw">let </span>locals = PyDict::new(py);
+<a href=#29 id=29 data-nosnippet>29</a>    locals.set_item(<span class="string">"origen"</span>, py.import(<span class="string">"origen"</span>)<span class="question-mark">?</span>.to_object(py))<span class="question-mark">?</span>;
+<a href=#30 id=30 data-nosnippet>30</a>    locals.set_item(<span class="string">"builtins"</span>, py.import(<span class="string">"builtins"</span>)<span class="question-mark">?</span>.to_object(py))<span class="question-mark">?</span>;
+<a href=#31 id=31 data-nosnippet>31</a>    locals.set_item(<span class="string">"dut"</span>, py.eval(<span class="string">"origen.dut"</span>, <span class="prelude-val">Some</span>(locals), <span class="prelude-val">None</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
+<a href=#32 id=32 data-nosnippet>32</a>    <span class="kw">let </span>m = py.eval(<span class="string">"builtins.hasattr(dut, \"swd\")"</span>, <span class="prelude-val">Some</span>(locals), <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
+<a href=#33 id=33 data-nosnippet>33</a>
+<a href=#34 id=34 data-nosnippet>34</a>    <span class="kw">if </span>m.extract::&lt;bool&gt;()<span class="question-mark">? </span>{
+<a href=#35 id=35 data-nosnippet>35</a>        <span class="kw">let </span>pyswd = py.eval(<span class="string">"dut.swd"</span>, <span class="prelude-val">Some</span>(locals), <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
+<a href=#36 id=36 data-nosnippet>36</a>        <span class="kw">if let </span><span class="prelude-val">Ok</span>(swd) = pyswd.extract::&lt;PyRefMut&lt;<span class="kw">super</span>::<span class="kw">super</span>::services::swd::SWD&gt;&gt;() {
+<a href=#37 id=37 data-nosnippet>37</a>            <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(swd.id()<span class="question-mark">?</span>))
+<a href=#38 id=38 data-nosnippet>38</a>        } <span class="kw">else </span>{
+<a href=#39 id=39 data-nosnippet>39</a>            <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
+<a href=#40 id=40 data-nosnippet>40</a>        }
+<a href=#41 id=41 data-nosnippet>41</a>    } <span class="kw">else </span>{
+<a href=#42 id=42 data-nosnippet>42</a>        <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
+<a href=#43 id=43 data-nosnippet>43</a>    }
+<a href=#44 id=44 data-nosnippet>44</a>}
+<a href=#45 id=45 data-nosnippet>45</a>
+<a href=#46 id=46 data-nosnippet>46</a><span class="kw">fn </span>check_for_jtag(py: Python) -&gt; PyResult&lt;<span class="prelude-ty">Option</span>&lt;usize&gt;&gt; {
+<a href=#47 id=47 data-nosnippet>47</a>    <span class="kw">let </span>locals = PyDict::new(py);
+<a href=#48 id=48 data-nosnippet>48</a>    locals.set_item(<span class="string">"origen"</span>, py.import(<span class="string">"origen"</span>)<span class="question-mark">?</span>.to_object(py))<span class="question-mark">?</span>;
+<a href=#49 id=49 data-nosnippet>49</a>    locals.set_item(<span class="string">"builtins"</span>, py.import(<span class="string">"builtins"</span>)<span class="question-mark">?</span>.to_object(py))<span class="question-mark">?</span>;
+<a href=#50 id=50 data-nosnippet>50</a>    locals.set_item(<span class="string">"dut"</span>, py.eval(<span class="string">"origen.dut"</span>, <span class="prelude-val">Some</span>(locals), <span class="prelude-val">None</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
+<a href=#51 id=51 data-nosnippet>51</a>    <span class="kw">let </span>m = py.eval(<span class="string">"builtins.hasattr(dut, \"jtag\")"</span>, <span class="prelude-val">Some</span>(locals), <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
+<a href=#52 id=52 data-nosnippet>52</a>
+<a href=#53 id=53 data-nosnippet>53</a>    <span class="kw">if </span>m.extract::&lt;bool&gt;()<span class="question-mark">? </span>{
+<a href=#54 id=54 data-nosnippet>54</a>        <span class="kw">let </span>pyjtag = py.eval(<span class="string">"dut.jtag"</span>, <span class="prelude-val">Some</span>(locals), <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
+<a href=#55 id=55 data-nosnippet>55</a>        <span class="kw">if let </span><span class="prelude-val">Ok</span>(jtag) = pyjtag.extract::&lt;PyRefMut&lt;<span class="kw">super</span>::<span class="kw">super</span>::services::jtag::JTAG&gt;&gt;() {
+<a href=#56 id=56 data-nosnippet>56</a>            <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(jtag.id()<span class="question-mark">?</span>))
+<a href=#57 id=57 data-nosnippet>57</a>        } <span class="kw">else </span>{
+<a href=#58 id=58 data-nosnippet>58</a>            <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
+<a href=#59 id=59 data-nosnippet>59</a>        }
+<a href=#60 id=60 data-nosnippet>60</a>    } <span class="kw">else </span>{
+<a href=#61 id=61 data-nosnippet>61</a>        <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
+<a href=#62 id=62 data-nosnippet>62</a>    }
+<a href=#63 id=63 data-nosnippet>63</a>}
+<a href=#64 id=64 data-nosnippet>64</a>
+<a href=#65 id=65 data-nosnippet>65</a><span class="attr">#[pyclass(subclass)]
+<a href=#66 id=66 data-nosnippet>66</a></span><span class="doccomment">/// Controller connecting the :class:`origen.blocks.arm_debug.controller.Controller` view
+<a href=#67 id=67 data-nosnippet>67</a>/// with the :link-to:`backend model &lt;backend_arm_debug_model&gt;`.
+<a href=#68 id=68 data-nosnippet>68</a>/// The controller here is responsible for instantiating and initializing the
+<a href=#69 id=69 data-nosnippet>69</a>/// ArmDebug model.
+<a href=#70 id=70 data-nosnippet>70</a></span><span class="kw">pub struct </span>ArmDebug {
+<a href=#71 id=71 data-nosnippet>71</a>    arm_debug_id: <span class="prelude-ty">Option</span>&lt;usize&gt;,
+<a href=#72 id=72 data-nosnippet>72</a>}
+<a href=#73 id=73 data-nosnippet>73</a>
+<a href=#74 id=74 data-nosnippet>74</a><span class="attr">#[pymethods]
+<a href=#75 id=75 data-nosnippet>75</a></span><span class="kw">impl </span>ArmDebug {
+<a href=#76 id=76 data-nosnippet>76</a>    <span class="attr">#[classmethod]
+<a href=#77 id=77 data-nosnippet>77</a>    </span><span class="kw">fn </span>__init__(_cls: <span class="kw-2">&amp;</span>PyType, _instance: <span class="kw-2">&amp;</span>PyAny) -&gt; PyResult&lt;()&gt; {
+<a href=#78 id=78 data-nosnippet>78</a>        <span class="prelude-val">Ok</span>(())
+<a href=#79 id=79 data-nosnippet>79</a>    }
+<a href=#80 id=80 data-nosnippet>80</a>
+<a href=#81 id=81 data-nosnippet>81</a>    <span class="attr">#[new]
+<a href=#82 id=82 data-nosnippet>82</a>    </span><span class="kw">fn </span>new() -&gt; <span class="self">Self </span>{
+<a href=#83 id=83 data-nosnippet>83</a>        <span class="self">Self </span>{ arm_debug_id: <span class="prelude-val">None </span>}
+<a href=#84 id=84 data-nosnippet>84</a>    }
+<a href=#85 id=85 data-nosnippet>85</a>
+<a href=#86 id=86 data-nosnippet>86</a>    <span class="attr">#[classmethod]
+<a href=#87 id=87 data-nosnippet>87</a>    </span><span class="kw">fn </span>model_init(
+<a href=#88 id=88 data-nosnippet>88</a>        _cls: <span class="kw-2">&amp;</span>PyType,
+<a href=#89 id=89 data-nosnippet>89</a>        py: Python,
+<a href=#90 id=90 data-nosnippet>90</a>        instance: <span class="kw-2">&amp;</span>PyAny,
+<a href=#91 id=91 data-nosnippet>91</a>        block_options: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>PyDict&gt;,
+<a href=#92 id=92 data-nosnippet>92</a>    ) -&gt; PyResult&lt;()&gt; {
+<a href=#93 id=93 data-nosnippet>93</a>        <span class="kw">crate</span>::dut::PyDUT::ensure_pins(<span class="string">"dut"</span>)<span class="question-mark">?</span>;
+<a href=#94 id=94 data-nosnippet>94</a>        <span class="kw">let </span>swd_id = check_for_swd(py)<span class="question-mark">?</span>;
+<a href=#95 id=95 data-nosnippet>95</a>        <span class="kw">let </span>jtag_id = check_for_jtag(py)<span class="question-mark">?</span>;
+<a href=#96 id=96 data-nosnippet>96</a>
+<a href=#97 id=97 data-nosnippet>97</a>        <span class="comment">// Create the Arm Debug instance
+<a href=#98 id=98 data-nosnippet>98</a>        </span><span class="kw">let </span>arm_debug_id;
+<a href=#99 id=99 data-nosnippet>99</a>        {
+<a href=#100 id=100 data-nosnippet>100</a>            <span class="kw">let </span>model_id = instance.getattr(<span class="string">"model_id"</span>)<span class="question-mark">?</span>.extract::&lt;usize&gt;()<span class="question-mark">?</span>;
+<a href=#101 id=101 data-nosnippet>101</a>            <span class="kw">let </span><span class="kw-2">mut </span>dut = origen::dut();
+<a href=#102 id=102 data-nosnippet>102</a>            <span class="kw">let </span><span class="kw-2">mut </span>services = origen::services();
+<a href=#103 id=103 data-nosnippet>103</a>            arm_debug_id =
+<a href=#104 id=104 data-nosnippet>104</a>                OrigenArmDebug::model_init(<span class="kw-2">&amp;mut </span>dut, <span class="kw-2">&amp;mut </span>services, model_id, swd_id, jtag_id)<span class="question-mark">?</span>;
+<a href=#105 id=105 data-nosnippet>105</a>        }
+<a href=#106 id=106 data-nosnippet>106</a>
+<a href=#107 id=107 data-nosnippet>107</a>        <span class="comment">// Add the DP subblock
+<a href=#108 id=108 data-nosnippet>108</a>        </span><span class="kw">let </span>args = PyTuple::new(
+<a href=#109 id=109 data-nosnippet>109</a>            py,
+<a href=#110 id=110 data-nosnippet>110</a>            <span class="kw-2">&amp;</span>[<span class="string">"dp"</span>.to_object(py), <span class="string">"origen.arm_debug.dp"</span>.to_object(py)],
+<a href=#111 id=111 data-nosnippet>111</a>        );
+<a href=#112 id=112 data-nosnippet>112</a>        <span class="kw">let </span>kwargs = PyDict::new(py);
+<a href=#113 id=113 data-nosnippet>113</a>        <span class="kw">let </span>sb_options = PyDict::new(py);
+<a href=#114 id=114 data-nosnippet>114</a>        sb_options.set_item(<span class="string">"arm_debug_id"</span>, arm_debug_id)<span class="question-mark">?</span>;
+<a href=#115 id=115 data-nosnippet>115</a>        kwargs.set_item(<span class="string">"sb_options"</span>, sb_options.to_object(py))<span class="question-mark">?</span>;
+<a href=#116 id=116 data-nosnippet>116</a>        <span class="kw">let </span>py_dp_obj = instance.downcast::&lt;PyCell&lt;<span class="self">Self</span>&gt;&gt;()<span class="question-mark">?</span>.call_method(
+<a href=#117 id=117 data-nosnippet>117</a>            <span class="string">"add_sub_block"</span>,
+<a href=#118 id=118 data-nosnippet>118</a>            args,
+<a href=#119 id=119 data-nosnippet>119</a>            <span class="prelude-val">Some</span>(kwargs),
+<a href=#120 id=120 data-nosnippet>120</a>        )<span class="question-mark">?</span>;
+<a href=#121 id=121 data-nosnippet>121</a>        <span class="kw">let </span>py_dp = py_dp_obj.extract::&lt;DP&gt;()<span class="question-mark">?</span>;
+<a href=#122 id=122 data-nosnippet>122</a>        <span class="kw">let </span>dp_id = py_dp.dp_id.unwrap();
+<a href=#123 id=123 data-nosnippet>123</a>
+<a href=#124 id=124 data-nosnippet>124</a>        <span class="comment">// Now go back and add the DP ID to arm debug
+<a href=#125 id=125 data-nosnippet>125</a>        </span>{
+<a href=#126 id=126 data-nosnippet>126</a>            <span class="kw">let </span><span class="kw-2">mut </span>services = origen::services();
+<a href=#127 id=127 data-nosnippet>127</a>            <span class="kw">let </span>origen_arm_debug = services.get_as_mut_arm_debug(arm_debug_id)<span class="question-mark">?</span>;
+<a href=#128 id=128 data-nosnippet>128</a>            origen_arm_debug.set_dp_id(dp_id)<span class="question-mark">?</span>;
+<a href=#129 id=129 data-nosnippet>129</a>        }
+<a href=#130 id=130 data-nosnippet>130</a>
+<a href=#131 id=131 data-nosnippet>131</a>        <span class="comment">// If a jtag protocol was provided, add the JTAG DP
+<a href=#132 id=132 data-nosnippet>132</a>        </span><span class="kw">if </span>jtag_id.is_some() {
+<a href=#133 id=133 data-nosnippet>133</a>            <span class="kw">let </span>args = PyTuple::new(
+<a href=#134 id=134 data-nosnippet>134</a>                py,
+<a href=#135 id=135 data-nosnippet>135</a>                <span class="kw-2">&amp;</span>[
+<a href=#136 id=136 data-nosnippet>136</a>                    <span class="string">"jtag_dp"</span>.to_object(py),
+<a href=#137 id=137 data-nosnippet>137</a>                    <span class="string">"origen.arm_debug.jtag_dp"</span>.to_object(py),
+<a href=#138 id=138 data-nosnippet>138</a>                ],
+<a href=#139 id=139 data-nosnippet>139</a>            );
+<a href=#140 id=140 data-nosnippet>140</a>            <span class="kw">let </span>kwargs = PyDict::new(py);
+<a href=#141 id=141 data-nosnippet>141</a>            <span class="kw">let </span>sb_options = PyDict::new(py);
+<a href=#142 id=142 data-nosnippet>142</a>            sb_options.set_item(<span class="string">"arm_debug_id"</span>, arm_debug_id)<span class="question-mark">?</span>;
+<a href=#143 id=143 data-nosnippet>143</a>            kwargs.set_item(<span class="string">"sb_options"</span>, sb_options.to_object(py))<span class="question-mark">?</span>;
+<a href=#144 id=144 data-nosnippet>144</a>            <span class="kw">let </span>py_jtag_dp_obj = instance.downcast::&lt;PyCell&lt;<span class="self">Self</span>&gt;&gt;()<span class="question-mark">?</span>.call_method(
+<a href=#145 id=145 data-nosnippet>145</a>                <span class="string">"add_sub_block"</span>,
+<a href=#146 id=146 data-nosnippet>146</a>                args,
+<a href=#147 id=147 data-nosnippet>147</a>                <span class="prelude-val">Some</span>(kwargs),
+<a href=#148 id=148 data-nosnippet>148</a>            )<span class="question-mark">?</span>;
+<a href=#149 id=149 data-nosnippet>149</a>            <span class="kw">let </span>py_jtag_dp = py_jtag_dp_obj.extract::&lt;JtagDP&gt;()<span class="question-mark">?</span>;
+<a href=#150 id=150 data-nosnippet>150</a>            <span class="kw">let </span>jtag_dp_id = py_jtag_dp.id.unwrap();
+<a href=#151 id=151 data-nosnippet>151</a>
+<a href=#152 id=152 data-nosnippet>152</a>            <span class="kw">let </span><span class="kw-2">mut </span>services = origen::services();
+<a href=#153 id=153 data-nosnippet>153</a>            <span class="kw">let </span>origen_arm_debug = services.get_as_mut_arm_debug(arm_debug_id)<span class="question-mark">?</span>;
+<a href=#154 id=154 data-nosnippet>154</a>            origen_arm_debug.set_jtag_dp_id(jtag_dp_id)<span class="question-mark">?</span>;
+<a href=#155 id=155 data-nosnippet>155</a>        }
+<a href=#156 id=156 data-nosnippet>156</a>
+<a href=#157 id=157 data-nosnippet>157</a>        {
+<a href=#158 id=158 data-nosnippet>158</a>            <span class="kw">let </span><span class="kw-2">mut </span>slf = instance.extract::&lt;PyRefMut&lt;<span class="self">Self</span>&gt;&gt;()<span class="question-mark">?</span>;
+<a href=#159 id=159 data-nosnippet>159</a>            slf.arm_debug_id = <span class="prelude-val">Some</span>(arm_debug_id);
+<a href=#160 id=160 data-nosnippet>160</a>        }
+<a href=#161 id=161 data-nosnippet>161</a>        <span class="kw">if let </span><span class="prelude-val">Some</span>(opts) = block_options {
+<a href=#162 id=162 data-nosnippet>162</a>            <span class="kw">if let </span><span class="prelude-val">Some</span>(mem_aps) = opts.get_item(<span class="string">"mem_aps"</span>)<span class="question-mark">? </span>{
+<a href=#163 id=163 data-nosnippet>163</a>                <span class="kw">let </span>aps = mem_aps.downcast::&lt;PyDict&gt;()<span class="question-mark">?</span>;
+<a href=#164 id=164 data-nosnippet>164</a>                <span class="kw">for </span>(ap_name, ap_opts) <span class="kw">in </span>aps.iter() {
+<a href=#165 id=165 data-nosnippet>165</a>                    <span class="kw">let </span>ap_opts_dict = ap_opts.downcast::&lt;PyDict&gt;()<span class="question-mark">?</span>;
+<a href=#166 id=166 data-nosnippet>166</a>                    <span class="self">Self</span>::add_mem_ap(
+<a href=#167 id=167 data-nosnippet>167</a>                        instance.downcast::&lt;PyCell&lt;<span class="self">Self</span>&gt;&gt;()<span class="question-mark">?</span>,
+<a href=#168 id=168 data-nosnippet>168</a>                        py,
+<a href=#169 id=169 data-nosnippet>169</a>                        <span class="kw-2">&amp;</span>ap_name.extract::&lt;String&gt;()<span class="question-mark">?</span>,
+<a href=#170 id=170 data-nosnippet>170</a>                        {
+<a href=#171 id=171 data-nosnippet>171</a>                            <span class="kw">if let </span><span class="prelude-val">Some</span>(ap_addr) = ap_opts_dict.get_item(<span class="string">"ap"</span>)<span class="question-mark">? </span>{
+<a href=#172 id=172 data-nosnippet>172</a>                                <span class="prelude-val">Some</span>(ap_addr.extract::&lt;u32&gt;()<span class="question-mark">?</span>)
+<a href=#173 id=173 data-nosnippet>173</a>                            } <span class="kw">else </span>{
+<a href=#174 id=174 data-nosnippet>174</a>                                <span class="prelude-val">None
+<a href=#175 id=175 data-nosnippet>175</a>                            </span>}
+<a href=#176 id=176 data-nosnippet>176</a>                        },
+<a href=#177 id=177 data-nosnippet>177</a>                        {
+<a href=#178 id=178 data-nosnippet>178</a>                            <span class="kw">if let </span><span class="prelude-val">Some</span>(csw_reset) = ap_opts_dict.get_item(<span class="string">"csw_reset"</span>)<span class="question-mark">? </span>{
+<a href=#179 id=179 data-nosnippet>179</a>                                <span class="prelude-val">Some</span>(csw_reset.extract::&lt;u32&gt;()<span class="question-mark">?</span>)
+<a href=#180 id=180 data-nosnippet>180</a>                            } <span class="kw">else </span>{
+<a href=#181 id=181 data-nosnippet>181</a>                                <span class="prelude-val">None
+<a href=#182 id=182 data-nosnippet>182</a>                            </span>}
+<a href=#183 id=183 data-nosnippet>183</a>                        },
+<a href=#184 id=184 data-nosnippet>184</a>                    )<span class="question-mark">?</span>;
+<a href=#185 id=185 data-nosnippet>185</a>                }
+<a href=#186 id=186 data-nosnippet>186</a>            }
+<a href=#187 id=187 data-nosnippet>187</a>        }
+<a href=#188 id=188 data-nosnippet>188</a>        <span class="prelude-val">Ok</span>(())
+<a href=#189 id=189 data-nosnippet>189</a>    }
+<a href=#190 id=190 data-nosnippet>190</a>
+<a href=#191 id=191 data-nosnippet>191</a>    <span class="kw">fn </span>add_mem_ap(
+<a href=#192 id=192 data-nosnippet>192</a>        slf: <span class="kw-2">&amp;</span>PyCell&lt;<span class="self">Self</span>&gt;,
+<a href=#193 id=193 data-nosnippet>193</a>        py: Python,
+<a href=#194 id=194 data-nosnippet>194</a>        name: <span class="kw-2">&amp;</span>str,
+<a href=#195 id=195 data-nosnippet>195</a>        ap: <span class="prelude-ty">Option</span>&lt;u32&gt;,
+<a href=#196 id=196 data-nosnippet>196</a>        csw_reset: <span class="prelude-ty">Option</span>&lt;u32&gt;,
+<a href=#197 id=197 data-nosnippet>197</a>    ) -&gt; PyResult&lt;()&gt; {
+<a href=#198 id=198 data-nosnippet>198</a>        <span class="kw">let </span>args = PyTuple::new(
+<a href=#199 id=199 data-nosnippet>199</a>            py,
+<a href=#200 id=200 data-nosnippet>200</a>            <span class="kw-2">&amp;</span>[name.to_object(py), <span class="string">"origen.arm_debug.mem_ap"</span>.to_object(py)],
+<a href=#201 id=201 data-nosnippet>201</a>        );
+<a href=#202 id=202 data-nosnippet>202</a>        <span class="kw">let </span>kwargs = PyDict::new(py);
+<a href=#203 id=203 data-nosnippet>203</a>        <span class="kw">let </span>sb_options = PyDict::new(py);
+<a href=#204 id=204 data-nosnippet>204</a>        <span class="kw">if let </span><span class="prelude-val">Some</span>(_ap) = ap {
+<a href=#205 id=205 data-nosnippet>205</a>            sb_options.set_item(<span class="string">"ap"</span>, _ap)<span class="question-mark">?</span>;
+<a href=#206 id=206 data-nosnippet>206</a>        }
+<a href=#207 id=207 data-nosnippet>207</a>        <span class="kw">if let </span><span class="prelude-val">Some</span>(_csw_reset) = csw_reset {
+<a href=#208 id=208 data-nosnippet>208</a>            sb_options.set_item(<span class="string">"csw_reset"</span>, _csw_reset)<span class="question-mark">?</span>;
+<a href=#209 id=209 data-nosnippet>209</a>        }
+<a href=#210 id=210 data-nosnippet>210</a>        <span class="kw">let </span>arm_debug = slf.extract::&lt;PyRefMut&lt;<span class="self">Self</span>&gt;&gt;()<span class="question-mark">?</span>;
+<a href=#211 id=211 data-nosnippet>211</a>        sb_options.set_item(<span class="string">"arm_debug_id"</span>, arm_debug.arm_debug_id)<span class="question-mark">?</span>;
+<a href=#212 id=212 data-nosnippet>212</a>        kwargs.set_item(<span class="string">"sb_options"</span>, sb_options.to_object(py))<span class="question-mark">?</span>;
+<a href=#213 id=213 data-nosnippet>213</a>
+<a href=#214 id=214 data-nosnippet>214</a>        slf.call_method(<span class="string">"add_sub_block"</span>, args, <span class="prelude-val">Some</span>(kwargs))<span class="question-mark">?</span>;
+<a href=#215 id=215 data-nosnippet>215</a>        <span class="prelude-val">Ok</span>(())
+<a href=#216 id=216 data-nosnippet>216</a>    }
+<a href=#217 id=217 data-nosnippet>217</a>
+<a href=#218 id=218 data-nosnippet>218</a>    <span class="kw">fn </span>switch_to_swd(slf: PyRefMut&lt;<span class="self">Self</span>&gt;) -&gt; PyResult&lt;Py&lt;<span class="self">Self</span>&gt;&gt; {
+<a href=#219 id=219 data-nosnippet>219</a>        <span class="kw">let </span>services = origen::services();
+<a href=#220 id=220 data-nosnippet>220</a>        <span class="kw">let </span>arm_debug = services.get_as_arm_debug(slf.arm_debug_id.unwrap())<span class="question-mark">?</span>;
+<a href=#221 id=221 data-nosnippet>221</a>        <span class="kw">let </span>dut = origen::dut();
+<a href=#222 id=222 data-nosnippet>222</a>        arm_debug.switch_to_swd(<span class="kw-2">&amp;</span>dut, <span class="kw-2">&amp;</span>services)<span class="question-mark">?</span>;
+<a href=#223 id=223 data-nosnippet>223</a>        <span class="prelude-val">Ok</span>(slf.into())
+<a href=#224 id=224 data-nosnippet>224</a>    }
+<a href=#225 id=225 data-nosnippet>225</a>}
+<a href=#226 id=226 data-nosnippet>226</a>
+<a href=#227 id=227 data-nosnippet>227</a><span class="attr">#[pyclass(subclass)]
+<a href=#228 id=228 data-nosnippet>228</a>#[allow(dead_code)] </span><span class="comment">// Suppress the false dead-code warning for the "clone" derive
+<a href=#229 id=229 data-nosnippet>229</a></span><span class="attr">#[derive(Clone)]
+<a href=#230 id=230 data-nosnippet>230</a></span><span class="kw">struct </span>DP {
+<a href=#231 id=231 data-nosnippet>231</a>    <span class="kw">pub </span>dp_id: <span class="prelude-ty">Option</span>&lt;usize&gt;,
+<a href=#232 id=232 data-nosnippet>232</a>    <span class="attr">#[allow(dead_code)]
+<a href=#233 id=233 data-nosnippet>233</a>    </span><span class="kw">pub </span>arm_debug_id: <span class="prelude-ty">Option</span>&lt;usize&gt;,
+<a href=#234 id=234 data-nosnippet>234</a>}
+<a href=#235 id=235 data-nosnippet>235</a>
+<a href=#236 id=236 data-nosnippet>236</a><span class="attr">#[pymethods]
+<a href=#237 id=237 data-nosnippet>237</a></span><span class="kw">impl </span>DP {
+<a href=#238 id=238 data-nosnippet>238</a>    <span class="attr">#[classmethod]
+<a href=#239 id=239 data-nosnippet>239</a>    </span><span class="kw">fn </span>__init__(_cls: <span class="kw-2">&amp;</span>PyType, _instance: <span class="kw-2">&amp;</span>PyAny) -&gt; PyResult&lt;()&gt; {
+<a href=#240 id=240 data-nosnippet>240</a>        <span class="prelude-val">Ok</span>(())
+<a href=#241 id=241 data-nosnippet>241</a>    }
+<a href=#242 id=242 data-nosnippet>242</a>
+<a href=#243 id=243 data-nosnippet>243</a>    <span class="attr">#[new]
+<a href=#244 id=244 data-nosnippet>244</a>    </span><span class="kw">fn </span>new() -&gt; <span class="self">Self </span>{
+<a href=#245 id=245 data-nosnippet>245</a>        <span class="self">Self </span>{
+<a href=#246 id=246 data-nosnippet>246</a>            dp_id: <span class="prelude-val">None</span>,
+<a href=#247 id=247 data-nosnippet>247</a>            arm_debug_id: <span class="prelude-val">None</span>,
+<a href=#248 id=248 data-nosnippet>248</a>        }
+<a href=#249 id=249 data-nosnippet>249</a>    }
+<a href=#250 id=250 data-nosnippet>250</a>
+<a href=#251 id=251 data-nosnippet>251</a>    <span class="attr">#[classmethod]
+<a href=#252 id=252 data-nosnippet>252</a>    #[pyo3(signature=(instance, block_options=<span class="prelude-val">None</span>))]
+<a href=#253 id=253 data-nosnippet>253</a>    </span><span class="kw">fn </span>model_init(
+<a href=#254 id=254 data-nosnippet>254</a>        _cls: <span class="kw-2">&amp;</span>PyType,
+<a href=#255 id=255 data-nosnippet>255</a>        py: Python,
+<a href=#256 id=256 data-nosnippet>256</a>        instance: <span class="kw-2">&amp;</span>PyAny,
+<a href=#257 id=257 data-nosnippet>257</a>        block_options: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>PyDict&gt;,
+<a href=#258 id=258 data-nosnippet>258</a>    ) -&gt; PyResult&lt;()&gt; {
+<a href=#259 id=259 data-nosnippet>259</a>        <span class="comment">// Require an ArmDebug ID to tie this DP to an ArmDebug instance
+<a href=#260 id=260 data-nosnippet>260</a>        </span><span class="kw">let </span>arm_debug_id;
+<a href=#261 id=261 data-nosnippet>261</a>        <span class="kw">if let </span><span class="prelude-val">Some</span>(opts) = block_options {
+<a href=#262 id=262 data-nosnippet>262</a>            <span class="kw">if let </span><span class="prelude-val">Some</span>(ad_id) = opts.get_item(<span class="string">"arm_debug_id"</span>)<span class="question-mark">? </span>{
+<a href=#263 id=263 data-nosnippet>263</a>                <span class="kw">if let </span><span class="prelude-val">Ok</span>(id) = ad_id.extract::&lt;usize&gt;() {
+<a href=#264 id=264 data-nosnippet>264</a>                    arm_debug_id = id;
+<a href=#265 id=265 data-nosnippet>265</a>                } <span class="kw">else </span>{
+<a href=#266 id=266 data-nosnippet>266</a>                    <span class="kw">return </span><span class="prelude-val">Err</span>(PyErr::new::&lt;exceptions::PyRuntimeError, <span class="kw">_</span>&gt;(
+<a href=#267 id=267 data-nosnippet>267</a>                        <span class="string">"Subblock arm_debug.dp was given an arm_debug _id block option but could not extract it as an integer"
+<a href=#268 id=268 data-nosnippet>268</a>                    </span>));
+<a href=#269 id=269 data-nosnippet>269</a>                }
+<a href=#270 id=270 data-nosnippet>270</a>            } <span class="kw">else </span>{
+<a href=#271 id=271 data-nosnippet>271</a>                <span class="kw">return </span><span class="prelude-val">Err</span>(PyErr::new::&lt;exceptions::PyRuntimeError, <span class="kw">_</span>&gt;(
+<a href=#272 id=272 data-nosnippet>272</a>                    <span class="string">"Subblock arm_debug.dp was not given required block option 'arm_debug_id'"</span>,
+<a href=#273 id=273 data-nosnippet>273</a>                ));
+<a href=#274 id=274 data-nosnippet>274</a>            }
+<a href=#275 id=275 data-nosnippet>275</a>        } <span class="kw">else </span>{
+<a href=#276 id=276 data-nosnippet>276</a>            <span class="kw">return </span><span class="prelude-val">Err</span>(PyErr::new::&lt;exceptions::PyRuntimeError, <span class="kw">_</span>&gt;(
+<a href=#277 id=277 data-nosnippet>277</a>                <span class="string">"Subblock arm_debug.dp requires an arm_debug_id block option, but no block options were given."
+<a href=#278 id=278 data-nosnippet>278</a>            </span>));
+<a href=#279 id=279 data-nosnippet>279</a>        }
+<a href=#280 id=280 data-nosnippet>280</a>
+<a href=#281 id=281 data-nosnippet>281</a>        <span class="kw">let </span>obj = instance.to_object(py);
+<a href=#282 id=282 data-nosnippet>282</a>        <span class="kw">let </span>args = PyTuple::new(py, <span class="kw-2">&amp;</span>[<span class="string">"default"</span>.to_object(py), <span class="string">"default"</span>.to_object(py)]);
+<a href=#283 id=283 data-nosnippet>283</a>        <span class="kw">let </span>dp_id;
+<a href=#284 id=284 data-nosnippet>284</a>        {
+<a href=#285 id=285 data-nosnippet>285</a>            <span class="kw">let </span><span class="kw-2">mut </span>dut = origen::dut();
+<a href=#286 id=286 data-nosnippet>286</a>            <span class="kw">let </span>model_id = obj.getattr(py, <span class="string">"model_id"</span>)<span class="question-mark">?</span>.extract::&lt;usize&gt;(py)<span class="question-mark">?</span>;
+<a href=#287 id=287 data-nosnippet>287</a>            <span class="kw">let </span><span class="kw-2">mut </span>services = origen::services();
+<a href=#288 id=288 data-nosnippet>288</a>            dp_id = OrigenDP::model_init(<span class="kw-2">&amp;mut </span>dut, <span class="kw-2">&amp;mut </span>services, model_id, arm_debug_id)<span class="question-mark">?</span>;
+<a href=#289 id=289 data-nosnippet>289</a>        }
+<a href=#290 id=290 data-nosnippet>290</a>        <span class="kw">let </span><span class="kw-2">mut </span>slf = instance.extract::&lt;PyRefMut&lt;<span class="self">Self</span>&gt;&gt;()<span class="question-mark">?</span>;
+<a href=#291 id=291 data-nosnippet>291</a>        slf.dp_id = <span class="prelude-val">Some</span>(dp_id);
+<a href=#292 id=292 data-nosnippet>292</a>        obj.call_method1(py, <span class="string">"_set_as_default_address_block"</span>, args)<span class="question-mark">?</span>;
+<a href=#293 id=293 data-nosnippet>293</a>        <span class="prelude-val">Ok</span>(())
+<a href=#294 id=294 data-nosnippet>294</a>    }
+<a href=#295 id=295 data-nosnippet>295</a>
+<a href=#296 id=296 data-nosnippet>296</a>    <span class="attr">#[pyo3(signature=(bits, <span class="kw-2">**</span>_write_opts))]
+<a href=#297 id=297 data-nosnippet>297</a>    </span><span class="kw">fn </span>write_register(<span class="kw-2">&amp;</span><span class="self">self</span>, bits: <span class="kw-2">&amp;</span>PyAny, _write_opts: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>PyDict&gt;) -&gt; PyResult&lt;()&gt; {
+<a href=#298 id=298 data-nosnippet>298</a>        <span class="kw">let </span>bc = bits.extract::&lt;PyRef&lt;BitCollection&gt;&gt;()<span class="question-mark">?</span>;
+<a href=#299 id=299 data-nosnippet>299</a>        <span class="kw">let </span>dut = origen::dut();
+<a href=#300 id=300 data-nosnippet>300</a>        <span class="kw">let </span>services = origen::services();
+<a href=#301 id=301 data-nosnippet>301</a>        <span class="kw">let </span>dp = services.get_as_dp(<span class="self">self</span>.dp_id.unwrap())<span class="question-mark">?</span>;
+<a href=#302 id=302 data-nosnippet>302</a>        dp.write_register(<span class="kw-2">&amp;</span>dut, <span class="kw-2">&amp;</span>services, <span class="kw-2">&amp;</span>bc.materialize(<span class="kw-2">&amp;</span>dut)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
+<a href=#303 id=303 data-nosnippet>303</a>        <span class="prelude-val">Ok</span>(())
+<a href=#304 id=304 data-nosnippet>304</a>    }
+<a href=#305 id=305 data-nosnippet>305</a>
+<a href=#306 id=306 data-nosnippet>306</a>    <span class="attr">#[pyo3(signature=(bits, <span class="kw-2">**</span>_verify_opts))]
+<a href=#307 id=307 data-nosnippet>307</a>    </span><span class="kw">fn </span>verify_register(<span class="kw-2">&amp;</span><span class="self">self</span>, bits: <span class="kw-2">&amp;</span>PyAny, _verify_opts: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>PyDict&gt;) -&gt; PyResult&lt;()&gt; {
+<a href=#308 id=308 data-nosnippet>308</a>        <span class="kw">let </span>bc = bits.extract::&lt;PyRef&lt;BitCollection&gt;&gt;()<span class="question-mark">?</span>;
+<a href=#309 id=309 data-nosnippet>309</a>        <span class="kw">let </span>dut = origen::dut();
+<a href=#310 id=310 data-nosnippet>310</a>        <span class="kw">let </span>services = origen::services();
+<a href=#311 id=311 data-nosnippet>311</a>        <span class="kw">let </span>dp = services.get_as_dp(<span class="self">self</span>.dp_id.unwrap())<span class="question-mark">?</span>;
+<a href=#312 id=312 data-nosnippet>312</a>        dp.verify_register(<span class="kw-2">&amp;</span>dut, <span class="kw-2">&amp;</span>services, <span class="kw-2">&amp;</span>bc.materialize(<span class="kw-2">&amp;</span>dut)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
+<a href=#313 id=313 data-nosnippet>313</a>        <span class="prelude-val">Ok</span>(())
+<a href=#314 id=314 data-nosnippet>314</a>    }
+<a href=#315 id=315 data-nosnippet>315</a>
+<a href=#316 id=316 data-nosnippet>316</a>    <span class="kw">fn </span>power_up(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; PyResult&lt;()&gt; {
+<a href=#317 id=317 data-nosnippet>317</a>        <span class="kw">let </span><span class="kw-2">mut </span>dut = origen::dut();
+<a href=#318 id=318 data-nosnippet>318</a>        <span class="kw">let </span>services = origen::services();
+<a href=#319 id=319 data-nosnippet>319</a>        <span class="kw">let </span>dp = services.get_as_dp(<span class="self">self</span>.dp_id.unwrap())<span class="question-mark">?</span>;
+<a href=#320 id=320 data-nosnippet>320</a>        dp.power_up(<span class="kw-2">&amp;mut </span>dut, <span class="kw-2">&amp;</span>services)<span class="question-mark">?</span>;
+<a href=#321 id=321 data-nosnippet>321</a>        <span class="prelude-val">Ok</span>(())
+<a href=#322 id=322 data-nosnippet>322</a>    }
+<a href=#323 id=323 data-nosnippet>323</a>
+<a href=#324 id=324 data-nosnippet>324</a>    <span class="kw">fn </span>verify_powered_up(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; PyResult&lt;()&gt; {
+<a href=#325 id=325 data-nosnippet>325</a>        <span class="kw">let </span><span class="kw-2">mut </span>dut = origen::dut();
+<a href=#326 id=326 data-nosnippet>326</a>        <span class="kw">let </span>services = origen::services();
+<a href=#327 id=327 data-nosnippet>327</a>        <span class="kw">let </span>dp = services.get_as_dp(<span class="self">self</span>.dp_id.unwrap())<span class="question-mark">?</span>;
+<a href=#328 id=328 data-nosnippet>328</a>        dp.verify_powered_up(<span class="kw-2">&amp;mut </span>dut, <span class="kw-2">&amp;</span>services)<span class="question-mark">?</span>;
+<a href=#329 id=329 data-nosnippet>329</a>        <span class="prelude-val">Ok</span>(())
+<a href=#330 id=330 data-nosnippet>330</a>    }
+<a href=#331 id=331 data-nosnippet>331</a>}
+<a href=#332 id=332 data-nosnippet>332</a>
+<a href=#333 id=333 data-nosnippet>333</a><span class="attr">#[pyclass(subclass)]
+<a href=#334 id=334 data-nosnippet>334</a>#[allow(dead_code)] </span><span class="comment">// Suppress the false dead-code warning for the "clone" derive
+<a href=#335 id=335 data-nosnippet>335</a></span><span class="attr">#[derive(Clone)]
+<a href=#336 id=336 data-nosnippet>336</a></span><span class="kw">struct </span>JtagDP {
+<a href=#337 id=337 data-nosnippet>337</a>    <span class="kw">pub </span>id: <span class="prelude-ty">Option</span>&lt;usize&gt;,
+<a href=#338 id=338 data-nosnippet>338</a>    <span class="attr">#[allow(dead_code)]
+<a href=#339 id=339 data-nosnippet>339</a>    </span><span class="kw">pub </span>arm_debug_id: <span class="prelude-ty">Option</span>&lt;usize&gt;,
+<a href=#340 id=340 data-nosnippet>340</a>}
+<a href=#341 id=341 data-nosnippet>341</a>
+<a href=#342 id=342 data-nosnippet>342</a><span class="attr">#[pymethods]
+<a href=#343 id=343 data-nosnippet>343</a></span><span class="kw">impl </span>JtagDP {
+<a href=#344 id=344 data-nosnippet>344</a>    <span class="attr">#[classmethod]
+<a href=#345 id=345 data-nosnippet>345</a>    </span><span class="kw">fn </span>__init__(_cls: <span class="kw-2">&amp;</span>PyType, _instance: <span class="kw-2">&amp;</span>PyAny) -&gt; PyResult&lt;()&gt; {
+<a href=#346 id=346 data-nosnippet>346</a>        <span class="prelude-val">Ok</span>(())
+<a href=#347 id=347 data-nosnippet>347</a>    }
+<a href=#348 id=348 data-nosnippet>348</a>
+<a href=#349 id=349 data-nosnippet>349</a>    <span class="attr">#[new]
+<a href=#350 id=350 data-nosnippet>350</a>    </span><span class="kw">fn </span>new() -&gt; <span class="self">Self </span>{
+<a href=#351 id=351 data-nosnippet>351</a>        <span class="self">Self </span>{
+<a href=#352 id=352 data-nosnippet>352</a>            id: <span class="prelude-val">None</span>,
+<a href=#353 id=353 data-nosnippet>353</a>            arm_debug_id: <span class="prelude-val">None</span>,
+<a href=#354 id=354 data-nosnippet>354</a>        }
+<a href=#355 id=355 data-nosnippet>355</a>    }
+<a href=#356 id=356 data-nosnippet>356</a>
+<a href=#357 id=357 data-nosnippet>357</a>    <span class="attr">#[classmethod]
+<a href=#358 id=358 data-nosnippet>358</a>    #[pyo3(signature=(instance, block_options=<span class="prelude-val">None</span>))]
+<a href=#359 id=359 data-nosnippet>359</a>    </span><span class="kw">fn </span>model_init(
+<a href=#360 id=360 data-nosnippet>360</a>        _cls: <span class="kw-2">&amp;</span>PyType,
+<a href=#361 id=361 data-nosnippet>361</a>        py: Python,
+<a href=#362 id=362 data-nosnippet>362</a>        instance: <span class="kw-2">&amp;</span>PyAny,
+<a href=#363 id=363 data-nosnippet>363</a>        block_options: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>PyDict&gt;,
+<a href=#364 id=364 data-nosnippet>364</a>    ) -&gt; PyResult&lt;()&gt; {
+<a href=#365 id=365 data-nosnippet>365</a>        <span class="comment">// Require an ArmDebug ID to tie this DP to an ArmDebug instance
+<a href=#366 id=366 data-nosnippet>366</a>        </span><span class="kw">let </span>arm_debug_id;
+<a href=#367 id=367 data-nosnippet>367</a>        <span class="kw">if let </span><span class="prelude-val">Some</span>(opts) = block_options {
+<a href=#368 id=368 data-nosnippet>368</a>            <span class="kw">if let </span><span class="prelude-val">Some</span>(ad_id) = opts.get_item(<span class="string">"arm_debug_id"</span>)<span class="question-mark">? </span>{
+<a href=#369 id=369 data-nosnippet>369</a>                <span class="kw">if let </span><span class="prelude-val">Ok</span>(id) = ad_id.extract::&lt;usize&gt;() {
+<a href=#370 id=370 data-nosnippet>370</a>                    arm_debug_id = id;
+<a href=#371 id=371 data-nosnippet>371</a>                } <span class="kw">else </span>{
+<a href=#372 id=372 data-nosnippet>372</a>                    <span class="kw">return </span><span class="prelude-val">Err</span>(PyErr::new::&lt;exceptions::PyRuntimeError, <span class="kw">_</span>&gt;(
+<a href=#373 id=373 data-nosnippet>373</a>                        <span class="string">"Subblock jtagdp was given an arm_debug _id block option but could not extract it as an integer"
+<a href=#374 id=374 data-nosnippet>374</a>                    </span>));
+<a href=#375 id=375 data-nosnippet>375</a>                }
+<a href=#376 id=376 data-nosnippet>376</a>            } <span class="kw">else </span>{
+<a href=#377 id=377 data-nosnippet>377</a>                <span class="kw">return </span><span class="prelude-val">Err</span>(PyErr::new::&lt;exceptions::PyRuntimeError, <span class="kw">_</span>&gt;(
+<a href=#378 id=378 data-nosnippet>378</a>                    <span class="string">"Subblock jtagdp was not given required block option 'arm_debug_id'"</span>,
+<a href=#379 id=379 data-nosnippet>379</a>                ));
+<a href=#380 id=380 data-nosnippet>380</a>            }
+<a href=#381 id=381 data-nosnippet>381</a>        } <span class="kw">else </span>{
+<a href=#382 id=382 data-nosnippet>382</a>            <span class="kw">return </span><span class="prelude-val">Err</span>(PyErr::new::&lt;exceptions::PyRuntimeError, <span class="kw">_</span>&gt;(
+<a href=#383 id=383 data-nosnippet>383</a>                <span class="string">"Subblock jtagdp requires an arm_debug_id block option, but no block options were given."
+<a href=#384 id=384 data-nosnippet>384</a>            </span>));
+<a href=#385 id=385 data-nosnippet>385</a>        }
+<a href=#386 id=386 data-nosnippet>386</a>
+<a href=#387 id=387 data-nosnippet>387</a>        <span class="kw">let </span>obj = instance.to_object(py);
+<a href=#388 id=388 data-nosnippet>388</a>        <span class="kw">let </span>args = PyTuple::new(py, <span class="kw-2">&amp;</span>[<span class="string">"default"</span>.to_object(py), <span class="string">"default"</span>.to_object(py)]);
+<a href=#389 id=389 data-nosnippet>389</a>        <span class="kw">let </span>id;
+<a href=#390 id=390 data-nosnippet>390</a>        {
+<a href=#391 id=391 data-nosnippet>391</a>            <span class="kw">let </span><span class="kw-2">mut </span>dut = origen::dut();
+<a href=#392 id=392 data-nosnippet>392</a>            <span class="kw">let </span>model_id = obj.getattr(py, <span class="string">"model_id"</span>)<span class="question-mark">?</span>.extract::&lt;usize&gt;(py)<span class="question-mark">?</span>;
+<a href=#393 id=393 data-nosnippet>393</a>            <span class="kw">let </span><span class="kw-2">mut </span>services = origen::services();
+<a href=#394 id=394 data-nosnippet>394</a>            id = OrigenJtagDP::model_init(
+<a href=#395 id=395 data-nosnippet>395</a>                <span class="kw-2">&amp;mut </span>dut,
+<a href=#396 id=396 data-nosnippet>396</a>                <span class="kw-2">&amp;mut </span>services,
+<a href=#397 id=397 data-nosnippet>397</a>                model_id,
+<a href=#398 id=398 data-nosnippet>398</a>                arm_debug_id,
+<a href=#399 id=399 data-nosnippet>399</a>                {
+<a href=#400 id=400 data-nosnippet>400</a>                    <span class="kw">if let </span><span class="prelude-val">Some</span>(opts) = block_options {
+<a href=#401 id=401 data-nosnippet>401</a>                        <span class="kw">if let </span><span class="prelude-val">Some</span>(default_ir_size) = opts.get_item(<span class="string">"default_ir_size"</span>)<span class="question-mark">? </span>{
+<a href=#402 id=402 data-nosnippet>402</a>                            <span class="kw">if let </span><span class="prelude-val">Ok</span>(_default_ir_size) = default_ir_size.extract::&lt;usize&gt;() {
+<a href=#403 id=403 data-nosnippet>403</a>                                <span class="prelude-val">Some</span>(_default_ir_size)
+<a href=#404 id=404 data-nosnippet>404</a>                            } <span class="kw">else </span>{
+<a href=#405 id=405 data-nosnippet>405</a>                                <span class="kw">return </span><span class="prelude-val">Err</span>(PyErr::new::&lt;exceptions::PyRuntimeError, <span class="kw">_</span>&gt;(
+<a href=#406 id=406 data-nosnippet>406</a>                                    <span class="string">"Subblock arm_debug.jtag_dp was given a 'default_ifr_size' block option but could not extract it as an integer"
+<a href=#407 id=407 data-nosnippet>407</a>                                </span>));
+<a href=#408 id=408 data-nosnippet>408</a>                            }
+<a href=#409 id=409 data-nosnippet>409</a>                        } <span class="kw">else </span>{
+<a href=#410 id=410 data-nosnippet>410</a>                            <span class="prelude-val">None
+<a href=#411 id=411 data-nosnippet>411</a>                        </span>}
+<a href=#412 id=412 data-nosnippet>412</a>                    } <span class="kw">else </span>{
+<a href=#413 id=413 data-nosnippet>413</a>                        <span class="prelude-val">None
+<a href=#414 id=414 data-nosnippet>414</a>                    </span>}
+<a href=#415 id=415 data-nosnippet>415</a>                },
+<a href=#416 id=416 data-nosnippet>416</a>                {
+<a href=#417 id=417 data-nosnippet>417</a>                    <span class="kw">if let </span><span class="prelude-val">Some</span>(opts) = block_options {
+<a href=#418 id=418 data-nosnippet>418</a>                        <span class="kw">if let </span><span class="prelude-val">Some</span>(default_idcode) = opts.get_item(<span class="string">"default_idcode"</span>)<span class="question-mark">? </span>{
+<a href=#419 id=419 data-nosnippet>419</a>                            <span class="kw">if let </span><span class="prelude-val">Ok</span>(_default_idcode) = default_idcode.extract::&lt;u32&gt;() {
+<a href=#420 id=420 data-nosnippet>420</a>                                <span class="prelude-val">Some</span>(_default_idcode)
+<a href=#421 id=421 data-nosnippet>421</a>                            } <span class="kw">else </span>{
+<a href=#422 id=422 data-nosnippet>422</a>                                <span class="kw">return </span><span class="prelude-val">Err</span>(PyErr::new::&lt;exceptions::PyRuntimeError, <span class="kw">_</span>&gt;(
+<a href=#423 id=423 data-nosnippet>423</a>                                    <span class="string">"Subblock arm_debug.jtag_dp was given a 'default_idcode' block option but could not extract it as an integer"
+<a href=#424 id=424 data-nosnippet>424</a>                                </span>));
+<a href=#425 id=425 data-nosnippet>425</a>                            }
+<a href=#426 id=426 data-nosnippet>426</a>                        } <span class="kw">else </span>{
+<a href=#427 id=427 data-nosnippet>427</a>                            <span class="prelude-val">None
+<a href=#428 id=428 data-nosnippet>428</a>                        </span>}
+<a href=#429 id=429 data-nosnippet>429</a>                    } <span class="kw">else </span>{
+<a href=#430 id=430 data-nosnippet>430</a>                        <span class="prelude-val">None
+<a href=#431 id=431 data-nosnippet>431</a>                    </span>}
+<a href=#432 id=432 data-nosnippet>432</a>                },
+<a href=#433 id=433 data-nosnippet>433</a>                {
+<a href=#434 id=434 data-nosnippet>434</a>                    <span class="kw">if let </span><span class="prelude-val">Some</span>(opts) = block_options {
+<a href=#435 id=435 data-nosnippet>435</a>                        <span class="kw">if let </span><span class="prelude-val">Some</span>(dpacc_select) = opts.get_item(<span class="string">"dpacc_select"</span>)<span class="question-mark">? </span>{
+<a href=#436 id=436 data-nosnippet>436</a>                            <span class="kw">if let </span><span class="prelude-val">Ok</span>(_dpacc_select) = dpacc_select.extract::&lt;u32&gt;() {
+<a href=#437 id=437 data-nosnippet>437</a>                                <span class="prelude-val">Some</span>(_dpacc_select)
+<a href=#438 id=438 data-nosnippet>438</a>                            } <span class="kw">else </span>{
+<a href=#439 id=439 data-nosnippet>439</a>                                <span class="kw">return </span><span class="prelude-val">Err</span>(PyErr::new::&lt;exceptions::PyRuntimeError, <span class="kw">_</span>&gt;(
+<a href=#440 id=440 data-nosnippet>440</a>                                    <span class="string">"Subblock arm_debug.jtag_dp was given a 'dpacc_select' block option but could not extract it as an integer"
+<a href=#441 id=441 data-nosnippet>441</a>                                </span>));
+<a href=#442 id=442 data-nosnippet>442</a>                            }
+<a href=#443 id=443 data-nosnippet>443</a>                        } <span class="kw">else </span>{
+<a href=#444 id=444 data-nosnippet>444</a>                            <span class="prelude-val">None
+<a href=#445 id=445 data-nosnippet>445</a>                        </span>}
+<a href=#446 id=446 data-nosnippet>446</a>                    } <span class="kw">else </span>{
+<a href=#447 id=447 data-nosnippet>447</a>                        <span class="prelude-val">None
+<a href=#448 id=448 data-nosnippet>448</a>                    </span>}
+<a href=#449 id=449 data-nosnippet>449</a>                },
+<a href=#450 id=450 data-nosnippet>450</a>                {
+<a href=#451 id=451 data-nosnippet>451</a>                    <span class="kw">if let </span><span class="prelude-val">Some</span>(opts) = block_options {
+<a href=#452 id=452 data-nosnippet>452</a>                        <span class="kw">if let </span><span class="prelude-val">Some</span>(apacc_select) = opts.get_item(<span class="string">"apacc_select"</span>)<span class="question-mark">? </span>{
+<a href=#453 id=453 data-nosnippet>453</a>                            <span class="kw">if let </span><span class="prelude-val">Ok</span>(_apacc_select) = apacc_select.extract::&lt;u32&gt;() {
+<a href=#454 id=454 data-nosnippet>454</a>                                <span class="prelude-val">Some</span>(_apacc_select)
+<a href=#455 id=455 data-nosnippet>455</a>                            } <span class="kw">else </span>{
+<a href=#456 id=456 data-nosnippet>456</a>                                <span class="kw">return </span><span class="prelude-val">Err</span>(PyErr::new::&lt;exceptions::PyRuntimeError, <span class="kw">_</span>&gt;(
+<a href=#457 id=457 data-nosnippet>457</a>                                    <span class="string">"Subblock arm_debug.jtag_dp was given a 'apacc_select' block option but could not extract it as an integer"
+<a href=#458 id=458 data-nosnippet>458</a>                                </span>));
+<a href=#459 id=459 data-nosnippet>459</a>                            }
+<a href=#460 id=460 data-nosnippet>460</a>                        } <span class="kw">else </span>{
+<a href=#461 id=461 data-nosnippet>461</a>                            <span class="prelude-val">None
+<a href=#462 id=462 data-nosnippet>462</a>                        </span>}
+<a href=#463 id=463 data-nosnippet>463</a>                    } <span class="kw">else </span>{
+<a href=#464 id=464 data-nosnippet>464</a>                        <span class="prelude-val">None
+<a href=#465 id=465 data-nosnippet>465</a>                    </span>}
+<a href=#466 id=466 data-nosnippet>466</a>                },
+<a href=#467 id=467 data-nosnippet>467</a>            )<span class="question-mark">?</span>;
+<a href=#468 id=468 data-nosnippet>468</a>        }
+<a href=#469 id=469 data-nosnippet>469</a>        <span class="kw">let </span><span class="kw-2">mut </span>slf = instance.extract::&lt;PyRefMut&lt;<span class="self">Self</span>&gt;&gt;()<span class="question-mark">?</span>;
+<a href=#470 id=470 data-nosnippet>470</a>        slf.id = <span class="prelude-val">Some</span>(id);
+<a href=#471 id=471 data-nosnippet>471</a>        obj.call_method1(py, <span class="string">"_set_as_default_address_block"</span>, args)<span class="question-mark">?</span>;
+<a href=#472 id=472 data-nosnippet>472</a>        <span class="prelude-val">Ok</span>(())
+<a href=#473 id=473 data-nosnippet>473</a>    }
+<a href=#474 id=474 data-nosnippet>474</a>
+<a href=#475 id=475 data-nosnippet>475</a>    <span class="attr">#[pyo3(signature=(bits, <span class="kw-2">**</span>write_opts))]
+<a href=#476 id=476 data-nosnippet>476</a>    </span><span class="kw">fn </span>write_register(<span class="kw-2">&amp;</span><span class="self">self</span>, bits: <span class="kw-2">&amp;</span>PyAny, write_opts: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>PyDict&gt;) -&gt; PyResult&lt;()&gt; {
+<a href=#477 id=477 data-nosnippet>477</a>        <span class="kw">let </span>dut = origen::dut();
+<a href=#478 id=478 data-nosnippet>478</a>        <span class="kw">let </span>services = origen::services();
+<a href=#479 id=479 data-nosnippet>479</a>        <span class="kw">let </span>jtag_dp = services.get_as_jtag_dp(<span class="self">self</span>.id.unwrap())<span class="question-mark">?</span>;
+<a href=#480 id=480 data-nosnippet>480</a>
+<a href=#481 id=481 data-nosnippet>481</a>        <span class="kw">let </span>value = extract_value(bits, <span class="prelude-val">Some</span>(<span class="number">32</span>), <span class="kw-2">&amp;</span>dut)<span class="question-mark">?</span>;
+<a href=#482 id=482 data-nosnippet>482</a>        <span class="kw">let </span><span class="kw-2">mut </span>trans = value.to_write_transaction(<span class="kw-2">&amp;</span>dut)<span class="question-mark">?</span>;
+<a href=#483 id=483 data-nosnippet>483</a>        unpack_transaction_options(<span class="kw-2">&amp;mut </span>trans, write_opts)<span class="question-mark">?</span>;
+<a href=#484 id=484 data-nosnippet>484</a>        jtag_dp.write_register(<span class="kw-2">&amp;</span>dut, <span class="kw-2">&amp;</span>services, trans)<span class="question-mark">?</span>;
+<a href=#485 id=485 data-nosnippet>485</a>        <span class="prelude-val">Ok</span>(())
+<a href=#486 id=486 data-nosnippet>486</a>    }
+<a href=#487 id=487 data-nosnippet>487</a>
+<a href=#488 id=488 data-nosnippet>488</a>    <span class="attr">#[pyo3(signature=(bits, <span class="kw-2">**</span>verify_opts))]
+<a href=#489 id=489 data-nosnippet>489</a>    </span><span class="kw">fn </span>verify_register(<span class="kw-2">&amp;</span><span class="self">self</span>, bits: <span class="kw-2">&amp;</span>PyAny, verify_opts: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>PyDict&gt;) -&gt; PyResult&lt;()&gt; {
+<a href=#490 id=490 data-nosnippet>490</a>        <span class="kw">let </span>dut = origen::dut();
+<a href=#491 id=491 data-nosnippet>491</a>        <span class="kw">let </span>services = origen::services();
+<a href=#492 id=492 data-nosnippet>492</a>        <span class="kw">let </span>jtag_dp = services.get_as_jtag_dp(<span class="self">self</span>.id.unwrap())<span class="question-mark">?</span>;
+<a href=#493 id=493 data-nosnippet>493</a>
+<a href=#494 id=494 data-nosnippet>494</a>        <span class="kw">let </span>value = extract_value(bits, <span class="prelude-val">Some</span>(<span class="number">32</span>), <span class="kw-2">&amp;</span>dut)<span class="question-mark">?</span>;
+<a href=#495 id=495 data-nosnippet>495</a>        <span class="kw">let </span><span class="kw-2">mut </span>trans = value.to_verify_transaction(<span class="kw-2">&amp;</span>dut)<span class="question-mark">?</span>;
+<a href=#496 id=496 data-nosnippet>496</a>        unpack_transaction_options(<span class="kw-2">&amp;mut </span>trans, verify_opts)<span class="question-mark">?</span>;
+<a href=#497 id=497 data-nosnippet>497</a>        jtag_dp.verify_register(<span class="kw-2">&amp;</span>dut, <span class="kw-2">&amp;</span>services, trans)<span class="question-mark">?</span>;
+<a href=#498 id=498 data-nosnippet>498</a>        <span class="prelude-val">Ok</span>(())
+<a href=#499 id=499 data-nosnippet>499</a>    }
+<a href=#500 id=500 data-nosnippet>500</a>}
+<a href=#501 id=501 data-nosnippet>501</a>
+<a href=#502 id=502 data-nosnippet>502</a><span class="attr">#[pyclass(subclass)]
+<a href=#503 id=503 data-nosnippet>503</a></span><span class="kw">struct </span>MemAP {
+<a href=#504 id=504 data-nosnippet>504</a>    <span class="kw">pub </span>mem_ap_id: <span class="prelude-ty">Option</span>&lt;usize&gt;,
+<a href=#505 id=505 data-nosnippet>505</a>}
+<a href=#506 id=506 data-nosnippet>506</a>
+<a href=#507 id=507 data-nosnippet>507</a><span class="attr">#[pymethods]
+<a href=#508 id=508 data-nosnippet>508</a></span><span class="kw">impl </span>MemAP {
+<a href=#509 id=509 data-nosnippet>509</a>    <span class="attr">#[classmethod]
+<a href=#510 id=510 data-nosnippet>510</a>    </span><span class="kw">fn </span>__init__(_cls: <span class="kw-2">&amp;</span>PyType, _instance: <span class="kw-2">&amp;</span>PyAny) -&gt; PyResult&lt;()&gt; {
+<a href=#511 id=511 data-nosnippet>511</a>        <span class="prelude-val">Ok</span>(())
+<a href=#512 id=512 data-nosnippet>512</a>    }
+<a href=#513 id=513 data-nosnippet>513</a>
+<a href=#514 id=514 data-nosnippet>514</a>    <span class="attr">#[new]
+<a href=#515 id=515 data-nosnippet>515</a>    </span><span class="kw">fn </span>new() -&gt; <span class="self">Self </span>{
+<a href=#516 id=516 data-nosnippet>516</a>        <span class="self">Self </span>{ mem_ap_id: <span class="prelude-val">None </span>}
+<a href=#517 id=517 data-nosnippet>517</a>    }
+<a href=#518 id=518 data-nosnippet>518</a>
+<a href=#519 id=519 data-nosnippet>519</a>    <span class="attr">#[classmethod]
+<a href=#520 id=520 data-nosnippet>520</a>    </span><span class="kw">fn </span>model_init(
+<a href=#521 id=521 data-nosnippet>521</a>        _cls: <span class="kw-2">&amp;</span>PyType,
+<a href=#522 id=522 data-nosnippet>522</a>        py: Python,
+<a href=#523 id=523 data-nosnippet>523</a>        instance: <span class="kw-2">&amp;</span>PyAny,
+<a href=#524 id=524 data-nosnippet>524</a>        block_options: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>PyDict&gt;,
+<a href=#525 id=525 data-nosnippet>525</a>    ) -&gt; PyResult&lt;()&gt; {
+<a href=#526 id=526 data-nosnippet>526</a>        <span class="comment">// Require an ArmDebug ID to tie this DP to an ArmDebug instance
+<a href=#527 id=527 data-nosnippet>527</a>        </span><span class="kw">let </span>arm_debug_id;
+<a href=#528 id=528 data-nosnippet>528</a>        <span class="kw">if let </span><span class="prelude-val">Some</span>(opts) = block_options {
+<a href=#529 id=529 data-nosnippet>529</a>            <span class="kw">if let </span><span class="prelude-val">Some</span>(ad_id) = opts.get_item(<span class="string">"arm_debug_id"</span>)<span class="question-mark">? </span>{
+<a href=#530 id=530 data-nosnippet>530</a>                <span class="kw">if let </span><span class="prelude-val">Ok</span>(id) = ad_id.extract::&lt;usize&gt;() {
+<a href=#531 id=531 data-nosnippet>531</a>                    arm_debug_id = id;
+<a href=#532 id=532 data-nosnippet>532</a>                } <span class="kw">else </span>{
+<a href=#533 id=533 data-nosnippet>533</a>                    <span class="kw">return </span><span class="prelude-val">Err</span>(PyErr::new::&lt;exceptions::PyRuntimeError, <span class="kw">_</span>&gt;(
+<a href=#534 id=534 data-nosnippet>534</a>                        <span class="string">"Subblock arm_debug.mem_ap was given an arm_debug _id block option but could not extract it as an integer"
+<a href=#535 id=535 data-nosnippet>535</a>                    </span>));
+<a href=#536 id=536 data-nosnippet>536</a>                }
+<a href=#537 id=537 data-nosnippet>537</a>            } <span class="kw">else </span>{
+<a href=#538 id=538 data-nosnippet>538</a>                <span class="kw">return </span><span class="prelude-val">Err</span>(PyErr::new::&lt;exceptions::PyRuntimeError, <span class="kw">_</span>&gt;(
+<a href=#539 id=539 data-nosnippet>539</a>                    <span class="string">"Subblock arm_debug.mem_ap was not given required block option 'arm_debug_id'"</span>,
+<a href=#540 id=540 data-nosnippet>540</a>                ));
+<a href=#541 id=541 data-nosnippet>541</a>            }
+<a href=#542 id=542 data-nosnippet>542</a>        } <span class="kw">else </span>{
+<a href=#543 id=543 data-nosnippet>543</a>            <span class="kw">return </span><span class="prelude-val">Err</span>(PyErr::new::&lt;exceptions::PyRuntimeError, <span class="kw">_</span>&gt;(
+<a href=#544 id=544 data-nosnippet>544</a>                <span class="string">"Subblock arm_debug.mem_ap requires an arm_debug_id block option, but no block options were given."
+<a href=#545 id=545 data-nosnippet>545</a>            </span>));
+<a href=#546 id=546 data-nosnippet>546</a>        }
+<a href=#547 id=547 data-nosnippet>547</a>
+<a href=#548 id=548 data-nosnippet>548</a>        <span class="kw">let </span>addr;
+<a href=#549 id=549 data-nosnippet>549</a>        <span class="comment">//let csw_reset;
+<a href=#550 id=550 data-nosnippet>550</a>        </span><span class="kw">if let </span><span class="prelude-val">Some</span>(ap_opts_dict) = block_options {
+<a href=#551 id=551 data-nosnippet>551</a>            <span class="kw">if let </span><span class="prelude-val">Some</span>(ap_addr) = ap_opts_dict.get_item(<span class="string">"ap"</span>)<span class="question-mark">? </span>{
+<a href=#552 id=552 data-nosnippet>552</a>                addr = ap_addr.extract::&lt;usize&gt;()<span class="question-mark">?</span>;
+<a href=#553 id=553 data-nosnippet>553</a>            } <span class="kw">else </span>{
+<a href=#554 id=554 data-nosnippet>554</a>                addr = <span class="number">0</span>;
+<a href=#555 id=555 data-nosnippet>555</a>            }
+<a href=#556 id=556 data-nosnippet>556</a>        } <span class="kw">else </span>{
+<a href=#557 id=557 data-nosnippet>557</a>            addr = <span class="number">0</span>;
+<a href=#558 id=558 data-nosnippet>558</a>        }
+<a href=#559 id=559 data-nosnippet>559</a>
+<a href=#560 id=560 data-nosnippet>560</a>        <span class="kw">let </span>obj = instance.to_object(py);
+<a href=#561 id=561 data-nosnippet>561</a>        <span class="kw">let </span>args = PyTuple::new(py, <span class="kw-2">&amp;</span>[<span class="string">"default"</span>.to_object(py), <span class="string">"default"</span>.to_object(py)]);
+<a href=#562 id=562 data-nosnippet>562</a>        <span class="kw">let </span>mem_ap_id;
+<a href=#563 id=563 data-nosnippet>563</a>        {
+<a href=#564 id=564 data-nosnippet>564</a>            <span class="kw">let </span><span class="kw-2">mut </span>dut = origen::dut();
+<a href=#565 id=565 data-nosnippet>565</a>            <span class="kw">let </span><span class="kw-2">mut </span>services = origen::services();
+<a href=#566 id=566 data-nosnippet>566</a>            <span class="kw">let </span>model_id = obj.getattr(py, <span class="string">"model_id"</span>)<span class="question-mark">?</span>.extract::&lt;usize&gt;(py)<span class="question-mark">?</span>;
+<a href=#567 id=567 data-nosnippet>567</a>            mem_ap_id =
+<a href=#568 id=568 data-nosnippet>568</a>                OrigenMemAP::model_init(<span class="kw-2">&amp;mut </span>dut, <span class="kw-2">&amp;mut </span>services, model_id, arm_debug_id, addr)<span class="question-mark">?</span>;
+<a href=#569 id=569 data-nosnippet>569</a>        }
+<a href=#570 id=570 data-nosnippet>570</a>        <span class="kw">let </span><span class="kw-2">mut </span>slf = instance.extract::&lt;PyRefMut&lt;<span class="self">Self</span>&gt;&gt;()<span class="question-mark">?</span>;
+<a href=#571 id=571 data-nosnippet>571</a>        slf.mem_ap_id = <span class="prelude-val">Some</span>(mem_ap_id);
+<a href=#572 id=572 data-nosnippet>572</a>        obj.call_method1(py, <span class="string">"_set_as_default_address_block"</span>, args)<span class="question-mark">?</span>;
+<a href=#573 id=573 data-nosnippet>573</a>        <span class="prelude-val">Ok</span>(())
+<a href=#574 id=574 data-nosnippet>574</a>    }
+<a href=#575 id=575 data-nosnippet>575</a>
+<a href=#576 id=576 data-nosnippet>576</a>    <span class="doccomment">/// Initiates an ArmDebug MemAP write based on the given register (passed in as
+<a href=#577 id=577 data-nosnippet>577</a>    /// a BitCollection).
+<a href=#578 id=578 data-nosnippet>578</a>    /// Assumes that all posturing has been completed - that is, the bits' data, overlay
+<a href=#579 id=579 data-nosnippet>579</a>    /// status, etc. is current.
+<a href=#580 id=580 data-nosnippet>580</a>    </span><span class="attr">#[pyo3(signature=(bits, <span class="kw-2">**</span>write_opts))]
+<a href=#581 id=581 data-nosnippet>581</a>    </span><span class="kw">fn </span>write_register(<span class="kw-2">&amp;</span><span class="self">self</span>, bits: <span class="kw-2">&amp;</span>PyAny, write_opts: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>PyDict&gt;) -&gt; PyResult&lt;()&gt; {
+<a href=#582 id=582 data-nosnippet>582</a>        <span class="kw">let </span>dut = origen::dut();
+<a href=#583 id=583 data-nosnippet>583</a>        <span class="kw">let </span>services = origen::services();
+<a href=#584 id=584 data-nosnippet>584</a>        <span class="kw">let </span>ap = services.get_as_mem_ap(<span class="self">self</span>.mem_ap_id.unwrap())<span class="question-mark">?</span>;
+<a href=#585 id=585 data-nosnippet>585</a>        <span class="kw">let </span>trans = resolve_transaction(
+<a href=#586 id=586 data-nosnippet>586</a>            <span class="kw-2">&amp;</span>dut,
+<a href=#587 id=587 data-nosnippet>587</a>            bits,
+<a href=#588 id=588 data-nosnippet>588</a>            <span class="prelude-val">Some</span>(origen::TransactionAction::Write),
+<a href=#589 id=589 data-nosnippet>589</a>            write_opts,
+<a href=#590 id=590 data-nosnippet>590</a>        )<span class="question-mark">?</span>;
+<a href=#591 id=591 data-nosnippet>591</a>        ap.write_register(<span class="kw-2">&amp;</span>dut, <span class="kw-2">&amp;</span>services, <span class="kw-2">&amp;</span>trans)<span class="question-mark">?</span>;
+<a href=#592 id=592 data-nosnippet>592</a>        <span class="prelude-val">Ok</span>(())
+<a href=#593 id=593 data-nosnippet>593</a>    }
+<a href=#594 id=594 data-nosnippet>594</a>
+<a href=#595 id=595 data-nosnippet>595</a>    <span class="attr">#[pyo3(signature=(bits, <span class="kw-2">**</span>verify_opts))]
+<a href=#596 id=596 data-nosnippet>596</a>    </span><span class="kw">fn </span>verify_register(<span class="kw-2">&amp;</span><span class="self">self</span>, bits: <span class="kw-2">&amp;</span>PyAny, verify_opts: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>PyDict&gt;) -&gt; PyResult&lt;()&gt; {
+<a href=#597 id=597 data-nosnippet>597</a>        <span class="kw">let </span>dut = origen::dut();
+<a href=#598 id=598 data-nosnippet>598</a>        <span class="kw">let </span>services = origen::services();
+<a href=#599 id=599 data-nosnippet>599</a>        <span class="kw">let </span>ap = services.get_as_mem_ap(<span class="self">self</span>.mem_ap_id.unwrap())<span class="question-mark">?</span>;
+<a href=#600 id=600 data-nosnippet>600</a>        <span class="kw">let </span>trans = resolve_transaction(
+<a href=#601 id=601 data-nosnippet>601</a>            <span class="kw-2">&amp;</span>dut,
+<a href=#602 id=602 data-nosnippet>602</a>            bits,
+<a href=#603 id=603 data-nosnippet>603</a>            <span class="prelude-val">Some</span>(origen::TransactionAction::Verify),
+<a href=#604 id=604 data-nosnippet>604</a>            verify_opts,
+<a href=#605 id=605 data-nosnippet>605</a>        )<span class="question-mark">?</span>;
+<a href=#606 id=606 data-nosnippet>606</a>        ap.verify_register(<span class="kw-2">&amp;</span>dut, <span class="kw-2">&amp;</span>services, <span class="kw-2">&amp;</span>trans)<span class="question-mark">?</span>;
+<a href=#607 id=607 data-nosnippet>607</a>        <span class="prelude-val">Ok</span>(())
+<a href=#608 id=608 data-nosnippet>608</a>    }
+<a href=#609 id=609 data-nosnippet>609</a>
+<a href=#610 id=610 data-nosnippet>610</a>    <span class="attr">#[pyo3(signature=(bits, <span class="kw-2">**</span>capture_opts))]
+<a href=#611 id=611 data-nosnippet>611</a>    </span><span class="kw">fn </span>capture_register(<span class="kw-2">&amp;</span><span class="self">self</span>, bits: <span class="kw-2">&amp;</span>PyAny, capture_opts: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>PyDict&gt;) -&gt; PyResult&lt;()&gt; {
+<a href=#612 id=612 data-nosnippet>612</a>        <span class="kw">let </span>dut = origen::dut();
+<a href=#613 id=613 data-nosnippet>613</a>        <span class="kw">let </span>services = origen::services();
+<a href=#614 id=614 data-nosnippet>614</a>        <span class="kw">let </span>ap = services.get_as_mem_ap(<span class="self">self</span>.mem_ap_id.unwrap())<span class="question-mark">?</span>;
+<a href=#615 id=615 data-nosnippet>615</a>        <span class="kw">let </span>trans = resolve_transaction(
+<a href=#616 id=616 data-nosnippet>616</a>            <span class="kw-2">&amp;</span>dut,
+<a href=#617 id=617 data-nosnippet>617</a>            bits,
+<a href=#618 id=618 data-nosnippet>618</a>            <span class="prelude-val">Some</span>(origen::TransactionAction::Capture),
+<a href=#619 id=619 data-nosnippet>619</a>            capture_opts,
+<a href=#620 id=620 data-nosnippet>620</a>        )<span class="question-mark">?</span>;
+<a href=#621 id=621 data-nosnippet>621</a>        ap.verify_register(<span class="kw-2">&amp;</span>dut, <span class="kw-2">&amp;</span>services, <span class="kw-2">&amp;</span>trans)<span class="question-mark">?</span>;
+<a href=#622 id=622 data-nosnippet>622</a>        <span class="prelude-val">Ok</span>(())
+<a href=#623 id=623 data-nosnippet>623</a>    }
+<a href=#624 id=624 data-nosnippet>624</a>}</code></pre></div></section></main></body></html>

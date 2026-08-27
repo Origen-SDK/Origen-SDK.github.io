@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["confirm_or_exit","confirm_with_user","cyan","cyanln","green","greenln","grey","greyln","red","redln","standardln","teal","tealln","yellow","yellowln"]};

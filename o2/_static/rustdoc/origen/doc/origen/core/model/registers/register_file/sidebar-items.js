@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["RegisterFile","Represents a groups of registers within an address block. RegisterFiles can also contain other RegisterFiles."]]});
+window.SIDEBAR_ITEMS = {"struct":["RegisterFile"]};

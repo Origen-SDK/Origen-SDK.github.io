@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["Group",""],["TempGroup","This is used to make the packages optional when parsing a BOM (e.g. it doesn't need to be defined in the workspace BOM), but it is quickly converted to a real group where the pacakges field is required"]]});

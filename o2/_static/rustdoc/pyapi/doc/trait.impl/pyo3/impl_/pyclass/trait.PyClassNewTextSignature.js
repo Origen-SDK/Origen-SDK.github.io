@@ -1,0 +1,9 @@
+(function() {
+    var implementors = Object.fromEntries([["_origen",[["impl PyClassNewTextSignature&lt;<a class=\"struct\" href=\"_origen/tester/struct.PyTester.html\" title=\"struct _origen::tester::PyTester\">PyTester</a>&gt; for PyClassImplCollector&lt;<a class=\"struct\" href=\"_origen/tester/struct.PyTester.html\" title=\"struct _origen::tester::PyTester\">PyTester</a>&gt;"]]]]);
+    if (window.register_implementors) {
+        window.register_implementors(implementors);
+    } else {
+        window.pending_implementors = implementors;
+    }
+})()
+//{"start":57,"fragment_lengths":[327]}

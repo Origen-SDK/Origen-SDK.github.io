@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["preprocess_as_template","resolve_relative_paths_to_strings","to_abs_path"]};
