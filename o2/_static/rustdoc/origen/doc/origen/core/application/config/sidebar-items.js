@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":["Config","CurrentState"]};
+window.SIDEBAR_ITEMS = {"struct":["Config","CurrentState","ProgramGenerationConfig"]};
