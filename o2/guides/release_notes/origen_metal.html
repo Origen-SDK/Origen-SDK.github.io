@@ -359,6 +359,7 @@
 
 
 
+
 </ul>
 </div>
 </nav></div>
@@ -421,6 +422,21 @@
                   
   <section id="origen-metal-release-notes">
 <h1>Origen Metal Release Notes<a class="headerlink" href="#origen-metal-release-notes" title="Link to this heading">#</a></h1>
+</section>
+<section id="origen-metal-1-7-0">
+<span id="release-origen-metal-1-7-0"></span><h1>Origen Metal 1.7.0<a class="headerlink" href="#origen-metal-1-7-0" title="Link to this heading">#</a></h1>
+<ul class="simple">
+<li><p><strong>Released:</strong> 2026-11-02</p></li>
+<li><p><strong>Author:</strong> Stephen McGinty</p></li>
+<li><p><strong>Tag:</strong> <code class="docutils literal notranslate"><span class="pre">origen-metal-v1.7.0</span></code></p></li>
+</ul>
+<p>This release adds SMT8 flow control to the program generator and fixes the handling of test result blocks and SMT8 flow names.</p>
+<ul class="simple">
+<li><p>Added SMT8 flow-control APIs to <code class="docutils literal notranslate"><span class="pre">PyInterface</span></code>: <code class="docutils literal notranslate"><span class="pre">set_flag</span></code>, <code class="docutils literal notranslate"><span class="pre">set_variable</span></code>, <code class="docutils literal notranslate"><span class="pre">if_expr</span></code>/<code class="docutils literal notranslate"><span class="pre">unless_expr</span></code> expression conditions (as context managers or flow options), fixed-count ascending or descending <code class="docutils literal notranslate"><span class="pre">loop</span></code>s, and bypassed groups via <code class="docutils literal notranslate"><span class="pre">group(...,</span> <span class="pre">bypass=True)</span></code>. Assigned and expression-read variables become flow inputs and are passed down through enclosing flows, and SMT8 now renders <code class="docutils literal notranslate"><span class="pre">bypass</span> <span class="pre">=</span> <span class="pre">true;</span></code> for bypassed sub-flows, matching SMT7’s <code class="docutils literal notranslate"><span class="pre">groupbypass</span></code>. UltraFLEX still rejects loops and variable assignments. Contributed by Stephen McGinty in #246.</p></li>
+<li><p>Fixed tests with more than one result block, such as a bin and an <code class="docutils literal notranslate"><span class="pre">on_fail</span></code> flag, silently losing all but the last block on every tester. Blocks of the same kind are now merged in order, and SMT8 renders a test with both passed and failed branches as a single <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">(t.pass)</span> <span class="pre">{</span> <span class="pre">...</span> <span class="pre">}</span> <span class="pre">else</span> <span class="pre">{</span> <span class="pre">...</span> <span class="pre">}</span></code>. Contributed by Stephen McGinty in #247.</p></li>
+<li><p>SMT8 flow names now keep the consecutive underscores of their group or flow name, for example <code class="docutils literal notranslate"><span class="pre">main__retest</span></code> becomes <code class="docutils literal notranslate"><span class="pre">MAIN__RETEST</span></code> instead of <code class="docutils literal notranslate"><span class="pre">MAIN_RETEST</span></code>, and leading or trailing spaces no longer produce leading or trailing underscores. Generated flow and file names change for existing programs whose group or flow names contain consecutive underscores. Contributed by Stephen McGinty in #248.</p></li>
+</ul>
+<hr class="docutils" />
 </section>
 <section id="origen-metal-1-6-1">
 <span id="release-origen-metal-1-6-1"></span><h1>Origen Metal 1.6.1<a class="headerlink" href="#origen-metal-1-6-1" title="Link to this heading">#</a></h1>
@@ -649,6 +665,7 @@ Origen Metal release updates.</p>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Origen Metal Release Notes</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#origen-metal-1-7-0">Origen Metal 1.7.0</a></li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#origen-metal-1-6-1">Origen Metal 1.6.1</a></li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#origen-metal-1-6-0">Origen Metal 1.6.0</a></li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#origen-metal-1-5-1">Origen Metal 1.5.1</a></li>

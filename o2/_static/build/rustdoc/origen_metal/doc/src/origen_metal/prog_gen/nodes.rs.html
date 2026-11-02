@@ -171,35 +171,36 @@
 <a href=#171 id=171 data-nosnippet>171</a>    /// it through unchanged.
 <a href=#172 id=172 data-nosnippet>172</a>    </span>Call(String, Vec&lt;String&gt;),
 <a href=#173 id=173 data-nosnippet>173</a>
-<a href=#174 id=174 data-nosnippet>174</a>    <span class="doccomment">/// A bounded iteration loop: (iteration_count, counter_variable_name).
+<a href=#174 id=174 data-nosnippet>174</a>    <span class="doccomment">/// A bounded iteration loop: (iteration_count, counter_variable_name, descending).
 <a href=#175 id=175 data-nosnippet>175</a>    /// `iteration_count` is None for condition-driven or infinite loops.
 <a href=#176 id=176 data-nosnippet>176</a>    /// `counter_variable_name` is None if the loop counter is not exposed as a variable.
-<a href=#177 id=177 data-nosnippet>177</a>    /// Child nodes form the loop body. Fills the gap left by the payload-less Whenever* placeholders
-<a href=#178 id=178 data-nosnippet>178</a>    /// for formats with explicit loop constructs (e.g. SMT7 loops).
-<a href=#179 id=179 data-nosnippet>179</a>    </span>Loop(<span class="prelude-ty">Option</span>&lt;u32&gt;, <span class="prelude-ty">Option</span>&lt;String&gt;),
-<a href=#180 id=180 data-nosnippet>180</a>
-<a href=#181 id=181 data-nosnippet>181</a>    <span class="doccomment">/// A structured result report entry: (category, message).
-<a href=#182 id=182 data-nosnippet>182</a>    /// Distinct from Log (runtime stdout) and Comment (source annotation).
-<a href=#183 id=183 data-nosnippet>183</a>    /// Produces structured output that becomes part of the test result record.
-<a href=#184 id=184 data-nosnippet>184</a>    /// Used by formats like SMT8 result annotation steps.
-<a href=#185 id=185 data-nosnippet>185</a>    </span>Report(String, String),
-<a href=#186 id=186 data-nosnippet>186</a>
-<a href=#187 id=187 data-nosnippet>187</a>    <span class="doccomment">/// A runtime assertion: (expression, failure_message).
-<a href=#188 id=188 data-nosnippet>188</a>    /// If the expression evaluates to false at runtime, execution halts with an error
-<a href=#189 id=189 data-nosnippet>189</a>    /// (not a test failure). Distinct from Test (which measures a DUT) and Condition
-<a href=#190 id=190 data-nosnippet>190</a>    /// (which branches). Used for program-correctness checks and defensive assertions.
-<a href=#191 id=191 data-nosnippet>191</a>    </span>Assertion(String, String),
-<a href=#192 id=192 data-nosnippet>192</a>
-<a href=#193 id=193 data-nosnippet>193</a>    <span class="doccomment">/// A named hook or callback invocation with positional arguments: (callback_name, args).
-<a href=#194 id=194 data-nosnippet>194</a>    /// Used for formats where callbacks are first-class flow steps. Processors that don't
-<a href=#195 id=195 data-nosnippet>195</a>    /// handle this should pass it through unchanged.
-<a href=#196 id=196 data-nosnippet>196</a>    </span>Callback(String, Vec&lt;String&gt;),
-<a href=#197 id=197 data-nosnippet>197</a>}
-<a href=#198 id=198 data-nosnippet>198</a>
-<a href=#199 id=199 data-nosnippet>199</a><span class="kw">impl </span>std::fmt::Display <span class="kw">for </span>PGM {
-<a href=#200 id=200 data-nosnippet>200</a>    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; std::fmt::Result {
-<a href=#201 id=201 data-nosnippet>201</a>        <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self </span>{
-<a href=#202 id=202 data-nosnippet>202</a>            <span class="kw">_ </span>=&gt; <span class="macro">write!</span>(f, <span class="string">"{}"</span>, <span class="macro">format!</span>(<span class="string">"{:?}"</span>, <span class="self">self</span>)),
-<a href=#203 id=203 data-nosnippet>203</a>        }
-<a href=#204 id=204 data-nosnippet>204</a>    }
-<a href=#205 id=205 data-nosnippet>205</a>}</code></pre></div></section></main></body></html>
+<a href=#177 id=177 data-nosnippet>177</a>    /// `descending` counts the loop variable down from `iteration_count` to 1 instead of up.
+<a href=#178 id=178 data-nosnippet>178</a>    /// Child nodes form the loop body. Fills the gap left by the payload-less Whenever* placeholders
+<a href=#179 id=179 data-nosnippet>179</a>    /// for formats with explicit loop constructs (e.g. SMT7 loops).
+<a href=#180 id=180 data-nosnippet>180</a>    </span>Loop(<span class="prelude-ty">Option</span>&lt;u32&gt;, <span class="prelude-ty">Option</span>&lt;String&gt;, bool),
+<a href=#181 id=181 data-nosnippet>181</a>
+<a href=#182 id=182 data-nosnippet>182</a>    <span class="doccomment">/// A structured result report entry: (category, message).
+<a href=#183 id=183 data-nosnippet>183</a>    /// Distinct from Log (runtime stdout) and Comment (source annotation).
+<a href=#184 id=184 data-nosnippet>184</a>    /// Produces structured output that becomes part of the test result record.
+<a href=#185 id=185 data-nosnippet>185</a>    /// Used by formats like SMT8 result annotation steps.
+<a href=#186 id=186 data-nosnippet>186</a>    </span>Report(String, String),
+<a href=#187 id=187 data-nosnippet>187</a>
+<a href=#188 id=188 data-nosnippet>188</a>    <span class="doccomment">/// A runtime assertion: (expression, failure_message).
+<a href=#189 id=189 data-nosnippet>189</a>    /// If the expression evaluates to false at runtime, execution halts with an error
+<a href=#190 id=190 data-nosnippet>190</a>    /// (not a test failure). Distinct from Test (which measures a DUT) and Condition
+<a href=#191 id=191 data-nosnippet>191</a>    /// (which branches). Used for program-correctness checks and defensive assertions.
+<a href=#192 id=192 data-nosnippet>192</a>    </span>Assertion(String, String),
+<a href=#193 id=193 data-nosnippet>193</a>
+<a href=#194 id=194 data-nosnippet>194</a>    <span class="doccomment">/// A named hook or callback invocation with positional arguments: (callback_name, args).
+<a href=#195 id=195 data-nosnippet>195</a>    /// Used for formats where callbacks are first-class flow steps. Processors that don't
+<a href=#196 id=196 data-nosnippet>196</a>    /// handle this should pass it through unchanged.
+<a href=#197 id=197 data-nosnippet>197</a>    </span>Callback(String, Vec&lt;String&gt;),
+<a href=#198 id=198 data-nosnippet>198</a>}
+<a href=#199 id=199 data-nosnippet>199</a>
+<a href=#200 id=200 data-nosnippet>200</a><span class="kw">impl </span>std::fmt::Display <span class="kw">for </span>PGM {
+<a href=#201 id=201 data-nosnippet>201</a>    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; std::fmt::Result {
+<a href=#202 id=202 data-nosnippet>202</a>        <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self </span>{
+<a href=#203 id=203 data-nosnippet>203</a>            <span class="kw">_ </span>=&gt; <span class="macro">write!</span>(f, <span class="string">"{}"</span>, <span class="macro">format!</span>(<span class="string">"{:?}"</span>, <span class="self">self</span>)),
+<a href=#204 id=204 data-nosnippet>204</a>        }
+<a href=#205 id=205 data-nosnippet>205</a>    }
+<a href=#206 id=206 data-nosnippet>206</a>}</code></pre></div></section></main></body></html>
