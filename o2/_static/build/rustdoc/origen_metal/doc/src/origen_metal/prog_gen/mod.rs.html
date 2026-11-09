@@ -180,45 +180,114 @@
 <a href=#180 id=180 data-nosnippet>180</a>    <span class="comment">//flow.to_file("unprocessed_ast.txt")?;
 <a href=#181 id=181 data-nosnippet>181</a>    </span><span class="kw">let </span><span class="kw-2">mut </span>ast = flow.process(<span class="kw-2">&amp;mut </span>|n| processors::target_tester::run(n, tester))<span class="question-mark">?</span>;
 <a href=#182 id=182 data-nosnippet>182</a>
-<a href=#183 id=183 data-nosnippet>183</a>    <span class="kw">if </span>validate {
-<a href=#184 id=184 data-nosnippet>184</a>        <span class="macro">log_debug!</span>(<span class="string">"Validating flow for tester {:?}"</span>, tester);
-<a href=#185 id=185 data-nosnippet>185</a>        validators::duplicate_ids::run(<span class="kw-2">&amp;</span>ast)<span class="question-mark">?</span>;
-<a href=#186 id=186 data-nosnippet>186</a>        validators::missing_ids::run(<span class="kw-2">&amp;</span>ast)<span class="question-mark">?</span>;
-<a href=#187 id=187 data-nosnippet>187</a>        validators::jobs::run(<span class="kw-2">&amp;</span>ast)<span class="question-mark">?</span>;
-<a href=#188 id=188 data-nosnippet>188</a>        validators::flags::run(<span class="kw-2">&amp;</span>ast)<span class="question-mark">?</span>;
-<a href=#189 id=189 data-nosnippet>189</a>        <span class="macro">log_debug!</span>(<span class="string">"Flow validation completed successfully"</span>);
-<a href=#190 id=190 data-nosnippet>190</a>    }
-<a href=#191 id=191 data-nosnippet>191</a>
-<a href=#192 id=192 data-nosnippet>192</a>    <span class="comment">// This should be run at the very start after the AST has been validated, it removes all define test
-<a href=#193 id=193 data-nosnippet>193</a>    // and attribute nodes
-<a href=#194 id=194 data-nosnippet>194</a>    </span><span class="kw">let </span><span class="kw-2">mut </span>m;
-<a href=#195 id=195 data-nosnippet>195</a>    <span class="macro">log_debug!</span>(<span class="string">"Extracting initial model from flow for tester {:?}"</span>, tester);
-<a href=#196 id=196 data-nosnippet>196</a>    <span class="comment">//ast.to_file("pre_initial_model_extract_ast.txt")?;
-<a href=#197 id=197 data-nosnippet>197</a>    </span>(ast, m) = processors::initial_model_extract::run(<span class="kw-2">&amp;</span>ast, tester, model)<span class="question-mark">?</span>;
-<a href=#198 id=198 data-nosnippet>198</a>
-<a href=#199 id=199 data-nosnippet>199</a>    <span class="comment">//ast.to_file("unprocesed_ast.txt")?;
-<a href=#200 id=200 data-nosnippet>200</a>    </span><span class="macro">log_debug!</span>(<span class="string">"Processing flow for tester {:?}"</span>, tester);
-<a href=#201 id=201 data-nosnippet>201</a>    ast = processors::clean_resources::run(<span class="kw-2">&amp;</span>ast)<span class="question-mark">?</span>;
-<a href=#202 id=202 data-nosnippet>202</a>    ast = processors::nest_on_result_nodes::run(<span class="kw-2">&amp;</span>ast)<span class="question-mark">?</span>;
-<a href=#203 id=203 data-nosnippet>203</a>    ast = processors::relationship::run(<span class="kw-2">&amp;</span>ast)<span class="question-mark">?</span>;
-<a href=#204 id=204 data-nosnippet>204</a>    ast = processors::condition::run(<span class="kw-2">&amp;</span>ast)<span class="question-mark">?</span>;
-<a href=#205 id=205 data-nosnippet>205</a>    ast = processors::continue_implementer::run(<span class="kw-2">&amp;</span>ast)<span class="question-mark">?</span>;
-<a href=#206 id=206 data-nosnippet>206</a>    ast = processors::flag_optimizer::run(<span class="kw-2">&amp;</span>ast, <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
-<a href=#207 id=207 data-nosnippet>207</a>    ast = processors::adjacent_if_combiner::run(<span class="kw-2">&amp;</span>ast)<span class="question-mark">?</span>;
-<a href=#208 id=208 data-nosnippet>208</a>
-<a href=#209 id=209 data-nosnippet>209</a>    <span class="comment">// Any tester-specific processing
-<a href=#210 id=210 data-nosnippet>210</a>    </span><span class="kw">match </span>tester {
-<a href=#211 id=211 data-nosnippet>211</a>        SupportedTester::V93KSMT7 =&gt; {
-<a href=#212 id=212 data-nosnippet>212</a>            (ast, m) = advantest::smt7::processors::clean_names_and_add_sig::run(<span class="kw-2">&amp;</span>ast, m)<span class="question-mark">?</span>;
-<a href=#213 id=213 data-nosnippet>213</a>        }
-<a href=#214 id=214 data-nosnippet>214</a>        SupportedTester::V93KSMT8 =&gt; {
-<a href=#215 id=215 data-nosnippet>215</a>            ast = advantest::smt8::processors::create_flow_data::run(<span class="kw-2">&amp;</span>ast)<span class="question-mark">?</span>;
-<a href=#216 id=216 data-nosnippet>216</a>        }
-<a href=#217 id=217 data-nosnippet>217</a>        <span class="kw">_ </span>=&gt; {}
-<a href=#218 id=218 data-nosnippet>218</a>    }
-<a href=#219 id=219 data-nosnippet>219</a>
-<a href=#220 id=220 data-nosnippet>220</a>    <span class="comment">//ast.to_file("ast.txt")?;
-<a href=#221 id=221 data-nosnippet>221</a>
-<a href=#222 id=222 data-nosnippet>222</a>    // Do a final model extract for things which may have been optimized away if done earlier, e.g. flag variables
-<a href=#223 id=223 data-nosnippet>223</a>    </span><span class="prelude-val">Ok</span>(processors::final_model_extract::run(<span class="kw-2">&amp;</span>ast, m)<span class="question-mark">?</span>)
-<a href=#224 id=224 data-nosnippet>224</a>}</code></pre></div></section></main></body></html>
+<a href=#183 id=183 data-nosnippet>183</a>    <span class="comment">// This should be run at the very start after the AST has been validated, it removes all define test
+<a href=#184 id=184 data-nosnippet>184</a>    // and attribute nodes.
+<a href=#185 id=185 data-nosnippet>185</a>    // The validators only read the flow, they check it on another thread while the model is
+<a href=#186 id=186 data-nosnippet>186</a>    // extracted, which reads it too. A validation error is returned as before, ahead of any
+<a href=#187 id=187 data-nosnippet>187</a>    // error from the extraction, or a panic in the extraction of an invalid flow.
+<a href=#188 id=188 data-nosnippet>188</a>    </span><span class="kw">let </span><span class="kw-2">mut </span>m;
+<a href=#189 id=189 data-nosnippet>189</a>    <span class="kw">let </span>extracted: <span class="kw">crate</span>::Result&lt;(Node&lt;PGM&gt;, Model)&gt; = <span class="kw">if </span>validate {
+<a href=#190 id=190 data-nosnippet>190</a>        <span class="macro">log_debug!</span>(<span class="string">"Validating flow for tester {:?}"</span>, tester);
+<a href=#191 id=191 data-nosnippet>191</a>        std::thread::scope(|scope| -&gt; <span class="kw">crate</span>::Result&lt;(Node&lt;PGM&gt;, Model)&gt; {
+<a href=#192 id=192 data-nosnippet>192</a>            <span class="comment">// Some validators recurse through nested conditions, give them the stack a main
+<a href=#193 id=193 data-nosnippet>193</a>            // thread usually has
+<a href=#194 id=194 data-nosnippet>194</a>            </span><span class="kw">let </span>validation = std::thread::Builder::new()
+<a href=#195 id=195 data-nosnippet>195</a>                .name(<span class="string">"flow validation"</span>.to_string())
+<a href=#196 id=196 data-nosnippet>196</a>                .stack_size(<span class="number">8 </span>* <span class="number">1024 </span>* <span class="number">1024</span>)
+<a href=#197 id=197 data-nosnippet>197</a>                .spawn_scoped(scope, || -&gt; <span class="kw">crate</span>::Result&lt;()&gt; {
+<a href=#198 id=198 data-nosnippet>198</a>                    validators::duplicate_ids::run(<span class="kw-2">&amp;</span>ast)<span class="question-mark">?</span>;
+<a href=#199 id=199 data-nosnippet>199</a>                    validators::missing_ids::run(<span class="kw-2">&amp;</span>ast)<span class="question-mark">?</span>;
+<a href=#200 id=200 data-nosnippet>200</a>                    validators::jobs::run(<span class="kw-2">&amp;</span>ast)<span class="question-mark">?</span>;
+<a href=#201 id=201 data-nosnippet>201</a>                    validators::flags::run(<span class="kw-2">&amp;</span>ast)
+<a href=#202 id=202 data-nosnippet>202</a>                })<span class="question-mark">?</span>;
+<a href=#203 id=203 data-nosnippet>203</a>            <span class="macro">log_debug!</span>(<span class="string">"Extracting initial model from flow for tester {:?}"</span>, tester);
+<a href=#204 id=204 data-nosnippet>204</a>            <span class="kw">let </span>extracted = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+<a href=#205 id=205 data-nosnippet>205</a>                processors::initial_model_extract::run(<span class="kw-2">&amp;</span>ast, tester, model)
+<a href=#206 id=206 data-nosnippet>206</a>            }));
+<a href=#207 id=207 data-nosnippet>207</a>            <span class="kw">match </span>validation.join() {
+<a href=#208 id=208 data-nosnippet>208</a>                <span class="prelude-val">Ok</span>(validated) =&gt; validated<span class="question-mark">?</span>,
+<a href=#209 id=209 data-nosnippet>209</a>                <span class="prelude-val">Err</span>(panic) =&gt; std::panic::resume_unwind(panic),
+<a href=#210 id=210 data-nosnippet>210</a>            }
+<a href=#211 id=211 data-nosnippet>211</a>            <span class="macro">log_debug!</span>(<span class="string">"Flow validation completed successfully"</span>);
+<a href=#212 id=212 data-nosnippet>212</a>            <span class="kw">match </span>extracted {
+<a href=#213 id=213 data-nosnippet>213</a>                <span class="prelude-val">Ok</span>(extracted) =&gt; extracted,
+<a href=#214 id=214 data-nosnippet>214</a>                <span class="prelude-val">Err</span>(panic) =&gt; std::panic::resume_unwind(panic),
+<a href=#215 id=215 data-nosnippet>215</a>            }
+<a href=#216 id=216 data-nosnippet>216</a>        })
+<a href=#217 id=217 data-nosnippet>217</a>    } <span class="kw">else </span>{
+<a href=#218 id=218 data-nosnippet>218</a>        <span class="macro">log_debug!</span>(<span class="string">"Extracting initial model from flow for tester {:?}"</span>, tester);
+<a href=#219 id=219 data-nosnippet>219</a>        <span class="comment">//ast.to_file("pre_initial_model_extract_ast.txt")?;
+<a href=#220 id=220 data-nosnippet>220</a>        </span>processors::initial_model_extract::run(<span class="kw-2">&amp;</span>ast, tester, model)
+<a href=#221 id=221 data-nosnippet>221</a>    };
+<a href=#222 id=222 data-nosnippet>222</a>    (ast, m) = extracted<span class="question-mark">?</span>;
+<a href=#223 id=223 data-nosnippet>223</a>
+<a href=#224 id=224 data-nosnippet>224</a>    <span class="comment">//ast.to_file("unprocesed_ast.txt")?;
+<a href=#225 id=225 data-nosnippet>225</a>    </span><span class="macro">log_debug!</span>(<span class="string">"Processing flow for tester {:?}"</span>, tester);
+<a href=#226 id=226 data-nosnippet>226</a>    ast = processors::clean_resources::run(<span class="kw-2">&amp;</span>ast)<span class="question-mark">?</span>;
+<a href=#227 id=227 data-nosnippet>227</a>    ast = processors::nest_on_result_nodes::run(<span class="kw-2">&amp;</span>ast)<span class="question-mark">?</span>;
+<a href=#228 id=228 data-nosnippet>228</a>    ast = processors::relationship::run(<span class="kw-2">&amp;</span>ast)<span class="question-mark">?</span>;
+<a href=#229 id=229 data-nosnippet>229</a>    ast = processors::condition::run(<span class="kw-2">&amp;</span>ast)<span class="question-mark">?</span>;
+<a href=#230 id=230 data-nosnippet>230</a>    ast = processors::continue_implementer::run(<span class="kw-2">&amp;</span>ast)<span class="question-mark">?</span>;
+<a href=#231 id=231 data-nosnippet>231</a>    ast = processors::flag_optimizer::run(<span class="kw-2">&amp;</span>ast, <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
+<a href=#232 id=232 data-nosnippet>232</a>    ast = processors::adjacent_if_combiner::run(<span class="kw-2">&amp;</span>ast)<span class="question-mark">?</span>;
+<a href=#233 id=233 data-nosnippet>233</a>
+<a href=#234 id=234 data-nosnippet>234</a>    <span class="comment">// Any tester-specific processing
+<a href=#235 id=235 data-nosnippet>235</a>    </span><span class="kw">match </span>tester {
+<a href=#236 id=236 data-nosnippet>236</a>        SupportedTester::V93KSMT7 =&gt; {
+<a href=#237 id=237 data-nosnippet>237</a>            (ast, m) = advantest::smt7::processors::clean_names_and_add_sig::run(<span class="kw-2">&amp;</span>ast, m)<span class="question-mark">?</span>;
+<a href=#238 id=238 data-nosnippet>238</a>        }
+<a href=#239 id=239 data-nosnippet>239</a>        SupportedTester::V93KSMT8 =&gt; {
+<a href=#240 id=240 data-nosnippet>240</a>            ast = advantest::smt8::processors::create_flow_data::run(<span class="kw-2">&amp;</span>ast)<span class="question-mark">?</span>;
+<a href=#241 id=241 data-nosnippet>241</a>        }
+<a href=#242 id=242 data-nosnippet>242</a>        <span class="kw">_ </span>=&gt; {}
+<a href=#243 id=243 data-nosnippet>243</a>    }
+<a href=#244 id=244 data-nosnippet>244</a>
+<a href=#245 id=245 data-nosnippet>245</a>    <span class="comment">//ast.to_file("ast.txt")?;
+<a href=#246 id=246 data-nosnippet>246</a>
+<a href=#247 id=247 data-nosnippet>247</a>    // Do a final model extract for things which may have been optimized away if done earlier, e.g. flag variables
+<a href=#248 id=248 data-nosnippet>248</a>    </span><span class="prelude-val">Ok</span>(processors::final_model_extract::run(<span class="kw-2">&amp;</span>ast, m)<span class="question-mark">?</span>)
+<a href=#249 id=249 data-nosnippet>249</a>}
+<a href=#250 id=250 data-nosnippet>250</a>
+<a href=#251 id=251 data-nosnippet>251</a><span class="attr">#[cfg(test)]
+<a href=#252 id=252 data-nosnippet>252</a></span><span class="kw">mod </span>tests {
+<a href=#253 id=253 data-nosnippet>253</a>    <span class="kw">use super</span>::<span class="kw-2">*</span>;
+<a href=#254 id=254 data-nosnippet>254</a>
+<a href=#255 id=255 data-nosnippet>255</a>    <span class="attr">#[test]
+<a href=#256 id=256 data-nosnippet>256</a>    </span><span class="kw">fn </span>a_validation_error_is_returned_ahead_of_an_extraction_error() {
+<a href=#257 id=257 data-nosnippet>257</a>        <span class="comment">// The flow assigns the same ID twice (a validation error) and makes two test
+<a href=#258 id=258 data-nosnippet>258</a>        // invocations with the same internal ID (an extraction error)
+<a href=#259 id=259 data-nosnippet>259</a>        </span><span class="kw">let </span><span class="kw-2">mut </span>flow = AST::new();
+<a href=#260 id=260 data-nosnippet>260</a>        flow.push_and_open(Node::new(PGM::Flow(<span class="string">"main"</span>.to_string())));
+<a href=#261 id=261 data-nosnippet>261</a>        <span class="kw">for </span>name <span class="kw">in </span>[<span class="string">"a"</span>, <span class="string">"b"</span>] {
+<a href=#262 id=262 data-nosnippet>262</a>            flow.push(Node::new(PGM::DefTestInv(
+<a href=#263 id=263 data-nosnippet>263</a>                <span class="number">1</span>,
+<a href=#264 id=264 data-nosnippet>264</a>                name.to_string(),
+<a href=#265 id=265 data-nosnippet>265</a>                SupportedTester::V93KSMT8,
+<a href=#266 id=266 data-nosnippet>266</a>            )));
+<a href=#267 id=267 data-nosnippet>267</a>            flow.push(Node::new(PGM::Test(<span class="number">1</span>, FlowID::from_str(<span class="string">"dup"</span>))));
+<a href=#268 id=268 data-nosnippet>268</a>        }
+<a href=#269 id=269 data-nosnippet>269</a>        <span class="kw">let </span>error = process_flow(
+<a href=#270 id=270 data-nosnippet>270</a>            <span class="kw-2">&amp;</span>flow,
+<a href=#271 id=271 data-nosnippet>271</a>            Model::new(SupportedTester::V93KSMT8),
+<a href=#272 id=272 data-nosnippet>272</a>            SupportedTester::V93KSMT8,
+<a href=#273 id=273 data-nosnippet>273</a>            <span class="bool-val">true</span>,
+<a href=#274 id=274 data-nosnippet>274</a>        )
+<a href=#275 id=275 data-nosnippet>275</a>        .unwrap_err()
+<a href=#276 id=276 data-nosnippet>276</a>        .to_string();
+<a href=#277 id=277 data-nosnippet>277</a>        <span class="macro">assert!</span>(error.contains(<span class="string">"was assigned more than once"</span>), <span class="string">"{}"</span>, error);
+<a href=#278 id=278 data-nosnippet>278</a>
+<a href=#279 id=279 data-nosnippet>279</a>        <span class="kw">let </span>error = process_flow(
+<a href=#280 id=280 data-nosnippet>280</a>            <span class="kw-2">&amp;</span>flow,
+<a href=#281 id=281 data-nosnippet>281</a>            Model::new(SupportedTester::V93KSMT8),
+<a href=#282 id=282 data-nosnippet>282</a>            SupportedTester::V93KSMT8,
+<a href=#283 id=283 data-nosnippet>283</a>            <span class="bool-val">false</span>,
+<a href=#284 id=284 data-nosnippet>284</a>        )
+<a href=#285 id=285 data-nosnippet>285</a>        .unwrap_err()
+<a href=#286 id=286 data-nosnippet>286</a>        .to_string();
+<a href=#287 id=287 data-nosnippet>287</a>        <span class="macro">assert!</span>(
+<a href=#288 id=288 data-nosnippet>288</a>            error.contains(<span class="string">"two test invocations have been generated with the same internal ID"</span>),
+<a href=#289 id=289 data-nosnippet>289</a>            <span class="string">"{}"</span>,
+<a href=#290 id=290 data-nosnippet>290</a>            error
+<a href=#291 id=291 data-nosnippet>291</a>        );
+<a href=#292 id=292 data-nosnippet>292</a>    }
+<a href=#293 id=293 data-nosnippet>293</a>}</code></pre></div></section></main></body></html>
