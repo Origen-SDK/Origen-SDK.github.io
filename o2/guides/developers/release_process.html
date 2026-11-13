@@ -535,15 +535,16 @@ credentials, unused registry versions, and unused tags.</p></li>
 <li><p>Require the configured regression workflow (<code class="docutils literal notranslate"><span class="pre">release.regression_workflow</span></code>)
 to have passed on the pushed release-branch HEAD, waiting for a run that has
 not finished. The tests are not repeated locally: the release commit only
-changes versions, lockfiles, and histories on top of that commit. Package
-validation and a strict full documentation build still run locally on the
-prepared release.</p></li>
+changes versions, lockfiles, and histories on top of that commit. Nothing is
+built locally either; the publication workflows build and validate every
+package and the website from the exact tag.</p></li>
 <li><p>Update every Python and Rust manifest for the selected product. Update
 Origen’s Metal dependency only when the selected release plan requires it.</p></li>
-<li><p>Prepend each selected product’s history and rebuild documentation.</p></li>
+<li><p>Prepend each selected product’s history.</p></li>
 <li><p>Present the final diff and request confirmation.</p></li>
-<li><p>Commit version and history files atomically through the configured RC
-driver, then create and push product-qualified tags.</p></li>
+<li><p>Commit version and history files atomically with the <code class="docutils literal notranslate"><span class="pre">git</span></code> CLI, so the
+maintainer’s own Git setup is used, then create and push product-qualified
+tags.</p></li>
 <li><p>Dispatch the configured publication workflow with the exact tag and expected
 version, monitor it, and verify registry publication.</p></li>
 <li><p>Deploy the already validated website only after all selected publications

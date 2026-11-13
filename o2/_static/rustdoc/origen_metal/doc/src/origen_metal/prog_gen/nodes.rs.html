@@ -140,68 +140,74 @@
 <a href=#140 id=140 data-nosnippet>140</a>    /// expression string.
 <a href=#141 id=141 data-nosnippet>141</a>    </span>SetVariable(String, String),
 <a href=#142 id=142 data-nosnippet>142</a>
-<a href=#143 id=143 data-nosnippet>143</a>    <span class="doccomment">/// Flow input/output parameter declaration: (name, type_name, default_value).
-<a href=#144 id=144 data-nosnippet>144</a>    /// Distinct from Variable (local variable). Represents a named, typed parameter
-<a href=#145 id=145 data-nosnippet>145</a>    /// of a SubFlow — analogous to a function argument. Used in formats with named
-<a href=#146 id=146 data-nosnippet>146</a>    /// parameter declarations such as SMT7.
-<a href=#147 id=147 data-nosnippet>147</a>    </span>Parameter(String, String, <span class="prelude-ty">Option</span>&lt;String&gt;),
+<a href=#143 id=143 data-nosnippet>143</a>    <span class="doccomment">/// Declares a flow variable, its name's case kept, as an output of the enclosing flow
+<a href=#144 id=144 data-nosnippet>144</a>    /// without assigning it, e.g. a variable which a test method sets natively. For V93K SMT8
+<a href=#145 id=145 data-nosnippet>145</a>    /// it is an output of the declaring flow and of every enclosing flow, like a flag set by
+<a href=#146 id=146 data-nosnippet>146</a>    /// the user. It renders nothing for other testers.
+<a href=#147 id=147 data-nosnippet>147</a>    </span>OutputVariable(String),
 <a href=#148 id=148 data-nosnippet>148</a>
-<a href=#149 id=149 data-nosnippet>149</a>    <span class="doccomment">/// Multi-site synchronization barrier. Processors targeting testers that support
-<a href=#150 id=150 data-nosnippet>150</a>    /// multi-site execution should emit the appropriate sync primitive (e.g. V93K
-<a href=#151 id=151 data-nosnippet>151</a>    /// synchronization). Processors that don't understand this node should pass it
-<a href=#152 id=152 data-nosnippet>152</a>    /// through unchanged.
-<a href=#153 id=153 data-nosnippet>153</a>    </span>Synchronize,
+<a href=#149 id=149 data-nosnippet>149</a>    <span class="doccomment">/// Flow input/output parameter declaration: (name, type_name, default_value).
+<a href=#150 id=150 data-nosnippet>150</a>    /// Distinct from Variable (local variable). Represents a named, typed parameter
+<a href=#151 id=151 data-nosnippet>151</a>    /// of a SubFlow — analogous to a function argument. Used in formats with named
+<a href=#152 id=152 data-nosnippet>152</a>    /// parameter declarations such as SMT7.
+<a href=#153 id=153 data-nosnippet>153</a>    </span>Parameter(String, String, <span class="prelude-ty">Option</span>&lt;String&gt;),
 <a href=#154 id=154 data-nosnippet>154</a>
-<a href=#155 id=155 data-nosnippet>155</a>    <span class="doccomment">/// A labeled jump target. Formats that support labeled flow control use this to mark
-<a href=#156 id=156 data-nosnippet>156</a>    /// a named jump destination. Complemented by Goto.
-<a href=#157 id=157 data-nosnippet>157</a>    </span>Label(String),
-<a href=#158 id=158 data-nosnippet>158</a>
-<a href=#159 id=159 data-nosnippet>159</a>    <span class="doccomment">/// Jump to a labeled target. Formats that support labeled flow control use this to
-<a href=#160 id=160 data-nosnippet>160</a>    /// redirect execution to the named label. Complemented by Label.
-<a href=#161 id=161 data-nosnippet>161</a>    </span>Goto(String),
-<a href=#162 id=162 data-nosnippet>162</a>
-<a href=#163 id=163 data-nosnippet>163</a>    <span class="doccomment">/// Events to run if the test or group with the given ID produced a runtime error
-<a href=#164 id=164 data-nosnippet>164</a>    /// or abort (not a test failure). Completes the result-handler triad alongside
-<a href=#165 id=165 data-nosnippet>165</a>    /// OnPassed and OnFailed. Processors that don't handle this should pass it through.
-<a href=#166 id=166 data-nosnippet>166</a>    </span>OnError(FlowID),
-<a href=#167 id=167 data-nosnippet>167</a>
-<a href=#168 id=168 data-nosnippet>168</a>    <span class="doccomment">/// An external procedure/subroutine call with positional arguments: (procedure_name, args).
-<a href=#169 id=169 data-nosnippet>169</a>    /// Distinct from SubFlow (which is flow-graph-aware and tracked by the Model).
-<a href=#170 id=170 data-nosnippet>170</a>    /// Used for calling external procedures, library routines, or user-defined subroutines
-<a href=#171 id=171 data-nosnippet>171</a>    /// that are not part of the flow graph. Processors that don't handle this should pass
-<a href=#172 id=172 data-nosnippet>172</a>    /// it through unchanged.
-<a href=#173 id=173 data-nosnippet>173</a>    </span>Call(String, Vec&lt;String&gt;),
-<a href=#174 id=174 data-nosnippet>174</a>
-<a href=#175 id=175 data-nosnippet>175</a>    <span class="doccomment">/// A bounded iteration loop: (iteration_count, counter_variable_name, descending).
-<a href=#176 id=176 data-nosnippet>176</a>    /// `iteration_count` is None for condition-driven or infinite loops.
-<a href=#177 id=177 data-nosnippet>177</a>    /// `counter_variable_name` is None if the loop counter is not exposed as a variable.
-<a href=#178 id=178 data-nosnippet>178</a>    /// `descending` counts the loop variable down from `iteration_count` to 1 instead of up.
-<a href=#179 id=179 data-nosnippet>179</a>    /// Child nodes form the loop body. Fills the gap left by the payload-less Whenever* placeholders
-<a href=#180 id=180 data-nosnippet>180</a>    /// for formats with explicit loop constructs (e.g. SMT7 loops).
-<a href=#181 id=181 data-nosnippet>181</a>    </span>Loop(<span class="prelude-ty">Option</span>&lt;u32&gt;, <span class="prelude-ty">Option</span>&lt;String&gt;, bool),
-<a href=#182 id=182 data-nosnippet>182</a>
-<a href=#183 id=183 data-nosnippet>183</a>    <span class="doccomment">/// A structured result report entry: (category, message).
-<a href=#184 id=184 data-nosnippet>184</a>    /// Distinct from Log (runtime stdout) and Comment (source annotation).
-<a href=#185 id=185 data-nosnippet>185</a>    /// Produces structured output that becomes part of the test result record.
-<a href=#186 id=186 data-nosnippet>186</a>    /// Used by formats like SMT8 result annotation steps.
-<a href=#187 id=187 data-nosnippet>187</a>    </span>Report(String, String),
+<a href=#155 id=155 data-nosnippet>155</a>    <span class="doccomment">/// Multi-site synchronization barrier. Processors targeting testers that support
+<a href=#156 id=156 data-nosnippet>156</a>    /// multi-site execution should emit the appropriate sync primitive (e.g. V93K
+<a href=#157 id=157 data-nosnippet>157</a>    /// synchronization). Processors that don't understand this node should pass it
+<a href=#158 id=158 data-nosnippet>158</a>    /// through unchanged.
+<a href=#159 id=159 data-nosnippet>159</a>    </span>Synchronize,
+<a href=#160 id=160 data-nosnippet>160</a>
+<a href=#161 id=161 data-nosnippet>161</a>    <span class="doccomment">/// A labeled jump target. Formats that support labeled flow control use this to mark
+<a href=#162 id=162 data-nosnippet>162</a>    /// a named jump destination. Complemented by Goto.
+<a href=#163 id=163 data-nosnippet>163</a>    </span>Label(String),
+<a href=#164 id=164 data-nosnippet>164</a>
+<a href=#165 id=165 data-nosnippet>165</a>    <span class="doccomment">/// Jump to a labeled target. Formats that support labeled flow control use this to
+<a href=#166 id=166 data-nosnippet>166</a>    /// redirect execution to the named label. Complemented by Label.
+<a href=#167 id=167 data-nosnippet>167</a>    </span>Goto(String),
+<a href=#168 id=168 data-nosnippet>168</a>
+<a href=#169 id=169 data-nosnippet>169</a>    <span class="doccomment">/// Events to run if the test or group with the given ID produced a runtime error
+<a href=#170 id=170 data-nosnippet>170</a>    /// or abort (not a test failure). Completes the result-handler triad alongside
+<a href=#171 id=171 data-nosnippet>171</a>    /// OnPassed and OnFailed. Processors that don't handle this should pass it through.
+<a href=#172 id=172 data-nosnippet>172</a>    </span>OnError(FlowID),
+<a href=#173 id=173 data-nosnippet>173</a>
+<a href=#174 id=174 data-nosnippet>174</a>    <span class="doccomment">/// An external procedure/subroutine call with positional arguments: (procedure_name, args).
+<a href=#175 id=175 data-nosnippet>175</a>    /// Distinct from SubFlow (which is flow-graph-aware and tracked by the Model).
+<a href=#176 id=176 data-nosnippet>176</a>    /// Used for calling external procedures, library routines, or user-defined subroutines
+<a href=#177 id=177 data-nosnippet>177</a>    /// that are not part of the flow graph. Processors that don't handle this should pass
+<a href=#178 id=178 data-nosnippet>178</a>    /// it through unchanged.
+<a href=#179 id=179 data-nosnippet>179</a>    </span>Call(String, Vec&lt;String&gt;),
+<a href=#180 id=180 data-nosnippet>180</a>
+<a href=#181 id=181 data-nosnippet>181</a>    <span class="doccomment">/// A bounded iteration loop: (iteration_count, counter_variable_name, descending).
+<a href=#182 id=182 data-nosnippet>182</a>    /// `iteration_count` is None for condition-driven or infinite loops.
+<a href=#183 id=183 data-nosnippet>183</a>    /// `counter_variable_name` is None if the loop counter is not exposed as a variable.
+<a href=#184 id=184 data-nosnippet>184</a>    /// `descending` counts the loop variable down from `iteration_count` to 1 instead of up.
+<a href=#185 id=185 data-nosnippet>185</a>    /// Child nodes form the loop body. Fills the gap left by the payload-less Whenever* placeholders
+<a href=#186 id=186 data-nosnippet>186</a>    /// for formats with explicit loop constructs (e.g. SMT7 loops).
+<a href=#187 id=187 data-nosnippet>187</a>    </span>Loop(<span class="prelude-ty">Option</span>&lt;u32&gt;, <span class="prelude-ty">Option</span>&lt;String&gt;, bool),
 <a href=#188 id=188 data-nosnippet>188</a>
-<a href=#189 id=189 data-nosnippet>189</a>    <span class="doccomment">/// A runtime assertion: (expression, failure_message).
-<a href=#190 id=190 data-nosnippet>190</a>    /// If the expression evaluates to false at runtime, execution halts with an error
-<a href=#191 id=191 data-nosnippet>191</a>    /// (not a test failure). Distinct from Test (which measures a DUT) and Condition
-<a href=#192 id=192 data-nosnippet>192</a>    /// (which branches). Used for program-correctness checks and defensive assertions.
-<a href=#193 id=193 data-nosnippet>193</a>    </span>Assertion(String, String),
+<a href=#189 id=189 data-nosnippet>189</a>    <span class="doccomment">/// A structured result report entry: (category, message).
+<a href=#190 id=190 data-nosnippet>190</a>    /// Distinct from Log (runtime stdout) and Comment (source annotation).
+<a href=#191 id=191 data-nosnippet>191</a>    /// Produces structured output that becomes part of the test result record.
+<a href=#192 id=192 data-nosnippet>192</a>    /// Used by formats like SMT8 result annotation steps.
+<a href=#193 id=193 data-nosnippet>193</a>    </span>Report(String, String),
 <a href=#194 id=194 data-nosnippet>194</a>
-<a href=#195 id=195 data-nosnippet>195</a>    <span class="doccomment">/// A named hook or callback invocation with positional arguments: (callback_name, args).
-<a href=#196 id=196 data-nosnippet>196</a>    /// Used for formats where callbacks are first-class flow steps. Processors that don't
-<a href=#197 id=197 data-nosnippet>197</a>    /// handle this should pass it through unchanged.
-<a href=#198 id=198 data-nosnippet>198</a>    </span>Callback(String, Vec&lt;String&gt;),
-<a href=#199 id=199 data-nosnippet>199</a>}
+<a href=#195 id=195 data-nosnippet>195</a>    <span class="doccomment">/// A runtime assertion: (expression, failure_message).
+<a href=#196 id=196 data-nosnippet>196</a>    /// If the expression evaluates to false at runtime, execution halts with an error
+<a href=#197 id=197 data-nosnippet>197</a>    /// (not a test failure). Distinct from Test (which measures a DUT) and Condition
+<a href=#198 id=198 data-nosnippet>198</a>    /// (which branches). Used for program-correctness checks and defensive assertions.
+<a href=#199 id=199 data-nosnippet>199</a>    </span>Assertion(String, String),
 <a href=#200 id=200 data-nosnippet>200</a>
-<a href=#201 id=201 data-nosnippet>201</a><span class="kw">impl </span>std::fmt::Display <span class="kw">for </span>PGM {
-<a href=#202 id=202 data-nosnippet>202</a>    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; std::fmt::Result {
-<a href=#203 id=203 data-nosnippet>203</a>        <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self </span>{
-<a href=#204 id=204 data-nosnippet>204</a>            <span class="kw">_ </span>=&gt; <span class="macro">write!</span>(f, <span class="string">"{}"</span>, <span class="macro">format!</span>(<span class="string">"{:?}"</span>, <span class="self">self</span>)),
-<a href=#205 id=205 data-nosnippet>205</a>        }
-<a href=#206 id=206 data-nosnippet>206</a>    }
-<a href=#207 id=207 data-nosnippet>207</a>}</code></pre></div></section></main></body></html>
+<a href=#201 id=201 data-nosnippet>201</a>    <span class="doccomment">/// A named hook or callback invocation with positional arguments: (callback_name, args).
+<a href=#202 id=202 data-nosnippet>202</a>    /// Used for formats where callbacks are first-class flow steps. Processors that don't
+<a href=#203 id=203 data-nosnippet>203</a>    /// handle this should pass it through unchanged.
+<a href=#204 id=204 data-nosnippet>204</a>    </span>Callback(String, Vec&lt;String&gt;),
+<a href=#205 id=205 data-nosnippet>205</a>}
+<a href=#206 id=206 data-nosnippet>206</a>
+<a href=#207 id=207 data-nosnippet>207</a><span class="kw">impl </span>std::fmt::Display <span class="kw">for </span>PGM {
+<a href=#208 id=208 data-nosnippet>208</a>    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; std::fmt::Result {
+<a href=#209 id=209 data-nosnippet>209</a>        <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self </span>{
+<a href=#210 id=210 data-nosnippet>210</a>            <span class="kw">_ </span>=&gt; <span class="macro">write!</span>(f, <span class="string">"{}"</span>, <span class="macro">format!</span>(<span class="string">"{:?}"</span>, <span class="self">self</span>)),
+<a href=#211 id=211 data-nosnippet>211</a>        }
+<a href=#212 id=212 data-nosnippet>212</a>    }
+<a href=#213 id=213 data-nosnippet>213</a>}</code></pre></div></section></main></body></html>

@@ -449,15 +449,16 @@ the CLI enforces and the exact version CI installs. Install it with:</p>
 <span class="go">uv --version</span>
 </pre></div>
 </div>
-<p>Configure your Git identity and export a GitHub token for the short local
-commit, tag, and workflow-dispatch phase:</p>
+<p>Configure your Git identity and export a GitHub token that can run workflows in
+<code class="docutils literal notranslate"><span class="pre">Origen-SDK/o2</span></code>, used to check CI and start the release workflow:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">git config user.name "Your Name"</span>
 <span class="go">git config user.email "you@example.com"</span>
-<span class="go">export github_pat=...</span>
+<span class="go">export github_pat=$(gh auth token)</span>
 </pre></div>
 </div>
-<p>Set <code class="docutils literal notranslate"><span class="pre">ORIGEN_GIT_SSH_KEY</span></code> when the checkout uses SSH and more than one GitHub
-identity exists locally. The release workflow itself uses the
+<p>Commits, tags, and pushes are made with the <code class="docutils literal notranslate"><span class="pre">git</span></code> command, so they use your
+normal Git setup, including SSH host aliases and keys. The release workflow
+itself uses the
 <code class="docutils literal notranslate"><span class="pre">O2_RELEASE_APP_ID</span></code> and <code class="docutils literal notranslate"><span class="pre">O2_RELEASE_APP_PRIVATE_KEY</span></code> repository secrets to
 create a short-lived GitHub App token. The app must have Actions and Contents
 write access to both <code class="docutils literal notranslate"><span class="pre">Origen-SDK/o2</span></code> and
@@ -466,8 +467,9 @@ their existing GitHub Actions secrets.</p>
 <p>The command reads the source remote, release branch, and orchestrator workflow
 from <code class="docutils literal notranslate"><span class="pre">config/application.toml</span></code>, verifies each package’s repository metadata,
 and uses O2’s configured revision-control driver.</p>
-<p>Prepare a release note in <code class="docutils literal notranslate"><span class="pre">release_note.txt</span></code>, pass another file with <code class="docutils literal notranslate"><span class="pre">--file</span></code>,
-or enter the note when prompted. Empty notes are rejected.</p>
+<p>Prepare a release note in <code class="docutils literal notranslate"><span class="pre">release_note.txt</span></code> in the repository root (Git ignores
+it), pass another file with <code class="docutils literal notranslate"><span class="pre">--file</span></code>, or enter the note when prompted. Empty
+notes are rejected.</p>
 </section>
 <section id="previewing-a-release">
 <h2>Previewing a release<a class="headerlink" href="#previewing-a-release" title="Link to this heading">#</a></h2>
@@ -536,14 +538,14 @@ workflow, author, and provider, then asks for final confirmation. Locally it:</p
 <li><p>requires the GitHub regression workflow to have passed on the pushed
 release-branch HEAD, waiting for it if the run is still in progress;</p></li>
 <li><p>updates Python/Rust manifests, lockfiles, and release histories atomically;</p></li>
-<li><p>validates wheels, the Metal crate, and strict full documentation;</p></li>
 <li><p>creates one release commit and product-qualified tags;</p></li>
 <li><p>pushes the commit and tags;</p></li>
 <li><p>dispatches the combined GitHub Actions release workflow; and</p></li>
 <li><p>records the workflow run ID and URL before returning.</p></li>
 </ol>
-<p>GitHub Actions then publishes and verifies Metal before publishing dependent
-Origen packages, creates GitHub Releases, and deploys the website. The local
+<p>Nothing is built or tested locally. GitHub Actions then builds, publishes, and
+verifies Metal before publishing dependent Origen packages, creates GitHub
+Releases, and deploys the website. The local
 terminal does not wait by default. Add <code class="docutils literal notranslate"><span class="pre">--wait</span></code> to retain synchronous
 monitoring:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">origen rc tag --product origen --product origen-metal --wait</span>
@@ -558,8 +560,8 @@ python/origen/doc/metal/history
 </section>
 <section id="local-preparation">
 <h2>Local preparation<a class="headerlink" href="#local-preparation" title="Link to this heading">#</a></h2>
-<p>To update and validate versions and histories without committing, tagging,
-pushing, publishing, or deploying, use:</p>
+<p>To update versions and histories without committing, tagging, pushing,
+publishing, or deploying, use:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">origen rc tag --product origen-metal --type patch --local</span>
 </pre></div>
 </div>
