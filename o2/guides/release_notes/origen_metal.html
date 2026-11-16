@@ -362,6 +362,7 @@
 
 
 
+
 </ul>
 </div>
 </nav></div>
@@ -424,6 +425,24 @@
                   
   <section id="origen-metal-release-notes">
 <h1>Origen Metal Release Notes<a class="headerlink" href="#origen-metal-release-notes" title="Link to this heading">#</a></h1>
+</section>
+<section id="origen-metal-1-10-0">
+<span id="release-origen-metal-1-10-0"></span><h1>Origen Metal 1.10.0<a class="headerlink" href="#origen-metal-1-10-0" title="Link to this heading">#</a></h1>
+<ul class="simple">
+<li><p><strong>Released:</strong> 2026-11-16</p></li>
+<li><p><strong>Author:</strong> Stephen McGinty</p></li>
+<li><p><strong>Tag:</strong> <code class="docutils literal notranslate"><span class="pre">origen-metal-v1.10.0</span></code></p></li>
+</ul>
+<p>This release extends SMT8 flow generation with loops that start at any index or repeat to a count set at run time, declarations of flow inputs and local flags, and fixes to flag assignment and propagation.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">loop()</span></code> takes a <code class="docutils literal notranslate"><span class="pre">start</span></code> index, e.g. <code class="docutils literal notranslate"><span class="pre">loop(6,</span> <span class="pre">start=0)</span></code> renders <code class="docutils literal notranslate"><span class="pre">for</span> <span class="pre">(index</span> <span class="pre">:</span> <span class="pre">0..5)</span></code>, and its count may be the name of a flow variable holding it when the loop starts, rendered <code class="docutils literal notranslate"><span class="pre">for</span> <span class="pre">(index</span> <span class="pre">:</span> <span class="pre">1</span> <span class="pre">..</span> <span class="pre">count)</span></code> with the count declared as a flow input. A fixed count of 0 is now an error. Rust: <code class="docutils literal notranslate"><span class="pre">PGM::Loop</span></code> gains a start and takes a <code class="docutils literal notranslate"><span class="pre">LoopCount</span></code>, <code class="docutils literal notranslate"><span class="pre">flow_api::start_loop</span></code> gains a <code class="docutils literal notranslate"><span class="pre">start</span></code> argument. Contributed by Stephen McGinty in #251.</p></li>
+<li><p>A flow called from within a loop which reads the loop’s counter declares it as an input, and the caller passes it down from within the loop. Contributed by Stephen McGinty in #251.</p></li>
+<li><p>New <code class="docutils literal notranslate"><span class="pre">declare_input_variable(name)</span></code> flow API declares a flow input which the flow only passes down to its sub-flows, keeping the case of its name. Contributed by Stephen McGinty in #251.</p></li>
+<li><p>New <code class="docutils literal notranslate"><span class="pre">declare_local_flag(name)</span></code> flow API: a flag set in the declaring flow or its sub-flows is passed out only as far as the highest enclosing flow in which another flow reads it, instead of to every enclosing flow. Contributed by Stephen McGinty in #251.</p></li>
+<li><p>A test’s or group’s result flag is set once, however many conditions reference it, and a test referenced by <code class="docutils literal notranslate"><span class="pre">if_ran</span></code> before <code class="docutils literal notranslate"><span class="pre">if_failed</span></code> or <code class="docutils literal notranslate"><span class="pre">if_passed</span></code> now also sets its failed or passed flag. Contributed by Stephen McGinty in #251.</p></li>
+<li><p>A flag or variable set by an earlier sub-flow and read by a later one is no longer also declared an input of the enclosing flows. A caller which assigns such an input, <code class="docutils literal notranslate"><span class="pre">&lt;FLOW&gt;.&lt;FLAG&gt;</span> <span class="pre">=</span> <span class="pre">...</span></code>, must drop the assignment. Contributed by Stephen McGinty in #251.</p></li>
+</ul>
+<hr class="docutils" />
 </section>
 <section id="origen-metal-1-9-0">
 <span id="release-origen-metal-1-9-0"></span><h1>Origen Metal 1.9.0<a class="headerlink" href="#origen-metal-1-9-0" title="Link to this heading">#</a></h1>
@@ -697,6 +716,7 @@ Origen Metal release updates.</p>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Origen Metal Release Notes</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#origen-metal-1-10-0">Origen Metal 1.10.0</a></li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#origen-metal-1-9-0">Origen Metal 1.9.0</a></li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#origen-metal-1-8-0">Origen Metal 1.8.0</a></li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#origen-metal-1-7-0">Origen Metal 1.7.0</a></li>

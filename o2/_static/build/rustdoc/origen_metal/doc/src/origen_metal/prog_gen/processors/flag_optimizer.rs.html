@@ -106,7 +106,7 @@
 <a href=#106 id=106 data-nosnippet>106</a>            PGM::Flow(<span class="kw">_</span>)
 <a href=#107 id=107 data-nosnippet>107</a>            | PGM::SubFlow(<span class="kw">_</span>, <span class="kw">_</span>)
 <a href=#108 id=108 data-nosnippet>108</a>            | PGM::Else
-<a href=#109 id=109 data-nosnippet>109</a>            | PGM::Loop(<span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>)
+<a href=#109 id=109 data-nosnippet>109</a>            | PGM::Loop(..)
 <a href=#110 id=110 data-nosnippet>110</a>            | PGM::Whenever
 <a href=#111 id=111 data-nosnippet>111</a>            | PGM::WheneverAny
 <a href=#112 id=112 data-nosnippet>112</a>            | PGM::WheneverAll =&gt; {
@@ -334,7 +334,7 @@
 <a href=#334 id=334 data-nosnippet>334</a><span class="attr">#[cfg(test)]
 <a href=#335 id=335 data-nosnippet>335</a></span><span class="kw">mod </span>tests {
 <a href=#336 id=336 data-nosnippet>336</a>    <span class="kw">use </span><span class="kw">super</span>::run;
-<a href=#337 id=337 data-nosnippet>337</a>    <span class="kw">use </span><span class="kw">crate</span>::prog_gen::{BinType, FlowCondition, FlowID, GroupType, PGM};
+<a href=#337 id=337 data-nosnippet>337</a>    <span class="kw">use </span><span class="kw">crate</span>::prog_gen::{BinType, FlowCondition, FlowID, GroupType, LoopCount, PGM};
 <a href=#338 id=338 data-nosnippet>338</a>    <span class="kw">use </span><span class="kw">crate</span>::Result;
 <a href=#339 id=339 data-nosnippet>339</a>
 <a href=#340 id=340 data-nosnippet>340</a>    <span class="attr">#[test]
@@ -434,7 +434,7 @@
 <a href=#434 id=434 data-nosnippet>434</a>    <span class="attr">#[test]
 <a href=#435 id=435 data-nosnippet>435</a>    </span><span class="kw">fn </span>it_applies_the_optimization_within_loops() -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
 <a href=#436 id=436 data-nosnippet>436</a>        <span class="kw">let </span>input = <span class="macro">node!</span>(PGM::Flow, <span class="string">"f1"</span>.to_string() =&gt;
-<a href=#437 id=437 data-nosnippet>437</a>            <span class="macro">node!</span>(PGM::Loop, <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">Some</span>(<span class="string">"index"</span>.to_string()), <span class="bool-val">false </span>=&gt;
+<a href=#437 id=437 data-nosnippet>437</a>            <span class="macro">node!</span>(PGM::Loop, <span class="prelude-val">Some</span>(LoopCount::Fixed(<span class="number">3</span>)), <span class="prelude-val">Some</span>(<span class="string">"index"</span>.to_string()), <span class="bool-val">false</span>, <span class="number">1 </span>=&gt;
 <a href=#438 id=438 data-nosnippet>438</a>                <span class="macro">node!</span>(PGM::Test, <span class="number">1</span>, FlowID::from_int(<span class="number">1</span>) =&gt;
 <a href=#439 id=439 data-nosnippet>439</a>                    <span class="macro">node!</span>(PGM::OnFailed, FlowID::from_int(<span class="number">1</span>) =&gt;
 <a href=#440 id=440 data-nosnippet>440</a>                        <span class="macro">node!</span>(PGM::Continue),
@@ -448,7 +448,7 @@
 <a href=#448 id=448 data-nosnippet>448</a>        );
 <a href=#449 id=449 data-nosnippet>449</a>
 <a href=#450 id=450 data-nosnippet>450</a>        <span class="kw">let </span>output = <span class="macro">node!</span>(PGM::Flow, <span class="string">"f1"</span>.to_string() =&gt;
-<a href=#451 id=451 data-nosnippet>451</a>            <span class="macro">node!</span>(PGM::Loop, <span class="prelude-val">Some</span>(<span class="number">3</span>), <span class="prelude-val">Some</span>(<span class="string">"index"</span>.to_string()), <span class="bool-val">false </span>=&gt;
+<a href=#451 id=451 data-nosnippet>451</a>            <span class="macro">node!</span>(PGM::Loop, <span class="prelude-val">Some</span>(LoopCount::Fixed(<span class="number">3</span>)), <span class="prelude-val">Some</span>(<span class="string">"index"</span>.to_string()), <span class="bool-val">false</span>, <span class="number">1 </span>=&gt;
 <a href=#452 id=452 data-nosnippet>452</a>                <span class="macro">node!</span>(PGM::Test, <span class="number">1</span>, FlowID::from_int(<span class="number">1</span>) =&gt;
 <a href=#453 id=453 data-nosnippet>453</a>                    <span class="macro">node!</span>(PGM::OnFailed, FlowID::from_int(<span class="number">1</span>) =&gt;
 <a href=#454 id=454 data-nosnippet>454</a>                        <span class="macro">node!</span>(PGM::Continue),

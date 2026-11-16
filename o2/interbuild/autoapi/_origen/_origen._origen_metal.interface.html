@@ -449,6 +449,24 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="origen._origen_metal.interface.PyInterface.declare_input_variable">
+<span class="sig-name descname"><span class="pre">declare_input_variable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#origen._origen_metal.interface.PyInterface.declare_input_variable" title="Link to this definition">#</a></dt>
+<dd><p>Declare the given flow variable, keeping the case of its name, as an input of the
+current flow without reading it, e.g. a value which the flow only passes down to its
+sub-flows. A sub-flow receives it only if it reads or declares it too.
+Must be called at flow level, not within a condition or loop.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="origen._origen_metal.interface.PyInterface.declare_local_flag">
+<span class="sig-name descname"><span class="pre">declare_local_flag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#origen._origen_metal.interface.PyInterface.declare_local_flag" title="Link to this definition">#</a></dt>
+<dd><p>Declare that the given flag, when set in the current flow or in any of its sub-flows,
+is local to the flows which read it: it is passed out of the flow which sets it only as
+far as the highest enclosing flow in which another flow reads it, rather than to every
+enclosing flow. Must be called at flow level, not within a condition or loop.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="origen._origen_metal.interface.PyInterface.declare_output_variable">
 <span class="sig-name descname"><span class="pre">declare_output_variable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#origen._origen_metal.interface.PyInterface.declare_output_variable" title="Link to this definition">#</a></dt>
 <dd><p>Declare the given flow variable, keeping the case of its name, as an output of the
@@ -520,9 +538,12 @@ expression is true</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="origen._origen_metal.interface.PyInterface.loop">
-<span class="sig-name descname"><span class="pre">loop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">count</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Ellipsis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">descending</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#origen._origen_metal.interface.PyInterface.loop" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">loop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">count</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Ellipsis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">descending</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#origen._origen_metal.interface.PyInterface.loop" title="Link to this definition">#</a></dt>
 <dd><p>Repeats the flow content generated within the returned context manager count times.
-The iteration number, counting from 1 up to count (or down from count to 1 when
+The count is a number from 1, or the name of a flow variable which holds it when the loop
+starts. Like a hand-written V93K SMT8 for loop, a loop to a variable is not guarded, the
+variable must be at least 1 when the loop starts.
+The iteration number, counting up from start through count values (or down to start when
 descending), is available within the loop as the given flow variable.
 Flow options, e.g. if_enable, are applied to the whole loop.</p>
 </dd></dl>
@@ -658,6 +679,8 @@ expression is false</p>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#origen._origen_metal.interface.PyInterface.add_test"><code class="docutils literal notranslate"><span class="pre">PyInterface.add_test()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#origen._origen_metal.interface.PyInterface.bad_die"><code class="docutils literal notranslate"><span class="pre">PyInterface.bad_die()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#origen._origen_metal.interface.PyInterface.bin"><code class="docutils literal notranslate"><span class="pre">PyInterface.bin()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#origen._origen_metal.interface.PyInterface.declare_input_variable"><code class="docutils literal notranslate"><span class="pre">PyInterface.declare_input_variable()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#origen._origen_metal.interface.PyInterface.declare_local_flag"><code class="docutils literal notranslate"><span class="pre">PyInterface.declare_local_flag()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#origen._origen_metal.interface.PyInterface.declare_output_variable"><code class="docutils literal notranslate"><span class="pre">PyInterface.declare_output_variable()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#origen._origen_metal.interface.PyInterface.description"><code class="docutils literal notranslate"><span class="pre">PyInterface.description</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#origen._origen_metal.interface.PyInterface.good_die"><code class="docutils literal notranslate"><span class="pre">PyInterface.good_die()</span></code></a></li>
