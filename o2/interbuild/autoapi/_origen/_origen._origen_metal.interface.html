@@ -467,6 +467,16 @@ enclosing flow. Must be called at flow level, not within a condition or loop.</p
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="origen._origen_metal.interface.PyInterface.declare_local_variable">
+<span class="sig-name descname"><span class="pre">declare_local_variable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#origen._origen_metal.interface.PyInterface.declare_local_variable" title="Link to this definition">#</a></dt>
+<dd><p>Declare that the given flow variable (case kept), when assigned with set_variable in the
+current flow or in any of its sub-flows, is local to the flows which read it, as a flag
+declared with declare_local_flag is: it is an output of the flow which assigns it, rather
+than an input, and it is passed out only as far as the highest enclosing flow in which
+another flow reads it. Must be called at flow level, not within a condition or loop.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="origen._origen_metal.interface.PyInterface.declare_output_variable">
 <span class="sig-name descname"><span class="pre">declare_output_variable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#origen._origen_metal.interface.PyInterface.declare_output_variable" title="Link to this definition">#</a></dt>
 <dd><p>Declare the given flow variable, keeping the case of its name, as an output of the
@@ -561,8 +571,15 @@ Flow options, e.g. if_enable, are applied to the whole loop.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="origen._origen_metal.interface.PyInterface.resources">
-<span class="sig-name descname"><span class="pre">resources</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#origen._origen_metal.interface.PyInterface.resources" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">resources</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keep_flows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#origen._origen_metal.interface.PyInterface.resources" title="Link to this definition">#</a></dt>
+<dd><p>Returns a context manager for a block of resources: the tests within it are defined in the
+test program but are not executed by the flow.</p>
+<p>With keep_flows=True, on V93K SMT8, the flow-type groups and sub-flows within the block
+are kept as flow definitions: each one is written to its own flow file and declared by the
+enclosing flow, but is not executed by it. The variables which the block’s content would
+make inputs or outputs of the enclosing flow, if it were executed, are declared by it too.
+On other testers, keep_flows has no effect.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="origen._origen_metal.interface.PyInterface.resources_filename">
@@ -681,6 +698,7 @@ expression is false</p>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#origen._origen_metal.interface.PyInterface.bin"><code class="docutils literal notranslate"><span class="pre">PyInterface.bin()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#origen._origen_metal.interface.PyInterface.declare_input_variable"><code class="docutils literal notranslate"><span class="pre">PyInterface.declare_input_variable()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#origen._origen_metal.interface.PyInterface.declare_local_flag"><code class="docutils literal notranslate"><span class="pre">PyInterface.declare_local_flag()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#origen._origen_metal.interface.PyInterface.declare_local_variable"><code class="docutils literal notranslate"><span class="pre">PyInterface.declare_local_variable()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#origen._origen_metal.interface.PyInterface.declare_output_variable"><code class="docutils literal notranslate"><span class="pre">PyInterface.declare_output_variable()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#origen._origen_metal.interface.PyInterface.description"><code class="docutils literal notranslate"><span class="pre">PyInterface.description</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#origen._origen_metal.interface.PyInterface.good_die"><code class="docutils literal notranslate"><span class="pre">PyInterface.good_die()</span></code></a></li>

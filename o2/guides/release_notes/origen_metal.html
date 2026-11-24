@@ -364,6 +364,7 @@
 
 
 
+
 </ul>
 </div>
 </nav></div>
@@ -426,6 +427,26 @@
                   
   <section id="origen-metal-release-notes">
 <h1>Origen Metal Release Notes<a class="headerlink" href="#origen-metal-release-notes" title="Link to this heading">#</a></h1>
+</section>
+<section id="origen-metal-1-12-0">
+<span id="release-origen-metal-1-12-0"></span><h1>Origen Metal 1.12.0<a class="headerlink" href="#origen-metal-1-12-0" title="Link to this heading">#</a></h1>
+<ul class="simple">
+<li><p><strong>Released:</strong> 2026-11-24</p></li>
+<li><p><strong>Author:</strong> Stephen McGinty</p></li>
+<li><p><strong>Tag:</strong> <code class="docutils literal notranslate"><span class="pre">origen-metal-v1.12.0</span></code></p></li>
+</ul>
+<p>This release extends SMT8 flow generation with resources blocks that keep their flows, flow variables local to the flows which read them, and opt-in formatting options, and fixes how adjacent opposite conditions are combined and how test templates are cached.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">resources(keep_flows=True)</span></code> keeps the flow-type groups and sub-flows within a resources block as SMT8 flow definitions: each is written to its own flow file and declared, but not executed, by the enclosing flow, which declares the variables the block would read or set if it were executed. Rust: <code class="docutils literal notranslate"><span class="pre">flow_api::start_resources_keep_flows</span></code>, <code class="docutils literal notranslate"><span class="pre">PGM::ResourcesKeepFlows</span></code>. Contributed by Stephen McGinty in #253.</p></li>
+<li><p>New <code class="docutils literal notranslate"><span class="pre">set_smt8_options(...,</span> <span class="pre">empty_else=False)</span></code> option leaves out the empty <code class="docutils literal notranslate"><span class="pre">else</span> <span class="pre">{</span> <span class="pre">}</span></code> branch of an SMT8 condition. Rust: <code class="docutils literal notranslate"><span class="pre">Config::set_smt8_empty_else</span></code>. Contributed by Stephen McGinty in #254.</p></li>
+<li><p>Adjacent opposite conditions, e.g. <code class="docutils literal notranslate"><span class="pre">if_flag(F)</span></code> then <code class="docutils literal notranslate"><span class="pre">unless_flag(F)</span></code>, are now also combined into one <code class="docutils literal notranslate"><span class="pre">if</span></code>/<code class="docutils literal notranslate"><span class="pre">else</span></code> within loops, conditions and else branches. Conditions are only combined when they test the same list of flags or enables, and not when the first one may change what the second tests. This changes the SMT8 and SMT7 output of such nested pairs. Contributed by Stephen McGinty in #255.</p></li>
+<li><p>Fixed the else branch of combined conditions being dropped on UltraFLEX, and on SMT7 for conditions it renders as plain content. Contributed by Stephen McGinty in #255.</p></li>
+<li><p>Fixed a cached test template being served after the template load path changed, e.g. when one process generates for targets with different test-method library versions. Contributed by Stephen McGinty in #256.</p></li>
+<li><p>New <code class="docutils literal notranslate"><span class="pre">set_smt8_options(...,</span> <span class="pre">o1_formatting=True)</span></code> option formats SMT8 flows as Origen 1 (origen_testers) writes them: sub-flow variable blocks, only the flags a flow sets initialized, and test-method parameters in Origen 1’s order. Rust: <code class="docutils literal notranslate"><span class="pre">Config::set_smt8_o1_formatting</span></code>. Contributed by Stephen McGinty in #257.</p></li>
+<li><p>New <code class="docutils literal notranslate"><span class="pre">set_smt8_options(...,</span> <span class="pre">keep_sub_flow_instance_case=True)</span></code> option keeps the case of SMT8 sub-flow instance names in the calling flow and in limits-file test paths; flow files and definitions stay upper case. Rust: <code class="docutils literal notranslate"><span class="pre">Config::set_smt8_keep_sub_flow_instance_case</span></code>. Contributed by Stephen McGinty in #258.</p></li>
+<li><p>New <code class="docutils literal notranslate"><span class="pre">declare_local_variable(name)</span></code> flow API: a flow variable assigned with <code class="docutils literal notranslate"><span class="pre">set_variable</span></code> is an output of the flow which assigns it, passed out only as far as the highest enclosing flow in which another flow reads it, rather than an input of every enclosing flow. Rust: <code class="docutils literal notranslate"><span class="pre">flow_api::declare_local_variable</span></code>, <code class="docutils literal notranslate"><span class="pre">PGM::LocalVariable</span></code>. Contributed by Stephen McGinty in #259.</p></li>
+</ul>
+<hr class="docutils" />
 </section>
 <section id="origen-metal-1-11-0">
 <span id="release-origen-metal-1-11-0"></span><h1>Origen Metal 1.11.0<a class="headerlink" href="#origen-metal-1-11-0" title="Link to this heading">#</a></h1>
@@ -731,6 +752,7 @@ Origen Metal release updates.</p>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Origen Metal Release Notes</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#origen-metal-1-12-0">Origen Metal 1.12.0</a></li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#origen-metal-1-11-0">Origen Metal 1.11.0</a></li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#origen-metal-1-10-0">Origen Metal 1.10.0</a></li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#origen-metal-1-9-0">Origen Metal 1.9.0</a></li>
